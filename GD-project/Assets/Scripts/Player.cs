@@ -12,8 +12,6 @@ public class Player : MonoBehaviour
     
     private PlayerInput input;
 
-    private float moveAmount;
-
     public void Awake() {
         Assert.IsNull(Instance);
         Instance = this;
@@ -24,9 +22,8 @@ public class Player : MonoBehaviour
     private void Move() {
         currentMovementSpeed = maxMovementSpeed * input.Horizontal * Time.deltaTime;
         currentRotationSpeed = maxRotationSpeed * input.Rotation * Time.deltaTime;
-        moveAmount += currentMovementSpeed;
 
-        this.transform.position += moveAmount * this.transform.forward;
+        this.transform.position += currentMovementSpeed * this.transform.forward;
         this.transform.Rotate(this.transform.up, currentRotationSpeed);
     }
 
