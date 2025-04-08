@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -10,6 +11,8 @@ public class Player : MonoBehaviour
     [SerializeField] private float currentRotationSpeed;
     [SerializeField] private float maxRotationSpeed = 45f;
     
+    [SerializeField] Rigidbody player;
+    
     private PlayerInput input;
 
     public void Awake() {
@@ -20,15 +23,18 @@ public class Player : MonoBehaviour
     }
 
     private void Move() {
-        currentMovementSpeed = maxMovementSpeed * input.Horizontal * Time.deltaTime;
-        currentRotationSpeed = maxRotationSpeed * input.Rotation * Time.deltaTime;
-
-        this.transform.position += currentMovementSpeed * this.transform.forward;
-        this.transform.Rotate(this.transform.up, currentRotationSpeed);
+        currentMovementSpeed = maxMovementSpeed * input.Horizontal * Time.fixedDeltaTime;
+        currentRotationSpeed = maxRotationSpeed * input.Rotation * Time.fixedDeltaTime;
+        
+        player.MovePosition(player.position + currentMovementSpeed * transform.forward);
+        player.transform.Rotate(Vector3.up * currentRotationSpeed);
+        
+        // Ho bisogno di questo constraint per evitare che il giocatore si ribalti quando tocca un muro
+        player.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     }
 
-    // Update is called once per frame
-    void Update()
+    // FixedUpdate is called once per frame
+    void FixedUpdate()
     {
         Move();
     }
