@@ -33,8 +33,9 @@ public class EnemyMovement : MonoBehaviour
 
         walkPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
 
-        if (Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround))
+        if(Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround)) {
             walkPointSet = true;
+        }
     }
     
     void Patroling()
@@ -51,9 +52,9 @@ public class EnemyMovement : MonoBehaviour
             walkPointSet = false;
     }
 
-    void ChasePlayer()
-    {
-        agent.SetDestination(player.position);
+    void ChasePlayer() {
+        Debug.Log(transform.position);
+		agent.SetDestination(player.position);
     }
 
     void ResetAttack()
