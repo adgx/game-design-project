@@ -53,7 +53,6 @@ public class EnemyMovement : MonoBehaviour
     }
 
     void ChasePlayer() {
-        Debug.Log(transform.position);
 		agent.SetDestination(player.position);
     }
 

@@ -2,9 +2,12 @@ using UnityEngine;
 
 public class PlayerInput : MonoBehaviour
 {
+    // Movement
     [SerializeField] private KeyCode forwardInput, backInput, leftInput, rightInput;
+    // Shooting
+    [SerializeField] private KeyCode leftMouseInput;
 
-    private float horizontalInput, rotationInput;
+    private float horizontalInput, rotationInput, shootInput;
 
     public float Horizontal
     {
@@ -15,39 +18,58 @@ public class PlayerInput : MonoBehaviour
     }
 
     public float Rotation {
-        get {
+        get
+        {
             return rotationInput;
+        }
+    }
+
+    public float Shoot
+    {
+        get
+        {
+            return shootInput;
         }
     }
 
     private void GetInput()
     {
         //Get horizontal input
-        if (UnityEngine.Input.GetKey(forwardInput))
+        if (Input.GetKey(forwardInput))
         {
             horizontalInput = 1.0f;
         }
-        else if (UnityEngine.Input.GetKey(backInput))
+        else if (Input.GetKey(backInput))
         {
             horizontalInput = -1.0f;
         }
-        else                                                                //Non sto premendo nè destra nè sinistra
+        else    //Not pressing forward not back
         {
             horizontalInput = 0.0f;
         }
         
         //Get rotation input
-        if (UnityEngine.Input.GetKey(rightInput))
+        if (Input.GetKey(rightInput))
         {
             rotationInput = 1.0f;
         }
-        else if (UnityEngine.Input.GetKey(leftInput))
+        else if (Input.GetKey(leftInput))
         {
             rotationInput = -1.0f;
         }
-        else                                                                //Non sto premendo nè destra nè sinistra
+        else    //Not pressing right nor left
         {
             rotationInput = 0.0f;
+        }
+        
+        // Get shoot input
+        if (Input.GetKey(leftMouseInput))
+        {
+            shootInput = 1.0f;
+        }
+        else
+        {
+            shootInput = 0.0f;
         }
     }
 
