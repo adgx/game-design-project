@@ -10,9 +10,10 @@ public class PlayerShoot : MonoBehaviour
 
     void Shoot()
     {
-        GameObject bullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity, GameObject.FindGameObjectWithTag("WorldObjectHolder").transform);
-        bullet.GetComponent<Rigidbody2D>().AddForce(bulletSpawnTransform.forward * bulletSpeed, ForceMode2D.Impulse);
-    }
+        Rigidbody rbBullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity).GetComponent<Rigidbody>();
+		rbBullet.AddForce(bulletSpawnTransform.forward * bulletSpeed, ForceMode.Impulse);
+		rbBullet.AddForce(bulletSpawnTransform.up * 2f, ForceMode.Impulse);
+	}
 
     void Update()
     {
