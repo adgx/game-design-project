@@ -71,7 +71,10 @@ public class EnemyMovement : MonoBehaviour
         if (!alreadyAttacked)
         {
             //Attack code here
-            Rigidbody rbBullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity).GetComponent<Rigidbody>();
+            GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+			bullet.tag = "EnemyProjectile";
+
+			Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
 			rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
 			rbBullet.AddForce(transform.up * 2f, ForceMode.Impulse);
             //End of attack code

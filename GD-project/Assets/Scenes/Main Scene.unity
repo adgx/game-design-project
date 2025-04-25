@@ -232,7 +232,7 @@ GameObject:
   - component: {fileID: 821914362}
   m_Layer: 6
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: PlayerTag
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -405,6 +405,7 @@ MonoBehaviour:
   bulletDamage: 0
   bulletSpawnTransform: {fileID: 699118621}
   bulletPrefab: {fileID: 3780818778376199547, guid: e2193c01f07e84362a8e9f21a5774953, type: 3}
+  magneticSpherePrefab: {fileID: 1845003934129358180, guid: 7d4cc2c6d0a10f446af83cb8fda970c9, type: 3}
 --- !u!1 &948718293
 GameObject:
   m_ObjectHideFlags: 0
@@ -747,7 +748,7 @@ GameObject:
   - component: {fileID: 1641000627}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: EnemyTag
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
