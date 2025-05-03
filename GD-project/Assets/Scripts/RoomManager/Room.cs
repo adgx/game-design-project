@@ -56,9 +56,9 @@ public class Room : MonoBehaviour
     /// </summary>
     public void CloseAllDoors()
     {
-        if (topDoor != null) topDoor.SetActive(false); // Close the top door
-        if (bottomDoor != null) bottomDoor.SetActive(false); // Close the bottom door
-        if (rightDoor != null) rightDoor.SetActive(false); // Close the right door
-        if (leftDoor != null) leftDoor.SetActive(false); // Close the left door
+        if (topDoor != null) topDoor.SetActive(false);
+        if (bottomDoor != null) bottomDoor.SetActive(false);
+        if (rightDoor != null) rightDoor.SetActive(false);
+        if (leftDoor != null) leftDoor.SetActive(false);
     }
 }

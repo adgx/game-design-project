@@ -20,6 +20,16 @@ public class RoomManager : MonoBehaviour
     [SerializeField] private int minRooms = 5;
 
     /// <summary>
+    /// The reference to the current room
+    /// </summary>
+    [SerializeField] public Vector3Int currentRoom;
+    
+    /// <summary>
+    /// The reference to the current player
+    /// </summary>
+    [SerializeField] public GameObject currentPlayer = null;
+
+    /// <summary>
     /// The width of each room.
     /// </summary>
     private int roomWidth = 20;
@@ -125,6 +135,7 @@ public class RoomManager : MonoBehaviour
         // Start generating rooms from the center of the grid.
         Vector3Int startRoom = new Vector3Int(gridSizeX / 2, 0, gridSizeZ / 2);
         EnqueueInitialRoom(startRoom);
+        currentRoom = startRoom;
     }
 
     /// <summary>
@@ -140,7 +151,8 @@ public class RoomManager : MonoBehaviour
         // Instantiate the room prefab at the calculated position.
         var room = Instantiate(roomPrefab, GetPositionFromGridIndex(roomIndex), Quaternion.identity);
         room.name = $"Room-{roomCount}";
-        room.GetComponent<Room>().RoomIndex = roomIndex;
+        var roomScript = room.GetComponent<Room>();
+        roomScript.RoomIndex = roomIndex;
         roomObjects.Add(room); // Add the room to the list of room objects
     }
 
