@@ -1,64 +1,90 @@
 using UnityEngine;
 
-public class Room : MonoBehaviour
+namespace RoomManager
 {
-    /// <summary>
-    /// The door object for the top side of the room.
-    /// </summary>
-    [SerializeField] private GameObject topDoor;
-
-    /// <summary>
-    /// The door object for the bottom side of the room.
-    /// </summary>
-    [SerializeField] private GameObject bottomDoor;
-
-    /// <summary>
-    /// The door object for the right side of the room.
-    /// </summary>
-    [SerializeField] private GameObject rightDoor;
-
-    /// <summary>
-    /// The door object for the left side of the room.
-    /// </summary>
-    [SerializeField] private GameObject leftDoor;
-
-    /// <summary>
-    /// The index (position) of the room in the grid.
-    /// </summary>
-    public Vector3Int RoomIndex { get; set; }
-
-    /// <summary>
-    /// Opens the door in the specified direction.
-    /// </summary>
-    /// <param name="direction">The direction to open the door (forward, back, left, or right).</param>
-    public void OpenDoor(Vector3Int direction)
+    public class Room : MonoBehaviour
     {
-        if (direction == Vector3Int.forward && topDoor != null)
-        {
-            topDoor.SetActive(true); // Open the top door
-        }
-        else if (direction == Vector3Int.back && bottomDoor != null)
-        {
-            bottomDoor.SetActive(true); // Open the bottom door
-        }
-        else if (direction == Vector3Int.right && rightDoor != null)
-        {
-            rightDoor.SetActive(true); // Open the right door
-        }
-        else if (direction == Vector3Int.left && leftDoor != null)
-        {
-            leftDoor.SetActive(true); // Open the left door
-        }
-    }
+        [SerializeField] private GameObject topDoor;
+        [SerializeField] private GameObject bottomDoor;
+        [SerializeField] private GameObject rightDoor;
+        [SerializeField] private GameObject leftDoor;
 
-    /// <summary>
-    /// Closes all doors in the room.
-    /// </summary>
-    public void CloseAllDoors()
-    {
-        if (topDoor != null) topDoor.SetActive(false);
-        if (bottomDoor != null) bottomDoor.SetActive(false);
-        if (rightDoor != null) rightDoor.SetActive(false);
-        if (leftDoor != null) leftDoor.SetActive(false);
+        public Transform topSpawnPoint;
+        public Transform bottomSpawnPoint;
+        public Transform leftSpawnPoint;
+        public Transform rightSpawnPoint;
+        public Transform centralSpawnPoint;
+
+        public Vector3Int RoomIndex { get; set; }
+
+        private void Awake()
+        {
+            Transform spawnPointsTransform = transform.Find("SpawnPoints");
+
+            if (spawnPointsTransform == null)
+            {
+                Debug.LogError("SpawnPoints GameObject is missing from the Room!");
+                return;
+            }
+
+            topSpawnPoint = spawnPointsTransform.Find("TopSpawnPoint");
+            if (topSpawnPoint == null) Debug.LogWarning("Top Spawn Point is missing!");
+
+            bottomSpawnPoint = spawnPointsTransform.Find("BottomSpawnPoint");
+            if (bottomSpawnPoint == null) Debug.LogWarning("Back Spawn Point is missing!");
+
+            leftSpawnPoint = spawnPointsTransform.Find("LeftSpawnPoint");
+            if (leftSpawnPoint == null) Debug.LogWarning("Left Spawn Point is missing!");
+
+            rightSpawnPoint = spawnPointsTransform.Find("RightSpawnPoint");
+            if (rightSpawnPoint == null) Debug.LogWarning("Right Spawn Point is missing!");
+
+            centralSpawnPoint = spawnPointsTransform.Find("CentralSpawnPoint");
+            if (centralSpawnPoint == null) Debug.LogWarning("Central Spawn Point is missing!");
+        }
+
+
+        public void OpenDoor(Vector3Int direction)
+        {
+            if (direction == Vector3Int.forward && topDoor != null)
+            {
+                topDoor.SetActive(true);
+            }
+            else if (direction == Vector3Int.back && bottomDoor != null)
+            {
+                bottomDoor.SetActive(true);
+            }
+            else if (direction == Vector3Int.right && rightDoor != null)
+            {
+                rightDoor.SetActive(true);
+            }
+            else if (direction == Vector3Int.left && leftDoor != null)
+            {
+                leftDoor.SetActive(true);
+            }
+        }
+
+        public void CloseAllDoors()
+        {
+            if (topDoor != null)
+            {
+                topDoor.SetActive(false);
+            }
+
+            if (bottomDoor != null)
+            {
+                bottomDoor.SetActive(false);
+            }
+
+            if (rightDoor != null)
+            {
+                rightDoor.SetActive(false);
+            }
+
+            if (leftDoor != null)
+            {
+                leftDoor.SetActive(false);
+            }
+        }
     }
 }
