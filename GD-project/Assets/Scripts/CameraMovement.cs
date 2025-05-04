@@ -7,8 +7,8 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private float cameraMovementSpeed = 10f;
     
     [SerializeField] private float xOffset = 0f;
-    [SerializeField] private float yOffset = 4;
-    [SerializeField] private float zOffset = -6f;
+    [SerializeField] private float yOffset = 10;
+    [SerializeField] private float zOffset = -11f;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
