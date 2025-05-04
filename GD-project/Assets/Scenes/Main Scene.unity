@@ -357,10 +357,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79975468693d44d2c92222e8a3319c26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentMovementSpeed: 0
+  currentVerticalSpeed: 0
+  currentHorizontalSpeed: 0
   maxMovementSpeed: 10
-  currentRotationSpeed: 0
-  maxRotationSpeed: 90
+  maxRotationSpeed: 20
   player: {fileID: 821914362}
 --- !u!54 &821914362
 Rigidbody:

@@ -7,20 +7,20 @@ public class PlayerInput : MonoBehaviour
     // Shooting
     [SerializeField] private KeyCode leftMouseInput;
 
-    private float horizontalInput, rotationInput, shootInput;
+    private float verticalInput, horizontalInput, shootInput;
 
-    public float Horizontal
+    public float Vertical
     {
         get
         {
-            return horizontalInput;
+            return verticalInput;
         }
     }
 
-    public float Rotation {
+    public float Horizontal {
         get
         {
-            return rotationInput;
+            return horizontalInput;
         }
     }
 
@@ -37,29 +37,29 @@ public class PlayerInput : MonoBehaviour
         //Get horizontal input
         if (Input.GetKey(forwardInput))
         {
-            horizontalInput = 1.0f;
+			verticalInput = 1.0f;
         }
         else if (Input.GetKey(backInput))
         {
-            horizontalInput = -1.0f;
+			verticalInput = -1.0f;
         }
         else    //Not pressing forward not back
         {
-            horizontalInput = 0.0f;
+			verticalInput = 0.0f;
         }
         
         //Get rotation input
         if (Input.GetKey(rightInput))
         {
-            rotationInput = 1.0f;
+			horizontalInput = 1.0f;
         }
         else if (Input.GetKey(leftInput))
         {
-            rotationInput = -1.0f;
+			horizontalInput = -1.0f;
         }
         else    //Not pressing right nor left
         {
-            rotationInput = 0.0f;
+            horizontalInput = 0.0f;
         }
         
         // Get shoot input
