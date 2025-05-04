@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float currentVerticalSpeed;
     [SerializeField] private float currentHorizontalSpeed;
 	[SerializeField] private float maxMovementSpeed = 10f;
-	[SerializeField] private float maxRotationSpeed = 20f;
+	[SerializeField] private float maxRotationSpeed = 15f;
     
     [SerializeField] Rigidbody player;
     
