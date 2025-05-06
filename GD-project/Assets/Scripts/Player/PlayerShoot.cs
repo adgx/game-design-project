@@ -27,6 +27,7 @@ public class PlayerShoot : MonoBehaviour
 		if(!magneticSphereOpen) {
             magneticSphere = Instantiate(magneticSpherePrefab, transform.position, Quaternion.identity);
             magneticSphere.transform.parent = transform;
+            //magneticSphere.transform.Rotate(new Vector3(0, 0, 90));
 			magneticSphereOpen = true;
         }
         else {
