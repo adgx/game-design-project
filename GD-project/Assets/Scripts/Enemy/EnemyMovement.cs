@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -88,8 +90,29 @@ public class EnemyMovement : MonoBehaviour
     {
         health -= damage;
 
-        if (health <= 0) Invoke(nameof(DestroyEnemy), 0.5f);
+        StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
+
+		if(health <= 0)
+			Invoke(nameof(DestroyEnemy), 0.05f);
     }
+    // Change enemy color when hit and change it back to normal after "duration" seconds
+    IEnumerator ChangeColor(Renderer renderer, Color dmgColor, float duration, float delay) {
+        // Save the original color of the enemy
+        Color originColor = renderer.material.color;
+
+        renderer.material.color = dmgColor;
+
+		yield return new WaitForSeconds(delay);
+
+		// Lerp animation with given duration in seconds
+		for(float t = 0; t < 1.0f; t += Time.deltaTime / duration) {
+			renderer.material.color = Color.Lerp(dmgColor, originColor, t);
+
+			yield return null;
+		}
+
+        renderer.material.color = originColor;
+	}
     private void DestroyEnemy()
     {
         Destroy(gameObject);
