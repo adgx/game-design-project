@@ -19,7 +19,7 @@ public class PlayerShoot : MonoBehaviour
 
 		Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
 		rbBullet.AddForce(bulletSpawnTransform.forward * bulletSpeed, ForceMode.Impulse);
-		rbBullet.AddForce(bulletSpawnTransform.up * 1f, ForceMode.Impulse);
+		rbBullet.AddForce(bulletSpawnTransform.up * 2f, ForceMode.Impulse);
 	}
 
     void SpawnMagneticSphere() {
