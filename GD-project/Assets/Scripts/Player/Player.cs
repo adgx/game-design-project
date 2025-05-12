@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
         Instance = this;
 
         input = GetComponent<PlayerInput>();
+        player.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     }
 
     private void Move() {
@@ -28,13 +29,9 @@ public class Player : MonoBehaviour
         
         player.MovePosition(player.position + currentMovementSpeed * transform.forward);
         player.transform.Rotate(Vector3.up * currentRotationSpeed);
-        
-        // Ho bisogno di questo constraint per evitare che il giocatore si ribalti quando tocca un muro
-        player.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     }
-
-    // FixedUpdate is called once per frame
-    void FixedUpdate()
+    
+    private void FixedUpdate()
     {
         Move();
     }

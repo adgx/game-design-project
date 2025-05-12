@@ -12,6 +12,8 @@ namespace RoomManager
         [SerializeField] private int minRooms = 5;
 
         public GameObject currentPlayer;
+        public bool playerHasSpawned;
+
         public Vector3Int CurrentRoomIndex { get; set; }
 
         private int roomWidth = 20 * 5;
@@ -27,10 +29,10 @@ namespace RoomManager
         private int[,,] roomGrid;
         private int roomCount;
         private bool generationComplete;
-
+        
         private void Awake()
         {
-            currentPlayer = GameObject.FindWithTag("PlayerTag");
+            currentPlayer = GameObject.FindWithTag("Player");
         }
 
         private void Start()
@@ -48,26 +50,37 @@ namespace RoomManager
                 TryGenerateRoom(new Vector3Int(roomIndex.x, roomIndex.y, roomIndex.z - 1));
                 TryGenerateRoom(new Vector3Int(roomIndex.x, roomIndex.y, roomIndex.z + 1));
             }
-            else if (generationComplete && (roomCount < minRooms || roomCount > maxRooms))
-            {
-                RegenerateRooms();
-            }
-            else if (!generationComplete)
-            {
-                Debug.Log("Generation completed with room count: " + roomCount);
-                generationComplete = true;
-                SpawnPlayerInRoom(CurrentRoomIndex, null);
-            }
+            else
+                switch (generationComplete)
+                {
+                    case true when (roomCount < minRooms || roomCount > maxRooms):
+                        RegenerateRooms();
+                        break;
+                    case false:
+                    {
+                        Debug.Log("Generation completed with room count: " + roomCount);
+                        generationComplete = true;
+
+                        if (!playerHasSpawned)
+                        {
+                            SpawnPlayerInRoom(CurrentRoomIndex);
+                            playerHasSpawned = true;
+                        }
+
+                        break;
+                    }
+                }
         }
 
         public void SpawnPlayerInRoom(Vector3Int roomIndex, Vector3Int? entryDirection = null)
         {
             var roomObject = roomObjects.FirstOrDefault(room => room.GetComponent<Room>().RoomIndex == roomIndex);
             if (roomObject == null) return;
+            
 
             var roomScript = roomObject.GetComponent<Room>();
             if (roomScript == null || currentPlayer == null) return;
-            
+
             if (entryDirection == Vector3Int.forward)
             {
                 currentPlayer.transform.position = roomScript.bottomSpawnPoint.position;
@@ -89,7 +102,7 @@ namespace RoomManager
                 currentPlayer.transform.position = roomScript.centralSpawnPoint.position;
             }
         }
-        
+
         private void GenerateRooms()
         {
             roomGrid = new int[gridSizeX, gridSizeY, gridSizeZ];
@@ -118,9 +131,9 @@ namespace RoomManager
 
         private bool TryGenerateRoom(Vector3Int index)
         {
-            int x = index.x;
-            int y = index.y;
-            int z = index.z;
+            var x = index.x;
+            var y = index.y;
+            var z = index.z;
 
             if (!IsInBounds(x, y, z)) return false;
             if (roomGrid[x, y, z] != 0) return false;
@@ -151,14 +164,12 @@ namespace RoomManager
 
         private void RegenerateRooms()
         {
-            foreach (var room in roomObjects)
+            foreach (var room in roomObjects.Where(room => room != null))
             {
-                if (room != null)
-                {
-                    Destroy(room);
-                }
+                Destroy(room);
             }
 
+            playerHasSpawned = false;
             GenerateRooms();
         }
 
@@ -224,24 +235,6 @@ namespace RoomManager
                 0,
                 roomDepth * (gridIndex.z - gridSizeZ / 2)
             );
-        }
-
-        private void OnDrawGizmos()
-        {
-            Color gizmoColor = new Color(0, 1, 1, 0.05f);
-            Gizmos.color = gizmoColor;
-
-            for (int x = 0; x < gridSizeX; x++)
-            {
-                for (int y = 0; y < gridSizeY; y++)
-                {
-                    for (int z = 0; z < gridSizeZ; z++)
-                    {
-                        Vector3 position = GetPositionFromGridIndex(new Vector3Int(x, y, z));
-                        Gizmos.DrawWireCube(position, new Vector3(roomWidth, roomHeight, roomDepth));
-                    }
-                }
-            }
         }
     }
 }

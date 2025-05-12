@@ -26,7 +26,7 @@ namespace RoomManager
                 Debug.LogError("SpawnPoints GameObject is missing from the Room!");
                 return;
             }
-
+            
             topSpawnPoint = spawnPointsTransform.Find("TopSpawnPoint");
             if (topSpawnPoint == null) Debug.LogWarning("Top Spawn Point is missing!");
 

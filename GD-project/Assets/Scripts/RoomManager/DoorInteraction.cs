@@ -9,10 +9,10 @@ namespace RoomManager
         private Transform playerTransform;
         private RoomManager roomManager;
         private const float interactionDistance = 5f;
-
+        
         private void Start()
         {
-            playerTransform = GameObject.FindWithTag("PlayerTag")?.transform;
+            playerTransform = GameObject.FindWithTag("Player")?.transform;
             roomManager = FindFirstObjectByType<RoomManager>();
             SetDirectionFromName();
         }
@@ -21,7 +21,7 @@ namespace RoomManager
         {
             if (playerTransform == null || roomManager == null) return;
 
-            float distance = Vector3.Distance(playerTransform.position, transform.position);
+            var distance = Vector3.Distance(playerTransform.position, transform.position);
 
             if (distance <= interactionDistance && Input.GetKeyDown(KeyCode.L))
             {
