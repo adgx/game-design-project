@@ -1,3 +1,4 @@
+using Helper;
 using UnityEngine;
 
 namespace RoomManager
@@ -9,7 +10,7 @@ namespace RoomManager
         private Transform playerTransform;
         private RoomManager roomManager;
         private const float interactionDistance = 5f;
-        
+
         private void Start()
         {
             playerTransform = GameObject.FindWithTag("Player")?.transform;
@@ -54,9 +55,12 @@ namespace RoomManager
 
             if (nextRoom != null)
             {
-                roomManager.CurrentRoomIndex = nextRoom.RoomIndex;
-                roomManager.SpawnPlayerInRoom(nextRoom.RoomIndex, direction);
-                Debug.Log($"Player moved to Room at {nextRoom.RoomIndex}");
+                FadeManager.Instance.FadeOutIn(() =>
+                {
+                    roomManager.CurrentRoomIndex = nextRoom.RoomIndex;
+                    roomManager.SpawnPlayerInRoom(nextRoom.RoomIndex, direction);
+                    Debug.Log($"Player moved to Room at {nextRoom.RoomIndex}");
+                });
             }
             else
             {
