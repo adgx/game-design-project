@@ -14,6 +14,12 @@ public class Player : MonoBehaviour
     [SerializeField] Rigidbody player;
     
     private PlayerInput input;
+    private bool isFrozen;
+
+    public void FreezeMovement(bool freeze)
+    {
+        isFrozen = freeze;
+    }
 
     public void Awake() {
         Assert.IsNull(Instance);
@@ -24,6 +30,8 @@ public class Player : MonoBehaviour
     }
 
     private void Move() {
+        if (isFrozen) return;
+        
         currentMovementSpeed = maxMovementSpeed * input.Horizontal * Time.fixedDeltaTime;
         currentRotationSpeed = maxRotationSpeed * input.Rotation * Time.fixedDeltaTime;
         
