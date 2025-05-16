@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,19 +11,20 @@ namespace RoomManager
         [SerializeField] private GameObject roomPrefab;
         [SerializeField] private int maxRooms = 15;
         [SerializeField] private int minRooms = 5;
+        
+        public event Action OnRunReady;
 
         public GameObject currentPlayer;
         public bool playerHasSpawned;
 
         public Vector3Int CurrentRoomIndex { get; set; }
 
-        private int roomWidth = 20 * 5;
-        private int roomHeight = 10;
-        private int roomDepth = 20 * 5;
+        private const int RoomWidth = 20 * 5;
+        private const int RoomDepth = 20 * 5;
 
-        private int gridSizeX = 10;
-        private int gridSizeY = 1;
-        private int gridSizeZ = 10;
+        private const int GridSizeX = 10;
+        private const int GridSizeY = 1;
+        private const int GridSizeZ = 10;
 
         private List<GameObject> roomObjects = new List<GameObject>();
         private Queue<Vector3Int> roomQueue = new Queue<Vector3Int>();
@@ -65,6 +67,8 @@ namespace RoomManager
                         {
                             SpawnPlayerInRoom(CurrentRoomIndex);
                             playerHasSpawned = true;
+                            
+                            OnRunReady?.Invoke();
                         }
 
                         break;
@@ -75,11 +79,11 @@ namespace RoomManager
         public void SpawnPlayerInRoom(Vector3Int roomIndex, Vector3Int? entryDirection = null)
         {
             var roomObject = roomObjects.FirstOrDefault(room => room.GetComponent<Room>().RoomIndex == roomIndex);
-            if (roomObject == null) return;
+            if (!roomObject) return;
             
 
             var roomScript = roomObject.GetComponent<Room>();
-            if (roomScript == null || currentPlayer == null) return;
+            if (!roomScript || !currentPlayer) return;
 
             if (entryDirection == Vector3Int.forward)
             {
@@ -105,13 +109,13 @@ namespace RoomManager
 
         private void GenerateRooms()
         {
-            roomGrid = new int[gridSizeX, gridSizeY, gridSizeZ];
+            roomGrid = new int[GridSizeX, GridSizeY, GridSizeZ];
             roomQueue.Clear();
             roomObjects.Clear();
             roomCount = 0;
             generationComplete = false;
 
-            var startRoomIndex = new Vector3Int(gridSizeX / 2, 0, gridSizeZ / 2);
+            var startRoomIndex = new Vector3Int(GridSizeX / 2, 0, GridSizeZ / 2);
             EnqueueInitialRoom(startRoomIndex);
             CurrentRoomIndex = startRoomIndex;
         }
@@ -129,17 +133,17 @@ namespace RoomManager
             roomObjects.Add(room);
         }
 
-        private bool TryGenerateRoom(Vector3Int index)
+        private void TryGenerateRoom(Vector3Int index)
         {
             var x = index.x;
             var y = index.y;
             var z = index.z;
 
-            if (!IsInBounds(x, y, z)) return false;
-            if (roomGrid[x, y, z] != 0) return false;
-            if (roomCount >= maxRooms) return false;
-            if (Random.value < 0.5f) return false;
-            if (CountAdjacentRooms(index) > 1) return false;
+            if (!IsInBounds(x, y, z)) return;
+            if (roomGrid[x, y, z] != 0) return;
+            if (roomCount >= maxRooms) return;
+            if (Random.value < 0.5f) return;
+            if (CountAdjacentRooms(index) > 1) return;
 
             roomGrid[x, y, z] = 1;
             roomCount++;
@@ -151,18 +155,16 @@ namespace RoomManager
             roomObjects.Add(newRoom);
 
             OpenDoors(newRoom, x, y, z);
-
-            return true;
         }
 
-        private bool IsInBounds(int x, int y, int z)
+        private static bool IsInBounds(int x, int y, int z)
         {
-            return x >= 0 && x < gridSizeX &&
-                   y >= 0 && y < gridSizeY &&
-                   z >= 0 && z < gridSizeZ;
+            return x is >= 0 and < GridSizeX &&
+                   y is >= 0 and < GridSizeY &&
+                   z is >= 0 and < GridSizeZ;
         }
 
-        private void RegenerateRooms()
+        public void RegenerateRooms()
         {
             foreach (var room in roomObjects.Where(room => room != null))
             {
@@ -191,49 +193,57 @@ namespace RoomManager
 
         private void OpenDoors(GameObject room, int x, int y, int z)
         {
-            Room newRoomScript = room.GetComponent<Room>();
+            var newRoomScript = room.GetComponent<Room>();
 
             if (IsInBounds(x - 1, y, z) && roomGrid[x - 1, y, z] != 0)
             {
-                Room adj = GetRoomScriptAt(new Vector3Int(x - 1, y, z));
+                var adj = GetRoomScriptAt(new Vector3Int(x - 1, y, z));
                 newRoomScript?.OpenDoor(Vector3Int.left);
                 adj?.OpenDoor(Vector3Int.right);
+                newRoomScript.Doors |= Room.DoorFlags.Left;
+                adj.Doors |= Room.DoorFlags.Right;
             }
 
             if (IsInBounds(x + 1, y, z) && roomGrid[x + 1, y, z] != 0)
             {
-                Room adj = GetRoomScriptAt(new Vector3Int(x + 1, y, z));
+                var adj = GetRoomScriptAt(new Vector3Int(x + 1, y, z));
                 newRoomScript?.OpenDoor(Vector3Int.right);
                 adj?.OpenDoor(Vector3Int.left);
+                newRoomScript.Doors |= Room.DoorFlags.Right;
+                adj.Doors |= Room.DoorFlags.Left;
             }
 
             if (IsInBounds(x, y, z - 1) && roomGrid[x, y, z - 1] != 0)
             {
-                Room adj = GetRoomScriptAt(new Vector3Int(x, y, z - 1));
+                var adj = GetRoomScriptAt(new Vector3Int(x, y, z - 1));
                 newRoomScript?.OpenDoor(Vector3Int.back);
                 adj?.OpenDoor(Vector3Int.forward);
+                newRoomScript.Doors |= Room.DoorFlags.Bottom;
+                adj.Doors |= Room.DoorFlags.Top;
             }
 
             if (IsInBounds(x, y, z + 1) && roomGrid[x, y, z + 1] != 0)
             {
-                Room adj = GetRoomScriptAt(new Vector3Int(x, y, z + 1));
+                var adj = GetRoomScriptAt(new Vector3Int(x, y, z + 1));
                 newRoomScript?.OpenDoor(Vector3Int.forward);
                 adj?.OpenDoor(Vector3Int.back);
+                newRoomScript.Doors |= Room.DoorFlags.Top;
+                adj.Doors |= Room.DoorFlags.Bottom;
             }
         }
 
         public Room GetRoomScriptAt(Vector3Int index)
         {
-            GameObject roomObject = roomObjects.Find(r => r.GetComponent<Room>().RoomIndex == index);
+            var roomObject = roomObjects.Find(r => r.GetComponent<Room>().RoomIndex == index);
             return roomObject?.GetComponent<Room>();
         }
 
-        private Vector3 GetPositionFromGridIndex(Vector3Int gridIndex)
+        private static Vector3 GetPositionFromGridIndex(Vector3Int gridIndex)
         {
             return new Vector3(
-                roomWidth * (gridIndex.x - gridSizeX / 2),
+                RoomWidth * (gridIndex.x - GridSizeX / 2),
                 0,
-                roomDepth * (gridIndex.z - gridSizeZ / 2)
+                RoomDepth * (gridIndex.z - GridSizeZ / 2)
             );
         }
     }

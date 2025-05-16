@@ -15,6 +15,18 @@ namespace RoomManager
         public Transform rightSpawnPoint;
         public Transform centralSpawnPoint;
 
+        [System.Flags]
+        public enum DoorFlags
+        {
+            None = 0,
+            Right = 1 << 0,
+            Left = 1 << 1,
+            Bottom = 1 << 2,
+            Top = 1 << 3
+        }
+
+        public DoorFlags Doors { get; set; }
+
         public Vector3Int RoomIndex { get; set; }
 
         private void Awake()
@@ -26,7 +38,7 @@ namespace RoomManager
                 Debug.LogError("SpawnPoints GameObject is missing from the Room!");
                 return;
             }
-            
+
             topSpawnPoint = spawnPointsTransform.Find("TopSpawnPoint");
             if (topSpawnPoint == null) Debug.LogWarning("Top Spawn Point is missing!");
 
