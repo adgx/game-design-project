@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class GetCollisions : MonoBehaviour
 {
-	[SerializeField] int playerBulletDamage = 40, enemyBulletDamage = 20;
+	[SerializeField] int playerBulletDamage = 30, enemyBulletDamage = 20;
 
 	// This function checks if the projectile shot by the player or by the enemy collides with somethinga nd, if so, it destroys the projectilewawadsa
 	void OnCollisionStay(Collision collision) {
@@ -13,6 +13,12 @@ public class GetCollisions : MonoBehaviour
 				if(contact.thisCollider.tag == "PlayerProjectile" && contact.otherCollider.tag == "EnemyTag") {
 					EnemyMovement enemyMovement = contact.otherCollider.GetComponent<EnemyMovement>();
 					enemyMovement.TakeDamage(playerBulletDamage);
+				}
+				else {
+					if(contact.thisCollider.tag == "EnemyProjectile" && contact.otherCollider.tag == "PlayerTag") {
+						PlayerShoot playerShoot = contact.otherCollider.GetComponent<PlayerShoot>();
+						playerShoot.TakeDamage(enemyBulletDamage);
+					}
 				}
 			}
 		}
