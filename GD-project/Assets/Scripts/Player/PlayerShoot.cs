@@ -16,7 +16,13 @@ public class PlayerShoot : MonoBehaviour
 
     public float health;
 
-    void Shoot() {
+	public HealthBar healthBar;
+
+	private void Start() {
+		healthBar.SetMaxHealth(health);
+	}
+
+	void Shoot() {
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity);
         bullet.tag = "PlayerProjectile";
 
@@ -42,6 +48,7 @@ public class PlayerShoot : MonoBehaviour
 
 	public void TakeDamage(int damage) {
 		health -= damage;
+		healthBar.SetHealth(health);
 
 		StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
 
