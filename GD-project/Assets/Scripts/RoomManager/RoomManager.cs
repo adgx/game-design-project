@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.AI.Navigation;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -31,6 +32,7 @@ namespace RoomManager
         private int[,,] roomGrid;
         private int roomCount;
         private bool generationComplete;
+        public bool navMashBaked = false;
         
         private void Awake()
         {
@@ -62,6 +64,11 @@ namespace RoomManager
                     {
                         Debug.Log("Generation completed with room count: " + roomCount);
                         generationComplete = true;
+
+                        // Baking the NavMesh, in order to have the enemy moving
+                        NavMeshSurface nav = GetComponent<NavMeshSurface>();
+                        nav.BuildNavMesh();
+						navMashBaked = true;
 
                         if (!playerHasSpawned)
                         {

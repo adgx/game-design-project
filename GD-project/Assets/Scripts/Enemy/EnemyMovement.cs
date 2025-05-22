@@ -1,3 +1,4 @@
+using RoomManager;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
@@ -53,6 +54,8 @@ public class EnemyMovement : MonoBehaviour
     }
 
     void ChasePlayer() {
+        //NavMeshHit hit;
+		//if(NavMesh.SamplePosition(agent.transform.position, out hit, 1.0f, NavMesh.AllAreas))
 		agent.SetDestination(player.position);
     }
 

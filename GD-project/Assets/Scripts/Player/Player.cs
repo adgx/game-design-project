@@ -30,7 +30,7 @@ public class Player : MonoBehaviour
         player.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     }
 
-    private void Move() {
+	private void Move() {
         currentVerticalSpeed = maxMovementSpeed * Math.Abs(input.Vertical) * Time.fixedDeltaTime;
         currentHorizontalSpeed = maxMovementSpeed * Math.Abs(input.Horizontal) * Time.fixedDeltaTime;
         
