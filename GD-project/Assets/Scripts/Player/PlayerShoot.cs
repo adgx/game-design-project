@@ -4,25 +4,29 @@ using UnityEngine;
 
 public class PlayerShoot : MonoBehaviour
 {
-    public float bulletSpeed;
-    public float bulletDamage;
-    
-    public Transform bulletSpawnTransform;
-    public GameObject bulletPrefab;
+	[SerializeField] private float bulletSpeed;
+	[SerializeField] private float bulletDamage;
 
-    public GameObject magneticSpherePrefab;
-    GameObject magneticSphere;
-	private bool magneticSphereOpen = false;
+	[SerializeField] private Transform bulletSpawnTransform;
+	[SerializeField] private GameObject bulletPrefab;
+
+	[SerializeField] private GameObject magneticShieldPrefab;
+    GameObject magneticShield;
+	private bool magneticShieldOpen = false;
+
+	[SerializeField] private RotateSphere rotateSphere;
 
     public float health;
 
-	public HealthBar healthBar;
+	[SerializeField] private HealthBar healthBar;
 
 	private void Start() {
 		healthBar.SetMaxHealth(health);
 	}
 
 	void Shoot() {
+		rotateSphere.positionSphere(transform.position + transform.forward * 1f);
+
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity);
         bullet.tag = "PlayerProjectile";
 
@@ -32,17 +36,16 @@ public class PlayerShoot : MonoBehaviour
 	}
 
     void SpawnMagneticSphere() {
-		if(!magneticSphereOpen) {
-            magneticSphere = Instantiate(magneticSpherePrefab, transform.position, Quaternion.identity);
-            magneticSphere.transform.parent = transform;
-            //magneticSphere.transform.Rotate(new Vector3(0, 0, 90));
-			magneticSphereOpen = true;
+		if(!magneticShieldOpen) {
+            magneticShield = Instantiate(magneticShieldPrefab, transform.position, Quaternion.identity);
+			magneticShield.transform.parent = transform;
+			magneticShieldOpen = true;
         }
         else {
-            if(magneticSphere != null) {
-                Destroy(magneticSphere);
+            if(magneticShield != null) {
+                Destroy(magneticShield);
             }
-            magneticSphereOpen = false;
+			magneticShieldOpen = false;
         }
     }
 
@@ -79,7 +82,7 @@ public class PlayerShoot : MonoBehaviour
 
 	void Update() {
         if (Input.GetButtonDown("Fire1")) {
-            if(!magneticSphere) {
+            if(!magneticShield) {
                 Shoot();
             }
         }
