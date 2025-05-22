@@ -7,8 +7,8 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private float cameraMovementSpeed = 10f;
     
     [SerializeField] private float xOffset = 0f;
-    [SerializeField] private float yOffset = 4;
-    [SerializeField] private float zOffset = -6f;
+    [SerializeField] private float yOffset = 10;
+    [SerializeField] private float zOffset = -11f;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -18,8 +18,10 @@ public class CameraMovement : MonoBehaviour
 
     private void FollowTarget()
     {
-        Vector3 targetPosition = new Vector3(target.position.x, target.position.y + yOffset, target.position.z + zOffset);
-        transform.position = Vector3.Lerp(transform.position, targetPosition, Time.fixedDeltaTime * cameraMovementSpeed);
+        if(target != null) {
+            Vector3 targetPosition = new Vector3(target.position.x, target.position.y + yOffset, target.position.z + zOffset);
+            transform.position = Vector3.Lerp(transform.position, targetPosition, Time.fixedDeltaTime * cameraMovementSpeed);
+        }
     }
 
     // FixedUpdate is called once per frame
