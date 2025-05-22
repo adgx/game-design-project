@@ -26,7 +26,9 @@ public class EnemyMovement : MonoBehaviour
     public float sightRange, attackRange;
     public bool playerInSightRange, playerInAttackRange;
 
-    void SearchWalkPoint()
+    public RoomManager.RoomManager roomManager;
+
+	void SearchWalkPoint()
     {
         //Calculate random point in range
         float randomZ = Random.Range(-walkPointRange, walkPointRange);
@@ -54,9 +56,8 @@ public class EnemyMovement : MonoBehaviour
     }
 
     void ChasePlayer() {
-        //NavMeshHit hit;
-		//if(NavMesh.SamplePosition(agent.transform.position, out hit, 1.0f, NavMesh.AllAreas))
-		agent.SetDestination(player.position);
+		if(roomManager.navMashBaked)
+		    agent.SetDestination(player.position);
     }
 
     void ResetAttack()
