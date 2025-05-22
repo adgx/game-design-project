@@ -15,12 +15,19 @@ public class Player : MonoBehaviour
     [SerializeField] Rigidbody player;
     
     private PlayerInput input;
+    private bool isFrozen;
+
+    public void FreezeMovement(bool freeze)
+    {
+        isFrozen = freeze;
+    }
 
     public void Awake() {
         Assert.IsNull(Instance);
         Instance = this;
 
         input = GetComponent<PlayerInput>();
+        player.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     }
 
     private void Move() {
@@ -28,9 +35,9 @@ public class Player : MonoBehaviour
         currentHorizontalSpeed = maxMovementSpeed * Math.Abs(input.Horizontal) * Time.fixedDeltaTime;
         
         player.MovePosition(player.position + currentVerticalSpeed * transform.forward);
-		player.MovePosition(player.position + currentHorizontalSpeed * transform.forward);
+		    player.MovePosition(player.position + currentHorizontalSpeed * transform.forward);
         
-        // Ho bisogno di questo constraint per evitare che il giocatore si ribalti quando tocca un muro o che si giri quando è attaccato da un nemico
+        // Ho bisogno di questo constraint per evitare che il giocatore si ribalti quando tocca un muro o che si giri quando Ã¨ attaccato da un nemico
         player.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
     }
 
