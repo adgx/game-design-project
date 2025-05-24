@@ -1,30 +1,63 @@
 using System.Collections;
-using Unity.VisualScripting;
+using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 
 public class PlayerShoot : MonoBehaviour
 {
+	// Attack1
 	[SerializeField] private float bulletSpeed;
-	[SerializeField] private float bulletDamage;
-
+	// The point in which the bullet spawns
 	[SerializeField] private Transform bulletSpawnTransform;
 	[SerializeField] private GameObject bulletPrefab;
 
+	// Attack2
+	[SerializeField] private GameObject attackAreaPrefab;
+	private int defaultCloseAttackDamage = 50;
+	private int closeAttackDamage = 50;
+	private float defaultDamageRadius = 2.5f;
+	private float damageRadius = 2.5f;
+
+	// The player has 3 attacks they can choose. They can change them by using the mouse scroll wheel
+	private int attackNumber = 1;
+	[SerializeField] TextMeshProUGUI selectedAttackText;
+
+
+	// Defense
 	[SerializeField] private GameObject magneticShieldPrefab;
     GameObject magneticShield;
 	private bool magneticShieldOpen = false;
 
-	[SerializeField] private RotateSphere rotateSphere;
 
+	// Health
     public float health;
-
 	[SerializeField] private HealthBar healthBar;
+
+	// Stamina for the attacks
+	private int maxSphereStamina = 5;
+	private int sphereStamina = 5;
+
+	private Player player;
+	[SerializeField] private RotateSphere rotateSphere;
 
 	private void Start() {
 		healthBar.SetMaxHealth(health);
+		player = GetComponent<Player>();
 	}
 
-	void Shoot() {
+	void ChangeAttack(int direction) {
+		attackNumber += direction;
+		if(attackNumber > 3) {
+			attackNumber = 1;
+		}
+		else if(attackNumber < 1) {
+			attackNumber = 3;
+		}
+
+		selectedAttackText.text = "Attack " + attackNumber.ToString();
+	}
+
+	void DistanceAttack1() {
 		rotateSphere.positionSphere(transform.position + transform.forward * 1f);
 
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity);
@@ -33,6 +66,57 @@ public class PlayerShoot : MonoBehaviour
 		Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
 		rbBullet.AddForce(bulletSpawnTransform.forward * bulletSpeed, ForceMode.Impulse);
 		rbBullet.AddForce(bulletSpawnTransform.up * 2f, ForceMode.Impulse);
+
+		sphereStamina--;
+	}
+
+	void CloseAttack1() {
+		SpawnAttackArea();
+		sphereStamina--;
+
+		CheckForEnemies();
+	}
+
+	async void CloseAttack2() {
+		int attackStamina = 0;
+		while(Input.GetButton("Fire1") && attackStamina < sphereStamina) {
+			damageRadius += 1f;
+			closeAttackDamage += 20;
+			attackStamina++;
+			Debug.Log(attackStamina);
+			await Task.Delay(500);
+		}
+		sphereStamina -= attackStamina;
+
+		SpawnAttackArea();
+
+		CheckForEnemies();
+	}
+
+	async void SpawnAttackArea() {
+		GameObject attackArea = Instantiate(attackAreaPrefab, transform.position, Quaternion.identity);
+		attackArea.transform.localScale = new Vector3(2 * damageRadius, 0, 2 * damageRadius);
+		player.isFrozen = true;
+
+		await Task.Delay(500);
+
+		Destroy(attackArea);
+		player.isFrozen = false;
+
+		// Set values back to default
+		closeAttackDamage = defaultCloseAttackDamage;
+		damageRadius = defaultDamageRadius;
+	}
+
+	// Checks if there are enemies in the attack area and, if so, damages them
+	void CheckForEnemies() {
+		Collider[] colliders = Physics.OverlapSphere(transform.position, damageRadius);
+		foreach(Collider c in colliders) {
+			// Checks if the collider is an enemy
+			if(c.GetComponent<EnemyMovement>()) {
+				c.GetComponent<EnemyMovement>().TakeDamage(closeAttackDamage);
+			}
+		}
 	}
 
     void SpawnMagneticSphere() {
@@ -82,13 +166,34 @@ public class PlayerShoot : MonoBehaviour
 
 	void Update() {
         if (Input.GetButtonDown("Fire1")) {
-            if(!magneticShield) {
-                Shoot();
+            if(!magneticShield && sphereStamina > 0) {
+				switch(attackNumber) {
+					case 1:
+						DistanceAttack1();
+						break;
+					case 2:
+						CloseAttack1();
+						break;
+					case 3:
+						CloseAttack2();
+						break;
+					default:
+						break;
+				}
             }
         }
 
         if (Input.GetButtonDown("Fire2")) {
             SpawnMagneticSphere();
         }
-    }
+
+		// Selecting a different attack
+		if(Input.GetAxis("Mouse ScrollWheel") > 0) {
+			ChangeAttack(1);
+		}
+		else if(Input.GetAxis("Mouse ScrollWheel") < 0) {
+			ChangeAttack(-1);
+		}
+
+	}
 }

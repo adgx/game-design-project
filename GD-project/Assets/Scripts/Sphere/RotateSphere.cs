@@ -22,18 +22,23 @@ public class RotateSphere : MonoBehaviour
             transform.RotateAround(player.transform.position, new Vector3(0, 1, 0), rotationSpeed * Time.deltaTime);
         }
         else {
+            Player playerClass = player.GetComponent<Player>();
+
             Vector3 currentDir = (transform.position - player.transform.position).normalized;
             Vector3 targetDir = (desiredPosition - player.transform.position).normalized;
 
             float angle = Vector3.Angle(currentDir, targetDir);
+
+            playerClass.isFrozen = true;
 
             transform.RotateAround(player.transform.position, new Vector3(0, 1, 0), 20 * rotationSpeed * Time.deltaTime);
 
             if(angle < 12f) {
 				transform.position = desiredPosition;
 
-                await Task.Delay(1000);
+                await Task.Delay(500);
 				rotateSphere = true;
+                playerClass.isFrozen = false;
 			}
         }
     }

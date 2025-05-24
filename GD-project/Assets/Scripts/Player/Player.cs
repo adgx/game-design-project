@@ -12,10 +12,10 @@ public class Player : MonoBehaviour
 	[SerializeField] private float maxMovementSpeed = 10f;
 	[SerializeField] private float maxRotationSpeed = 15f;
     
-    [SerializeField] Rigidbody player;
+    [SerializeField] private Rigidbody player;
     
     private PlayerInput input;
-    private bool isFrozen;
+    public bool isFrozen;
 
     public void FreezeMovement(bool freeze)
     {
@@ -56,7 +56,9 @@ public class Player : MonoBehaviour
     // FixedUpdate is called once per frame
     void FixedUpdate()
     {
-        Move();
-        RotatePlayer();
+        if(!isFrozen) {
+            Move();
+            RotatePlayer();
+        }
     }
 }

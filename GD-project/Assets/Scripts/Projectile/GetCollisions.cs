@@ -4,7 +4,7 @@ public class GetCollisions : MonoBehaviour
 {
 	[SerializeField] int playerBulletDamage = 30, enemyBulletDamage = 20;
 
-	// This function checks if the projectile shot by the player or by the enemy collides with somethinga nd, if so, it destroys the projectilewawadsa
+	// This function checks if the projectile shot by the player or by the enemy collides with something and, if so, it destroys the projectile
 	void OnCollisionStay(Collision collision) {
 		foreach(ContactPoint contact in collision.contacts) {
 			if((contact.thisCollider.tag == "EnemyProjectile" && contact.otherCollider.tag != "Enemy") || (contact.thisCollider.tag == "PlayerProjectile" && contact.otherCollider.tag != "Player")) {
