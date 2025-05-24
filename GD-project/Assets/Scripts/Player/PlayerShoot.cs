@@ -39,10 +39,45 @@ public class PlayerShoot : MonoBehaviour
 
 	private Player player;
 	[SerializeField] private RotateSphere rotateSphere;
+	[SerializeField] private GameObject rotatingSphere;
 
 	private void Start() {
 		healthBar.SetMaxHealth(health);
 		player = GetComponent<Player>();
+	}
+
+	void ChangeSphereColor() {
+		// TODO: chiedere ad Antonino come cambiare il colore della sfera
+		switch(sphereStamina) {
+			case 5:
+				// rotatingSphere.ledColor = Color.blue;
+				break;
+			case 4:
+				// rotatingSphere.ledColor = Color.green;
+				break;
+			case 3:
+				// rotatingSphere.ledColor = Color.yellow;
+				break;
+			case 2:
+				// rotatingSphere.ledColor = Color.orange;
+				break;
+			case 1:
+				// rotatingSphere.ledColor = Color.red;
+				break;
+			case 0:
+				// rotatingSphere.ledColor = Color.red;
+				break;
+			default:
+				break;
+
+		}
+	}
+
+	async void RecoverStamina() {
+		while(sphereStamina < maxSphereStamina) {
+			await Task.Delay(400);
+			sphereStamina += 1;
+		}
 	}
 
 	void ChangeAttack(int direction) {
@@ -68,11 +103,17 @@ public class PlayerShoot : MonoBehaviour
 		rbBullet.AddForce(bulletSpawnTransform.up * 2f, ForceMode.Impulse);
 
 		sphereStamina--;
+		if(sphereStamina <= 0) {
+			RecoverStamina();
+		}
 	}
 
 	void CloseAttack1() {
 		SpawnAttackArea();
 		sphereStamina--;
+		if(sphereStamina <= 0) {
+			RecoverStamina();
+		}
 
 		CheckForEnemies();
 	}
@@ -87,6 +128,9 @@ public class PlayerShoot : MonoBehaviour
 			await Task.Delay(500);
 		}
 		sphereStamina -= attackStamina;
+		if(sphereStamina <= 0) {
+			RecoverStamina();
+		}
 
 		SpawnAttackArea();
 
@@ -119,7 +163,7 @@ public class PlayerShoot : MonoBehaviour
 		}
 	}
 
-    void SpawnMagneticSphere() {
+    void SpawnMagneticShield() {
 		if(!magneticShieldOpen) {
             magneticShield = Instantiate(magneticShieldPrefab, transform.position, Quaternion.identity);
 			magneticShield.transform.parent = transform;
@@ -184,7 +228,7 @@ public class PlayerShoot : MonoBehaviour
         }
 
         if (Input.GetButtonDown("Fire2")) {
-            SpawnMagneticSphere();
+			SpawnMagneticShield();
         }
 
 		// Selecting a different attack
