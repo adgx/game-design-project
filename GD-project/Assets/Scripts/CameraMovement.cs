@@ -25,7 +25,7 @@ public class CameraMovement : MonoBehaviour
     {
         if(target != null) {
             Vector3 targetPosition = new Vector3(target.position.x + xOffset, target.position.y + yOffset, target.position.z + zOffset);
-            transform.position = Vector3.Lerp(transform.position, target.position - transform.forward * 9.0f, Time.fixedDeltaTime * cameraMovementSpeed);
+            transform.position = Vector3.Lerp(transform.position, targetPosition, Time.fixedDeltaTime * cameraMovementSpeed);
         }
     }
 
@@ -47,8 +47,8 @@ public class CameraMovement : MonoBehaviour
     // FixedUpdate is called once per frame
     void FixedUpdate()
     {
-        //FollowTarget();
+        FollowTarget();
 
-        RotateCamera();
+        //RotateCamera();
     }
 }
