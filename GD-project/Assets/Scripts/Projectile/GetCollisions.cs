@@ -7,12 +7,23 @@ public class GetCollisions : MonoBehaviour
 	// This function checks if the projectile shot by the player or by the enemy collides with something and, if so, it destroys the projectile
 	void OnCollisionStay(Collision collision) {
 		foreach(ContactPoint contact in collision.contacts) {
-			if((contact.thisCollider.tag == "EnemyProjectile" && contact.otherCollider.tag != "Enemy") || (contact.thisCollider.tag == "PlayerProjectile" && contact.otherCollider.tag != "Player")) {
+			if((contact.thisCollider.tag == "EnemyProjectile" && !contact.otherCollider.tag.Contains("Enemy")) || (contact.thisCollider.tag == "PlayerProjectile" && contact.otherCollider.tag != "Player")) {
 				Destroy(contact.thisCollider.gameObject);
 
-				if(contact.thisCollider.tag == "PlayerProjectile" && contact.otherCollider.tag == "Enemy") {
-					EnemyMovement enemyMovement = contact.otherCollider.GetComponent<EnemyMovement>();
-					enemyMovement.TakeDamage(playerBulletDamage);
+				if(contact.thisCollider.tag == "PlayerProjectile" && contact.otherCollider.tag.Contains("Enemy")) {
+					if(contact.otherCollider.GetComponent<EnemyMaynardMovement>()) {
+						contact.otherCollider.GetComponent<EnemyMaynardMovement>().TakeDamage(playerBulletDamage);
+					}
+					else {
+						if(contact.otherCollider.GetComponent<EnemyDrakeMovement>()) {
+							contact.otherCollider.GetComponent<EnemyDrakeMovement>().TakeDamage(playerBulletDamage);
+						}
+						else {
+							if(contact.otherCollider.GetComponent<EnemyIncognitoMovement>()) {
+								contact.otherCollider.GetComponent<EnemyIncognitoMovement>().TakeDamage(playerBulletDamage);
+							}
+						}
+					}
 				}
 				else {
 					if(contact.thisCollider.tag == "EnemyProjectile" && contact.otherCollider.tag == "Player") {

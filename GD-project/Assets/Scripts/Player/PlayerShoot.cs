@@ -139,6 +139,7 @@ public class PlayerShoot : MonoBehaviour
 
 	async void SpawnAttackArea() {
 		GameObject attackArea = Instantiate(attackAreaPrefab, transform.position, Quaternion.identity);
+		attackArea.transform.parent = transform;
 		attackArea.transform.localScale = new Vector3(2 * damageRadius, 0, 2 * damageRadius);
 		player.isFrozen = true;
 
@@ -157,8 +158,18 @@ public class PlayerShoot : MonoBehaviour
 		Collider[] colliders = Physics.OverlapSphere(transform.position, damageRadius);
 		foreach(Collider c in colliders) {
 			// Checks if the collider is an enemy
-			if(c.GetComponent<EnemyMovement>()) {
-				c.GetComponent<EnemyMovement>().TakeDamage(closeAttackDamage);
+			if(c.GetComponent<EnemyMaynardMovement>()) {
+				c.GetComponent<EnemyMaynardMovement>().TakeDamage(closeAttackDamage);
+			}
+			else {
+				if(c.GetComponent<EnemyDrakeMovement>()) {
+					c.GetComponent<EnemyDrakeMovement>().TakeDamage(closeAttackDamage);
+				}
+				else {
+					if(c.GetComponent<EnemyIncognitoMovement>()) {
+						c.GetComponent<EnemyIncognitoMovement>().TakeDamage(closeAttackDamage);
+					}
+				}
 			}
 		}
 	}
