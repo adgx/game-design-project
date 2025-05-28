@@ -10,6 +10,8 @@ namespace RoomManager
         private Transform playerTransform;
         private RoomManager roomManager;
         private const float interactionDistance = 5f;
+        
+        public bool playerMoved = true;
 
         private void Start()
         {
@@ -55,17 +57,24 @@ namespace RoomManager
 
             if (nextRoom != null)
             {
+                playerMoved = false;
                 FadeManager.Instance.FadeOutIn(() =>
                 {
                     roomManager.CurrentRoomIndex = nextRoom.RoomIndex;
                     roomManager.SpawnPlayerInRoom(nextRoom.RoomIndex, direction);
                     Debug.Log($"Player moved to Room at {nextRoom.RoomIndex}");
+                    //Invoke(nameof(SetPlayerMoved), 5000);
                 });
             }
             else
             {
                 Debug.Log("No room in that direction!");
             }
+        }
+
+        private void SetPlayerMoved()
+        {
+            playerMoved = true;
         }
     }
 }

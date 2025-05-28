@@ -93,7 +93,7 @@ public class PlayerShoot : MonoBehaviour
 	}
 
 	void DistanceAttack1() {
-		rotateSphere.positionSphere(transform.position + transform.forward * 1f);
+		rotateSphere.positionSphere(transform.forward * 1f);
 
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity);
         bullet.tag = "PlayerProjectile";
@@ -207,7 +207,7 @@ public class PlayerShoot : MonoBehaviour
 		yield return new WaitForSeconds(delay);
 
 		// Lerp animation with given duration in seconds
-		for(float t = 0; t < 1.0f; t += Time.deltaTime / duration) {
+		for(float t = 0; t < 1.0f || renderer.material.color != originColor; t += Time.deltaTime / duration) {
 			renderer.material.color = Color.Lerp(dmgColor, originColor, t);
 
 			yield return null;

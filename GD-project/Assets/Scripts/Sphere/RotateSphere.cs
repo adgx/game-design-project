@@ -24,8 +24,8 @@ public class RotateSphere : MonoBehaviour
         else {
             Player playerClass = player.GetComponent<Player>();
 
-            Vector3 currentDir = (transform.position - player.transform.position).normalized;
-            Vector3 targetDir = (desiredPosition - player.transform.position).normalized;
+            Vector3 currentDir = (transform.localPosition).normalized;
+            Vector3 targetDir = (desiredPosition).normalized;
 
             float angle = Vector3.Angle(currentDir, targetDir);
 
@@ -34,7 +34,7 @@ public class RotateSphere : MonoBehaviour
             transform.RotateAround(player.transform.position, new Vector3(0, 1, 0), 20 * rotationSpeed * Time.deltaTime);
 
             if(angle < 12f) {
-				transform.position = desiredPosition;
+				transform.localPosition = desiredPosition;
 
                 await Task.Delay(500);
 				rotateSphere = true;

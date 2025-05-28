@@ -33,9 +33,15 @@ public class Player : MonoBehaviour
 	private void Move() {
         currentVerticalSpeed = maxMovementSpeed * Math.Abs(input.Vertical) * Time.fixedDeltaTime;
         currentHorizontalSpeed = maxMovementSpeed * Math.Abs(input.Horizontal) * Time.fixedDeltaTime;
+
+        if (currentVerticalSpeed != 0 && currentHorizontalSpeed != 0) {
+            // We need to divide the speed by 2 when the player is moving diagonally to avoid faster movement
+            currentVerticalSpeed = currentVerticalSpeed/2;
+            currentHorizontalSpeed = currentHorizontalSpeed/2;
+        }
         
         player.MovePosition(player.position + currentVerticalSpeed * transform.forward);
-		    player.MovePosition(player.position + currentHorizontalSpeed * transform.forward);
+        player.MovePosition(player.position + currentHorizontalSpeed * transform.forward);
         
         // Ho bisogno di questo constraint per evitare che il giocatore si ribalti quando tocca un muro o che si giri quando è attaccato da un nemico
         player.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;

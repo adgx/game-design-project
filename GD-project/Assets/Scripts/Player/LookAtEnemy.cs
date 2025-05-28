@@ -2,11 +2,9 @@ using UnityEngine;
 
 public class LookAtEnemy : MonoBehaviour
 {
-    public GameObject enemy;
-
-    public float maxRotationSpeed = 200f;
-    public float sightRange = 20;
-    public LayerMask whatIsEnemy;
+    [SerializeField] private float maxRotationSpeed = 200f;
+    [SerializeField] private float sightRange = 20;
+    [SerializeField] private LayerMask whatIsEnemy;
 
     private PlayerInput input;
 
@@ -17,14 +15,30 @@ public class LookAtEnemy : MonoBehaviour
 	// Update is called once per frame
 	void FixedUpdate()
     {
-		bool enemyInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsEnemy);
+		Collider[] enemiesInRange = Physics.OverlapSphere(transform.position, sightRange, whatIsEnemy);
 
-		if(input.Vertical == 0 && input.Horizontal == 0 && enemyInSightRange) {
-            Vector3 direction = enemy.transform.position - transform.position;
+		if(input.Vertical == 0 && input.Horizontal == 0 && enemiesInRange.Length > 0) {
+            Transform closestEnemy = null;
+            float minDistance = float.MaxValue;
 
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, Time.fixedDeltaTime * maxRotationSpeed);
-            transform.rotation = rotation;
+            foreach (Collider enemyCollider in enemiesInRange) {
+                float distance = Vector3.Distance(transform.position, enemyCollider.transform.position);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestEnemy = enemyCollider.transform;
+                }
+            }
+
+            if (closestEnemy != null) {
+                Vector3 direction = closestEnemy.transform.position - transform.position;
+
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, Time.fixedDeltaTime * maxRotationSpeed);
+                transform.rotation = rotation;
+            }
         }
+        
+        if (transform.position.y < 2)
+            transform.position = new Vector3(transform.position.x, 3, transform.position.z);
     }
 }

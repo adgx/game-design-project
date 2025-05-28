@@ -1525,10 +1525,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 808119409}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 892.6929, y: -380.4065}
-  m_SizeDelta: {x: 134.6142, y: 35.927}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -67.30713, y: 18.169373}
+  m_SizeDelta: {x: 134.61426, y: 35.927002}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1698784975
 MonoBehaviour:
@@ -1861,6 +1861,7 @@ GameObject:
   - component: {fileID: 1738691465}
   - component: {fileID: 1738691466}
   - component: {fileID: 1738691467}
+  - component: {fileID: 1738691468}
   m_Layer: 0
   m_Name: RoomManager
   m_TagString: Untagged
@@ -1959,6 +1960,20 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 90da59eca04994f41addfe52946afdcf, type: 2}
   m_BuildHeightMesh: 0
+--- !u!114 &1738691468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1738691462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66bf35ef3a16945b2b5fd489204d10af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  direction: {x: 0, y: 0, z: 0}
+  playerMoved: 1
 --- !u!1 &1768603422
 GameObject:
   m_ObjectHideFlags: 0
