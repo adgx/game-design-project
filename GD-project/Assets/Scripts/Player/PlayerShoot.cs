@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Threading.Tasks;
 using TMPro;
@@ -30,12 +31,18 @@ public class PlayerShoot : MonoBehaviour
 
 
 	// Health
-    public float health;
+  public float health;
 	[SerializeField] private HealthBar healthBar;
 
 	// Stamina for the attacks
 	private int maxSphereStamina = 5;
 	private int sphereStamina = 5;
+
+	// PowerUps
+	public PowerUp powerUp;
+
+	// DistantAttackDamage
+	public GetCollisions getCollisions;
 
 	private Player player;
 	[SerializeField] private RotateSphere rotateSphere;
@@ -92,17 +99,44 @@ public class PlayerShoot : MonoBehaviour
 		selectedAttackText.text = "Attack " + attackNumber.ToString();
 	}
 
-	void DistanceAttack1() {
+	async void DistanceAttack1() {
 		rotateSphere.positionSphere(transform.forward * 1f);
 
-        GameObject bullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity);
-        bullet.tag = "PlayerProjectile";
+		int attackStamina = 0;
+		int maxStamina = 0;
+		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.AttackPowerUp)) {
+			if (powerUp.powerUpsObtained[PowerUp.PowerUpType.AttackPowerUp] == 1) {
+				maxStamina = Math.Min(sphereStamina, 3);
+			}
+			else {
+				if (powerUp.powerUpsObtained[PowerUp.PowerUpType.AttackPowerUp] == 2) {
+					maxStamina = Math.Min(sphereStamina, 5);
+				}
+			}
+		}
+		while(Input.GetButton("Fire1") && attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.AttackPowerUp)) {
+			// TODO: need to find a better way to manage the charging of the attack
+			attackStamina++;
+			getCollisions.playerBulletDamage += 10;
+			
+			await Task.Delay(500);
+		}
+
+		GameObject bullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity);
+		bullet.tag = "PlayerProjectile";
 
 		Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
 		rbBullet.AddForce(bulletSpawnTransform.forward * bulletSpeed, ForceMode.Impulse);
 		rbBullet.AddForce(bulletSpawnTransform.up * 2f, ForceMode.Impulse);
 
-		sphereStamina--;
+		getCollisions.playerBulletDamage = getCollisions.initialPlayerBulletDamage;
+
+		if (attackStamina == 0) {
+			sphereStamina--;
+		}
+		else {
+			sphereStamina -= attackStamina;
+		}
 		if(sphereStamina <= 0) {
 			RecoverStamina();
 		}
@@ -174,19 +208,31 @@ public class PlayerShoot : MonoBehaviour
 		}
 	}
 
-    void SpawnMagneticShield() {
+	void SpawnMagneticShield() {
 		if(!magneticShieldOpen) {
-            magneticShield = Instantiate(magneticShieldPrefab, transform.position, Quaternion.identity);
-			magneticShield.transform.parent = transform;
-			magneticShieldOpen = true;
-        }
-        else {
-            if(magneticShield != null) {
-                Destroy(magneticShield);
-            }
+			if(powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DefensePowerUp)) {
+				if(powerUp.powerUpsObtained[PowerUp.PowerUpType.DefensePowerUp] == 1) {
+					// Spawn level 1 shield
+				}
+				else {
+					if(powerUp.powerUpsObtained[PowerUp.PowerUpType.DefensePowerUp] == 2) {
+						// Spawn level 2 shield
+					}
+					else {
+						magneticShield = Instantiate(magneticShieldPrefab, transform.position, Quaternion.identity);
+						magneticShield.transform.parent = transform;
+						magneticShieldOpen = true;
+					}
+				}
+			}
+		}
+		else {
+			if(magneticShield != null) {
+				Destroy(magneticShield);
+			}
 			magneticShieldOpen = false;
-        }
-    }
+		}
+	}
 
 	public void TakeDamage(int damage) {
 		health -= damage;

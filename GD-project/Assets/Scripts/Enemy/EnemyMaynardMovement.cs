@@ -21,8 +21,8 @@ public class EnemyMaynardMovement : MonoBehaviour {
 	public GameObject bulletPrefab;
 
 	//States
-	public float sightRange, attackRange;
-	public bool playerInSightRange, playerInAttackRange;
+	public float sightRange, remoteAttackRange, closeAttackRange;
+	public bool playerInSightRange, playerInRemoteAttackRange, playerInCloseAttackRange;
 
 	public RoomManager.RoomManager roomManager;
 
@@ -61,7 +61,7 @@ public class EnemyMaynardMovement : MonoBehaviour {
 		alreadyAttacked = false;
 	}
 
-	void AttackPlayer() {
+	void RemoteAttackPlayer() {
 		//Make sure enemy doesn't move
 		agent.SetDestination(transform.position);
 
@@ -70,6 +70,28 @@ public class EnemyMaynardMovement : MonoBehaviour {
 		if(!alreadyAttacked) {
 			//Attack code here
 			GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+			bullet.tag = "EnemyProjectile";
+
+			Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
+			rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
+			rbBullet.AddForce(transform.up * 2f, ForceMode.Impulse);
+			//End of attack code
+
+			alreadyAttacked = true;
+			Invoke(nameof(ResetAttack), timeBetweenAttacks);
+		}
+	}
+
+	void CloseAttackPlayer() {
+		//Make sure enemy doesn't move
+		agent.SetDestination(transform.position);
+
+		transform.LookAt(player);
+
+		if(!alreadyAttacked) {
+			//Attack code here
+			GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+			bullet.transform.GetComponent<Renderer>().material.color = Color.red;
 			bullet.tag = "EnemyProjectile";
 
 			Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
@@ -121,13 +143,17 @@ public class EnemyMaynardMovement : MonoBehaviour {
 	void Update() {
 		//Check for sight and attack range
 		playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
-		playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
+		playerInRemoteAttackRange = Physics.CheckSphere(transform.position, remoteAttackRange, whatIsPlayer);
+		playerInCloseAttackRange = Physics.CheckSphere(transform.position, closeAttackRange, whatIsPlayer);
 
-		if(!playerInSightRange && !playerInAttackRange)
+		if(!playerInSightRange && !playerInCloseAttackRange)
 			Patroling();
-		if(playerInSightRange && !playerInAttackRange)
+		if(playerInSightRange && !playerInCloseAttackRange)
 			ChasePlayer();
-		if(playerInAttackRange && playerInSightRange)
-			AttackPlayer();
+		if(playerInCloseAttackRange && playerInSightRange)
+			CloseAttackPlayer();
+		else if(playerInRemoteAttackRange && playerInSightRange) {
+			RemoteAttackPlayer();
+		}
 	}
 }

@@ -140,7 +140,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &5960297
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1410,9 +1410,11 @@ MonoBehaviour:
   timeBetweenAttacks: 2
   bulletPrefab: {fileID: 3780818778376199547, guid: e2193c01f07e84362a8e9f21a5774953, type: 3}
   sightRange: 20
-  attackRange: 12
+  remoteAttackRange: 12
+  closeAttackRange: 1
   playerInSightRange: 0
-  playerInAttackRange: 0
+  playerInRemoteAttackRange: 0
+  playerInCloseAttackRange: 0
   roomManager: {fileID: 1738691463}
 --- !u!1 &1656369792
 GameObject:
@@ -1667,7 +1669,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a939247a258214b4c81f18460ff9e5d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 1768603422}
   maxRotationSpeed: 200
   sightRange: 20
   whatIsEnemy:
@@ -1995,7 +1996,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &1768603423
 Rigidbody:
   m_ObjectHideFlags: 0
