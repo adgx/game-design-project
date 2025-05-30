@@ -3,8 +3,7 @@ using System.Collections.Generic;
 
 public class PowerUp : MonoBehaviour
 {
-    public enum PowerUpType
-    {
+    public enum PowerUpType {
         AttackPowerUp,
         DefensePowerUp,
         DamageBoost,

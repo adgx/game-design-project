@@ -63,18 +63,12 @@ namespace RoomManager
                     roomManager.CurrentRoomIndex = nextRoom.RoomIndex;
                     roomManager.SpawnPlayerInRoom(nextRoom.RoomIndex, direction);
                     Debug.Log($"Player moved to Room at {nextRoom.RoomIndex}");
-                    //Invoke(nameof(SetPlayerMoved), 5000);
                 });
             }
             else
             {
                 Debug.Log("No room in that direction!");
             }
-        }
-
-        private void SetPlayerMoved()
-        {
-            playerMoved = true;
         }
     }
 }

@@ -99,8 +99,13 @@ public class PlayerShoot : MonoBehaviour
 		selectedAttackText.text = "Attack " + attackNumber.ToString();
 	}
 
+	void SetAttack(int n) {
+		attackNumber = n;
+		selectedAttackText.text = "Attack " + attackNumber.ToString();
+	}
+
 	async void DistanceAttack1() {
-		rotateSphere.positionSphere(transform.forward * 1f);
+		rotateSphere.positionSphere(transform.forward * 1f, RotateSphere.Animation.RotateAround);
 
 		int attackStamina = 0;
 		int maxStamina = 0;
@@ -144,12 +149,14 @@ public class PlayerShoot : MonoBehaviour
 
 	void CloseAttack1() {
 		SpawnAttackArea();
+
+		CheckForEnemies();
+
 		sphereStamina--;
+
 		if(sphereStamina <= 0) {
 			RecoverStamina();
 		}
-
-		CheckForEnemies();
 	}
 
 	async void CloseAttack2() {
@@ -172,6 +179,8 @@ public class PlayerShoot : MonoBehaviour
 	}
 
 	async void SpawnAttackArea() {
+		rotateSphere.positionSphere(new Vector3(0, 1, 0), RotateSphere.Animation.Linear);
+		
 		GameObject attackArea = Instantiate(attackAreaPrefab, transform.position, Quaternion.identity);
 		attackArea.transform.parent = transform;
 		attackArea.transform.localScale = new Vector3(2 * damageRadius, 0, 2 * damageRadius);
@@ -181,6 +190,10 @@ public class PlayerShoot : MonoBehaviour
 
 		Destroy(attackArea);
 		player.isFrozen = false;
+
+		rotateSphere.positionSphere(new Vector3(1, 0, 0), RotateSphere.Animation.Linear);
+		await Task.Delay(300);
+		rotateSphere.rotateSphere = true;
 
 		// Set values back to default
 		closeAttackDamage = defaultCloseAttackDamage;
@@ -208,7 +221,7 @@ public class PlayerShoot : MonoBehaviour
 		}
 	}
 
-	void SpawnMagneticShield() {
+	async void SpawnMagneticShield() {
 		if(!magneticShieldOpen) {
 			if(powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DefensePowerUp)) {
 				if(powerUp.powerUpsObtained[PowerUp.PowerUpType.DefensePowerUp] == 1) {
@@ -266,8 +279,8 @@ public class PlayerShoot : MonoBehaviour
 	}
 
 	void Update() {
-        if (Input.GetButtonDown("Fire1")) {
-            if(!magneticShield && sphereStamina > 0) {
+		if (Input.GetButtonDown("Fire1")) {
+			if(!magneticShield && sphereStamina > 0) {
 				switch(attackNumber) {
 					case 1:
 						DistanceAttack1();
@@ -281,12 +294,12 @@ public class PlayerShoot : MonoBehaviour
 					default:
 						break;
 				}
-            }
-        }
+			}
+		}
 
-        if (Input.GetButtonDown("Fire2")) {
+		if (Input.GetButtonDown("Fire2")) {
 			SpawnMagneticShield();
-        }
+		}
 
 		// Selecting a different attack
 		if(Input.GetAxis("Mouse ScrollWheel") > 0) {
@@ -295,6 +308,14 @@ public class PlayerShoot : MonoBehaviour
 		else if(Input.GetAxis("Mouse ScrollWheel") < 0) {
 			ChangeAttack(-1);
 		}
-
+		if(Input.GetKeyDown(KeyCode.Alpha1)) {
+			SetAttack(1);
+		}
+		if(Input.GetKeyDown(KeyCode.Alpha2)) {
+			SetAttack(2);
+		}
+		if(Input.GetKeyDown(KeyCode.Alpha3)) {
+			SetAttack(3);
+		}
 	}
 }
