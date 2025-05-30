@@ -119,6 +119,88 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &165511277
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 165511278}
+  - component: {fileID: 165511279}
+  - component: {fileID: 165511281}
+  - component: {fileID: 165511280}
+  m_Layer: 5
+  m_Name: MinimapGridPanel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &165511278
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165511277}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 808119409}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 400, y: 400}
+  m_Pivot: {x: 1, y: 1}
+--- !u!222 &165511279
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165511277}
+  m_CullTransparentMesh: 1
+--- !u!225 &165511280
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165511277}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &165511281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165511277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 5
+    m_Right: 5
+    m_Top: 5
+    m_Bottom: 5
+  m_ChildAlignment: 0
+  m_StartCorner: 0
+  m_StartAxis: 0
+  m_CellSize: {x: 15, y: 15}
+  m_Spacing: {x: 2, y: 2}
+  m_Constraint: 1
+  m_ConstraintCount: 10
 --- !u!1 &189734653
 GameObject:
   m_ObjectHideFlags: 0
@@ -458,6 +540,7 @@ RectTransform:
   m_Children:
   - {fileID: 289313563}
   - {fileID: 1596319026}
+  - {fileID: 165511278}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -821,6 +904,7 @@ GameObject:
   - component: {fileID: 1738691463}
   - component: {fileID: 1738691465}
   - component: {fileID: 1738691466}
+  - component: {fileID: 1738691467}
   m_Layer: 0
   m_Name: RoomManager
   m_TagString: Untagged
@@ -888,6 +972,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timerText: {fileID: 1596319027}
   roomManager: {fileID: 1738691463}
+--- !u!114 &1738691467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1738691462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f538bfb57677d426496e9e95e13ab2b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minimapRoomIconPrefab: {fileID: 6662264308540135868, guid: 6ecf666fe6b9a4ef29bdbc452f266aee, type: 3}
+  minimapGridParent: {fileID: 165511278}
+  emptyGridCellColor: {r: 0, g: 0, b: 0, a: 0}
+  undiscoveredRoomColor: {r: 0.2, g: 0.2, b: 0.2, a: 0}
+  visitedRoomColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
+  currentPlayerColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!1 &1799270656
 GameObject:
   m_ObjectHideFlags: 0
@@ -1028,9 +1130,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79975468693d44d2c92222e8a3319c26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentMovementSpeed: 0
+  currentVerticalSpeed: 0
+  currentHorizontalSpeed: 0
   maxMovementSpeed: 10
-  currentRotationSpeed: 0
   maxRotationSpeed: 90
   player: {fileID: 1799270663}
 --- !u!54 &1799270663

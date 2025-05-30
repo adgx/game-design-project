@@ -1,4 +1,3 @@
-using System;
 using Helper;
 using UnityEngine;
 using TMPro;
@@ -7,7 +6,7 @@ namespace RoomManager
 {
     public class GameTimer : MonoBehaviour
     {
-        private const float TimeLimit = 10f;
+        private const float TimeLimit = 2*60f;
         private float currentTime;
 
         public TMP_Text timerText;

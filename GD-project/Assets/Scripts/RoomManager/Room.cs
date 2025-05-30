@@ -4,11 +4,13 @@ namespace RoomManager
 {
     public class Room : MonoBehaviour
     {
+        [Header("Door GameObjects")]
         [SerializeField] private GameObject topDoor;
         [SerializeField] private GameObject bottomDoor;
         [SerializeField] private GameObject rightDoor;
         [SerializeField] private GameObject leftDoor;
 
+        [Header("Spawn Points")]
         public Transform topSpawnPoint;
         public Transform bottomSpawnPoint;
         public Transform leftSpawnPoint;
@@ -18,85 +20,52 @@ namespace RoomManager
         [System.Flags]
         public enum DoorFlags
         {
-            None = 0,
-            Right = 1 << 0,
-            Left = 1 << 1,
+            None   = 0,
+            Right  = 1 << 0,
+            Left   = 1 << 1,
             Bottom = 1 << 2,
-            Top = 1 << 3
+            Top    = 1 << 3
         }
 
         public DoorFlags Doors { get; set; }
-
         public Vector3Int RoomIndex { get; set; }
 
         private void Awake()
         {
-            Transform spawnPointsTransform = transform.Find("SpawnPoints");
-
-            if (spawnPointsTransform == null)
+            var spawnPointsContainer = transform.Find("SpawnPoints");
+            if (spawnPointsContainer)
             {
-                Debug.LogError("SpawnPoints GameObject is missing from the Room!");
-                return;
+                topSpawnPoint = spawnPointsContainer.Find("TopSpawnPoint");
+                bottomSpawnPoint = spawnPointsContainer.Find("BottomSpawnPoint");
+                leftSpawnPoint = spawnPointsContainer.Find("LeftSpawnPoint");
+                rightSpawnPoint = spawnPointsContainer.Find("RightSpawnPoint");
+                centralSpawnPoint = spawnPointsContainer.Find("CentralSpawnPoint");
             }
+            else
+            {
+                Debug.LogWarning($"Room '{name}' is missing 'SpawnPoints' child GameObject for organized spawn points.", this);
+                if(!centralSpawnPoint) centralSpawnPoint = transform;
+            }
+            
+            if (!centralSpawnPoint) Debug.LogError($"Room '{name}': CentralSpawnPoint is not assigned and not found!", this);
 
-            topSpawnPoint = spawnPointsTransform.Find("TopSpawnPoint");
-            if (topSpawnPoint == null) Debug.LogWarning("Top Spawn Point is missing!");
-
-            bottomSpawnPoint = spawnPointsTransform.Find("BottomSpawnPoint");
-            if (bottomSpawnPoint == null) Debug.LogWarning("Back Spawn Point is missing!");
-
-            leftSpawnPoint = spawnPointsTransform.Find("LeftSpawnPoint");
-            if (leftSpawnPoint == null) Debug.LogWarning("Left Spawn Point is missing!");
-
-            rightSpawnPoint = spawnPointsTransform.Find("RightSpawnPoint");
-            if (rightSpawnPoint == null) Debug.LogWarning("Right Spawn Point is missing!");
-
-            centralSpawnPoint = spawnPointsTransform.Find("CentralSpawnPoint");
-            if (centralSpawnPoint == null) Debug.LogWarning("Central Spawn Point is missing!");
+            CloseAllDoors();
         }
-
-
+        
         public void OpenDoor(Vector3Int direction)
         {
-            if (direction == Vector3Int.forward && topDoor != null)
-            {
-                topDoor.SetActive(true);
-            }
-            else if (direction == Vector3Int.back && bottomDoor != null)
-            {
-                bottomDoor.SetActive(true);
-            }
-            else if (direction == Vector3Int.right && rightDoor != null)
-            {
-                rightDoor.SetActive(true);
-            }
-            else if (direction == Vector3Int.left && leftDoor != null)
-            {
-                leftDoor.SetActive(true);
-            }
+            if (direction == Vector3Int.forward && topDoor) topDoor.SetActive(true);
+            else if (direction == Vector3Int.back && bottomDoor) bottomDoor.SetActive(true);
+            else if (direction == Vector3Int.right && rightDoor) rightDoor.SetActive(true);
+            else if (direction == Vector3Int.left && leftDoor) leftDoor.SetActive(true);
         }
 
         public void CloseAllDoors()
         {
-            if (topDoor != null)
-            {
-                topDoor.SetActive(false);
-            }
-
-            if (bottomDoor != null)
-            {
-                bottomDoor.SetActive(false);
-            }
-
-            if (rightDoor != null)
-            {
-                rightDoor.SetActive(false);
-            }
-
-            if (leftDoor != null)
-            {
-                leftDoor.SetActive(false);
-            }
+            if (topDoor) topDoor.SetActive(false);
+            if (bottomDoor) bottomDoor.SetActive(false);
+            if (rightDoor) rightDoor.SetActive(false);
+            if (leftDoor) leftDoor.SetActive(false);
         }
     }
 }
