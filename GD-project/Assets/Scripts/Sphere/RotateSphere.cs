@@ -47,9 +47,10 @@ public class RotateSphere : MonoBehaviour
             switch (animation) {
                 case Animation.RotateAround:
                     Player playerClass = player.GetComponent<Player>();
+                    transform.localPosition = Vector3.MoveTowards(transform.localPosition, new Vector3(transform.localPosition.x, 0, transform.localPosition.z), transitionSpeed * Time.deltaTime);
 
-                    Vector3 currentDir = (transform.localPosition).normalized;
-                    Vector3 targetDir = (desiredPosition).normalized;
+                    Vector3 currentDir = transform.localPosition.normalized;
+                    Vector3 targetDir = desiredPosition.normalized;
 
                     float angle = Vector3.Angle(currentDir, targetDir);
 
