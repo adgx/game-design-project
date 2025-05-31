@@ -1,49 +1,60 @@
+// RoomManager.cs
+using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using Random = UnityEngine.Random;
+using Random = UnityEngine.Random; // Explicitly using UnityEngine.Random
 
 namespace RoomManager
 {
     public class RoomManager : MonoBehaviour
     {
-        [Header("Room Generation Settings")] [SerializeField]
-        private GameObject roomPrefab;
+        public static RoomManager Instance { get; private set; }
 
+        public const float CELL_WORLD_WIDTH = 130f;
+        public const float CELL_WORLD_DEPTH = 130f;
+
+        public static float GetCellWorldWidth() => CELL_WORLD_WIDTH;
+        public static float GetCellWorldDepth() => CELL_WORLD_DEPTH;
+
+        [Header("Room Generation Settings")]
+        [Tooltip("Drag ALL your room and corridor prefabs here.")]
+        [SerializeField] private List<GameObject> allRoomPrefabs;
         [SerializeField] private int maxRooms = 15;
-        [SerializeField] private int minRooms = 5;
+        [SerializeField] private int minRooms = 10;
+        [Tooltip("Chance to skip creating a connection from an available connector. 0 = always connect, 1 = never connect.")]
+        [Range(0f, 1f)]
+        [SerializeField] private float skipConnectionChance = 0.35f;
 
-        [Header("Player References")] public GameObject currentPlayer;
+
+        [Header("Player References")]
+        public GameObject currentPlayer;
 
         public event Action OnRunReady;
         public event Action<Vector3Int> PlayerEnteredNewRoom;
 
-        public bool PlayerHasSpawned { get; private set; }
+        public bool playerHasSpawned { get; private set; }
         public Vector3Int CurrentRoomIndex { get; private set; }
 
-        // Room and Grid Dimensions (World Space)
-        private const int RoomWidth = 20 * 5;
-        private const int RoomDepth = 20 * 5;
-
-        // Grid Dimensions (Logical Grid)
         private const int GridSizeX = 10;
         private const int GridSizeY = 1;
         private const int GridSizeZ = 10;
 
-        private List<GameObject> roomObjects = new List<GameObject>();
-        private Queue<Vector3Int> roomQueue = new Queue<Vector3Int>();
+        private Dictionary<RoomType, List<GameObject>> sortedRoomPrefabs = new Dictionary<RoomType, List<GameObject>>();
+        private List<Room> roomInstances = new List<Room>();
+        private Queue<Vector3Int> roomsToProcessQueue = new Queue<Vector3Int>();
         private int[,,] roomGrid;
         private int roomCount;
         private bool generationComplete;
 
         private void Awake()
         {
-            if (currentPlayer) return;
-            currentPlayer = GameObject.FindWithTag("Player");
-            if (!currentPlayer)
-            {
-                Debug.LogError("RoomManager: Player GameObject not found! Assign it or tag it correctly.");
+            if (Instance == null) { Instance = this; }
+            else if (Instance != this) { Destroy(gameObject); return; }
+            SortPrefabs();
+            if (currentPlayer == null) {
+                currentPlayer = GameObject.FindWithTag("Player");
+                if (currentPlayer == null) Debug.LogError("PLAYER NOT FOUND. Tag player or assign in Inspector.");
             }
         }
 
@@ -54,263 +65,262 @@ namespace RoomManager
 
         private void Update()
         {
-            if (roomQueue.Count > 0 && roomCount < maxRooms && !generationComplete)
+            if (roomsToProcessQueue.Count > 0 && roomCount < maxRooms && !generationComplete)
             {
-                var roomIndex = roomQueue.Dequeue();
-                TryGenerateRoom(new Vector3Int(roomIndex.x - 1, roomIndex.y, roomIndex.z)); // West
-                TryGenerateRoom(new Vector3Int(roomIndex.x + 1, roomIndex.y, roomIndex.z)); // East
-                TryGenerateRoom(new Vector3Int(roomIndex.x, roomIndex.y, roomIndex.z - 1)); // South/Back
-                TryGenerateRoom(new Vector3Int(roomIndex.x, roomIndex.y, roomIndex.z + 1)); // North/Forward
+                Vector3Int currentRoomGridIndex = roomsToProcessQueue.Dequeue();
+                TryExpandFrom(currentRoomGridIndex);
             }
-            else
+            else if (!generationComplete)
             {
-                if (generationComplete)
-                {
-                    return;
-                }
-
-                if (roomCount < minRooms || roomCount > maxRooms)
-                {
-                    Debug.LogWarning(
-                        $"RoomManager: Generation finished but constraints violated. Rooms: {roomCount} (Min: {minRooms}, Max: {maxRooms}). Regenerating...");
+                if (roomCount < minRooms || roomCount > maxRooms) {
                     RegenerateRooms();
-                }
-                else
-                {
-                    Debug.Log("RoomManager: Generation completed successfully with room count: " + roomCount);
+                } else {
                     generationComplete = true;
-
-                    if (!PlayerHasSpawned)
-                    {
+                    if (!playerHasSpawned) {
                         SpawnPlayerInRoom(CurrentRoomIndex);
-                        PlayerHasSpawned = true;
+                        playerHasSpawned = true;
                     }
+                    OnRunReady?.Invoke();
+                }
+            }
+        }
 
-                    Debug.Log(
-                        $"RoomManager: Run ready. Player spawned: {PlayerHasSpawned}, Current Room: {CurrentRoomIndex}");
-                    OnRunReady?.Invoke(); // Notify minimap and others that the new valid map is ready.
+        private void SortPrefabs()
+        {
+            sortedRoomPrefabs.Clear();
+            foreach (RoomType rt in Enum.GetValues(typeof(RoomType))) {
+                sortedRoomPrefabs.Add(rt, new List<GameObject>());
+            }
+            if (allRoomPrefabs == null || allRoomPrefabs.Count == 0) {
+                Debug.LogError("RoomManager: 'All Room Prefabs' list is empty!");
+                enabled = false; return;
+            }
+            foreach (GameObject prefab in allRoomPrefabs) {
+                if (prefab == null) continue;
+                Room roomComponent = prefab.GetComponent<Room>();
+                if (roomComponent != null) {
+                    sortedRoomPrefabs[roomComponent.roomType].Add(prefab);
+                } else {
+                    Debug.LogWarning($"Prefab '{prefab.name}' missing Room component.");
                 }
             }
         }
 
         public void RegenerateRooms()
         {
-            Debug.Log("RoomManager: RegenerateRooms() called.");
             GenerateRooms();
         }
 
         private void GenerateRooms()
         {
-            Debug.Log("RoomManager: GenerateRooms() starting.");
-            // 1. Clean up old rooms
-            foreach (var roomGo in roomObjects.Where(r => r))
-            {
-                Destroy(roomGo);
-            }
-
-            roomObjects.Clear();
-
-            // 2. Reset state variables
+            foreach (var roomInst in roomInstances.Where(r => r != null && r.gameObject != null)) { Destroy(roomInst.gameObject); }
+            roomInstances.Clear();
+            roomsToProcessQueue.Clear();
             roomGrid = new int[GridSizeX, GridSizeY, GridSizeZ];
-            roomQueue.Clear();
-            roomCount = 0;
-            generationComplete = false; // Reset for the new generation attempt
-            PlayerHasSpawned = false; // Player needs to be "re-spawned" in the new map
+            roomCount = 0; generationComplete = false; playerHasSpawned = false;
 
-            // 3. Define and enqueue the starting room
-            var startRoomIndex = new Vector3Int(GridSizeX / 2, 0, GridSizeZ / 2);
-            CurrentRoomIndex = startRoomIndex; // Set the designated start room for this new map
-            EnqueueInitialRoom(startRoomIndex);
-            Debug.Log(
-                $"RoomManager: New generation started. Initial room enqueued at {startRoomIndex}. CurrentRoomIndex set to {CurrentRoomIndex}.");
-        }
+            if (sortedRoomPrefabs.Count == 0 || sortedRoomPrefabs.Values.All(list => list.Count == 0)) SortPrefabs();
 
-        private void EnqueueInitialRoom(Vector3Int roomIndex)
-        {
-            roomQueue.Enqueue(roomIndex);
-            roomGrid[roomIndex.x, roomIndex.y, roomIndex.z] = 1; // Mark as room
-            roomCount++;
-
-            var roomGo = Instantiate(roomPrefab, GetPositionFromGridIndex(roomIndex), Quaternion.identity);
-            roomGo.name = $"Room-Start({roomIndex.x},{roomIndex.y},{roomIndex.z})";
-            var roomScript = roomGo.GetComponent<Room>();
-            if (roomScript)
-            {
-                roomScript.RoomIndex = roomIndex;
-            }
-            else
-            {
-                Debug.LogError($"Room prefab is missing 'Room' script component on {roomGo.name}");
-            }
-
-            roomObjects.Add(roomGo);
-        }
-
-        private void TryGenerateRoom(Vector3Int index)
-        {
-            if (!IsInBounds(index.x, index.y, index.z)) return;
-            if (roomGrid[index.x, index.y, index.z] != 0) return; // Already a room or processed
-            if (roomCount >= maxRooms) return; // Max rooms limit reached
-            if (Random.value < 0.5f) return; // Random chance to not build
-            if (CountAdjacentRooms(index) > 1) return; // Avoid overly connected rooms early on
-
-            roomGrid[index.x, index.y, index.z] = 1; // Mark as room
-            roomCount++;
-            roomQueue.Enqueue(index);
-
-            var newRoomGo = Instantiate(roomPrefab, GetPositionFromGridIndex(index), Quaternion.identity);
-            newRoomGo.name = $"Room-{roomCount}({index.x},{index.y},{index.z})";
-            var roomScript = newRoomGo.GetComponent<Room>();
-            if (roomScript)
-            {
-                roomScript.RoomIndex = index;
-            }
-            else
-            {
-                Debug.LogError($"Room prefab is missing 'Room' script component on {newRoomGo.name}");
-            }
-
-            roomObjects.Add(newRoomGo);
-
-            OpenDoors(newRoomGo, index.x, index.y, index.z);
-        }
-
-        public void SpawnPlayerInRoom(Vector3Int roomIndex, Vector3Int? entryDirection = null)
-        {
-            if (!currentPlayer)
-            {
-                Debug.LogError("RoomManager: Cannot spawn player, currentPlayer is null.");
+            List<GameObject> initialRoomCandidates = GetPrefabsOfType(RoomType.Room);
+            if (initialRoomCandidates.Count == 0) {
+                Debug.LogError("Cannot start: No prefabs of type 'Room' found!");
                 return;
             }
-
-            var roomObject = roomObjects.FirstOrDefault(room => room.GetComponent<Room>().RoomIndex == roomIndex);
-            if (!roomObject)
-            {
-                Debug.LogError($"RoomManager: Cannot find room object at index {roomIndex} to spawn player.");
-                return;
-            }
-
-            var roomScript = roomObject.GetComponent<Room>();
-            if (!roomScript)
-            {
-                Debug.LogError($"RoomManager: Room object at {roomIndex} is missing Room script component.");
-                return;
-            }
-
-            CurrentRoomIndex = roomIndex;
-
-            Vector3 spawnPosition = roomScript.centralSpawnPoint
-                ? roomScript.centralSpawnPoint.position
-                : roomObject.transform.position;
-
-            if (entryDirection.HasValue)
-            {
-                if (entryDirection.Value == Vector3Int.forward && roomScript.bottomSpawnPoint)
-                    spawnPosition = roomScript.bottomSpawnPoint.position;
-                else if (entryDirection.Value == Vector3Int.back && roomScript.topSpawnPoint)
-                    spawnPosition = roomScript.topSpawnPoint.position;
-                else if (entryDirection.Value == Vector3Int.left && roomScript.rightSpawnPoint)
-                    spawnPosition = roomScript.rightSpawnPoint.position;
-                else if (entryDirection.Value == Vector3Int.right && roomScript.leftSpawnPoint)
-                    spawnPosition = roomScript.leftSpawnPoint.position;
-            }
-
-            currentPlayer.transform.position = spawnPosition;
-            Debug.Log(
-                $"RoomManager: Player spawned in room {roomIndex} at {spawnPosition}. Entry direction: {entryDirection?.ToString() ?? "None"}.");
-        }
-
-        private void OpenDoors(GameObject room, int x, int y, int z)
-        {
-            var newRoomScript = room.GetComponent<Room>();
-            if (!newRoomScript) return;
-            
-            if (IsInBounds(x - 1, y, z) && roomGrid[x - 1, y, z] != 0)
-            {
-                var adj = GetRoomScriptAt(new Vector3Int(x - 1, y, z));
-                newRoomScript.OpenDoor(Vector3Int.left);
-                adj?.OpenDoor(Vector3Int.right);
-                newRoomScript.Doors |= Room.DoorFlags.Left;
-                if (adj) adj.Doors |= Room.DoorFlags.Right;
-            }
-            
-            if (IsInBounds(x + 1, y, z) && roomGrid[x + 1, y, z] != 0)
-            {
-                var adj = GetRoomScriptAt(new Vector3Int(x + 1, y, z));
-                newRoomScript.OpenDoor(Vector3Int.right);
-                adj?.OpenDoor(Vector3Int.left);
-                newRoomScript.Doors |= Room.DoorFlags.Right;
-                if (adj) adj.Doors |= Room.DoorFlags.Left;
-            }
-            
-            if (IsInBounds(x, y, z - 1) && roomGrid[x, y, z - 1] != 0)
-            {
-                var adj = GetRoomScriptAt(new Vector3Int(x, y, z - 1));
-                newRoomScript.OpenDoor(Vector3Int.back);
-                adj?.OpenDoor(Vector3Int.forward);
-                newRoomScript.Doors |= Room.DoorFlags.Bottom;
-                if (adj) adj.Doors |= Room.DoorFlags.Top;
-            }
-            
-            if (IsInBounds(x, y, z + 1) && roomGrid[x, y, z + 1] != 0)
-            {
-                var adj = GetRoomScriptAt(new Vector3Int(x, y, z + 1));
-                newRoomScript.OpenDoor(Vector3Int.forward);
-                adj?.OpenDoor(Vector3Int.back);
-                newRoomScript.Doors |= Room.DoorFlags.Top;
-                if (adj) adj.Doors |= Room.DoorFlags.Bottom;
-            }
-        }
-
-        public Room GetRoomScriptAt(Vector3Int index)
-        {
-            var roomObject = roomObjects.Find(r => r && r.GetComponent<Room>()?.RoomIndex == index);
-            return roomObject?.GetComponent<Room>();
-        }
-
-        private Vector3 GetPositionFromGridIndex(Vector3Int gridIndex)
-        {
-            return new Vector3(
-                RoomWidth * (gridIndex.x - GridSizeX / 2f),
-                0,
-                RoomDepth * (gridIndex.z - GridSizeZ / 2f)
-            );
-        }
-
-        private bool IsInBounds(int x, int y, int z)
-        {
-            return x is >= 0 and < GridSizeX &&
-                   y is >= 0 and < GridSizeY &&
-                   z is >= 0 and < GridSizeZ;
-        }
-
-        private int CountAdjacentRooms(Vector3Int index)
-        {
-            int count = 0;
-            if (IsInBounds(index.x - 1, index.y, index.z) && roomGrid[index.x - 1, index.y, index.z] != 0) count++;
-            if (IsInBounds(index.x + 1, index.y, index.z) && roomGrid[index.x + 1, index.y, index.z] != 0) count++;
-            if (IsInBounds(index.x, index.y, index.z - 1) && roomGrid[index.x, index.y, index.z - 1] != 0) count++;
-            if (IsInBounds(index.x, index.y, index.z + 1) && roomGrid[index.x, index.y, index.z + 1] != 0) count++;
-            return count;
+            Vector3Int startGridIndex = new Vector3Int(GridSizeX / 2, 0, GridSizeZ / 2);
+            GameObject startPrefab = initialRoomCandidates[Random.Range(0, initialRoomCandidates.Count)];
+            Room initialRoom = PlaceNewRoomAt(startGridIndex, startPrefab);
+            if (initialRoom != null) { CurrentRoomIndex = startGridIndex; }
+            else { Debug.LogError("Failed to place initial room!"); }
         }
         
-        public static int GetGridSizeX() => GridSizeX;
-        public static int GetGridSizeZ() => GridSizeZ;
-
-        public bool DoesRoomExistAt(Vector3Int gridIndex)
+        private List<GameObject> GetPrefabsOfType(RoomType type)
         {
-            if (roomGrid == null) return false;
-            if (IsInBounds(gridIndex.x, gridIndex.y, gridIndex.z))
-            {
-                return roomGrid[gridIndex.x, gridIndex.y, gridIndex.z] == 1;
+            if (sortedRoomPrefabs.TryGetValue(type, out List<GameObject> prefabs) && prefabs != null && prefabs.Count > 0) {
+                return prefabs;
             }
-
-            return false;
+            return new List<GameObject>();
         }
 
-        public void NotifyPlayerEnteredRoom(Vector3Int roomIndex)
+        private Room PlaceNewRoomAt(Vector3Int gridIndex, GameObject prefabToUse)
         {
-            PlayerEnteredNewRoom?.Invoke(roomIndex);
+            if (prefabToUse == null) return null;
+            if (!IsInBounds(gridIndex) || roomGrid[gridIndex.x, gridIndex.y, gridIndex.z] != 0) return null;
+
+            Vector3 worldPosition = GetWorldPositionFromGridIndex(gridIndex);
+            GameObject roomGO = Instantiate(prefabToUse, worldPosition, Quaternion.identity);
+            Room newRoomScript = roomGO.GetComponent<Room>();
+
+            if (newRoomScript == null) { Destroy(roomGO); return null; }
+
+            newRoomScript.RoomIndex = gridIndex;
+            roomGrid[gridIndex.x, gridIndex.y, gridIndex.z] = roomInstances.Count + 1;
+            roomInstances.Add(newRoomScript);
+            roomCount++;
+            if (roomCount < maxRooms) roomsToProcessQueue.Enqueue(gridIndex);
+            return newRoomScript;
+        }
+
+        // MODIFIED TryExpandFrom: More flexible room/corridor connections
+        private void TryExpandFrom(Vector3Int currentRoomGridIndex)
+        {
+            Room currentRoomScript = GetRoomByGridIndex(currentRoomGridIndex);
+            if (currentRoomScript == null) return;
+
+            var availableConnectors = currentRoomScript.GetAvailableConnectors();
+            if (availableConnectors.Count == 0) return;
+
+            var shuffledConnectors = availableConnectors.OrderBy(c => Random.value);
+
+            foreach (RoomConnector currentConnectorInfo in shuffledConnectors)
+            {
+                if (roomCount >= maxRooms) break;
+
+                // Skip this connection based on a random chance (except for the very first room trying to expand)
+                if (roomCount > 1 && Random.value < skipConnectionChance)
+                {
+                    continue;
+                }
+
+                ConnectorDirection expansionDirection = currentConnectorInfo.direction; // e.g., North
+                Vector3Int neighborGridIndex = currentRoomGridIndex + GetVectorFromLocalDirection(expansionDirection);
+
+                // Check if neighbor cell is valid and empty
+                if (!IsInBounds(neighborGridIndex) || roomGrid[neighborGridIndex.x, neighborGridIndex.y, neighborGridIndex.z] != 0)
+                {
+                    continue; // Skip if out of bounds or occupied
+                }
+
+                // Determine the connector needed on the new room (must be opposite to current)
+                ConnectorDirection requiredConnectorOnNewRoom = GetOppositeDirection(expansionDirection);
+                
+                // Get a list of ALL prefabs that have this required connector
+                List<GameObject> suitablePrefabs = new List<GameObject>();
+                foreach (List<GameObject> prefabListByType in sortedRoomPrefabs.Values) // Iterate through all types
+                {
+                    foreach (GameObject prefab in prefabListByType)
+                    {
+                        Room roomData = prefab.GetComponent<Room>();
+                        if (roomData != null && roomData.GetConnector(requiredConnectorOnNewRoom) != null)
+                        {
+                            // Additional check: If expansionDirection is N/S, a Corridor_EW is not suitable, and vice-versa.
+                            // Standard rooms are always suitable if they have the connector.
+                            if (roomData.roomType == RoomType.Room)
+                            {
+                                suitablePrefabs.Add(prefab);
+                            }
+                            else if (expansionDirection == ConnectorDirection.North || expansionDirection == ConnectorDirection.South)
+                            {
+                                if (roomData.roomType == RoomType.Corridor_NS)
+                                {
+                                    suitablePrefabs.Add(prefab);
+                                }
+                            }
+                            else // Expansion is East or West
+                            {
+                                if (roomData.roomType == RoomType.Corridor_EW)
+                                {
+                                    suitablePrefabs.Add(prefab);
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                if (suitablePrefabs.Count == 0)
+                {
+                    // No prefabs found that can connect in this way
+                    // Debug.LogWarning($"No suitable prefabs found to connect from {currentRoomGridIndex} via {expansionDirection} (requiring {requiredConnectorOnNewRoom} on new room).");
+                    continue;
+                }
+
+                GameObject prefabToPlace = suitablePrefabs[Random.Range(0, suitablePrefabs.Count)];
+                
+                Room neighborRoomScript = PlaceNewRoomAt(neighborGridIndex, prefabToPlace);
+                if (neighborRoomScript != null)
+                {
+                    currentRoomScript.ActivateConnection(expansionDirection);
+                    neighborRoomScript.ActivateConnection(requiredConnectorOnNewRoom);
+                    // Debug.Log($"Connected {currentRoomScript.name} ({currentRoomScript.roomType}) via {expansionDirection} to {neighborRoomScript.name} ({neighborRoomScript.roomType}) via {requiredConnectorOnNewRoom}");
+                }
+            }
+        }
+
+        public void SpawnPlayerInRoom(Vector3Int roomIndex, Vector3Int? worldEntryDirection = null)
+        {
+            if (currentPlayer == null) return;
+            Room roomToSpawnIn = GetRoomByGridIndex(roomIndex);
+            if (roomToSpawnIn == null) return;
+            CurrentRoomIndex = roomIndex;
+            Transform spawnPoint = worldEntryDirection.HasValue ?
+                roomToSpawnIn.GetSpawnPointForWorldEntryDirection(worldEntryDirection.Value) :
+                roomToSpawnIn.centralSpawnPoint;
+            currentPlayer.transform.position = spawnPoint != null ? spawnPoint.position : roomToSpawnIn.transform.position;
+        }
+
+        public Room GetRoomByGridIndex(Vector3Int gridIndex)
+        {
+            return roomInstances.FirstOrDefault(r => r != null && r.RoomIndex == gridIndex);
+        }
+
+        private Vector3 GetWorldPositionFromGridIndex(Vector3Int gridIndex)
+        {
+            float xPos = (gridIndex.x - GridSizeX / 2f + 0.5f) * CELL_WORLD_WIDTH;
+            float zPos = (gridIndex.z - GridSizeZ / 2f + 0.5f) * CELL_WORLD_DEPTH;
+            return new Vector3(xPos, 0, zPos);
+        }
+
+        private bool IsInBounds(Vector3Int gridIndex)
+        {
+            return gridIndex.x >= 0 && gridIndex.x < GridSizeX &&
+                   gridIndex.y >= 0 && gridIndex.y < GridSizeY &&
+                   gridIndex.z >= 0 && gridIndex.z < GridSizeZ;
+        }
+
+        public static ConnectorDirection GetOppositeDirection(ConnectorDirection dir) { 
+            switch (dir) {
+                case ConnectorDirection.North: return ConnectorDirection.South;
+                case ConnectorDirection.South: return ConnectorDirection.North;
+                case ConnectorDirection.East:  return ConnectorDirection.West;
+                case ConnectorDirection.West:  return ConnectorDirection.East;
+                default: throw new ArgumentOutOfRangeException(nameof(dir), "Invalid ConnectorDirection.");
+            }
+        }
+        public static Vector3Int GetVectorFromLocalDirection(ConnectorDirection dir) { 
+            switch (dir) {
+                case ConnectorDirection.North: return Vector3Int.forward;
+                case ConnectorDirection.South: return Vector3Int.back;
+                case ConnectorDirection.East:  return Vector3Int.right;
+                case ConnectorDirection.West:  return Vector3Int.left;
+                default: return Vector3Int.zero;
+            }
+        }
+        public static ConnectorDirection GetOppositeLocalDirection(Vector3Int worldGridOffsetPlayerCameFrom) { 
+            if (worldGridOffsetPlayerCameFrom == Vector3Int.forward) return ConnectorDirection.South;
+            if (worldGridOffsetPlayerCameFrom == Vector3Int.back) return ConnectorDirection.North;
+            if (worldGridOffsetPlayerCameFrom == Vector3Int.right) return ConnectorDirection.West;
+            if (worldGridOffsetPlayerCameFrom == Vector3Int.left) return ConnectorDirection.East;
+            return ConnectorDirection.South; // Fallback
+        }
+        public static Vector3 GetWorldVectorFromLocalDirection(ConnectorDirection dir, Transform roomTransform) { 
+            switch (dir) {
+                case ConnectorDirection.North: return roomTransform.forward;
+                case ConnectorDirection.South: return -roomTransform.forward;
+                case ConnectorDirection.East:  return roomTransform.right;
+                case ConnectorDirection.West:  return -roomTransform.right;
+                default: return Vector3.zero;
+            }
+        }
+
+        public int GetGridSizeX() => GridSizeX;
+        public int GetGridSizeZ() => GridSizeZ;
+        public bool DoesRoomExistAt(Vector3Int gridIndex)
+        {
+            if (roomGrid == null || !IsInBounds(gridIndex)) return false;
+            return roomGrid[gridIndex.x, gridIndex.y, gridIndex.z] != 0;
+        }
+        public void NotifyPlayerEnteredNewRoom(Vector3Int newRoomIndex)
+        {
+            PlayerEnteredNewRoom?.Invoke(newRoomIndex);
         }
     }
 }

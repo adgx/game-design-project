@@ -924,11 +924,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4db81237abb1948529dd419e41cbb730, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomPrefab: {fileID: 2397693676041395911, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
+  allRoomPrefabs:
+  - {fileID: 2397693676041395911, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
+  - {fileID: 4493371007400883041, guid: 61f6444a3b0ca4a728988b2b4f6d6251, type: 3}
   maxRooms: 15
   minRooms: 10
-  currentPlayer: {fileID: 0}
-  playerHasSpawned: 0
+  skipConnectionChance: 0.35
+  currentPlayer: {fileID: 1799270656}
 --- !u!4 &1738691464
 Transform:
   m_ObjectHideFlags: 0
