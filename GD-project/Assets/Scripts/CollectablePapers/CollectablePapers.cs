@@ -6,6 +6,7 @@ public class CollectablePapers : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI paperText;
     [SerializeField] private GameObject paperTextContainer;
+    [SerializeField] private Player player;
     
     private const int N_PAPERS = 7;
     
@@ -39,6 +40,8 @@ public class CollectablePapers : MonoBehaviour
     public void CollectPaper() {
         if (lastPaperCollected < N_PAPERS) {
             papers[lastPaperCollected] = true;
+            
+            player.isFrozen = true;
             paperText.SetText(messages[lastPaperCollected]);
             paperTextContainer.SetActive(true);
 
@@ -50,6 +53,7 @@ public class CollectablePapers : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape) && paperTextContainer.activeSelf) {
             paperTextContainer.SetActive(false);
+            player.isFrozen = false;
         }
     }
 }

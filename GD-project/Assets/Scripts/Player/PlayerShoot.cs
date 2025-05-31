@@ -105,7 +105,7 @@ public class PlayerShoot : MonoBehaviour
 	}
 
 	async void DistanceAttack1() {
-		rotateSphere.positionSphere(transform.forward * 1f, RotateSphere.Animation.RotateAround);
+		rotateSphere.positionSphere(new Vector3(0, 0, 1), RotateSphere.Animation.RotateAround);
 
 		int attackStamina = 0;
 		int maxStamina = 0;
