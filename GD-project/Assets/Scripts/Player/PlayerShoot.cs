@@ -31,12 +31,13 @@ public class PlayerShoot : MonoBehaviour
 
 
 	// Health
-  public float health;
+	public float maxHealth = 120;
+	public float health;
 	[SerializeField] private HealthBar healthBar;
 
 	// Stamina for the attacks
 	private int maxSphereStamina = 5;
-	private int sphereStamina = 5;
+	public int sphereStamina = 5;
 
 	// PowerUps
 	public PowerUp powerUp;
@@ -77,6 +78,13 @@ public class PlayerShoot : MonoBehaviour
 			default:
 				break;
 
+		}
+	}
+
+	public void DecreaseStamina(int amount) {
+		sphereStamina -= amount;
+		if (sphereStamina <= 0) {
+			RecoverStamina();
 		}
 	}
 
@@ -137,13 +145,10 @@ public class PlayerShoot : MonoBehaviour
 		getCollisions.playerBulletDamage = getCollisions.initialPlayerBulletDamage;
 
 		if (attackStamina == 0) {
-			sphereStamina--;
+			DecreaseStamina(1);
 		}
 		else {
-			sphereStamina -= attackStamina;
-		}
-		if(sphereStamina <= 0) {
-			RecoverStamina();
+			DecreaseStamina(attackStamina);
 		}
 	}
 
@@ -152,11 +157,7 @@ public class PlayerShoot : MonoBehaviour
 
 		CheckForEnemies();
 
-		sphereStamina--;
-
-		if(sphereStamina <= 0) {
-			RecoverStamina();
-		}
+		DecreaseStamina(1);
 	}
 
 	async void CloseAttack2() {
@@ -168,10 +169,7 @@ public class PlayerShoot : MonoBehaviour
 			Debug.Log(attackStamina);
 			await Task.Delay(500);
 		}
-		sphereStamina -= attackStamina;
-		if(sphereStamina <= 0) {
-			RecoverStamina();
-		}
+		DecreaseStamina(attackStamina);
 
 		SpawnAttackArea();
 
@@ -276,6 +274,15 @@ public class PlayerShoot : MonoBehaviour
 	}
 	private void DestroyPlayer() {
 		Destroy(gameObject);
+	}
+
+	public void RecoverHealth(float amount) {
+		health += amount;
+		if (health > maxHealth) {
+			health = maxHealth;
+		}
+		
+		healthBar.SetHealth(health);
 	}
 
 	void Update() {
