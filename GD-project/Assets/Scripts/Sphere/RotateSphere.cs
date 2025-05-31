@@ -6,6 +6,10 @@ public class RotateSphere : MonoBehaviour
     [SerializeField] private GameObject player;
     [SerializeField] private float rotationSpeed = 100f;
     [SerializeField] private float transitionSpeed = 10f;
+    
+    // Parameters for the "wave" movement of the Sphere
+    private float waveAmplitude = 0.5f;
+    private float waveFrequency = 2.5f;
 
     private Vector3 desiredPosition;
     public bool rotateSphere = true;
@@ -33,6 +37,11 @@ public class RotateSphere : MonoBehaviour
     {
         if(rotateSphere) {
             transform.RotateAround(player.transform.position, new Vector3(0, 1, 0), rotationSpeed * Time.deltaTime);
+            
+            float waveOffset = Mathf.Sin(Time.time * waveFrequency) * waveAmplitude;
+            
+            Vector3 currentPosition = transform.position;
+            transform.position = new Vector3(currentPosition.x, 2.5f + waveOffset, currentPosition.z);
         }
         else {
             switch (animation) {
