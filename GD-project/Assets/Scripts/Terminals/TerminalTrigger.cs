@@ -5,6 +5,7 @@ using UnityEngine;
 public class TerminalTrigger : MonoBehaviour
 {
     [SerializeField] private PlayerShoot playerShoot;
+    [SerializeField] private PowerUp powerUps;
     
     private enum TriggerType {
         None,
@@ -13,8 +14,9 @@ public class TerminalTrigger : MonoBehaviour
         SnackDistributor
     }
     
-    private bool playerInTrigger = false;
     private TriggerType triggerType;
+
+    static System.Random rnd = new System.Random();
     
     private void OnTriggerEnter(Collider other) {
         if (transform.CompareTag(TriggerType.SphereTerminal.ToString())) {
@@ -41,10 +43,36 @@ public class TerminalTrigger : MonoBehaviour
             switch (triggerType) {
                 case TriggerType.SphereTerminal:
                     // Give a random power up for the Sphere
+
+                    if(powerUps.spherePowerUps.Count > 0) {
+                        // Generate a random power up
+                        int powerUpIndexSphere = rnd.Next(powerUps.spherePowerUps.Count);
+						Debug.Log(powerUps.spherePowerUps.Count);
+
+						// Insert the power up in the dictionary of the obtained ones
+						powerUps.ObtainPowerUp(powerUps.spherePowerUps[powerUpIndexSphere]);
+
+                        // Remove the power up from the list of power ups
+                        powerUps.spherePowerUps.RemoveAt(powerUpIndexSphere);
+                    }
+
                     break;
                 case TriggerType.PlayerTerminal:
                     // Give a random power up for the Player
-                    break;
+
+                    if(powerUps.playerPowerUps.Count > 0) {
+                        // Generate a random power up
+                        int powerUpIndexPlayer = rnd.Next(powerUps.playerPowerUps.Count);
+						Debug.Log(powerUps.playerPowerUps.Count);
+
+						// Insert the power up in the dictionary of the obtained ones
+						powerUps.ObtainPowerUp(powerUps.playerPowerUps[powerUpIndexPlayer]);
+
+                        // Remove the power up from the list of power ups
+                        powerUps.playerPowerUps.RemoveAt(powerUpIndexPlayer);
+                    }
+
+					break;
                 case TriggerType.SnackDistributor:
                     // Recover health, lose 1 stamina for the Sphere
                     playerShoot.RecoverHealth(playerShoot.maxHealth);

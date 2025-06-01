@@ -762,7 +762,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c95e080be36249ad9c5585fdf4428d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerShoot: {fileID: 0}
+  playerShoot: {fileID: 1728157141}
+  powerUps: {fileID: 1728157148}
 --- !u!1 &347109497
 GameObject:
   m_ObjectHideFlags: 0
@@ -1212,7 +1213,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c95e080be36249ad9c5585fdf4428d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerShoot: {fileID: 0}
+  playerShoot: {fileID: 1728157141}
+  powerUps: {fileID: 1728157148}
 --- !u!1001 &1016344251
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1968,7 +1970,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!54 &1633870778
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2339,7 +2341,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c95e080be36249ad9c5585fdf4428d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerShoot: {fileID: 0}
+  playerShoot: {fileID: 1728157141}
+  powerUps: {fileID: 1728157148}
 --- !u!1 &1698784973
 GameObject:
   m_ObjectHideFlags: 0
@@ -2711,6 +2714,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d89f240575744a14a9d048a61bb426a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spherePowerUps: 
+  playerPowerUps: 
 --- !u!1 &1738691462
 GameObject:
   m_ObjectHideFlags: 0
