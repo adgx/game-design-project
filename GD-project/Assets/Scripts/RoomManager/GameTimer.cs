@@ -1,76 +1,66 @@
-using System;
 using Helper;
 using UnityEngine;
 using TMPro;
 
-namespace RoomManager
-{
-    public class GameTimer : MonoBehaviour
-    {
-        private const float TimeLimit = 10f;
-        private float currentTime;
+namespace RoomManager {
+	public class GameTimer : MonoBehaviour {
+		private const float TimeLimit = 2 * 60f;
+		private float currentTime;
 
-        public TMP_Text timerText;
+		public TMP_Text timerText;
 
-        private bool isRunning;
+		private bool isRunning;
 
-        public RoomManager roomManager;
-        
-        private void OnDestroy()
-        {
-            if (roomManager)
-                roomManager.OnRunReady -= HandleRunReady;
-        }
+		public RoomManager roomManager;
 
-        private void Start()
-        {
-            if (roomManager)
-            {
-                roomManager.OnRunReady += HandleRunReady;
-            }
-        }
+		private void OnDestroy() {
+			if(roomManager)
+				roomManager.OnRunReady -= HandleRunReady;
+		}
 
-        private void Update()
-        {
-            if (!isRunning) return;
-            
-            currentTime -= Time.deltaTime;
+		private void Start() {
+			if(roomManager) {
+				roomManager.OnRunReady += HandleRunReady;
+			}
+		}
 
-            if (currentTime <= 0f)
-            {
-                currentTime = 0f;
-                isRunning = false;
-                
-                ResetRun();
-            }
-            
-            UpdateTimerUI();
-        }
+		private void Update() {
+			if(!isRunning)
+				return;
 
-        private void HandleRunReady()
-        {
-            currentTime = TimeLimit;
-            isRunning = true;
-        }
+			currentTime -= Time.deltaTime;
 
-        private void UpdateTimerUI()
-        {
-            var minutes = Mathf.FloorToInt(currentTime / 60f);
-            var seconds = Mathf.FloorToInt(currentTime % 60f);
+			if(currentTime <= 0f) {
+				currentTime = 0f;
+				isRunning = false;
 
-            timerText.text = $"{minutes:00}:{seconds:00}";
-        }
+				ResetRun();
+			}
 
-        private void ResetRun()
-        {
-            if (!roomManager) return;
-            
-            FadeManager.Instance.FadeOutIn(() =>
-            {
-                roomManager.RegenerateRooms();
-                currentTime = TimeLimit;
-                isRunning = true;
-            });
-        }
-    }
+			UpdateTimerUI();
+		}
+
+		private void HandleRunReady() {
+			currentTime = TimeLimit;
+			isRunning = true;
+		}
+
+		private void UpdateTimerUI() {
+			var minutes = Mathf.FloorToInt(currentTime / 60f);
+			var seconds = Mathf.FloorToInt(currentTime % 60f);
+
+			timerText.text = $"{minutes:00}:{seconds:00}";
+		}
+
+		private void ResetRun() {
+			if(!roomManager)
+				return;
+
+			FadeManager.Instance.FadeOutIn(() => {
+				roomManager.RegenerateRooms();
+				currentTime = TimeLimit;
+				isRunning = true;
+			});
+		}
+	}
 }

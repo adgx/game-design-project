@@ -2,60 +2,55 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-namespace Helper
-{
-    public class FadeManager : MonoBehaviour
-    {
-        public static FadeManager Instance;
+namespace Helper {
+	public class FadeManager : MonoBehaviour {
+		public static FadeManager Instance;
 
-        [SerializeField] private CanvasGroup fadeCanvasGroup;
-        [SerializeField] private float fadeDuration = 0.5f;
+		[SerializeField] private CanvasGroup fadeCanvasGroup;
+		[SerializeField] private float fadeDuration = 0.5f;
 
-        private Player player;
+		private Player player;
 
-        private void Awake()
-        {
-            if (Instance == null) Instance = this;
-            else Destroy(gameObject);
+		private void Awake() {
+			if(Instance == null)
+				Instance = this;
+			else
+				Destroy(gameObject);
 
-            DontDestroyOnLoad(gameObject);
-            
-            player = GameObject.FindWithTag("Player").GetComponent<Player>();
-        }
+			DontDestroyOnLoad(gameObject);
 
-        public void FadeOutIn(Action onFadeMidpoint)
-        {
-            StartCoroutine(FadeOutInRoutine(onFadeMidpoint));
-        }
+			player = GameObject.FindWithTag("Player").GetComponent<Player>();
+		}
 
-        private IEnumerator FadeOutInRoutine(Action onFadeMidpoint)
-        {
-            player.FreezeMovement(true);
-            
-            yield return StartCoroutine(FadeTo(1));
-            
-            onFadeMidpoint?.Invoke();
-            
-            yield return new WaitForEndOfFrame();
-            yield return new WaitForSeconds(0.5f);
-            
-            player.FreezeMovement(false);
-            yield return StartCoroutine(FadeTo(0));
-        }
+		public void FadeOutIn(Action onFadeMidpoint) {
+			StartCoroutine(FadeOutInRoutine(onFadeMidpoint));
+		}
 
-        private IEnumerator FadeTo(float targetAlpha)
-        {
-            var startAlpha = fadeCanvasGroup.alpha;
-            var time = 0f;
+		private IEnumerator FadeOutInRoutine(Action onFadeMidpoint) {
+			player.FreezeMovement(true);
 
-            while (time < fadeDuration)
-            {
-                fadeCanvasGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, time / fadeDuration);
-                time += Time.deltaTime;
-                yield return null;
-            }
+			yield return StartCoroutine(FadeTo(1));
 
-            fadeCanvasGroup.alpha = targetAlpha;
-        }
-    }
+			onFadeMidpoint?.Invoke();
+
+			yield return new WaitForEndOfFrame();
+			yield return new WaitForSeconds(0.5f);
+
+			player.FreezeMovement(false);
+			yield return StartCoroutine(FadeTo(0));
+		}
+
+		private IEnumerator FadeTo(float targetAlpha) {
+			var startAlpha = fadeCanvasGroup.alpha;
+			var time = 0f;
+
+			while(time < fadeDuration) {
+				fadeCanvasGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, time / fadeDuration);
+				time += Time.deltaTime;
+				yield return null;
+			}
+
+			fadeCanvasGroup.alpha = targetAlpha;
+		}
+	}
 }
