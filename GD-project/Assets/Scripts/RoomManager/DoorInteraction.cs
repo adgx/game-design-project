@@ -1,3 +1,4 @@
+using Helper;
 using UnityEngine;
 
 namespace RoomManager
@@ -8,7 +9,7 @@ namespace RoomManager
         private RoomManager roomManager;
         private Room parentRoom;
 
-        private const float INTERACTION_DISTANCE = 8f;
+        private const float INTERACTION_DISTANCE = 6f;
         public KeyCode interactionKey = KeyCode.E;
 
         void Start()
@@ -87,8 +88,11 @@ namespace RoomManager
 
             if (nextRoomScript != null)
             {
-                roomManager.SpawnPlayerInRoom(nextRoomGridIndex, leadsToWorldDirection);
-                roomManager.NotifyPlayerEnteredNewRoom(nextRoomGridIndex);
+                FadeManager.Instance.FadeOutIn(() =>
+                {
+                    roomManager.SpawnPlayerInRoom(nextRoomGridIndex, leadsToWorldDirection);
+                    roomManager.NotifyPlayerEnteredNewRoom(nextRoomGridIndex);
+                });
             }
             else
             {

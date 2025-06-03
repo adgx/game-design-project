@@ -11,8 +11,8 @@ namespace RoomManager
     {
         public static RoomManager Instance { get; private set; }
 
-        private const float CellWorldWidth = 130f;
-        private const float CellWorldDepth = 130f;
+        private const float CellWorldWidth = 200f;
+        private const float CellWorldDepth = 200f;
 
         public static float GetCellWorldWidth() => CellWorldWidth;
         public static float GetCellWorldDepth() => CellWorldDepth;

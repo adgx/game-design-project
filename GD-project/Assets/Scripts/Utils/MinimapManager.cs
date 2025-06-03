@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace RoomManager.MinimapManager
+namespace Utils
 {
     public class MinimapManager : MonoBehaviour
     {

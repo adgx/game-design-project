@@ -1,19 +1,19 @@
 using Helper;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
-namespace RoomManager
+namespace Utils
 {
     public class GameTimer : MonoBehaviour
     {
-        private const float TimeLimit = 30f;
+        private const float TimeLimit = 2 * 60f;
         private float currentTime;
 
         public TMP_Text timerText;
 
         private bool isRunning;
 
-        public RoomManager roomManager;
+        public RoomManager.RoomManager roomManager;
 
         private void OnDestroy()
         {
