@@ -670,7 +670,7 @@ Transform:
   m_GameObject: {fileID: 307148560}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 80, y: 1.5, z: 81}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 0.30252, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1122,7 +1122,7 @@ Transform:
   m_GameObject: {fileID: 964185341}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 80, y: 1.5, z: 78}
+  m_LocalPosition: {x: 0, y: 1.5, z: -3}
   m_LocalScale: {x: 1, y: 0.30252, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1621,7 +1621,7 @@ Transform:
   m_GameObject: {fileID: 1386329521}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 78, y: 1.5, z: 81}
+  m_LocalPosition: {x: 109, y: 1.5, z: 108}
   m_LocalScale: {x: 1, y: 0.30252, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2332,7 +2332,7 @@ Transform:
   m_GameObject: {fileID: 1684111138}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 80, y: 1.5, z: 84}
+  m_LocalPosition: {x: 0, y: 1.5, z: 3}
   m_LocalScale: {x: 1, y: 0.30252, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2648,17 +2648,17 @@ MonoBehaviour:
   bulletSpeed: 16
   bulletSpawnTransform: {fileID: 1469227814}
   bulletPrefab: {fileID: 3780818778376199547, guid: e2193c01f07e84362a8e9f21a5774953, type: 3}
-  attackAreaPrefab: {fileID: 0}
-  selectedAttackText: {fileID: 0}
-  magneticShieldPrefab: {fileID: 0}
+  attackAreaPrefab: {fileID: 1847315181234349731, guid: 3902c314b9067494cadeb754c1359a24, type: 3}
+  selectedAttackText: {fileID: 1698784975}
+  magneticShieldPrefab: {fileID: 5441482729280434030, guid: fd6f85ea9b1b66c4991ed3bcfbfa43d7, type: 3}
   maxHealth: 120
   health: 120
   healthBar: {fileID: 1432899843}
   sphereStamina: 5
-  powerUp: {fileID: 0}
-  getCollisions: {fileID: 0}
-  rotateSphere: {fileID: 0}
-  rotatingSphere: {fileID: 0}
+  powerUp: {fileID: 1728157148}
+  getCollisions: {fileID: 347109498}
+  rotateSphere: {fileID: 1016344254}
+  rotatingSphere: {fileID: 1016344253}
 --- !u!114 &1728157142
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2675,7 +2675,7 @@ MonoBehaviour:
   backInput: 115
   leftInput: 97
   rightInput: 100
-  leftMouseInput: 0
+  leftMouseInput: 324
 --- !u!114 &1728157143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2833,8 +2833,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allRoomPrefabs:
-  - {fileID: 2397693676041395911, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
-  - {fileID: 4493371007400883041, guid: b7cb8cce38c99e549a3e06d400963fac, type: 3}
+  - {fileID: 7322676706815848639, guid: 749e0c624e2284a32a91ce8ea873aefe, type: 3}
+  - {fileID: 4323597427231605597, guid: e777373a16ad74ddda553cbe908201dc, type: 3}
   maxRooms: 15
   minRooms: 10
   skipConnectionChance: 0.35
@@ -3148,7 +3148,7 @@ Transform:
   m_GameObject: {fileID: 1868746625}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 112, y: 0, z: 108}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
