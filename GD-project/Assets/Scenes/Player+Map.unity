@@ -2630,7 +2630,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
 --- !u!114 &1728157141
@@ -2648,17 +2648,17 @@ MonoBehaviour:
   bulletSpeed: 16
   bulletSpawnTransform: {fileID: 1469227814}
   bulletPrefab: {fileID: 3780818778376199547, guid: e2193c01f07e84362a8e9f21a5774953, type: 3}
-  attackAreaPrefab: {fileID: 1847315181234349731, guid: 3902c314b9067494cadeb754c1359a24, type: 3}
-  selectedAttackText: {fileID: 1698784975}
-  magneticShieldPrefab: {fileID: 5441482729280434030, guid: fd6f85ea9b1b66c4991ed3bcfbfa43d7, type: 3}
+  attackAreaPrefab: {fileID: 0}
+  selectedAttackText: {fileID: 0}
+  magneticShieldPrefab: {fileID: 0}
   maxHealth: 120
   health: 120
   healthBar: {fileID: 1432899843}
   sphereStamina: 5
-  powerUp: {fileID: 1728157148}
-  getCollisions: {fileID: 347109498}
-  rotateSphere: {fileID: 1016344254}
-  rotatingSphere: {fileID: 1016344253}
+  powerUp: {fileID: 0}
+  getCollisions: {fileID: 0}
+  rotateSphere: {fileID: 0}
+  rotatingSphere: {fileID: 0}
 --- !u!114 &1728157142
 MonoBehaviour:
   m_ObjectHideFlags: 0
