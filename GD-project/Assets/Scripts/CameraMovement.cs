@@ -12,17 +12,15 @@ public class CameraMovement : MonoBehaviour
 
     // Needed to rotate the camera around the player
     [SerializeField] private float mouseSensitivity = 3.0f;
-	[SerializeField] private float rotationX = 0f;
-	[SerializeField] private float rotationY = 0f;
+	[SerializeField] private float rotationX = 5f;
+	[SerializeField] private float rotationY = 20f;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
+    void Start() {
         target = Player.Instance.transform;
     }
 
-    private void FollowTarget()
-    {
+    private void FollowTarget() {
         if(target != null) {
             Vector3 targetPosition = new Vector3(target.position.x + xOffset, target.position.y + yOffset, target.position.z + zOffset);
             transform.position = Vector3.Lerp(transform.position, targetPosition, Time.fixedDeltaTime * cameraMovementSpeed);
@@ -37,18 +35,18 @@ public class CameraMovement : MonoBehaviour
 		rotationY += mouseX;
 		rotationX += mouseY;
 
-		rotationX = Mathf.Clamp(rotationX, -40, 40);
+		rotationX = Mathf.Clamp(rotationX, -20, 7);
 
 		transform.localEulerAngles = new Vector3(rotationX, rotationY, 0);
 
-        transform.position = target.position - transform.forward * 9.0f;
+        transform.position = target.position - transform.forward * 7.0f + transform.up * 2.0f;
 	}
 
     // FixedUpdate is called once per frame
     void FixedUpdate()
     {
-        FollowTarget();
+        //FollowTarget();
 
-        //RotateCamera();
+        RotateCamera();
     }
 }

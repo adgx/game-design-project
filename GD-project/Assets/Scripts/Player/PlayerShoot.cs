@@ -81,6 +81,17 @@ public class PlayerShoot : MonoBehaviour
 		}
 	}
 
+	private bool CheckStamina(int attackStamina) {
+		if (sphereStamina >= attackStamina) {
+			return true;
+		}
+		else {
+			// The Sphere has finished the stamina
+			return false;
+		}
+			
+	}
+
 	public void DecreaseStamina(int amount) {
 		sphereStamina -= amount;
 		if (sphereStamina <= 0) {
@@ -90,7 +101,7 @@ public class PlayerShoot : MonoBehaviour
 
 	async void RecoverStamina() {
 		while(sphereStamina < maxSphereStamina) {
-			await Task.Delay(400);
+			await Task.Delay(700);
 			sphereStamina += 1;
 		}
 	}
@@ -115,65 +126,79 @@ public class PlayerShoot : MonoBehaviour
 	async void DistanceAttack1() {
 		rotateSphere.positionSphere(new Vector3(0, 0, 1), RotateSphere.Animation.RotateAround);
 
-		int attackStamina = 0;
-		int maxStamina = 0;
-		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.AttackPowerUp)) {
-			if (powerUp.powerUpsObtained[PowerUp.PowerUpType.AttackPowerUp] == 1) {
-				maxStamina = Math.Min(sphereStamina, 3);
-			}
-			else {
-				if (powerUp.powerUpsObtained[PowerUp.PowerUpType.AttackPowerUp] == 2) {
-					maxStamina = Math.Min(sphereStamina, 5);
+		if (CheckStamina(1))
+		{
+
+			int attackStamina = 0;
+			int maxStamina = 0;
+			if (powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.AttackPowerUp))
+			{
+				if (powerUp.powerUpsObtained[PowerUp.PowerUpType.AttackPowerUp] == 1)
+				{
+					maxStamina = Math.Min(sphereStamina, 3);
+				}
+				else
+				{
+					if (powerUp.powerUpsObtained[PowerUp.PowerUpType.AttackPowerUp] == 2)
+					{
+						maxStamina = Math.Min(sphereStamina, 5);
+					}
 				}
 			}
-		}
-		while(Input.GetButton("Fire1") && attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.AttackPowerUp)) {
-			// TODO: need to find a better way to manage the charging of the attack
-			attackStamina++;
-			getCollisions.playerBulletDamage += 10;
-			
-			await Task.Delay(500);
-		}
 
-		GameObject bullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity);
-		bullet.tag = "PlayerProjectile";
+			while (Input.GetButton("Fire1") && attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.AttackPowerUp))
+			{
+				// TODO: need to find a better way to manage the charging of the attack
+				attackStamina++;
+				getCollisions.playerBulletDamage += 10;
 
-		Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
-		rbBullet.AddForce(bulletSpawnTransform.forward * bulletSpeed, ForceMode.Impulse);
-		rbBullet.AddForce(bulletSpawnTransform.up * 2f, ForceMode.Impulse);
+				await Task.Delay(500);
+			}
 
-		getCollisions.playerBulletDamage = getCollisions.initialPlayerBulletDamage;
+			GameObject bullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity);
+			bullet.tag = "PlayerProjectile";
 
-		if (attackStamina == 0) {
-			DecreaseStamina(1);
-		}
-		else {
-			DecreaseStamina(attackStamina);
+			Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
+			rbBullet.AddForce(bulletSpawnTransform.forward * bulletSpeed, ForceMode.Impulse);
+			rbBullet.AddForce(bulletSpawnTransform.up * 2f, ForceMode.Impulse);
+
+			getCollisions.playerBulletDamage = getCollisions.initialPlayerBulletDamage;
+
+			if (attackStamina == 0) {
+				DecreaseStamina(1);
+			}
+			else {
+				DecreaseStamina(attackStamina);
+			}
 		}
 	}
 
 	void CloseAttack1() {
-		SpawnAttackArea();
+		if (CheckStamina(1)) {
+			SpawnAttackArea();
 
-		CheckForEnemies();
+			CheckForEnemies();
 
-		DecreaseStamina(1);
+			DecreaseStamina(1);
+		}
 	}
 
 	async void CloseAttack2() {
 		int attackStamina = 0;
-		while(Input.GetButton("Fire1") && attackStamina < sphereStamina) {
-			damageRadius += 1f;
-			closeAttackDamage += 20;
-			attackStamina++;
-			Debug.Log(attackStamina);
-			await Task.Delay(500);
+		if (CheckStamina(1)) {
+			while (Input.GetButton("Fire1") && attackStamina < sphereStamina) {
+				damageRadius += 1f;
+				closeAttackDamage += 20;
+				attackStamina++;
+				await Task.Delay(500);
+			}
+
+			DecreaseStamina(attackStamina);
+
+			SpawnAttackArea();
+
+			CheckForEnemies();
 		}
-		DecreaseStamina(attackStamina);
-
-		SpawnAttackArea();
-
-		CheckForEnemies();
 	}
 
 	async void SpawnAttackArea() {
