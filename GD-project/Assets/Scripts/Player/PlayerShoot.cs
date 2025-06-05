@@ -128,7 +128,6 @@ public class PlayerShoot : MonoBehaviour
 
 		if (CheckStamina(1))
 		{
-
 			int attackStamina = 0;
 			int maxStamina = 0;
 			if (powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.AttackPowerUp))
@@ -151,8 +150,12 @@ public class PlayerShoot : MonoBehaviour
 				// TODO: need to find a better way to manage the charging of the attack
 				attackStamina++;
 				getCollisions.playerBulletDamage += 10;
-
-				await Task.Delay(500);
+				
+				Debug.Log(attackStamina);
+				if (attackStamina > 1)
+					await Task.Delay(500);
+				else
+					await Task.Delay(200);
 			}
 
 			GameObject bullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity);
