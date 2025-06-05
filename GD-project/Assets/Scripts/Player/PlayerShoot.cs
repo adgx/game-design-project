@@ -147,7 +147,6 @@ public class PlayerShoot : MonoBehaviour
 
 			while (Input.GetButton("Fire1") && attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.AttackPowerUp))
 			{
-				// TODO: need to find a better way to manage the charging of the attack
 				attackStamina++;
 				getCollisions.playerBulletDamage += 10;
 				
