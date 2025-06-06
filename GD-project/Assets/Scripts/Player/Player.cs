@@ -50,7 +50,7 @@ public class Player : MonoBehaviour
         player.MovePosition(player.position + currentVerticalSpeed * (new Vector3(mainCamera.transform.forward.x, 0f, mainCamera.transform.forward.z)));
         player.MovePosition(player.position + currentHorizontalSpeed * (new Vector3(mainCamera.transform.right.x, 0f, mainCamera.transform.right.z)));
         
-        // Ho bisogno di questo constraint per evitare che il giocatore si ribalti quando tocca un muro o che si giri quando è attaccato da un nemico
+        // I need this constraint to avoid that the player turns upside down when it touches another collider
         player.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
     }
 
@@ -61,8 +61,11 @@ public class Player : MonoBehaviour
         if(currentVerticalSpeed != 0 || currentHorizontalSpeed != 0) {
 			Quaternion targetRotation;
 			if(currentVerticalSpeed != 0 && currentHorizontalSpeed != 0) {
-				// TODO: we need to fix diagonal movement
-				targetRotation = Quaternion.LookRotation(new Vector3(mainCamera.transform.forward.x * input.Vertical, 0f, mainCamera.transform.forward.z * input.Vertical));
+				// Managing the player's diagonal movement
+				Vector3 forward = new Vector3(mainCamera.transform.forward.x, 0f, mainCamera.transform.forward.z).normalized;
+				Vector3 right = new Vector3(mainCamera.transform.right.x, 0f, mainCamera.transform.right.z).normalized;
+
+				targetRotation = Quaternion.LookRotation(forward * currentVerticalSpeed + right * currentHorizontalSpeed);
 			}
 			else {
 				if(currentVerticalSpeed != 0) {
