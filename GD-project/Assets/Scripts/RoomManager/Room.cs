@@ -13,9 +13,8 @@ namespace RoomManager
 
     public enum RoomType
     {
-        Room,
-        Corridor_NS,
-        Corridor_EW
+        IncubatorRoom,
+        OtherRoom,
     }
 
     [System.Serializable]

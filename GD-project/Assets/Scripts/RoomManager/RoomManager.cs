@@ -154,7 +154,7 @@ namespace RoomManager
             if (sortedRoomPrefabs.Count == 0 || sortedRoomPrefabs.Values.All(list => list.Count == 0))
                 SortPrefabs();
 
-            List<GameObject> initialRoomCandidates = GetPrefabsOfType(RoomType.Room);
+            List<GameObject> initialRoomCandidates = GetPrefabsOfType(RoomType.IncubatorRoom);
             if (initialRoomCandidates.Count == 0)
             {
                 Debug.LogError("Cannot start: No prefabs of type 'Room' found!");
@@ -252,21 +252,14 @@ namespace RoomManager
                         Room roomData = prefab.GetComponent<Room>();
                         if (roomData != null && roomData.GetConnector(requiredConnectorOnNewRoom) != null)
                         {
-                            if (roomData.roomType == RoomType.Room)
+                            if (roomData.roomType == RoomType.IncubatorRoom)
                             {
                                 suitablePrefabs.Add(prefab);
                             }
                             else if (expansionDirection == ConnectorDirection.North ||
                                      expansionDirection == ConnectorDirection.South)
                             {
-                                if (roomData.roomType == RoomType.Corridor_NS)
-                                {
-                                    suitablePrefabs.Add(prefab);
-                                }
-                            }
-                            else
-                            {
-                                if (roomData.roomType == RoomType.Corridor_EW)
+                                if (roomData.roomType == RoomType.OtherRoom)
                                 {
                                     suitablePrefabs.Add(prefab);
                                 }
