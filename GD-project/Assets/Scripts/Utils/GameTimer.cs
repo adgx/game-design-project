@@ -14,7 +14,8 @@ namespace Utils
 
 	public class GameTimer : MonoBehaviour
     {
-        private const float TimeLimit = 2 * 60f;
+	    // TODO: For testing purpose we use a 30 seconds timer, but it should be of 10 minutes 
+        private const float TimeLimit = 30f;
         private float currentTime;
 
         public TMP_Text timerText;
@@ -51,7 +52,7 @@ namespace Utils
 					alarmEmitters.Add(emitter);
 				}
 				else {
-					Debug.LogWarning($"StudioEventEmitter mancante su {speaker.name}");
+					Debug.LogWarning($"Missing StudioEventEmitter on {speaker.name}");
 				}
 			}
 		}
@@ -94,8 +95,12 @@ namespace Utils
 			// Audio management
 			// TODO: for the activation time for the alarm is 10 seconds, but it will be 60 seconds
 			if(!alarmTriggered && currentTime <= 10f) {
-				foreach(var emitter in alarmEmitters) {
-					emitter.Play();
+				foreach (var emitter in alarmEmitters)
+				{
+					if (emitter != null && emitter.gameObject != null)
+					{
+						emitter.Play();
+					}
 				}
 				alarmTriggered = true;
 			}
@@ -103,13 +108,26 @@ namespace Utils
 
         private void HandleRunReady()
         {
-            currentTime = TimeLimit;
-            isRunning = true;
+	        currentTime = TimeLimit;
+	        isRunning = true;
 
-			// Audio management
-			alarmTriggered = false;
-			AudioManager.instance.SetMusicLoopIteration(iteration);
-		}
+	        // Audio management
+	        alarmTriggered = false;
+	        alarmEmitters.Clear();
+
+	        GameObject[] alarmSpeakers = GameObject.FindGameObjectsWithTag("AlarmSpeaker");
+	        foreach (GameObject speaker in alarmSpeakers)
+	        {
+		        StudioEventEmitter emitter = AudioManager.instance.InitializeEventEmitter(FMODEvents.instance.laboratoryAlarm, speaker);
+		        if (emitter != null)
+		        {
+			        alarmEmitters.Add(emitter);
+		        }
+	        }
+
+	        AudioManager.instance.SetMusicLoopIteration(iteration);
+        }
+
 
         private void UpdateTimerUI()
         {
