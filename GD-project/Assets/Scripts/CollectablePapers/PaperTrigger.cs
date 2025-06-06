@@ -21,7 +21,7 @@ public class PaperTrigger : MonoBehaviour
     void Update() {
         if (playerInTrigger && Input.GetKeyDown(KeyCode.E)) {
             Debug.Log("Paper triggered");
-            collectablePapers.CollectPaper();
+            collectablePapers.CollectPaper(this);
         }
     }
 }

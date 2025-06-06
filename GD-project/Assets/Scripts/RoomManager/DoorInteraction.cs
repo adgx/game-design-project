@@ -1,3 +1,4 @@
+using System.Collections;
 using Helper;
 using UnityEngine;
 
@@ -12,12 +13,22 @@ namespace RoomManager
         private const float INTERACTION_DISTANCE = 6f;
         public KeyCode interactionKey = KeyCode.E;
 
-        void Start()
+        // Audio management
+		private GameObject player;
+		private IEnumerator PlayDoorCloseAfterDelay(float delay) {
+			yield return new WaitForSeconds(delay);
+			AudioManager.instance.PlayOneShot(FMODEvents.instance.doorClose, player.transform.position);
+		}
+
+		void Start()
         {
             roomManager = RoomManager.Instance;
             parentRoom = GetComponentInParent<Room>();
 
-            if (roomManager == null)
+			// Audio management
+			player = GameObject.Find("Player");
+
+			if (roomManager == null)
                 Debug.LogError("DoorInteraction: RoomManager.Instance not found!", this);
             if (parentRoom == null)
                 Debug.LogError("DoorInteraction: Parent Room component not found!", this);
@@ -88,11 +99,17 @@ namespace RoomManager
 
             if (nextRoomScript != null)
             {
-                FadeManager.Instance.FadeOutIn(() =>
+				// Audio management
+				AudioManager.instance.PlayOneShot(FMODEvents.instance.doorOpen, this.transform.position);
+
+				FadeManager.Instance.FadeOutIn(() =>
                 {
                     roomManager.SpawnPlayerInRoom(nextRoomGridIndex, leadsToWorldDirection);
                     roomManager.NotifyPlayerEnteredNewRoom(nextRoomGridIndex);
-                });
+
+					// Audio management
+					StartCoroutine(PlayDoorCloseAfterDelay(0.5f)); // ritardo di 1,15 secondi
+				});
             }
             else
             {

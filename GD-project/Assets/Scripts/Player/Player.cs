@@ -1,3 +1,4 @@
+using FMOD.Studio;
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -17,7 +18,12 @@ public class Player : MonoBehaviour
     private PlayerInput input;
     public bool isFrozen;
 
-    public void FreezeMovement(bool freeze)
+	// Audio management
+	private EventInstance playerFootsteps;
+	private EventInstance sphere;
+	private EventInstance sphereRotation;
+
+	public void FreezeMovement(bool freeze)
     {
         isFrozen = freeze;
     }
@@ -59,12 +65,57 @@ public class Player : MonoBehaviour
         }
 	}
 
-    // FixedUpdate is called once per frame
-    void FixedUpdate()
+	// Audio management
+	private void Start() 
+	{
+		playerFootsteps = AudioManager.instance.CreateInstance(FMODEvents.instance.playerFootsteps);
+		playerFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+		sphereRotation = AudioManager.instance.CreateInstance(FMODEvents.instance.sphereRotation);
+		sphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+	}
+
+	// FixedUpdate is called once per frame
+	void FixedUpdate()
     {
         if(!isFrozen) {
             Move();
             RotatePlayer();
         }
-    }
+
+		// Audio management
+		UpdateSound();
+	}
+
+	// Audio management
+	private void UpdateSound() 
+	{
+		playerFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+		sphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(this.transform));
+
+		// Start footsteps event if the player is moving
+		if((Mathf.Abs(input.Horizontal) > 0.01f || Mathf.Abs(input.Vertical) > 0.01f) && !isFrozen)
+		{
+			// Get the playback state for the footsteps event
+			PLAYBACK_STATE footstepsPlaybackState;
+			playerFootsteps.getPlaybackState(out footstepsPlaybackState);
+			if(footstepsPlaybackState.Equals(PLAYBACK_STATE.STOPPED)) 
+			{
+				playerFootsteps.start();
+			}
+		}
+		// Otherwise, stop the footsteps event
+		else
+		{
+			playerFootsteps.stop(STOP_MODE.ALLOWFADEOUT);
+		}
+
+		// Get the playback state for the rotation event
+		PLAYBACK_STATE rotationPlaybackState;
+		sphereRotation.getPlaybackState(out rotationPlaybackState);
+		if(rotationPlaybackState.Equals(PLAYBACK_STATE.STOPPED)) 
+		{
+			sphereRotation.start();
+		}
+	}
+
 }

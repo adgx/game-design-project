@@ -7,7 +7,11 @@ public class PlayerInput : MonoBehaviour
     // Shooting
     [SerializeField] private KeyCode leftMouseInput;
 
-    private float verticalInput, horizontalInput, shootInput;
+	// Audio management: Pause
+	[SerializeField] private KeyCode pauseInput;
+
+
+	private float verticalInput, horizontalInput, shootInput;
 
     public float Vertical
     {
@@ -32,7 +36,13 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    private void GetInput()
+	// Audio management
+	public bool PausePressed()
+    {
+		return Input.GetKeyDown(pauseInput);
+	}
+
+	private void GetInput()
     {
         //Get horizontal input
         if (Input.GetKey(forwardInput))

@@ -1,10 +1,18 @@
 using Helper;
+using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+// Audio management
+using FMODUnity;
+
 namespace Utils
 {
-    public class GameTimer : MonoBehaviour
+	// Audio management
+	[RequireComponent(typeof(StudioEventEmitter))]
+
+	public class GameTimer : MonoBehaviour
     {
         private const float TimeLimit = 2 * 60f;
         private float currentTime;
@@ -15,7 +23,13 @@ namespace Utils
 
         public RoomManager.RoomManager roomManager;
 
-        private void OnDestroy()
+		// Audio management
+		private List<StudioEventEmitter> alarmEmitters = new List<StudioEventEmitter>();
+		private bool alarmTriggered = false;
+		private MusicLoopIteration iteration = MusicLoopIteration.FIRST_ITERATION;
+		private GameObject player;
+
+		private void OnDestroy()
         {
             if (roomManager)
                 roomManager.OnRunReady -= HandleRunReady;
@@ -27,7 +41,20 @@ namespace Utils
             {
                 roomManager.OnRunReady += HandleRunReady;
             }
-        }
+
+			// Audio management
+			player = GameObject.Find("Player");
+			GameObject[] alarmSpeakers = GameObject.FindGameObjectsWithTag("AlarmSpeaker");
+			foreach(GameObject speaker in alarmSpeakers) {
+				StudioEventEmitter emitter = AudioManager.instance.InitializeEventEmitter(FMODEvents.instance.laboratoryAlarm, speaker);
+				if(emitter != null) {
+					alarmEmitters.Add(emitter);
+				}
+				else {
+					Debug.LogWarning($"StudioEventEmitter mancante su {speaker.name}");
+				}
+			}
+		}
 
         private void Update()
         {
@@ -42,16 +69,47 @@ namespace Utils
                 isRunning = false;
 
                 ResetRun();
-            }
+
+				// Audio management
+				foreach(var emitter in alarmEmitters) {
+					emitter.Stop();
+				}
+				switch(iteration) {
+					case MusicLoopIteration.FIRST_ITERATION:
+						iteration = MusicLoopIteration.SECOND_ITERATION;
+						break;
+					case MusicLoopIteration.SECOND_ITERATION:
+						iteration = MusicLoopIteration.THIRD_ITERATION;
+						break;
+					case MusicLoopIteration.THIRD_ITERATION:
+						iteration = MusicLoopIteration.FIRST_ITERATION;
+						break;
+					default:
+						break;
+				}
+			}
 
             UpdateTimerUI();
-        }
+
+			// Audio management
+			// TODO: for the activation time for the alarm is 10 seconds, but it will be 60 seconds
+			if(!alarmTriggered && currentTime <= 10f) {
+				foreach(var emitter in alarmEmitters) {
+					emitter.Play();
+				}
+				alarmTriggered = true;
+			}
+		}
 
         private void HandleRunReady()
         {
             currentTime = TimeLimit;
             isRunning = true;
-        }
+
+			// Audio management
+			alarmTriggered = false;
+			AudioManager.instance.SetMusicLoopIteration(iteration);
+		}
 
         private void UpdateTimerUI()
         {

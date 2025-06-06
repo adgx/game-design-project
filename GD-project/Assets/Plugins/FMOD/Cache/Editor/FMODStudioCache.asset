@@ -1,0 +1,496 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7305504225013782232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/WakingUp
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/WakingUp
+  Guid:
+    Data1: 776900939
+    Data2: 1206370472
+    Data3: -1873415267
+    Data4: 2015559660
+  Banks:
+  - {fileID: -4874458061475113707}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-6585435209992145754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Laboratory/Alarm
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Laboratory/Alarm
+  Guid:
+    Data1: 1373224865
+    Data2: 1258097855
+    Data3: -654289524
+    Data4: 410566001
+  Banks:
+  - {fileID: -4874458061475113707}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 27774
+--- !u!114 &-6464180732313862476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/Soundtrack
+  m_EditorClassIdentifier: 
+  Path: event:/Music/Soundtrack
+  Guid:
+    Data1: -2119342206
+    Data2: 1082500063
+    Data3: 1155554688
+    Data4: -1221304368
+  Banks:
+  - {fileID: -4024716199588284760}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters:
+  - {fileID: 3289663616763659532}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-5594265069001339336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/SphereDischarge
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/SphereDischarge
+  Guid:
+    Data1: -1812742576
+    Data2: 1321843028
+    Data3: 149478297
+    Data4: -1084694590
+  Banks:
+  - {fileID: -4874458061475113707}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-4874458061475113707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/SFX.bank
+  m_EditorClassIdentifier: 
+  Path: ../fmod-project/Build/Desktop/SFX.bank
+  Name: SFX
+  StudioPath: bank:/SFX
+  lastModified: 638848016723305670
+  FileSizes:
+  - Name: Desktop
+    Value: 832416
+  Exists: 1
+--- !u!114 &-4677161141612168468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/PaperInteraction
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/PaperInteraction
+  Guid:
+    Data1: 1770494798
+    Data2: 1123593310
+    Data3: -90282078
+    Data4: 1208520339
+  Banks:
+  - {fileID: -4874458061475113707}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-4081587203796788258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/DoorOpen
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/DoorOpen
+  Guid:
+    Data1: -305465452
+    Data2: 1338532496
+    Data3: -674571377
+    Data4: 1673984798
+  Banks:
+  - {fileID: -4874458061475113707}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-4024716199588284760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Music.bank
+  m_EditorClassIdentifier: 
+  Path: ../fmod-project/Build/Desktop/Music.bank
+  Name: Music
+  StudioPath: bank:/Music
+  lastModified: 638848016723275343
+  FileSizes:
+  - Name: Desktop
+    Value: 3887712
+  Exists: 1
+--- !u!114 &-2304625133493224460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.strings.bank
+  m_EditorClassIdentifier: 
+  Path: ../fmod-project/Build/Desktop/Master.strings.bank
+  Name: Master.strings
+  StudioPath: bank:/Master.strings
+  lastModified: 638848016723042789
+  FileSizes:
+  - Name: Desktop
+    Value: 1596
+  Exists: 1
+--- !u!114 &-1570004505764337694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Footsteps
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Footsteps
+  Guid:
+    Data1: 1166419053
+    Data2: 1320623170
+    Data3: 292728493
+    Data4: -596124364
+  Banks:
+  - {fileID: -4874458061475113707}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2000
+--- !u!114 &-548144496360178730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/VendingMachineItemPickup
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/VendingMachineItemPickup
+  Guid:
+    Data1: 626503219
+    Data2: 1117672935
+    Data3: 80789158
+    Data4: 1299605440
+  Banks:
+  - {fileID: -4874458061475113707}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d32cf7c32a3ed8347bac48ef5ed56d82, type: 3}
+  m_Name: FMODStudioCache
+  m_EditorClassIdentifier: 
+  EditorBanks:
+  - {fileID: -2304625133493224460}
+  - {fileID: 1277518162683674647}
+  - {fileID: -4024716199588284760}
+  - {fileID: -4874458061475113707}
+  EditorEvents:
+  - {fileID: -6464180732313862476}
+  - {fileID: 3027294757974728122}
+  - {fileID: -548144496360178730}
+  - {fileID: 6812372330399969446}
+  - {fileID: -7305504225013782232}
+  - {fileID: -4677161141612168468}
+  - {fileID: -5594265069001339336}
+  - {fileID: -1570004505764337694}
+  - {fileID: 7648166893736816103}
+  - {fileID: -4081587203796788258}
+  - {fileID: -6585435209992145754}
+  - {fileID: 3046241495028228615}
+  EditorParameters: []
+  MasterBanks:
+  - {fileID: 1277518162683674647}
+  StringsBanks:
+  - {fileID: -2304625133493224460}
+  cacheVersion: 131847
+  cacheTime: 638848016723305670
+  SerializableEventsDict:
+  - key: event:/Music/Soundtrack
+    index: 0
+  - key: event:/SFX/Player/SphereRotation
+    index: 1
+  - key: event:/SFX/Player/VendingMachineItemPickup
+    index: 2
+  - key: event:/SFX/Player/DoorClose
+    index: 3
+  - key: event:/SFX/Player/WakingUp
+    index: 4
+  - key: event:/SFX/Player/PaperInteraction
+    index: 5
+  - key: event:/SFX/Player/SphereDischarge
+    index: 6
+  - key: event:/SFX/Player/Footsteps
+    index: 7
+  - key: event:/SFX/Player/VendingMachineActivation
+    index: 8
+  - key: event:/SFX/Player/DoorOpen
+    index: 9
+  - key: event:/SFX/Laboratory/Alarm
+    index: 10
+  - key: event:/SFX/Player/TerminalInteraction
+    index: 11
+--- !u!114 &1277518162683674647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Master.bank
+  m_EditorClassIdentifier: 
+  Path: ../fmod-project/Build/Desktop/Master.bank
+  Name: Master
+  StudioPath: bank:/Master
+  lastModified: 638848016723042789
+  FileSizes:
+  - Name: Desktop
+    Value: 1524
+  Exists: 1
+--- !u!114 &3027294757974728122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/SphereRotation
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/SphereRotation
+  Guid:
+    Data1: 784200999
+    Data2: 1239473725
+    Data3: -2005726846
+    Data4: 1834673606
+  Banks:
+  - {fileID: -4874458061475113707}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 3700
+--- !u!114 &3046241495028228615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/TerminalInteraction
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/TerminalInteraction
+  Guid:
+    Data1: 1322266566
+    Data2: 1189502893
+    Data3: 494775174
+    Data4: -2079637945
+  Banks:
+  - {fileID: -4874458061475113707}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &3289663616763659532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Soundtrack/loopIteration
+  m_EditorClassIdentifier: 
+  Name: loopIteration
+  StudioPath: 
+  Min: 0
+  Max: 2
+  Default: 0
+  ID:
+    data1: 137479190
+    data2: 1326821408
+  Type: 2
+  IsGlobal: 0
+  Labels:
+  - FirstIteration
+  - SecondIteration
+  - ThirdIteration
+  Exists: 1
+--- !u!114 &6812372330399969446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/DoorClose
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/DoorClose
+  Guid:
+    Data1: 1243160138
+    Data2: 1126404859
+    Data3: 1977504399
+    Data4: -1866376778
+  Banks:
+  - {fileID: -4874458061475113707}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &7648166893736816103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/VendingMachineActivation
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/VendingMachineActivation
+  Guid:
+    Data1: -1372758906
+    Data2: 1116038183
+    Data3: 1763239348
+    Data4: 33930138
+  Banks:
+  - {fileID: -4874458061475113707}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0

@@ -42,9 +42,12 @@ public class TerminalTrigger : MonoBehaviour
         if (triggerType != TriggerType.None && Input.GetKeyDown(KeyCode.E)) {
             switch (triggerType) {
                 case TriggerType.SphereTerminal:
-                    // Give a random power up for the Sphere
 
-                    if(powerUps.spherePowerUps.Count > 0) {
+					// Audio management
+					AudioManager.instance.PlayOneShot(FMODEvents.instance.terminalInteraction, this.transform.position);
+
+					// Give a random power up for the Sphere
+					if(powerUps.spherePowerUps.Count > 0) {
                         // Generate a random power up
                         int powerUpIndexSphere = rnd.Next(powerUps.spherePowerUps.Count);
 						Debug.Log(powerUps.spherePowerUps.Count);
@@ -58,9 +61,11 @@ public class TerminalTrigger : MonoBehaviour
 
                     break;
                 case TriggerType.PlayerTerminal:
-                    // Give a random power up for the Player
+					// Audio management
+					AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineActivation, this.transform.position);
 
-                    if(powerUps.playerPowerUps.Count > 0) {
+					// Give a random power up for the Player
+					if(powerUps.playerPowerUps.Count > 0) {
                         // Generate a random power up
                         int powerUpIndexPlayer = rnd.Next(powerUps.playerPowerUps.Count);
 						Debug.Log(powerUps.playerPowerUps.Count);
@@ -74,8 +79,11 @@ public class TerminalTrigger : MonoBehaviour
 
 					break;
                 case TriggerType.SnackDistributor:
-                    // Recover health, lose 1 stamina for the Sphere
-                    playerShoot.RecoverHealth(playerShoot.maxHealth);
+					// Audio management
+					AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineActivation, this.transform.position);
+
+					// Recover health, lose 1 stamina for the Sphere
+					playerShoot.RecoverHealth(playerShoot.maxHealth);
                     playerShoot.DecreaseStamina(1);
 
                     break;

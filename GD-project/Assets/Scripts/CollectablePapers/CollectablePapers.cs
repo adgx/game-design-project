@@ -37,7 +37,7 @@ public class CollectablePapers : MonoBehaviour
         "Paper 7"
     };
 
-    public void CollectPaper() {
+    public void CollectPaper(PaperTrigger caller) {
         if (lastPaperCollected < N_PAPERS) {
             papers[lastPaperCollected] = true;
             
@@ -46,7 +46,10 @@ public class CollectablePapers : MonoBehaviour
             paperTextContainer.SetActive(true);
 
             lastPaperCollected++;
-        }
+
+			// Audio management
+			AudioManager.instance.PlayOneShot(FMODEvents.instance.paperInteraction, caller.transform.position);
+		}
     }
 
     private void Update()
