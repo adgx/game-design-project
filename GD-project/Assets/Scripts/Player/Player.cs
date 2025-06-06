@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
 	[SerializeField] private float maxRotationSpeed = 15f;
     
     [SerializeField] private Rigidbody player;
+	[SerializeField] private Camera mainCamera;
     
     private PlayerInput input;
     public bool isFrozen;
@@ -37,8 +38,8 @@ public class Player : MonoBehaviour
     }
 
 	private void Move() {
-        currentVerticalSpeed = maxMovementSpeed * Math.Abs(input.Vertical) * Time.fixedDeltaTime;
-        currentHorizontalSpeed = maxMovementSpeed * Math.Abs(input.Horizontal) * Time.fixedDeltaTime;
+        currentVerticalSpeed = maxMovementSpeed * input.Vertical * Time.fixedDeltaTime;
+        currentHorizontalSpeed = maxMovementSpeed * input.Horizontal * Time.fixedDeltaTime;
 
         if (currentVerticalSpeed != 0 && currentHorizontalSpeed != 0) {
             // We need to divide the speed by 2 when the player is moving diagonally to avoid faster movement
@@ -46,8 +47,8 @@ public class Player : MonoBehaviour
             currentHorizontalSpeed = currentHorizontalSpeed/2;
         }
         
-        player.MovePosition(player.position + currentVerticalSpeed * transform.forward);
-        player.MovePosition(player.position + currentHorizontalSpeed * transform.forward);
+        player.MovePosition(player.position + currentVerticalSpeed * (new Vector3(mainCamera.transform.forward.x, 0f, mainCamera.transform.forward.z)));
+        player.MovePosition(player.position + currentHorizontalSpeed * (new Vector3(mainCamera.transform.right.x, 0f, mainCamera.transform.right.z)));
         
         // Ho bisogno di questo constraint per evitare che il giocatore si ribalti quando tocca un muro o che si giri quando è attaccato da un nemico
         player.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
@@ -58,8 +59,20 @@ public class Player : MonoBehaviour
 		currentHorizontalSpeed = maxMovementSpeed * input.Horizontal * Time.fixedDeltaTime;
 
         if(currentVerticalSpeed != 0 || currentHorizontalSpeed != 0) {
-            Quaternion targetRotation = Quaternion.LookRotation(new Vector3(input.Horizontal, 0f, input.Vertical));
-            Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, maxRotationSpeed * Time.fixedDeltaTime);
+			Quaternion targetRotation;
+			if(currentVerticalSpeed != 0 && currentHorizontalSpeed != 0) {
+				// TODO: we need to fix diagonal movement
+				targetRotation = Quaternion.LookRotation(new Vector3(mainCamera.transform.forward.x * input.Vertical, 0f, mainCamera.transform.forward.z * input.Vertical));
+			}
+			else {
+				if(currentVerticalSpeed != 0) {
+					targetRotation = Quaternion.LookRotation(new Vector3(mainCamera.transform.forward.x * input.Vertical, 0f, mainCamera.transform.forward.z * input.Vertical));
+				}
+				else {
+					targetRotation = Quaternion.LookRotation(new Vector3(mainCamera.transform.right.x * input.Horizontal, 0f, mainCamera.transform.right.z * input.Horizontal));
+				}
+			}
+			Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, maxRotationSpeed * Time.fixedDeltaTime);
 
             player.MoveRotation(Quaternion.Slerp(player.rotation, targetRotation, Time.deltaTime * maxRotationSpeed));
         }
