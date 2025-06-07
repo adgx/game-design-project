@@ -49,73 +49,48 @@ public class TerminalTrigger : MonoBehaviour
 		if(!busy) {
 			switch(triggerType) {
 				case TriggerType.SphereTerminal:
-
-					if(machineHacked) {
-						// Give a random power up for the Sphere
-						if(powerUps.spherePowerUps.Count > 0) {
-							// Audio management
-							AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineItemPickUp, this.transform.position);
-
-							busy = true;
-							await Task.Delay(2000);
-
-							// Generate a random power up
-							int powerUpIndexSphere = rnd.Next(powerUps.spherePowerUps.Count);
-							Debug.Log(powerUps.spherePowerUps.Count);
-
-							// Insert the power up in the dictionary of the obtained ones
-							powerUps.ObtainPowerUp(powerUps.spherePowerUps[powerUpIndexSphere]);
-
-							// Remove the power up from the list of power ups
-							powerUps.spherePowerUps.RemoveAt(powerUpIndexSphere);
-
-							busy = false;
-						}
-					}
-					else {
-						Debug.Log("Hacking the machine");
+					// Give a random power up for the Sphere
+					if(powerUps.spherePowerUps.Count > 0) {
 						// Audio management
-						AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineActivation, this.transform.position);
+						AudioManager.instance.PlayOneShot(FMODEvents.instance.terminalInteraction, this.transform.position);
 
 						busy = true;
-						await Task.Delay(700);
+						await Task.Delay(2000);
+
+						// Generate a random power up
+						int powerUpIndexSphere = rnd.Next(powerUps.spherePowerUps.Count);
+						Debug.Log(powerUps.spherePowerUps.Count);
+
+						// Insert the power up in the dictionary of the obtained ones
+						powerUps.ObtainPowerUp(powerUps.spherePowerUps[powerUpIndexSphere]);
+
+						// Remove the power up from the list of power ups
+						powerUps.spherePowerUps.RemoveAt(powerUpIndexSphere);
+
 						busy = false;
-						machineHacked = true;
 					}
 
 					break;
 				case TriggerType.PlayerTerminal:
-					if(machineHacked) {
-						// Give a random power up for the Player
-						if(powerUps.playerPowerUps.Count > 0) {
-							// Audio management
-							AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineItemPickUp, this.transform.position);
-
-							busy = true;
-							await Task.Delay(2000);
-
-							// Generate a random power up
-							int powerUpIndexPlayer = rnd.Next(powerUps.playerPowerUps.Count);
-							Debug.Log(powerUps.playerPowerUps.Count);
-
-							// Insert the power up in the dictionary of the obtained ones
-							powerUps.ObtainPowerUp(powerUps.playerPowerUps[powerUpIndexPlayer]);
-
-							// Remove the power up from the list of power ups
-							powerUps.playerPowerUps.RemoveAt(powerUpIndexPlayer);
-
-							busy = false;
-						}
-					}
-					else {
-						Debug.Log("Hacking the machine");
+					// Give a random power up for the Player
+					if(powerUps.playerPowerUps.Count > 0) {
 						// Audio management
-						AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineActivation, this.transform.position);
+						AudioManager.instance.PlayOneShot(FMODEvents.instance.terminalInteraction, this.transform.position);
 
 						busy = true;
-						await Task.Delay(700);
+						await Task.Delay(2000);
+
+						// Generate a random power up
+						int powerUpIndexPlayer = rnd.Next(powerUps.playerPowerUps.Count);
+						Debug.Log(powerUps.playerPowerUps.Count);
+
+						// Insert the power up in the dictionary of the obtained ones
+						powerUps.ObtainPowerUp(powerUps.playerPowerUps[powerUpIndexPlayer]);
+
+						// Remove the power up from the list of power ups
+						powerUps.playerPowerUps.RemoveAt(powerUpIndexPlayer);
+
 						busy = false;
-						machineHacked = true;
 					}
 
 					break;
