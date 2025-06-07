@@ -41,14 +41,10 @@ public class Player : MonoBehaviour
         currentVerticalSpeed = maxMovementSpeed * input.Vertical * Time.fixedDeltaTime;
         currentHorizontalSpeed = maxMovementSpeed * input.Horizontal * Time.fixedDeltaTime;
 
-        if (currentVerticalSpeed != 0 && currentHorizontalSpeed != 0) {
-            // We need to divide the speed by 2 when the player is moving diagonally to avoid faster movement
-            currentVerticalSpeed = currentVerticalSpeed/2;
-            currentHorizontalSpeed = currentHorizontalSpeed/2;
-        }
-        
-        player.MovePosition(player.position + currentVerticalSpeed * (new Vector3(mainCamera.transform.forward.x, 0f, mainCamera.transform.forward.z)));
-        player.MovePosition(player.position + currentHorizontalSpeed * (new Vector3(mainCamera.transform.right.x, 0f, mainCamera.transform.right.z)));
+        Vector3 direction = input.Vertical * (new Vector3(mainCamera.transform.forward.x, 0f, mainCamera.transform.forward.z)) + input.Horizontal * (new Vector3(mainCamera.transform.right.x, 0f, mainCamera.transform.right.z));
+		direction.Normalize();
+
+		player.MovePosition(player.position + direction * maxMovementSpeed * Time.fixedDeltaTime);
         
         // I need this constraint to avoid that the player turns upside down when it touches another collider
         player.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;

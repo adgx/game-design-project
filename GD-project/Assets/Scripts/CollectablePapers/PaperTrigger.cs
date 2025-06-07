@@ -5,6 +5,7 @@ public class PaperTrigger : MonoBehaviour
     [SerializeField] private CollectablePapers collectablePapers;
     
     private bool playerInTrigger = false;
+    private bool paperOpen = false;
 
     void OnTriggerEnter(Collider other) {
         if (other.CompareTag("Player")) {
@@ -20,8 +21,14 @@ public class PaperTrigger : MonoBehaviour
 
     void Update() {
         if (playerInTrigger && Input.GetKeyDown(KeyCode.E)) {
-            Debug.Log("Paper triggered");
-            collectablePapers.CollectPaper(this);
+            if(!paperOpen) {
+                paperOpen = true;
+                collectablePapers.CollectPaper(this);
+            }
+            else {
+				collectablePapers.ClosePaper();
+                paperOpen=false;
+			}
         }
     }
 }

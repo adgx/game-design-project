@@ -32,9 +32,9 @@ namespace RoomManager
         public bool playerHasSpawned { get; private set; }
         public Vector3Int CurrentRoomIndex { get; private set; }
 
-        private const int GridSizeX = 10;
+        private const int GridSizeX = 20;
         private const int GridSizeY = 1;
-        private const int GridSizeZ = 10;
+        private const int GridSizeZ = 20;
 
         private Dictionary<RoomType, List<GameObject>> sortedRoomPrefabs = new Dictionary<RoomType, List<GameObject>>();
         private List<Room> roomInstances = new List<Room>();
@@ -157,7 +157,7 @@ namespace RoomManager
             List<GameObject> initialRoomCandidates = GetPrefabsOfType(RoomType.IncubatorRoom);
             if (initialRoomCandidates.Count == 0)
             {
-                Debug.LogError("Cannot start: No prefabs of type 'Room' found!");
+                Debug.LogError("Cannot start: No prefabs of type 'IncubatorRoom' found!");
                 return;
             }
 

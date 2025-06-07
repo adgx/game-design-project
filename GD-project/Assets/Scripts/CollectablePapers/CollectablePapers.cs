@@ -5,7 +5,7 @@ using UnityEngine;
 public class CollectablePapers : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI paperText;
-    [SerializeField] private GameObject paperTextContainer;
+    public GameObject paperTextContainer;
     [SerializeField] private Player player;
     
     private const int N_PAPERS = 7;
@@ -19,12 +19,12 @@ public class CollectablePapers : MonoBehaviour
         "- Something with your experiments went horribly wrong, you are trapped here now\n" +
         "- Wait... who are you?\n" +
         "- Find the next paper and you'll know\n" +
-        "Press esc button to continue",
+        "Press E to continue",
 
         "- Oh, here you are again. I am yourself... from the past\n" +
         "- What do you mean... from the past?\n" +
         "- Oh so you don't remember. You wrote these notes, while making all your fancy experiments on magnetism. Those experiments were not so fancy, I guess\n" +
-        "Press esc button to continue",
+        "Press E to continue",
         
         "Paper 3",
         
@@ -52,11 +52,12 @@ public class CollectablePapers : MonoBehaviour
 		}
     }
 
+    public void ClosePaper() {
+		paperTextContainer.SetActive(false);
+		player.isFrozen = false;
+	}
+
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && paperTextContainer.activeSelf) {
-            paperTextContainer.SetActive(false);
-            player.isFrozen = false;
-        }
     }
 }
