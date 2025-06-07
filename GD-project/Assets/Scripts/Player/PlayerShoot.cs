@@ -86,8 +86,9 @@ public class PlayerShoot : MonoBehaviour
 		if (sphereStamina >= attackStamina) {
 			return true;
 		}
-		else {
-			// The Sphere has finished the stamina
+		else { // The Sphere has finished the stamina
+			// Audio management
+			AudioManager.instance.PlayOneShot(FMODEvents.instance.sphereDischarge, rotatingSphere.transform.position);
 			return false;
 		}
 			

@@ -29,6 +29,10 @@ namespace Utils
 		private bool alarmTriggered = false;
 		private MusicLoopIteration iteration = MusicLoopIteration.FIRST_ITERATION;
 		private GameObject player;
+		private IEnumerator PlayWakeUpAfterDelay(float delay) {
+			yield return new WaitForSeconds(delay);
+			AudioManager.instance.PlayOneShot(FMODEvents.instance.playerWakeUp, player.transform.position);
+		}
 
 		private void OnDestroy()
         {
@@ -88,6 +92,9 @@ namespace Utils
 					default:
 						break;
 				}
+				
+				AudioManager.instance.SetMusicLoopIteration(iteration);
+				StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
 			}
 
             UpdateTimerUI();
