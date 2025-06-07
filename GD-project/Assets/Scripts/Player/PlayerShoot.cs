@@ -230,23 +230,23 @@ public class PlayerShoot : MonoBehaviour
 		Collider[] colliders = Physics.OverlapSphere(transform.position, damageRadius);
 		foreach(Collider c in colliders) {
 			// Checks if the collider is an enemy
-			if(c.GetComponent<EnemyMaynardMovement>()) {
-				c.GetComponent<EnemyMaynardMovement>().TakeDamage(closeAttackDamage);
+			if(c.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyMaynardMovement>()) {
+				c.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyMaynardMovement>().TakeDamage(closeAttackDamage);
 			}
 			else {
-				if(c.GetComponent<EnemyDrakeMovement>()) {
-					c.GetComponent<EnemyDrakeMovement>().TakeDamage(closeAttackDamage);
+				if(c.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyDrakeMovement>()) {
+					c.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyDrakeMovement>().TakeDamage(closeAttackDamage);
 				}
 				else {
-					if(c.GetComponent<EnemyIncognitoMovement>()) {
-						c.GetComponent<EnemyIncognitoMovement>().TakeDamage(closeAttackDamage);
+					if(c.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyIncognitoMovement>()) {
+						c.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyIncognitoMovement>().TakeDamage(closeAttackDamage);
 					}
 				}
 			}
 		}
 	}
 
-	async void SpawnMagneticShield() {
+	void SpawnMagneticShield() {
 		if(!magneticShieldOpen) {
 			if(powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DefensePowerUp)) {
 				if(powerUp.powerUpsObtained[PowerUp.PowerUpType.DefensePowerUp] == 1) {

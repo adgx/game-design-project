@@ -40,7 +40,6 @@ public class Player : MonoBehaviour
     }
 
 	private void Move() {
-		RaycastHit hit, hitBack;
         currentVerticalSpeed = maxMovementSpeed * input.Vertical * Time.fixedDeltaTime;
         currentHorizontalSpeed = maxMovementSpeed * input.Horizontal * Time.fixedDeltaTime;
 

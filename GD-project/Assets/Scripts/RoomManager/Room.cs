@@ -65,10 +65,14 @@ namespace RoomManager
         [Header("Room Variant Properties")] public RoomType roomType;
         public List<RoomConnector> connectors = new List<RoomConnector>();
         public Transform centralSpawnPoint;
+		public int maxSpawnCost = 10;
 
-        public Vector3Int RoomIndex { get; set; }
+		public Vector3Int RoomIndex { get; set; }
 
-        private void Awake()
+		public bool hasEnemiesSpawned;
+		public List<Transform> enemySpawnPoints;
+
+		private void Awake()
         {
             if (centralSpawnPoint == null)
             {
