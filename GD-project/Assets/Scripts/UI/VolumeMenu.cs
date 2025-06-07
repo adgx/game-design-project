@@ -20,7 +20,17 @@ public class VolumeMenu : MonoBehaviour
     {
         if (playerInput.PausePressed())
         {
-            ToggleVolumeMenu();
+			GameStatus.gamePaused = !GameStatus.gamePaused;
+			if(GameStatus.gamePaused) {
+				// Setting timeScale to 0 pauses the game
+				Time.timeScale = 0f;
+			}
+			else {
+				// Resume the game
+				Time.timeScale = 1f;
+			}
+
+			ToggleVolumeMenu();
         }
     }
 

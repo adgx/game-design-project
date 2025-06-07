@@ -37,8 +37,7 @@ public class PlayerInput : MonoBehaviour
     }
 
 	// Audio management
-	public bool PausePressed()
-    {
+	public bool PausePressed() {
 		return Input.GetKeyDown(pauseInput);
 	}
 

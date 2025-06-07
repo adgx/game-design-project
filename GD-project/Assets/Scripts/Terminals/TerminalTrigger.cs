@@ -1,11 +1,18 @@
 using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using UnityEngine;
 
+// NOTE: this script is attached to each terminal individually
 public class TerminalTrigger : MonoBehaviour
 {
     [SerializeField] private PlayerShoot playerShoot;
     [SerializeField] private PowerUp powerUps;
+
+    // You first hack the machine and then you press the button again to receive the snack.
+    private bool machineHacked = false;
+	// This variable is true while I'm hacking the machine or picking up a snack, so that I can not interact with the machine again
+	private bool busy = false;
     
     private enum TriggerType {
         None,
@@ -38,58 +45,116 @@ public class TerminalTrigger : MonoBehaviour
         triggerType = TriggerType.None;
     }
 
-    private void Update() {
-        if (triggerType != TriggerType.None && Input.GetKeyDown(KeyCode.E)) {
-            switch (triggerType) {
-                case TriggerType.SphereTerminal:
+    async private void ManageVendingMachine() {
+		if(!busy) {
+			switch(triggerType) {
+				case TriggerType.SphereTerminal:
 
-					// Audio management
-					AudioManager.instance.PlayOneShot(FMODEvents.instance.terminalInteraction, this.transform.position);
+					if(machineHacked) {
+						// Give a random power up for the Sphere
+						if(powerUps.spherePowerUps.Count > 0) {
+							// Audio management
+							AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineItemPickUp, this.transform.position);
 
-					// Give a random power up for the Sphere
-					if(powerUps.spherePowerUps.Count > 0) {
-                        // Generate a random power up
-                        int powerUpIndexSphere = rnd.Next(powerUps.spherePowerUps.Count);
-						Debug.Log(powerUps.spherePowerUps.Count);
+							busy = true;
+							await Task.Delay(2000);
 
-						// Insert the power up in the dictionary of the obtained ones
-						powerUps.ObtainPowerUp(powerUps.spherePowerUps[powerUpIndexSphere]);
+							// Generate a random power up
+							int powerUpIndexSphere = rnd.Next(powerUps.spherePowerUps.Count);
+							Debug.Log(powerUps.spherePowerUps.Count);
 
-                        // Remove the power up from the list of power ups
-                        powerUps.spherePowerUps.RemoveAt(powerUpIndexSphere);
-                    }
+							// Insert the power up in the dictionary of the obtained ones
+							powerUps.ObtainPowerUp(powerUps.spherePowerUps[powerUpIndexSphere]);
 
-                    break;
-                case TriggerType.PlayerTerminal:
-					// Audio management
-					AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineActivation, this.transform.position);
+							// Remove the power up from the list of power ups
+							powerUps.spherePowerUps.RemoveAt(powerUpIndexSphere);
 
-					// Give a random power up for the Player
-					if(powerUps.playerPowerUps.Count > 0) {
-                        // Generate a random power up
-                        int powerUpIndexPlayer = rnd.Next(powerUps.playerPowerUps.Count);
-						Debug.Log(powerUps.playerPowerUps.Count);
+							busy = false;
+						}
+					}
+					else {
+						Debug.Log("Hacking the machine");
+						// Audio management
+						AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineActivation, this.transform.position);
 
-						// Insert the power up in the dictionary of the obtained ones
-						powerUps.ObtainPowerUp(powerUps.playerPowerUps[powerUpIndexPlayer]);
-
-                        // Remove the power up from the list of power ups
-                        powerUps.playerPowerUps.RemoveAt(powerUpIndexPlayer);
-                    }
+						busy = true;
+						await Task.Delay(700);
+						busy = false;
+						machineHacked = true;
+					}
 
 					break;
-                case TriggerType.SnackDistributor:
-					// Audio management
-					AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineActivation, this.transform.position);
+				case TriggerType.PlayerTerminal:
+					if(machineHacked) {
+						// Give a random power up for the Player
+						if(powerUps.playerPowerUps.Count > 0) {
+							// Audio management
+							AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineItemPickUp, this.transform.position);
 
-					// Recover health, lose 1 stamina for the Sphere
-					playerShoot.RecoverHealth(playerShoot.maxHealth);
-                    playerShoot.DecreaseStamina(1);
+							busy = true;
+							await Task.Delay(2000);
 
-                    break;
-                default:
-                    break;
-            }
+							// Generate a random power up
+							int powerUpIndexPlayer = rnd.Next(powerUps.playerPowerUps.Count);
+							Debug.Log(powerUps.playerPowerUps.Count);
+
+							// Insert the power up in the dictionary of the obtained ones
+							powerUps.ObtainPowerUp(powerUps.playerPowerUps[powerUpIndexPlayer]);
+
+							// Remove the power up from the list of power ups
+							powerUps.playerPowerUps.RemoveAt(powerUpIndexPlayer);
+
+							busy = false;
+						}
+					}
+					else {
+						Debug.Log("Hacking the machine");
+						// Audio management
+						AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineActivation, this.transform.position);
+
+						busy = true;
+						await Task.Delay(700);
+						busy = false;
+						machineHacked = true;
+					}
+
+					break;
+				case TriggerType.SnackDistributor:
+
+					if(machineHacked) {
+						// Recover health, lose 1 stamina for the Sphere
+						Debug.Log("Recovering health");
+						// Audio management
+						AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineItemPickUp, this.transform.position);
+
+						busy = true;
+						await Task.Delay(2000);
+						playerShoot.RecoverHealth(playerShoot.maxHealth);
+						playerShoot.DecreaseStamina(1);
+						busy = false;
+					}
+					else {
+						Debug.Log("Hacking the machine");
+						// Audio management
+						AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineActivation, this.transform.position);
+
+						busy = true;
+						await Task.Delay(700);
+						busy = false;
+						machineHacked = true;
+					}
+
+					break;
+				default:
+					break;
+			}
+		}
+	}
+
+
+	private void Update() {
+        if (triggerType != TriggerType.None && Input.GetKeyDown(KeyCode.E)) {
+            ManageVendingMachine();
         }
     }
 }

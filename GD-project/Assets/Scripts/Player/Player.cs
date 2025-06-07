@@ -3,6 +3,8 @@ using System;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Splines;
+using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public class Player : MonoBehaviour
 {
@@ -38,6 +40,7 @@ public class Player : MonoBehaviour
     }
 
 	private void Move() {
+		RaycastHit hit, hitBack;
         currentVerticalSpeed = maxMovementSpeed * input.Vertical * Time.fixedDeltaTime;
         currentHorizontalSpeed = maxMovementSpeed * input.Horizontal * Time.fixedDeltaTime;
 

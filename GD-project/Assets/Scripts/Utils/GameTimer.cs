@@ -14,8 +14,7 @@ namespace Utils
 
 	public class GameTimer : MonoBehaviour
     {
-	    // TODO: For testing purpose we use a 30 seconds timer, but it should be of 10 minutes 
-        private const float TimeLimit = 30f;
+        private const float TimeLimit = 2 * 60f;
         private float currentTime;
 
         public TMP_Text timerText;
