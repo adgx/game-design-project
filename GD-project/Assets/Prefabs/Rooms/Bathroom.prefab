@@ -2937,6 +2937,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6655095094520805171}
     m_Modifications:
+    - target: {fileID: 3567241426471208247, guid: fc45853669bf3584e9160ffbda8c8f4b, type: 3}
+      propertyPath: m_TagString
+      value: FlushingWC
+      objectReference: {fileID: 0}
     - target: {fileID: 4952627424001394925, guid: fc45853669bf3584e9160ffbda8c8f4b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.8051224
@@ -2988,8 +2992,47 @@ PrefabInstance:
     - {fileID: 3207123199515290269, guid: fc45853669bf3584e9160ffbda8c8f4b, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3567241426471208247, guid: fc45853669bf3584e9160ffbda8c8f4b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3359607550556627575}
   m_SourcePrefab: {fileID: 100100000, guid: fc45853669bf3584e9160ffbda8c8f4b, type: 3}
+--- !u!1 &2377599787453295091 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3567241426471208247, guid: fc45853669bf3584e9160ffbda8c8f4b, type: 3}
+  m_PrefabInstance: {fileID: 1260881751298632900}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3359607550556627575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2377599787453295091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -283890271
+      Data2: 1141973038
+      Data3: 987327118
+      Data4: -2100846542
+    Path: event:/Ambience/Bathroom/FlushingWater
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 1
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!4 &6180285742189339689 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4952627424001394925, guid: fc45853669bf3584e9160ffbda8c8f4b, type: 3}
@@ -4072,6 +4115,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3370189135285541165}
     m_Modifications:
+    - target: {fileID: 3567241426471208247, guid: fc45853669bf3584e9160ffbda8c8f4b, type: 3}
+      propertyPath: m_TagString
+      value: FlushingWC
+      objectReference: {fileID: 0}
+    - target: {fileID: 4952627424001394925, guid: fc45853669bf3584e9160ffbda8c8f4b, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.98232
+      objectReference: {fileID: 0}
+    - target: {fileID: 4952627424001394925, guid: fc45853669bf3584e9160ffbda8c8f4b, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.98232
+      objectReference: {fileID: 0}
+    - target: {fileID: 4952627424001394925, guid: fc45853669bf3584e9160ffbda8c8f4b, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.98232
+      objectReference: {fileID: 0}
     - target: {fileID: 4952627424001394925, guid: fc45853669bf3584e9160ffbda8c8f4b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.227
@@ -4123,8 +4182,47 @@ PrefabInstance:
     - {fileID: 2939865252344113733, guid: fc45853669bf3584e9160ffbda8c8f4b, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3567241426471208247, guid: fc45853669bf3584e9160ffbda8c8f4b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6911591443655632876}
   m_SourcePrefab: {fileID: 100100000, guid: fc45853669bf3584e9160ffbda8c8f4b, type: 3}
+--- !u!1 &2243607129821883736 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3567241426471208247, guid: fc45853669bf3584e9160ffbda8c8f4b, type: 3}
+  m_PrefabInstance: {fileID: 3360679148464826479}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6911591443655632876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2243607129821883736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -283890271
+      Data2: 1141973038
+      Data3: 987327118
+      Data4: -2100846542
+    Path: event:/Ambience/Bathroom/FlushingWater
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 1
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!4 &7645075354871718018 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4952627424001394925, guid: fc45853669bf3584e9160ffbda8c8f4b, type: 3}

@@ -14,7 +14,7 @@ namespace RoomManager
     public enum RoomType
     {
         IncubatorRoom,
-        OtherRoom,
+        OtherRoom
     }
 
     [System.Serializable]

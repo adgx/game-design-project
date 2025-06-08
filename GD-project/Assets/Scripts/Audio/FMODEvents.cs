@@ -19,8 +19,11 @@ public class FMODEvents : MonoBehaviour
     [field: Header("Sphere SFX")]
     [field: SerializeField] public EventReference sphereRotation { get; private set; }
     
-    [field: Header("Laboratory SFX")]
+    [field: Header("Ambience")]
     [field: SerializeField] public EventReference laboratoryAlarm { get; private set;  }
+    [field: SerializeField] public EventReference serverNoise { get; private set;  }
+    [field: SerializeField] public EventReference flickeringLED { get; private set;  }
+    [field: SerializeField] public EventReference refrigeratorNoise { get; private set;  }
     
     [field: Header("Music")]
     [field: SerializeField] public EventReference music { get; private set; }
