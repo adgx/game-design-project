@@ -6,7 +6,6 @@ using UnityEngine;
 
 // Audio management
 using FMODUnity;
-using RoomManager;
 
 namespace Utils
 {
@@ -46,6 +45,47 @@ namespace Utils
 			AudioManager.instance.PlayOneShot(FMODEvents.instance.playerWakeUp, player.transform.position);
 		}
 
+		private void InitalizeEventEmittersWithTag(string tagValue, EventReference eventRef, List<StudioEventEmitter> emitters)
+		{
+			GameObject[] objects = GameObject.FindGameObjectsWithTag(tagValue);
+			foreach(GameObject obj in objects) {
+				StudioEventEmitter emitter = AudioManager.instance.InitializeEventEmitter(eventRef, obj);
+				if(emitter != null) {
+					emitters.Add(emitter);
+				}
+				else {
+					Debug.LogWarning($"Missing StudioEventEmitter on {obj.name}");
+				}
+			}
+		}
+		
+		private void stopEventEmitters(List<StudioEventEmitter> emitters)
+		{
+			foreach(var emitter in alarmEmitters) {
+				emitter.Stop();
+			}
+		}
+		
+		private void playEventEmitters(List<StudioEventEmitter> emitters, bool condition, ref bool isTriggered)
+		{
+			if(condition) {
+				foreach (var emitter in emitters)
+				{
+					if (emitter != null && emitter.gameObject != null)
+					{
+						emitter.Play();
+					}
+				}
+				isTriggered = true;
+			}
+		}
+		
+		private void resetEventEmitters(List<StudioEventEmitter> emitters, ref bool isTriggered)
+		{
+			isTriggered = false;
+			emitters.Clear();
+		}
+		
 		private void OnDestroy()
         {
             if (roomManager)
@@ -61,50 +101,11 @@ namespace Utils
 
 			// Audio management
 			player = GameObject.Find("Player");
-			
-			GameObject[] alarmSpeakers = GameObject.FindGameObjectsWithTag("AlarmSpeaker");
-			foreach(GameObject speaker in alarmSpeakers) {
-				StudioEventEmitter emitter = AudioManager.instance.InitializeEventEmitter(FMODEvents.instance.laboratoryAlarm, speaker);
-				if(emitter != null) {
-					alarmEmitters.Add(emitter);
-				}
-				else {
-					Debug.LogWarning($"Missing StudioEventEmitter on {speaker.name}");
-				}
-			}
-			
-			GameObject[] servers = GameObject.FindGameObjectsWithTag("Server");
-			foreach(GameObject server in servers) {
-				StudioEventEmitter emitter = AudioManager.instance.InitializeEventEmitter(FMODEvents.instance.serverNoise, server);
-				if(emitter != null) {
-					alarmEmitters.Add(emitter);
-				}
-				else {
-					Debug.LogWarning($"Missing StudioEventEmitter on {server.name}");
-				}
-			}
-			
-			GameObject[] leds = GameObject.FindGameObjectsWithTag("FlickeringLED");
-			foreach(GameObject led in leds) {
-				StudioEventEmitter emitter = AudioManager.instance.InitializeEventEmitter(FMODEvents.instance.flickeringLED, led);
-				if(emitter != null) {
-					ledEmitters.Add(emitter);
-				}
-				else {
-					Debug.LogWarning($"Missing StudioEventEmitter on {led.name}");
-				}
-			}
-			
-			GameObject[] refrigerators = GameObject.FindGameObjectsWithTag("Refrigerator");
-			foreach(GameObject refrigerator in refrigerators) {
-				StudioEventEmitter emitter = AudioManager.instance.InitializeEventEmitter(FMODEvents.instance.refrigeratorNoise, refrigerator);
-				if(emitter != null) {
-					ledEmitters.Add(emitter);
-				}
-				else {
-					Debug.LogWarning($"Missing StudioEventEmitter on {refrigerator.name}");
-				}
-			}
+
+			InitalizeEventEmittersWithTag("AlarmSpeaker", FMODEvents.instance.laboratoryAlarm, alarmEmitters);
+			InitalizeEventEmittersWithTag("Server", FMODEvents.instance.serverNoise, serverEmitters);
+			InitalizeEventEmittersWithTag("FlickeringLED", FMODEvents.instance.flickeringLED, ledEmitters);
+			InitalizeEventEmittersWithTag("Refrigerator", FMODEvents.instance.refrigeratorNoise, refrigeratorEmitters);
 		}
 
         private void Update()
@@ -122,21 +123,10 @@ namespace Utils
                 ResetRun();
 
 				// Audio management
-				foreach(var emitter in alarmEmitters) {
-					emitter.Stop();
-				}
-				
-				foreach(var emitter in serverEmitters) {
-					emitter.Stop();
-				}
-				
-				foreach(var emitter in ledEmitters) {
-					emitter.Stop();
-				}
-				
-				foreach(var emitter in refrigeratorEmitters) {
-					emitter.Stop();
-				}
+				stopEventEmitters(alarmEmitters);
+				stopEventEmitters(serverEmitters);
+				stopEventEmitters(ledEmitters);
+				stopEventEmitters(refrigeratorEmitters);
 				
 				switch(iteration) {
 					case MusicLoopIteration.FIRST_ITERATION:
@@ -160,49 +150,10 @@ namespace Utils
 
 			// Audio management
 			// TODO: for the activation time for the alarm is 10 seconds, but it will be 60 seconds
-			if(!alarmTriggered && currentTime <= 10f) {
-				foreach (var emitter in alarmEmitters)
-				{
-					if (emitter != null && emitter.gameObject != null)
-					{
-						emitter.Play();
-					}
-				}
-				alarmTriggered = true;
-			}
-			
-			if(!serverTriggered) {
-				foreach (var emitter in serverEmitters)
-				{
-					if (emitter != null && emitter.gameObject != null)
-					{
-						emitter.Play();
-					}
-				}
-				serverTriggered = true;
-			}
-			
-			if(!ledTriggered) {
-				foreach (var emitter in ledEmitters)
-				{
-					if (emitter != null && emitter.gameObject != null)
-					{
-						emitter.Play();
-					}
-				}
-				ledTriggered = true;
-			}
-			
-			if(!refrigeratorTriggered) {
-				foreach (var emitter in refrigeratorEmitters)
-				{
-					if (emitter != null && emitter.gameObject != null)
-					{
-						emitter.Play();
-					}
-				}
-				refrigeratorTriggered = true;
-			}
+			playEventEmitters(alarmEmitters, !alarmTriggered && currentTime <= 10f, ref alarmTriggered);
+			playEventEmitters(serverEmitters, !serverTriggered, ref serverTriggered);
+			playEventEmitters(ledEmitters, !ledTriggered, ref ledTriggered);
+			playEventEmitters(refrigeratorEmitters, !refrigeratorTriggered, ref refrigeratorTriggered);
 		}
 
         private void HandleRunReady()
@@ -211,58 +162,16 @@ namespace Utils
 	        isRunning = true;
 
 	        // Audio management
-	        alarmTriggered = false;
-	        alarmEmitters.Clear();
-	        
-	        serverTriggered = false;
-	        serverEmitters.Clear();
-	        
-	        ledTriggered = false;
-	        ledEmitters.Clear();
-	        
-	        refrigeratorTriggered = false;
-	        refrigeratorEmitters.Clear();
+	        resetEventEmitters(alarmEmitters, ref alarmTriggered);
+	        resetEventEmitters(serverEmitters, ref serverTriggered);
+	        resetEventEmitters(ledEmitters, ref ledTriggered);
+	        resetEventEmitters(refrigeratorEmitters, ref refrigeratorTriggered);
 
-	        GameObject[] alarmSpeakers = GameObject.FindGameObjectsWithTag("AlarmSpeaker");
-	        foreach (GameObject speaker in alarmSpeakers)
-	        {
-		        StudioEventEmitter emitter = AudioManager.instance.InitializeEventEmitter(FMODEvents.instance.laboratoryAlarm, speaker);
-		        if (emitter != null)
-		        {
-			        alarmEmitters.Add(emitter);
-		        }
-	        }
+	        InitalizeEventEmittersWithTag("AlarmSpeaker", FMODEvents.instance.laboratoryAlarm, alarmEmitters);
+	        InitalizeEventEmittersWithTag("Server", FMODEvents.instance.serverNoise, serverEmitters);
+	        InitalizeEventEmittersWithTag("FlickeringLED", FMODEvents.instance.flickeringLED, ledEmitters);
+	        InitalizeEventEmittersWithTag("Refrigerator", FMODEvents.instance.refrigeratorNoise, refrigeratorEmitters);
 	        
-	        GameObject[] servers = GameObject.FindGameObjectsWithTag("Server");
-	        foreach (GameObject server in servers)
-	        {
-		        StudioEventEmitter emitter = AudioManager.instance.InitializeEventEmitter(FMODEvents.instance.serverNoise, server);
-		        if (emitter != null)
-		        {
-			        serverEmitters.Add(emitter);
-		        }
-	        }
-	        
-	        GameObject[] leds = GameObject.FindGameObjectsWithTag("FlickeringLED");
-	        foreach (GameObject led in leds)
-	        {
-		        StudioEventEmitter emitter = AudioManager.instance.InitializeEventEmitter(FMODEvents.instance.flickeringLED, led);
-		        if (emitter != null)
-		        {
-			        ledEmitters.Add(emitter);
-		        }
-	        }
-	        
-	        GameObject[] refrigerators = GameObject.FindGameObjectsWithTag("Refrigerator");
-	        foreach (GameObject refrigerator  in refrigerators)
-	        {
-		        StudioEventEmitter emitter = AudioManager.instance.InitializeEventEmitter(FMODEvents.instance.refrigeratorNoise, refrigerator);
-		        if (emitter != null)
-		        {
-			        refrigeratorEmitters.Add(emitter);
-		        }
-	        }
-
 	        AudioManager.instance.SetMusicLoopIteration(iteration);
         }
 
