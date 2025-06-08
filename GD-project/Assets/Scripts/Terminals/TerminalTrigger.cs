@@ -10,15 +10,17 @@ public class TerminalTrigger : MonoBehaviour
     [SerializeField] private PowerUp powerUps;
 
     // You first hack the machine and then you press the button again to receive the snack.
-    private bool machineHacked = false;
+    private bool healthVendingMachineHacked = false;
+    // You first hack the machine and then you press the button again to receive the power up (snack/energy drink).
+    private bool powerUpVendingMachineHacked = false;
 	// This variable is true while I'm hacking the machine or picking up a snack, so that I can not interact with the machine again
 	private bool busy = false;
     
     private enum TriggerType {
         None,
         SphereTerminal,
-        PlayerTerminal,
-        SnackDistributor
+        PowerUpSnackDistributor,
+        HealthSnackDistributor
     }
     
     private TriggerType triggerType;
@@ -30,12 +32,12 @@ public class TerminalTrigger : MonoBehaviour
             triggerType = TriggerType.SphereTerminal;
         }
         else {
-            if (transform.CompareTag(TriggerType.PlayerTerminal.ToString())) {
-                triggerType = TriggerType.PlayerTerminal;
+            if (transform.CompareTag(TriggerType.PowerUpSnackDistributor.ToString())) {
+                triggerType = TriggerType.PowerUpSnackDistributor;
             }
             else {
-                if (transform.CompareTag(TriggerType.SnackDistributor.ToString())) {
-                    triggerType = TriggerType.SnackDistributor;
+                if (transform.CompareTag(TriggerType.HealthSnackDistributor.ToString())) {
+                    triggerType = TriggerType.HealthSnackDistributor;
                 }
             }
         }
@@ -71,37 +73,55 @@ public class TerminalTrigger : MonoBehaviour
 					}
 
 					break;
-				case TriggerType.PlayerTerminal:
+				case TriggerType.PowerUpSnackDistributor:
 					// Give a random power up for the Player
 					if(powerUps.playerPowerUps.Count > 0) {
-						// Audio management
-						AudioManager.instance.PlayOneShot(FMODEvents.instance.terminalInteraction, this.transform.position);
+						if (powerUpVendingMachineHacked)
+						{
+							// Get power up, lose 1 stamina for the Sphere
+							// Audio management
+							Debug.Log("Getting power up: taking snack from the machine");
+							AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineItemPickUp, this.transform.position);
+							powerUpVendingMachineHacked = false;
 
-						busy = true;
-						await Task.Delay(2000);
+							busy = true;
+							await Task.Delay(2000);
 
-						// Generate a random power up
-						int powerUpIndexPlayer = rnd.Next(powerUps.playerPowerUps.Count);
-						Debug.Log(powerUps.playerPowerUps.Count);
+							// Generate a random power up
+							int powerUpIndexPlayer = rnd.Next(powerUps.playerPowerUps.Count);
+							Debug.Log(powerUps.playerPowerUps.Count);
 
-						// Insert the power up in the dictionary of the obtained ones
-						powerUps.ObtainPowerUp(powerUps.playerPowerUps[powerUpIndexPlayer]);
+							// Insert the power up in the dictionary of the obtained ones
+							powerUps.ObtainPowerUp(powerUps.playerPowerUps[powerUpIndexPlayer]);
 
-						// Remove the power up from the list of power ups
-						powerUps.playerPowerUps.RemoveAt(powerUpIndexPlayer);
+							// Remove the power up from the list of power ups
+							powerUps.playerPowerUps.RemoveAt(powerUpIndexPlayer);
 
-						busy = false;
+							busy = false;
+						}
+
+						else
+						{
+							Debug.Log("Getting power up: machine activation");
+							// Audio management
+							AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineActivation, this.transform.position);
+
+							busy = true;
+							await Task.Delay(700);
+							busy = false;
+							powerUpVendingMachineHacked = true;
+						}
+
 					}
 
 					break;
-				case TriggerType.SnackDistributor:
-
-					if(machineHacked) {
+				case TriggerType.HealthSnackDistributor:
+					if(healthVendingMachineHacked) {
 						// Recover health, lose 1 stamina for the Sphere
-						Debug.Log("Recovering health");
+						Debug.Log("Recovering health: taking snack from the machine");
 						// Audio management
 						AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineItemPickUp, this.transform.position);
-						machineHacked = false;
+						healthVendingMachineHacked = false;
 
 						busy = true;
 						await Task.Delay(2000);
@@ -110,14 +130,14 @@ public class TerminalTrigger : MonoBehaviour
 						busy = false;
 					}
 					else {
-						Debug.Log("Hacking the machine");
+						Debug.Log("Recovering health: machine activation");
 						// Audio management
 						AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineActivation, this.transform.position);
 
 						busy = true;
 						await Task.Delay(700);
 						busy = false;
-						machineHacked = true;
+						healthVendingMachineHacked = true;
 					}
 
 					break;

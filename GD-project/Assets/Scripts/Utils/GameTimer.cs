@@ -109,7 +109,7 @@ namespace Utils
 			InitializeEventEmittersWithTag("Server", FMODEvents.instance.serverNoise, serverEmitters);
 			InitializeEventEmittersWithTag("FlickeringLED", FMODEvents.instance.flickeringLED, ledEmitters);
 			InitializeEventEmittersWithTag("Refrigerator", FMODEvents.instance.refrigeratorNoise, refrigeratorEmitters);
-			InitializeEventEmittersWithTag("SnackDistributor", FMODEvents.instance.vendingMachineNoise, vendingMachineEmitters);
+			InitializeEventEmittersWithTag("HealthSnackDistributor", FMODEvents.instance.vendingMachineNoise, vendingMachineEmitters);
 		}
 
         private void Update()
@@ -178,7 +178,7 @@ namespace Utils
 	        InitializeEventEmittersWithTag("Server", FMODEvents.instance.serverNoise, serverEmitters);
 	        InitializeEventEmittersWithTag("FlickeringLED", FMODEvents.instance.flickeringLED, ledEmitters);
 	        InitializeEventEmittersWithTag("Refrigerator", FMODEvents.instance.refrigeratorNoise, refrigeratorEmitters);
-	        InitializeEventEmittersWithTag("SnackDistributor", FMODEvents.instance.vendingMachineNoise, vendingMachineEmitters);
+	        InitializeEventEmittersWithTag("HealthSnackDistributor", FMODEvents.instance.vendingMachineNoise, vendingMachineEmitters);
 	        
 	        AudioManager.instance.SetMusicLoopIteration(iteration);
         }
