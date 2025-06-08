@@ -37,8 +37,11 @@ namespace Utils
 		private List<StudioEventEmitter> refrigeratorEmitters = new List<StudioEventEmitter>();
 		private bool refrigeratorIsTriggered = false;
 		
-		private List<StudioEventEmitter> vendingMachineEmitters = new List<StudioEventEmitter>();
-		private bool vendingMachineIsTriggered = false;
+		private List<StudioEventEmitter> HealthVendingMachineEmitters = new List<StudioEventEmitter>();
+		private bool HealthVendingMachineIsTriggered = false;
+		
+		private List<StudioEventEmitter> PowerUpVendingMachineEmitters = new List<StudioEventEmitter>();
+		private bool PowerUpVendingMachineIsTriggered = false;
 		
 		private MusicLoopIteration iteration = MusicLoopIteration.FIRST_ITERATION;
 		
@@ -109,7 +112,8 @@ namespace Utils
 			InitializeEventEmittersWithTag("Server", FMODEvents.instance.serverNoise, serverEmitters);
 			InitializeEventEmittersWithTag("FlickeringLED", FMODEvents.instance.flickeringLED, ledEmitters);
 			InitializeEventEmittersWithTag("Refrigerator", FMODEvents.instance.refrigeratorNoise, refrigeratorEmitters);
-			InitializeEventEmittersWithTag("HealthSnackDistributor", FMODEvents.instance.vendingMachineNoise, vendingMachineEmitters);
+			InitializeEventEmittersWithTag("HealthSnackDistributor", FMODEvents.instance.vendingMachineNoise, HealthVendingMachineEmitters);
+			InitializeEventEmittersWithTag("PowerUpSnackDistributor", FMODEvents.instance.vendingMachineNoise, PowerUpVendingMachineEmitters);
 		}
 
         private void Update()
@@ -131,7 +135,8 @@ namespace Utils
 				stopEventEmitters(serverEmitters);
 				stopEventEmitters(ledEmitters);
 				stopEventEmitters(refrigeratorEmitters);
-				stopEventEmitters(vendingMachineEmitters);
+				stopEventEmitters(HealthVendingMachineEmitters);
+				stopEventEmitters(PowerUpVendingMachineEmitters);
 				
 				switch(iteration) {
 					case MusicLoopIteration.FIRST_ITERATION:
@@ -159,7 +164,8 @@ namespace Utils
 			playEventEmitters(serverEmitters, !serverIsTriggered, ref serverIsTriggered);
 			playEventEmitters(ledEmitters, !ledIsTriggered, ref ledIsTriggered);
 			playEventEmitters(refrigeratorEmitters, !refrigeratorIsTriggered, ref refrigeratorIsTriggered);
-			playEventEmitters(vendingMachineEmitters, !vendingMachineIsTriggered, ref vendingMachineIsTriggered);
+			playEventEmitters(HealthVendingMachineEmitters, !HealthVendingMachineIsTriggered, ref HealthVendingMachineIsTriggered);
+			playEventEmitters(PowerUpVendingMachineEmitters, !PowerUpVendingMachineIsTriggered, ref PowerUpVendingMachineIsTriggered);
 		}
 
         private void HandleRunReady()
@@ -172,13 +178,15 @@ namespace Utils
 	        resetEventEmitters(serverEmitters, ref serverIsTriggered);
 	        resetEventEmitters(ledEmitters, ref ledIsTriggered);
 	        resetEventEmitters(refrigeratorEmitters, ref refrigeratorIsTriggered);
-	        resetEventEmitters(vendingMachineEmitters, ref vendingMachineIsTriggered);
+	        resetEventEmitters(HealthVendingMachineEmitters, ref HealthVendingMachineIsTriggered);
+	        resetEventEmitters(PowerUpVendingMachineEmitters, ref PowerUpVendingMachineIsTriggered);
 
 	        InitializeEventEmittersWithTag("AlarmSpeaker", FMODEvents.instance.alarm, alarmEmitters);
 	        InitializeEventEmittersWithTag("Server", FMODEvents.instance.serverNoise, serverEmitters);
 	        InitializeEventEmittersWithTag("FlickeringLED", FMODEvents.instance.flickeringLED, ledEmitters);
 	        InitializeEventEmittersWithTag("Refrigerator", FMODEvents.instance.refrigeratorNoise, refrigeratorEmitters);
-	        InitializeEventEmittersWithTag("HealthSnackDistributor", FMODEvents.instance.vendingMachineNoise, vendingMachineEmitters);
+	        InitializeEventEmittersWithTag("HealthSnackDistributor", FMODEvents.instance.vendingMachineNoise, HealthVendingMachineEmitters);
+	        InitializeEventEmittersWithTag("PowerUpSnackDistributor", FMODEvents.instance.vendingMachineNoise, PowerUpVendingMachineEmitters);
 	        
 	        AudioManager.instance.SetMusicLoopIteration(iteration);
         }

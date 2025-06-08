@@ -703,9 +703,10 @@ GameObject:
   - component: {fileID: 307148564}
   - component: {fileID: 307148563}
   - component: {fileID: 307148566}
+  - component: {fileID: 307148567}
   m_Layer: 0
   m_Name: PlayerTerminal
-  m_TagString: PlayerTerminal
+  m_TagString: PowerUpSnackDistributor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -813,6 +814,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerShoot: {fileID: 1728157141}
   powerUps: {fileID: 1728157148}
+--- !u!114 &307148567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 307148560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1484193312
+      Data2: 1244157275
+      Data3: 1979302808
+      Data4: -1684614068
+    Path: event:/Ambience/General/VendingMachineNoise
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 1
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &347109497
 GameObject:
   m_ObjectHideFlags: 0
@@ -2473,7 +2505,7 @@ MonoBehaviour:
       Data2: 1258097855
       Data3: -654289524
       Data4: 410566001
-    Path: event:/Ambience/Alarm
+    Path: event:/Ambience/General/Alarm
   <serverNoise>k__BackingField:
     Guid:
       Data1: -2014649865
@@ -2501,7 +2533,7 @@ MonoBehaviour:
       Data2: 1244157275
       Data3: 1979302808
       Data4: -1684614068
-    Path: event:/Ambience/VendingMachineNoise
+    Path: event:/Ambience/General/VendingMachineNoise
   <music>k__BackingField:
     Guid:
       Data1: -2119342206
@@ -3674,7 +3706,7 @@ GameObject:
   - component: {fileID: 1684111145}
   m_Layer: 0
   m_Name: SnackDistributor
-  m_TagString: SnackDistributor
+  m_TagString: HealthSnackDistributor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3801,7 +3833,7 @@ MonoBehaviour:
       Data2: 1244157275
       Data3: 1979302808
       Data4: -1684614068
-    Path: event:/Ambience/VendingMachineNoise
+    Path: event:/Ambience/General/VendingMachineNoise
   Event: 
   EventPlayTrigger: 0
   EventStopTrigger: 0
