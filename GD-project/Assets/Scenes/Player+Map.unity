@@ -2404,6 +2404,13 @@ MonoBehaviour:
       Data3: 292728493
       Data4: -596124364
     Path: event:/SFX/Player/Walking/Footsteps
+  <playerWakeUp>k__BackingField:
+    Guid:
+      Data1: 776900939
+      Data2: 1206370472
+      Data3: -1873415267
+      Data4: 2015559660
+    Path: event:/SFX/Player/Waking up/WakingUp
   <doorOpen>k__BackingField:
     Guid:
       Data1: -305465452
@@ -2452,22 +2459,15 @@ MonoBehaviour:
       Data2: 1321843028
       Data3: 149478297
       Data4: -1084694590
-    Path: event:/SFX/Sphere/SphereDischarge
-  <playerWakeUp>k__BackingField:
-    Guid:
-      Data1: 776900939
-      Data2: 1206370472
-      Data3: -1873415267
-      Data4: 2015559660
-    Path: event:/SFX/Player/Waking up/WakingUp
+    Path: event:/SFX/Player/Sphere/SphereDischarge
   <sphereRotation>k__BackingField:
     Guid:
       Data1: 784200999
       Data2: 1239473725
       Data3: -2005726846
       Data4: 1834673606
-    Path: event:/SFX/Sphere/SphereRotation
-  <laboratoryAlarm>k__BackingField:
+    Path: event:/SFX/Player/Sphere/SphereRotation
+  <alarm>k__BackingField:
     Guid:
       Data1: 1373224865
       Data2: 1258097855
@@ -2495,6 +2495,13 @@ MonoBehaviour:
       Data3: 1331899567
       Data4: 1296162209
     Path: event:/Ambience/Staff canteen/Refrigerator
+  <vendingMachineNoise>k__BackingField:
+    Guid:
+      Data1: 1484193312
+      Data2: 1244157275
+      Data3: 1979302808
+      Data4: -1684614068
+    Path: event:/Ambience/VendingMachineNoise
   <music>k__BackingField:
     Guid:
       Data1: -2119342206
@@ -3664,6 +3671,7 @@ GameObject:
   - component: {fileID: 1684111142}
   - component: {fileID: 1684111141}
   - component: {fileID: 1684111144}
+  - component: {fileID: 1684111145}
   m_Layer: 0
   m_Name: SnackDistributor
   m_TagString: SnackDistributor
@@ -3774,6 +3782,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerShoot: {fileID: 1728157141}
   powerUps: {fileID: 1728157148}
+--- !u!114 &1684111145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1684111138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1484193312
+      Data2: 1244157275
+      Data3: 1979302808
+      Data4: -1684614068
+    Path: event:/Ambience/VendingMachineNoise
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 1
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &1684462100
 GameObject:
   m_ObjectHideFlags: 0

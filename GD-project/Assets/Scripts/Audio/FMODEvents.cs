@@ -7,6 +7,7 @@ public class FMODEvents : MonoBehaviour
 {
     [field: Header("Player SFX")]
     [field: SerializeField] public EventReference playerFootsteps { get; private set; }
+    [field: SerializeField] public EventReference playerWakeUp { get; private set; }
     [field: SerializeField] public EventReference doorOpen { get; private set; }
     [field: SerializeField] public EventReference doorClose { get; private set; }
     [field: SerializeField] public EventReference paperInteraction { get; private set; }
@@ -14,16 +15,14 @@ public class FMODEvents : MonoBehaviour
     [field: SerializeField] public EventReference vendingMachineActivation { get; private set; }
     [field: SerializeField] public EventReference vendingMachineItemPickUp { get; private set; }
     [field: SerializeField] public EventReference sphereDischarge { get; private set; }
-    [field: SerializeField] public EventReference playerWakeUp { get; private set; }
-    
-    [field: Header("Sphere SFX")]
     [field: SerializeField] public EventReference sphereRotation { get; private set; }
     
     [field: Header("Ambience")]
-    [field: SerializeField] public EventReference laboratoryAlarm { get; private set;  }
+    [field: SerializeField] public EventReference alarm { get; private set;  }
     [field: SerializeField] public EventReference serverNoise { get; private set;  }
     [field: SerializeField] public EventReference flickeringLED { get; private set;  }
     [field: SerializeField] public EventReference refrigeratorNoise { get; private set;  }
+    [field: SerializeField] public EventReference vendingMachineNoise { get; private set;  }
     
     [field: Header("Music")]
     [field: SerializeField] public EventReference music { get; private set; }

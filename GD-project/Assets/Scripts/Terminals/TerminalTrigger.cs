@@ -101,6 +101,7 @@ public class TerminalTrigger : MonoBehaviour
 						Debug.Log("Recovering health");
 						// Audio management
 						AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineItemPickUp, this.transform.position);
+						machineHacked = false;
 
 						busy = true;
 						await Task.Delay(2000);

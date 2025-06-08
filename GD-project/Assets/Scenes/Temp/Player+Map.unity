@@ -4122,52 +4122,59 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <playerFootsteps>k__BackingField:
     Guid:
-      Data1: -1372758906
-      Data2: 1116038183
-      Data3: 1763239348
-      Data4: 33930138
+      Data1: 1166419053
+      Data2: 1320623170
+      Data3: 292728493
+      Data4: -596124364
     Path: event:/SFX/Player/Walking/Footsteps
-  <doorOpen>k__BackingField:
-    Guid:
-      Data1: 1322266566
-      Data2: 1189502893
-      Data3: 494775174
-      Data4: -2079637945
-    Path: event:/SFX/Player/Door/DoorOpen
-  <doorClose>k__BackingField:
+  <playerWakeUp>k__BackingField:
     Guid:
       Data1: 776900939
       Data2: 1206370472
       Data3: -1873415267
       Data4: 2015559660
-    Path: event:/SFX/Player/Door/DoorClose
-  <paperInteraction>k__BackingField:
-    Guid:
-      Data1: -1812742576
-      Data2: 1321843028
-      Data3: 149478297
-      Data4: -1084694590
-    Path: event:/SFX/Player/Paper/PaperInteraction
-  <terminalInteraction>k__BackingField:
-    Guid:
-      Data1: 802410230
-      Data2: 1129170750
-      Data3: 792859547
-      Data4: 80374644
-    Path: event:/SFX/Player/Terminal/TerminalInteraction
-  <vendingMachineActivation>k__BackingField:
+    Path: event:/SFX/Player/Waking up/WakingUp
+  <doorOpen>k__BackingField:
     Guid:
       Data1: -305465452
       Data2: 1338532496
       Data3: -674571377
       Data4: 1673984798
-    Path: event:/SFX/Player/Vending machine/VendingMachineActivation
-  <vendingMachineItemPickUp>k__BackingField:
+    Path: event:/SFX/Player/Door/DoorOpen
+  <doorClose>k__BackingField:
     Guid:
       Data1: 1243160138
       Data2: 1126404859
       Data3: 1977504399
       Data4: -1866376778
+    Path: event:/SFX/Player/Door/DoorClose
+  <paperInteraction>k__BackingField:
+    Guid:
+      Data1: 1770494798
+      Data2: 1123593310
+      Data3: -90282078
+      Data4: 1208520339
+    Path: event:/SFX/Player/Paper/PaperInteraction
+  <terminalInteraction>k__BackingField:
+    Guid:
+      Data1: 1322266566
+      Data2: 1189502893
+      Data3: 494775174
+      Data4: -2079637945
+    Path: event:/SFX/Player/Terminal/TerminalInteraction
+  <vendingMachineActivation>k__BackingField:
+    Guid:
+      Data1: -1372758906
+      Data2: 1116038183
+      Data3: 1763239348
+      Data4: 33930138
+    Path: event:/SFX/Player/Vending machine/VendingMachineActivation
+  <vendingMachineItemPickUp>k__BackingField:
+    Guid:
+      Data1: 626503219
+      Data2: 1117672935
+      Data3: 80789158
+      Data4: 1299605440
     Path: event:/SFX/Player/Vending machine/VendingMachineItemPickup
   <sphereDischarge>k__BackingField:
     Guid:
@@ -4175,29 +4182,43 @@ MonoBehaviour:
       Data2: 1321077471
       Data3: -218120781
       Data4: 1914792332
-    Path: event:/SFX/Sphere/SphereDischarge
-  <playerWakeUp>k__BackingField:
-    Guid:
-      Data1: 1770494798
-      Data2: 1123593310
-      Data3: -90282078
-      Data4: 1208520339
-    Path: event:/SFX/Player/Waking up/WakingUp
+    Path: event:/SFX/Player/Eating/Eating chocolate
   <sphereRotation>k__BackingField:
     Guid:
       Data1: 626503219
       Data2: 1117672935
       Data3: 80789158
       Data4: 1299605440
-    Path: event:/SFX/Sphere/SphereRotation
-  <laboratoryAlarm>k__BackingField:
+    Path: event:/SFX/Player/Vending machine/VendingMachineItemPickup
+  <alarm>k__BackingField:
     Guid:
-      Data1: 1373224865
-      Data2: 1258097855
-      Data3: -654289524
-      Data4: 410566001
-    Path: event:/Ambience/Alarm
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   <serverNoise>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <flickeringLED>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <refrigeratorNoise>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <vendingMachineNoise>k__BackingField:
     Guid:
       Data1: 0
       Data2: 0
@@ -4206,10 +4227,10 @@ MonoBehaviour:
     Path: 
   <music>k__BackingField:
     Guid:
-      Data1: 784200999
-      Data2: 1239473725
-      Data3: -2005726846
-      Data4: 1834673606
+      Data1: -2119342206
+      Data2: 1082500063
+      Data3: 1155554688
+      Data4: -1221304368
     Path: event:/Music/Soundtrack
 --- !u!1 &2143297035
 GameObject:

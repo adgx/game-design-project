@@ -26,16 +26,19 @@ namespace Utils
 
 		// Audio management
 		private List<StudioEventEmitter> alarmEmitters = new List<StudioEventEmitter>();
-		private bool alarmTriggered = false;
+		private bool alarmIsTriggered = false;
 		
 		private List<StudioEventEmitter> serverEmitters = new List<StudioEventEmitter>();
-		private bool serverTriggered = false;
+		private bool serverIsTriggered = false;
 		
 		private List<StudioEventEmitter> ledEmitters = new List<StudioEventEmitter>();
-		private bool ledTriggered = false;
+		private bool ledIsTriggered = false;
 		
-		private List<StudioEventEmitter>  refrigeratorEmitters = new List<StudioEventEmitter>();
-		private bool refrigeratorTriggered = false;
+		private List<StudioEventEmitter> refrigeratorEmitters = new List<StudioEventEmitter>();
+		private bool refrigeratorIsTriggered = false;
+		
+		private List<StudioEventEmitter> vendingMachineEmitters = new List<StudioEventEmitter>();
+		private bool vendingMachineIsTriggered = false;
 		
 		private MusicLoopIteration iteration = MusicLoopIteration.FIRST_ITERATION;
 		
@@ -45,7 +48,7 @@ namespace Utils
 			AudioManager.instance.PlayOneShot(FMODEvents.instance.playerWakeUp, player.transform.position);
 		}
 
-		private void InitalizeEventEmittersWithTag(string tagValue, EventReference eventRef, List<StudioEventEmitter> emitters)
+		private void InitializeEventEmittersWithTag(string tagValue, EventReference eventRef, List<StudioEventEmitter> emitters)
 		{
 			GameObject[] objects = GameObject.FindGameObjectsWithTag(tagValue);
 			foreach(GameObject obj in objects) {
@@ -102,10 +105,11 @@ namespace Utils
 			// Audio management
 			player = GameObject.Find("Player");
 
-			InitalizeEventEmittersWithTag("AlarmSpeaker", FMODEvents.instance.laboratoryAlarm, alarmEmitters);
-			InitalizeEventEmittersWithTag("Server", FMODEvents.instance.serverNoise, serverEmitters);
-			InitalizeEventEmittersWithTag("FlickeringLED", FMODEvents.instance.flickeringLED, ledEmitters);
-			InitalizeEventEmittersWithTag("Refrigerator", FMODEvents.instance.refrigeratorNoise, refrigeratorEmitters);
+			InitializeEventEmittersWithTag("AlarmSpeaker", FMODEvents.instance.alarm, alarmEmitters);
+			InitializeEventEmittersWithTag("Server", FMODEvents.instance.serverNoise, serverEmitters);
+			InitializeEventEmittersWithTag("FlickeringLED", FMODEvents.instance.flickeringLED, ledEmitters);
+			InitializeEventEmittersWithTag("Refrigerator", FMODEvents.instance.refrigeratorNoise, refrigeratorEmitters);
+			InitializeEventEmittersWithTag("SnackDistributor", FMODEvents.instance.vendingMachineNoise, vendingMachineEmitters);
 		}
 
         private void Update()
@@ -127,6 +131,7 @@ namespace Utils
 				stopEventEmitters(serverEmitters);
 				stopEventEmitters(ledEmitters);
 				stopEventEmitters(refrigeratorEmitters);
+				stopEventEmitters(vendingMachineEmitters);
 				
 				switch(iteration) {
 					case MusicLoopIteration.FIRST_ITERATION:
@@ -150,10 +155,11 @@ namespace Utils
 
 			// Audio management
 			// TODO: for the activation time for the alarm is 10 seconds, but it will be 60 seconds
-			playEventEmitters(alarmEmitters, !alarmTriggered && currentTime <= 10f, ref alarmTriggered);
-			playEventEmitters(serverEmitters, !serverTriggered, ref serverTriggered);
-			playEventEmitters(ledEmitters, !ledTriggered, ref ledTriggered);
-			playEventEmitters(refrigeratorEmitters, !refrigeratorTriggered, ref refrigeratorTriggered);
+			playEventEmitters(alarmEmitters, !alarmIsTriggered && currentTime <= 10f, ref alarmIsTriggered);
+			playEventEmitters(serverEmitters, !serverIsTriggered, ref serverIsTriggered);
+			playEventEmitters(ledEmitters, !ledIsTriggered, ref ledIsTriggered);
+			playEventEmitters(refrigeratorEmitters, !refrigeratorIsTriggered, ref refrigeratorIsTriggered);
+			playEventEmitters(vendingMachineEmitters, !vendingMachineIsTriggered, ref vendingMachineIsTriggered);
 		}
 
         private void HandleRunReady()
@@ -162,15 +168,17 @@ namespace Utils
 	        isRunning = true;
 
 	        // Audio management
-	        resetEventEmitters(alarmEmitters, ref alarmTriggered);
-	        resetEventEmitters(serverEmitters, ref serverTriggered);
-	        resetEventEmitters(ledEmitters, ref ledTriggered);
-	        resetEventEmitters(refrigeratorEmitters, ref refrigeratorTriggered);
+	        resetEventEmitters(alarmEmitters, ref alarmIsTriggered);
+	        resetEventEmitters(serverEmitters, ref serverIsTriggered);
+	        resetEventEmitters(ledEmitters, ref ledIsTriggered);
+	        resetEventEmitters(refrigeratorEmitters, ref refrigeratorIsTriggered);
+	        resetEventEmitters(vendingMachineEmitters, ref vendingMachineIsTriggered);
 
-	        InitalizeEventEmittersWithTag("AlarmSpeaker", FMODEvents.instance.laboratoryAlarm, alarmEmitters);
-	        InitalizeEventEmittersWithTag("Server", FMODEvents.instance.serverNoise, serverEmitters);
-	        InitalizeEventEmittersWithTag("FlickeringLED", FMODEvents.instance.flickeringLED, ledEmitters);
-	        InitalizeEventEmittersWithTag("Refrigerator", FMODEvents.instance.refrigeratorNoise, refrigeratorEmitters);
+	        InitializeEventEmittersWithTag("AlarmSpeaker", FMODEvents.instance.alarm, alarmEmitters);
+	        InitializeEventEmittersWithTag("Server", FMODEvents.instance.serverNoise, serverEmitters);
+	        InitializeEventEmittersWithTag("FlickeringLED", FMODEvents.instance.flickeringLED, ledEmitters);
+	        InitializeEventEmittersWithTag("Refrigerator", FMODEvents.instance.refrigeratorNoise, refrigeratorEmitters);
+	        InitializeEventEmittersWithTag("SnackDistributor", FMODEvents.instance.vendingMachineNoise, vendingMachineEmitters);
 	        
 	        AudioManager.instance.SetMusicLoopIteration(iteration);
         }
