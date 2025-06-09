@@ -257,7 +257,7 @@ public class PlayerShoot : MonoBehaviour
 						// Spawn level 2 shield
 					}
 					else {
-						magneticShield = Instantiate(magneticShieldPrefab, transform.position, Quaternion.identity);
+						magneticShield = Instantiate(magneticShieldPrefab, new Vector3(player.transform.position.x, player.transform.position.y - 1f, player.transform.position.z), Quaternion.identity);
 						magneticShield.transform.parent = transform;
 						magneticShieldOpen = true;
 					}
