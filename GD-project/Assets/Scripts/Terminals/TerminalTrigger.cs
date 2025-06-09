@@ -88,7 +88,7 @@ public class TerminalTrigger : MonoBehaviour
 						{
 							// Get power up, lose 1 stamina for the Sphere
 							// Audio management
-							Debug.Log("Getting power up: taking snack from the machine");
+							Debug.Log("Getting power up: taking power up from the machine");
 							AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineItemPickUp, this.transform.position);
 							powerUpVendingMachineHacked = false;
 
@@ -104,11 +104,13 @@ public class TerminalTrigger : MonoBehaviour
 							
 							if (obtainedPowerUp == PowerUp.PowerUpType.HealthBoost)
 							{
+								Debug.Log("Using power up: health boost (chips");
 								AudioManager.instance.PlayOneShot(FMODEvents.instance.playerEatChips, player.transform.position);
 							}
 							
 							if (obtainedPowerUp == PowerUp.PowerUpType.MovementBoost)
 							{
+								Debug.Log("Using power up: movement boost (energy drink");
 								AudioManager.instance.PlayOneShot(FMODEvents.instance.playerDrink, player.transform.position);
 							}
 							
