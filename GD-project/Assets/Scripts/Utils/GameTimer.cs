@@ -37,11 +37,20 @@ namespace Utils
 		private List<StudioEventEmitter> refrigeratorEmitters = new List<StudioEventEmitter>();
 		private bool refrigeratorIsTriggered = false;
 		
-		private List<StudioEventEmitter> HealthVendingMachineEmitters = new List<StudioEventEmitter>();
+		private List<StudioEventEmitter> healthVendingMachineEmitters = new List<StudioEventEmitter>();
 		private bool HealthVendingMachineIsTriggered = false;
 		
-		private List<StudioEventEmitter> PowerUpVendingMachineEmitters = new List<StudioEventEmitter>();
+		private List<StudioEventEmitter> powerUpVendingMachineEmitters = new List<StudioEventEmitter>();
 		private bool PowerUpVendingMachineIsTriggered = false;
+		
+		private List<StudioEventEmitter> terminalEmitters = new List<StudioEventEmitter>();
+		private bool terminalIsTriggered= false;
+		
+		private List<StudioEventEmitter> elevatorEmitters = new List<StudioEventEmitter>();
+		private bool elevatorIsTriggered = false;
+		
+		private List<StudioEventEmitter> ventilationEmitters = new List<StudioEventEmitter>();
+		private bool ventilationIsTriggered = false;
 		
 		private MusicLoopIteration iteration = MusicLoopIteration.FIRST_ITERATION;
 		
@@ -67,7 +76,7 @@ namespace Utils
 		
 		private void stopEventEmitters(List<StudioEventEmitter> emitters)
 		{
-			foreach(var emitter in alarmEmitters) {
+			foreach(var emitter in emitters) {
 				emitter.Stop();
 			}
 		}
@@ -112,8 +121,11 @@ namespace Utils
 			InitializeEventEmittersWithTag("Server", FMODEvents.instance.serverNoise, serverEmitters);
 			InitializeEventEmittersWithTag("FlickeringLED", FMODEvents.instance.flickeringLED, ledEmitters);
 			InitializeEventEmittersWithTag("Refrigerator", FMODEvents.instance.refrigeratorNoise, refrigeratorEmitters);
-			InitializeEventEmittersWithTag("HealthSnackDistributor", FMODEvents.instance.vendingMachineNoise, HealthVendingMachineEmitters);
-			InitializeEventEmittersWithTag("PowerUpSnackDistributor", FMODEvents.instance.vendingMachineNoise, PowerUpVendingMachineEmitters);
+			InitializeEventEmittersWithTag("HealthSnackDistributor", FMODEvents.instance.vendingMachineNoise, healthVendingMachineEmitters);
+			InitializeEventEmittersWithTag("PowerUpSnackDistributor", FMODEvents.instance.vendingMachineNoise, powerUpVendingMachineEmitters);
+			InitializeEventEmittersWithTag("SphereTerminal", FMODEvents.instance.terminalNoise, terminalEmitters);
+			InitializeEventEmittersWithTag("Elevator", FMODEvents.instance.elevatorNoise, elevatorEmitters);
+			InitializeEventEmittersWithTag("Ventilation", FMODEvents.instance.ventilationNoise, ventilationEmitters);
 		}
 
         private void Update()
@@ -135,8 +147,11 @@ namespace Utils
 				stopEventEmitters(serverEmitters);
 				stopEventEmitters(ledEmitters);
 				stopEventEmitters(refrigeratorEmitters);
-				stopEventEmitters(HealthVendingMachineEmitters);
-				stopEventEmitters(PowerUpVendingMachineEmitters);
+				stopEventEmitters(healthVendingMachineEmitters);
+				stopEventEmitters(powerUpVendingMachineEmitters);
+				stopEventEmitters(terminalEmitters);
+				stopEventEmitters(elevatorEmitters);
+				stopEventEmitters(ventilationEmitters);
 				
 				switch(iteration) {
 					case MusicLoopIteration.FIRST_ITERATION:
@@ -164,8 +179,11 @@ namespace Utils
 			playEventEmitters(serverEmitters, !serverIsTriggered, ref serverIsTriggered);
 			playEventEmitters(ledEmitters, !ledIsTriggered, ref ledIsTriggered);
 			playEventEmitters(refrigeratorEmitters, !refrigeratorIsTriggered, ref refrigeratorIsTriggered);
-			playEventEmitters(HealthVendingMachineEmitters, !HealthVendingMachineIsTriggered, ref HealthVendingMachineIsTriggered);
-			playEventEmitters(PowerUpVendingMachineEmitters, !PowerUpVendingMachineIsTriggered, ref PowerUpVendingMachineIsTriggered);
+			playEventEmitters(healthVendingMachineEmitters, !HealthVendingMachineIsTriggered, ref HealthVendingMachineIsTriggered);
+			playEventEmitters(powerUpVendingMachineEmitters, !PowerUpVendingMachineIsTriggered, ref PowerUpVendingMachineIsTriggered);
+			playEventEmitters(terminalEmitters, !terminalIsTriggered, ref terminalIsTriggered);
+			playEventEmitters(elevatorEmitters, !elevatorIsTriggered, ref elevatorIsTriggered);
+			playEventEmitters(ventilationEmitters, !ventilationIsTriggered, ref ventilationIsTriggered);
 		}
 
         private void HandleRunReady()
@@ -178,15 +196,21 @@ namespace Utils
 	        resetEventEmitters(serverEmitters, ref serverIsTriggered);
 	        resetEventEmitters(ledEmitters, ref ledIsTriggered);
 	        resetEventEmitters(refrigeratorEmitters, ref refrigeratorIsTriggered);
-	        resetEventEmitters(HealthVendingMachineEmitters, ref HealthVendingMachineIsTriggered);
-	        resetEventEmitters(PowerUpVendingMachineEmitters, ref PowerUpVendingMachineIsTriggered);
+	        resetEventEmitters(healthVendingMachineEmitters, ref HealthVendingMachineIsTriggered);
+	        resetEventEmitters(powerUpVendingMachineEmitters, ref PowerUpVendingMachineIsTriggered);
+	        resetEventEmitters(terminalEmitters, ref terminalIsTriggered);
+	        resetEventEmitters(elevatorEmitters, ref elevatorIsTriggered);
+	        resetEventEmitters(ventilationEmitters, ref ventilationIsTriggered);
 
 	        InitializeEventEmittersWithTag("AlarmSpeaker", FMODEvents.instance.alarm, alarmEmitters);
 	        InitializeEventEmittersWithTag("Server", FMODEvents.instance.serverNoise, serverEmitters);
 	        InitializeEventEmittersWithTag("FlickeringLED", FMODEvents.instance.flickeringLED, ledEmitters);
 	        InitializeEventEmittersWithTag("Refrigerator", FMODEvents.instance.refrigeratorNoise, refrigeratorEmitters);
-	        InitializeEventEmittersWithTag("HealthSnackDistributor", FMODEvents.instance.vendingMachineNoise, HealthVendingMachineEmitters);
-	        InitializeEventEmittersWithTag("PowerUpSnackDistributor", FMODEvents.instance.vendingMachineNoise, PowerUpVendingMachineEmitters);
+	        InitializeEventEmittersWithTag("HealthSnackDistributor", FMODEvents.instance.vendingMachineNoise, healthVendingMachineEmitters);
+	        InitializeEventEmittersWithTag("PowerUpSnackDistributor", FMODEvents.instance.vendingMachineNoise, powerUpVendingMachineEmitters);
+	        InitializeEventEmittersWithTag("SphereTerminal", FMODEvents.instance.terminalNoise, terminalEmitters);
+	        InitializeEventEmittersWithTag("Elevator", FMODEvents.instance.elevatorNoise, elevatorEmitters);
+	        InitializeEventEmittersWithTag("Ventilation", FMODEvents.instance.ventilationNoise, ventilationEmitters);
 	        
 	        AudioManager.instance.SetMusicLoopIteration(iteration);
         }

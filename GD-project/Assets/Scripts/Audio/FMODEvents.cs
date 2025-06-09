@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
 
@@ -23,6 +21,9 @@ public class FMODEvents : MonoBehaviour
     [field: SerializeField] public EventReference flickeringLED { get; private set;  }
     [field: SerializeField] public EventReference refrigeratorNoise { get; private set;  }
     [field: SerializeField] public EventReference vendingMachineNoise { get; private set;  }
+    [field: SerializeField] public EventReference terminalNoise { get; private set;  }
+    [field: SerializeField] public EventReference elevatorNoise { get; private set;  }
+    [field: SerializeField] public EventReference ventilationNoise { get; private set;  }
     
     [field: Header("Music")]
     [field: SerializeField] public EventReference music { get; private set; }

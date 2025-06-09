@@ -705,7 +705,7 @@ GameObject:
   - component: {fileID: 307148566}
   - component: {fileID: 307148567}
   m_Layer: 0
-  m_Name: PlayerTerminal
+  m_Name: PowerUpSnackDistributor
   m_TagString: PowerUpSnackDistributor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2022,6 +2022,7 @@ GameObject:
   - component: {fileID: 964185345}
   - component: {fileID: 964185344}
   - component: {fileID: 964185347}
+  - component: {fileID: 964185348}
   m_Layer: 0
   m_Name: SphereTerminal
   m_TagString: SphereTerminal
@@ -2132,6 +2133,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerShoot: {fileID: 1728157141}
   powerUps: {fileID: 1728157148}
+--- !u!114 &964185348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 964185341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -175314623
+      Data2: 1255852906
+      Data3: 1178096001
+      Data4: 1697852409
+    Path: event:/Ambience/General/TerminalNoise
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 1
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1001 &1004425050
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2526,7 +2558,7 @@ MonoBehaviour:
       Data2: 1232235182
       Data3: 1331899567
       Data4: 1296162209
-    Path: event:/Ambience/Staff canteen/Refrigerator
+    Path: event:/Ambience/Staff canteen/RefrigeratorNoise
   <vendingMachineNoise>k__BackingField:
     Guid:
       Data1: 1484193312
@@ -2534,6 +2566,27 @@ MonoBehaviour:
       Data3: 1979302808
       Data4: -1684614068
     Path: event:/Ambience/General/VendingMachineNoise
+  <terminalNoise>k__BackingField:
+    Guid:
+      Data1: -175314623
+      Data2: 1255852906
+      Data3: 1178096001
+      Data4: 1697852409
+    Path: event:/Ambience/General/TerminalNoise
+  <elevatorNoise>k__BackingField:
+    Guid:
+      Data1: 1356801504
+      Data2: 1243640970
+      Data3: 166545854
+      Data4: 1583370833
+    Path: event:/Ambience/Hallway/ElevatorNoise
+  <ventilationNoise>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   <music>k__BackingField:
     Guid:
       Data1: -2119342206
@@ -3705,7 +3758,7 @@ GameObject:
   - component: {fileID: 1684111144}
   - component: {fileID: 1684111145}
   m_Layer: 0
-  m_Name: SnackDistributor
+  m_Name: HealthSnackDistributor
   m_TagString: HealthSnackDistributor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

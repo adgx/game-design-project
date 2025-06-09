@@ -1849,9 +1849,10 @@ GameObject:
   - component: {fileID: 5842119888743906194}
   - component: {fileID: 1875250059652748755}
   - component: {fileID: 3202072373676849772}
+  - component: {fileID: 6589374466624540742}
   m_Layer: 0
   m_Name: VentilationShaft.Long.001
-  m_TagString: Untagged
+  m_TagString: Ventilation
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1924,6 +1925,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &6589374466624540742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 765037698237463641}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -849333374
+      Data2: 1300067871
+      Data3: 1301444737
+      Data4: 1296470915
+    Path: event:/Ambience/Storage room/VentilationNoise
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 1
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 40
 --- !u!1 &779308249344707928
 GameObject:
   m_ObjectHideFlags: 0
@@ -3629,9 +3661,10 @@ GameObject:
   - component: {fileID: 6864797442274621671}
   - component: {fileID: 5319148955694049691}
   - component: {fileID: 8174380347224091540}
+  - component: {fileID: 1451260645158756513}
   m_Layer: 0
   m_Name: VentilationShaft.JunctionB
-  m_TagString: Untagged
+  m_TagString: Ventilation
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3704,6 +3737,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1451260645158756513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1574747343470330408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -849333374
+      Data2: 1300067871
+      Data3: 1301444737
+      Data4: 1296470915
+    Path: event:/Ambience/Storage room/VentilationNoise
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 1
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 40
 --- !u!1 &1580657062800627898
 GameObject:
   m_ObjectHideFlags: 0
@@ -21462,9 +21526,10 @@ GameObject:
   - component: {fileID: 6631126049733553578}
   - component: {fileID: 4795873046853046542}
   - component: {fileID: 1049977887663092054}
+  - component: {fileID: 737574033904302965}
   m_Layer: 0
   m_Name: VentilationShaft.Long.001 (1)
-  m_TagString: Untagged
+  m_TagString: Ventilation
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -21537,6 +21602,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &737574033904302965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8615200420042922573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -849333374
+      Data2: 1300067871
+      Data3: 1301444737
+      Data4: 1296470915
+    Path: event:/Ambience/Storage room/VentilationNoise
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 1
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 40
 --- !u!1 &8635026911603615545
 GameObject:
   m_ObjectHideFlags: 0
@@ -21927,9 +22023,10 @@ GameObject:
   - component: {fileID: 6544709588935230547}
   - component: {fileID: 331960474155525366}
   - component: {fileID: 2037125797394038169}
+  - component: {fileID: 7808089815165195685}
   m_Layer: 0
   m_Name: VentilationShaft.Curved90_h
-  m_TagString: Untagged
+  m_TagString: Ventilation
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -22002,6 +22099,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &7808089815165195685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8816950493608972423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -849333374
+      Data2: 1300067871
+      Data3: 1301444737
+      Data4: 1296470915
+    Path: event:/Ambience/Storage room/VentilationNoise
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 1
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 40
 --- !u!1 &8852833348720673749
 GameObject:
   m_ObjectHideFlags: 0
@@ -22530,9 +22658,10 @@ GameObject:
   - component: {fileID: 2173794205884278872}
   - component: {fileID: 4715764699470101745}
   - component: {fileID: 301023713153810829}
+  - component: {fileID: 1974380210588307818}
   m_Layer: 0
   m_Name: VentilationShaft.Curved90_h (1)
-  m_TagString: Untagged
+  m_TagString: Ventilation
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -22605,6 +22734,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1974380210588307818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9197431791801089595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -849333374
+      Data2: 1300067871
+      Data3: 1301444737
+      Data4: 1296470915
+    Path: event:/Ambience/Storage room/VentilationNoise
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 1
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 40
 --- !u!1 &9201604140272438126
 GameObject:
   m_ObjectHideFlags: 0

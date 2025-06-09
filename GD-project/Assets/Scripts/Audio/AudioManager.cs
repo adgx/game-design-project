@@ -83,7 +83,19 @@ public class AudioManager : MonoBehaviour
     
     public StudioEventEmitter InitializeEventEmitter(EventReference eventReference, GameObject emitterGameObject)
     {
+        if (emitterGameObject == null)
+        {
+            Debug.LogError("InitializeEventEmitter failed: emitterGameObject is null.");
+            return null;
+        }
+
         StudioEventEmitter emitter = emitterGameObject.GetComponent<StudioEventEmitter>();
+        if (emitter == null)
+        {
+            Debug.LogError($"InitializeEventEmitter failed: No StudioEventEmitter found on {emitterGameObject.name}.");
+            return null;
+        }
+
         emitter.EventReference = eventReference;
         eventEmitters.Add(emitter);
         return emitter;
