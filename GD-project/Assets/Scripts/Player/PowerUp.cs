@@ -26,12 +26,12 @@ public class PowerUp : MonoBehaviour
 		spherePowerUps.Add(PowerUpType.DefensePowerUp);
 		spherePowerUps.Add(PowerUpType.DefensePowerUp);
 		spherePowerUps.Add(PowerUpType.DefensePowerUp);
-		spherePowerUps.Add(PowerUpType.DamageBoost);
+		spherePowerUps.Add(PowerUpType.DamageBoost);	// TODO: to be implemented
 
 		playerPowerUps.Add(PowerUpType.HealthBoost);
 		playerPowerUps.Add(PowerUpType.HealthBoost);
 		playerPowerUps.Add(PowerUpType.HealthBoost);
-		playerPowerUps.Add(PowerUpType.MovementBoost);
+		playerPowerUps.Add(PowerUpType.MovementBoost);	// TODO: to be implemented
 		playerPowerUps.Add(PowerUpType.MovementBoost);
 		playerPowerUps.Add(PowerUpType.MovementBoost);
 		
