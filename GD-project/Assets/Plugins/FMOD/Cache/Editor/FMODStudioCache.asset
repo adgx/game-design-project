@@ -1,5 +1,32 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8749200571231062445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Attack/Distance 2/Version 1/Distance2_Shoot_1
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Attack/Distance 2/Version 1/Distance2_Shoot_1
+  Guid:
+    Data1: 1745601595
+    Data2: 1114770188
+    Data3: -409871453
+    Data4: -1028367603
+  Banks:
+  - {fileID: 5065420971171067895}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-8691732298886927386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69,7 +96,7 @@ MonoBehaviour:
   Path: ../fmod-project/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638850855777160989
+  lastModified: 638851134747826741
   FileSizes:
   - Name: Desktop
     Value: 1524
@@ -122,6 +149,87 @@ MonoBehaviour:
   Banks:
   - {fileID: -6364876755650830886}
   IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-7567402022298309549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Attack/Distance 2/Version 1/Distance2_Load_1
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Attack/Distance 2/Version 1/Distance2_Load_1
+  Guid:
+    Data1: -1504091649
+    Data2: 1341889062
+    Data3: -1489269578
+    Data4: 2056284491
+  Banks:
+  - {fileID: 5065420971171067895}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 4874
+--- !u!114 &-7091964592095762905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Sphere/SphereDischarge
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Sphere/SphereDischarge
+  Guid:
+    Data1: -1812742576
+    Data2: 1321843028
+    Data3: 149478297
+    Data4: -1084694590
+  Banks:
+  - {fileID: 5065420971171067895}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-6640301849430220455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Sphere/SpherePartialRecharge
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Sphere/SpherePartialRecharge
+  Guid:
+    Data1: -173376928
+    Data2: 1284800641
+    Data3: -1552988530
+    Data4: 378764851
+  Banks:
+  - {fileID: 5065420971171067895}
+  IsStream: 0
   Is3D: 1
   IsOneShot: 1
   Parameters: []
@@ -283,6 +391,60 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 27774
+--- !u!114 &-4306061922007984963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Sphere/SphereFullRecharge
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Sphere/SphereFullRecharge
+  Guid:
+    Data1: 1001214641
+    Data2: 1077975843
+    Data3: 1585470126
+    Data4: 409065975
+  Banks:
+  - {fileID: 5065420971171067895}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-4291654913100434241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Attack/Distance 1/Version 1/Distance1
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Attack/Distance 1/Version 1/Distance1
+  Guid:
+    Data1: -635794463
+    Data2: 1255129654
+    Data3: 477083055
+    Data4: 147751870
+  Banks:
+  - {fileID: 5065420971171067895}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-4280277781347644752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -426,11 +588,38 @@ MonoBehaviour:
   Path: ../fmod-project/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638850855777175463
+  lastModified: 638851134747836784
   FileSizes:
   - Name: Desktop
-    Value: 2656
+    Value: 3098
   Exists: 1
+--- !u!114 &-1780915220806678830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Attack/Distance 2/Version 2/Distance2_Load_2
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Attack/Distance 2/Version 2/Distance2_Load_2
+  Guid:
+    Data1: 1234275442
+    Data2: 1220017165
+    Data3: 1503873679
+    Data4: 882638564
+  Banks:
+  - {fileID: 5065420971171067895}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 399
 --- !u!114 &-1713145638452263593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -485,6 +674,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &-24981856286500795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Attack/Distance 2/Version 2/Distance2_Shoot_2
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Attack/Distance 2/Version 2/Distance2_Shoot_2
+  Guid:
+    Data1: -1568284031
+    Data2: 1296495318
+    Data3: 1059179439
+    Data4: 905726983
+  Banks:
+  - {fileID: 5065420971171067895}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -522,7 +738,6 @@ MonoBehaviour:
   - {fileID: -4962972040068344876}
   - {fileID: 2261422203105267080}
   - {fileID: 4153006918751333011}
-  - {fileID: 1876495664598340777}
   - {fileID: -1713145638452263593}
   - {fileID: 8787916688092567399}
   - {fileID: 6449656848823476781}
@@ -534,13 +749,22 @@ MonoBehaviour:
   - {fileID: 5085229492516263674}
   - {fileID: -8647355418110044154}
   - {fileID: 7876250378605590337}
+  - {fileID: 7644790558413676834}
+  - {fileID: -8749200571231062445}
+  - {fileID: -6640301849430220455}
+  - {fileID: -1780915220806678830}
+  - {fileID: -24981856286500795}
+  - {fileID: -4306061922007984963}
+  - {fileID: -4291654913100434241}
+  - {fileID: -7567402022298309549}
+  - {fileID: -7091964592095762905}
   EditorParameters: []
   MasterBanks:
   - {fileID: -8373241030047903528}
   StringsBanks:
   - {fileID: -1907387261365305477}
   cacheVersion: 131847
-  cacheTime: 638851072411790322
+  cacheTime: 638851134749271961
   SerializableEventsDict:
   - key: event:/SFX/Player/Hand dryer/HandDryerActivation04
     index: 0
@@ -650,33 +874,6 @@ MonoBehaviour:
   Banks:
   - {fileID: -6364876755650830886}
   IsStream: 1
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &1876495664598340777
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Sphere/SphereDischarge
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Sphere/SphereDischarge
-  Guid:
-    Data1: -1812742576
-    Data2: 1321843028
-    Data3: 149478297
-    Data4: -1084694590
-  Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
   Is3D: 1
   IsOneShot: 1
   Parameters: []
@@ -915,10 +1112,10 @@ MonoBehaviour:
   Path: ../fmod-project/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638851061104599823
+  lastModified: 638851134749271961
   FileSizes:
   - Name: Desktop
-    Value: 888832
+    Value: 1107264
   Exists: 1
 --- !u!114 &5085229492516263674
 MonoBehaviour:
@@ -1001,6 +1198,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 96978
+--- !u!114 &7644790558413676834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Attack/Distance 1/Version 2/Distance1
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Attack/Distance 1/Version 2/Distance1
+  Guid:
+    Data1: -1608874989
+    Data2: 1162737558
+    Data3: 1850775983
+    Data4: 222910032
+  Banks:
+  - {fileID: 5065420971171067895}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &7876250378605590337
 MonoBehaviour:
   m_ObjectHideFlags: 0
