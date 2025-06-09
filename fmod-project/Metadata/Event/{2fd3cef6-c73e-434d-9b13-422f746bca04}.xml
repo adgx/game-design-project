@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{2fd3cef6-c73e-434d-9b13-422f746bca04}">
 		<property name="name">
-			<value>Eating chips</value>
+			<value>EatingChips</value>
 		</property>
 		<property name="outputFormat">
 			<value>2</value>
@@ -72,6 +72,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{f00e0b1a-83f4-404b-8fb9-7c89766982b4}">
+		<property name="volume">
+			<value>-25</value>
+		</property>
 		<relationship name="effectChain">
 			<destination>{18e5764a-43e6-4bd7-bbea-7b4643072c06}</destination>
 		</relationship>

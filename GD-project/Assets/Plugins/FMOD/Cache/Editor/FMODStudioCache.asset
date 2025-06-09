@@ -1,5 +1,59 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8691732298886927386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Defense/ShieldActivation
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Defense/ShieldActivation
+  Guid:
+    Data1: -192495753
+    Data2: 1195782594
+    Data3: 479025796
+    Data4: 414164792
+  Banks:
+  - {fileID: 5065420971171067895}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-8647355418110044154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Defense/ShieldHit
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Defense/ShieldHit
+  Guid:
+    Data1: 851313114
+    Data2: 1257598867
+    Data3: -1050364744
+    Data4: -834285941
+  Banks:
+  - {fileID: 5065420971171067895}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-8373241030047903528
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15,7 +69,7 @@ MonoBehaviour:
   Path: ../fmod-project/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638850698628417746
+  lastModified: 638850855777160989
   FileSizes:
   - Name: Desktop
     Value: 1524
@@ -89,7 +143,7 @@ MonoBehaviour:
   Path: ../fmod-project/Build/Desktop/Ambience.bank
   Name: Ambience
   StudioPath: bank:/Ambience
-  lastModified: 638850698628354803
+  lastModified: 638850816395149993
   FileSizes:
   - Name: Desktop
     Value: 4246272
@@ -325,11 +379,38 @@ MonoBehaviour:
   Path: ../fmod-project/Build/Desktop/Music.bank
   Name: Music
   StudioPath: bank:/Music
-  lastModified: 638850674260795588
+  lastModified: 638850815438325393
   FileSizes:
   - Name: Desktop
     Value: 3887712
   Exists: 1
+--- !u!114 &-2182497379548351049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Eating/EatingChocolate
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Eating/EatingChocolate
+  Guid:
+    Data1: 2115817834
+    Data2: 1321077471
+    Data3: -218120781
+    Data4: 1914792332
+  Banks:
+  - {fileID: 5065420971171067895}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-1907387261365305477
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -345,10 +426,10 @@ MonoBehaviour:
   Path: ../fmod-project/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638850698628427867
+  lastModified: 638850855777175463
   FileSizes:
   - Name: Desktop
-    Value: 2500
+    Value: 2656
   Exists: 1
 --- !u!114 &-1713145638452263593
 MonoBehaviour:
@@ -442,21 +523,24 @@ MonoBehaviour:
   - {fileID: 2261422203105267080}
   - {fileID: 4153006918751333011}
   - {fileID: 1876495664598340777}
-  - {fileID: 7102936044800987528}
   - {fileID: -1713145638452263593}
   - {fileID: 8787916688092567399}
   - {fileID: 6449656848823476781}
   - {fileID: 3171561564293508089}
-  - {fileID: 325989782923803412}
   - {fileID: -5580528737027272712}
   - {fileID: 2578424069092996616}
+  - {fileID: -2182497379548351049}
+  - {fileID: -8691732298886927386}
+  - {fileID: 5085229492516263674}
+  - {fileID: -8647355418110044154}
+  - {fileID: 7876250378605590337}
   EditorParameters: []
   MasterBanks:
   - {fileID: -8373241030047903528}
   StringsBanks:
   - {fileID: -1907387261365305477}
   cacheVersion: 131847
-  cacheTime: 638850698628427867
+  cacheTime: 638850899359256237
   SerializableEventsDict:
   - key: event:/SFX/Player/Hand dryer/HandDryerActivation04
     index: 0
@@ -496,49 +580,28 @@ MonoBehaviour:
     index: 17
   - key: event:/SFX/Player/Sphere/SphereDischarge
     index: 18
-  - key: event:/SFX/Player/Eating/Eating chocolate
-    index: 19
   - key: event:/SFX/Player/Walking/Footsteps
-    index: 20
+    index: 19
   - key: event:/SFX/Player/Vending machine/VendingMachineActivation
-    index: 21
+    index: 20
   - key: event:/SFX/Player/Door/DoorOpen
-    index: 22
+    index: 21
   - key: event:/SFX/Player/Terminal/TerminalInteraction
-    index: 23
-  - key: event:/SFX/Player/Eating/Eating chips
-    index: 24
+    index: 22
   - key: event:/Ambience/Storage room/VentilationNoise
-    index: 25
+    index: 23
   - key: event:/Ambience/Staff canteen/RefrigeratorNoise
+    index: 24
+  - key: event:/SFX/Player/Eating/EatingChocolate
+    index: 25
+  - key: event:/SFX/Player/Defense/ShieldActivation
     index: 26
---- !u!114 &325989782923803412
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Eating/Eating chips
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Eating/Eating chips
-  Guid:
-    Data1: 802410230
-    Data2: 1129170750
-    Data3: 792859547
-    Data4: 80374644
-  Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
+  - key: event:/SFX/Player/Drinking/Drink
+    index: 27
+  - key: event:/SFX/Player/Defense/ShieldHit
+    index: 28
+  - key: event:/SFX/Player/Eating/EatingChips
+    index: 29
 --- !u!114 &1581219752721046760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -852,11 +915,38 @@ MonoBehaviour:
   Path: ../fmod-project/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638850690045359783
+  lastModified: 638850899359256237
   FileSizes:
   - Name: Desktop
-    Value: 713248
+    Value: 888832
   Exists: 1
+--- !u!114 &5085229492516263674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Drinking/Drink
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Drinking/Drink
+  Guid:
+    Data1: -1592788327
+    Data2: 1145508056
+    Data3: 1240228743
+    Data4: -543696551
+  Banks:
+  - {fileID: 5065420971171067895}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &6449656848823476781
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -875,33 +965,6 @@ MonoBehaviour:
     Data2: 1338532496
     Data3: -674571377
     Data4: 1673984798
-  Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &7102936044800987528
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Eating/Eating chocolate
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Eating/Eating chocolate
-  Guid:
-    Data1: 2115817834
-    Data2: 1321077471
-    Data3: -218120781
-    Data4: 1914792332
   Banks:
   - {fileID: 5065420971171067895}
   IsStream: 0
@@ -938,6 +1001,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 96978
+--- !u!114 &7876250378605590337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Eating/EatingChips
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Eating/EatingChips
+  Guid:
+    Data1: 802410230
+    Data2: 1129170750
+    Data3: 792859547
+    Data4: 80374644
+  Banks:
+  - {fileID: 5065420971171067895}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &8787916688092567399
 MonoBehaviour:
   m_ObjectHideFlags: 0

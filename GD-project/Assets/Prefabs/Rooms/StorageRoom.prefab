@@ -19702,8 +19702,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4611792544535434008}
+  - component: {fileID: 3352496692707539225}
   m_Layer: 0
-  m_Name: Storage room
+  m_Name: StorageRoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19744,6 +19745,26 @@ Transform:
   - {fileID: 5731835130241965442}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3352496692707539225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7999259401534772710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 214320ac68aae4c69932706f791e93da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roomType: 1
+  connectors:
+  - id: 2
+    direction: 1
+    passageVisual: {fileID: 2926527138158437537}
+    spawnPoint: {fileID: 6883593272374552534}
+    isConnected: 0
+  centralSpawnPoint: {fileID: 4872280986875945669}
 --- !u!1 &8011959693935610524
 GameObject:
   m_ObjectHideFlags: 0
@@ -25373,7 +25394,8 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2798162152419757125, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
     m_RemovedGameObjects:
     - {fileID: 6085727621107316953, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
     - {fileID: 4855382729052564825, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
@@ -25393,6 +25415,11 @@ Transform:
 --- !u!4 &3902946044732335304 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1271518072024894409, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
+  m_PrefabInstance: {fileID: 2850596374251171585}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4872280986875945669 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7210979827587780036, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
   m_PrefabInstance: {fileID: 2850596374251171585}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &5150549151427548252 stripped

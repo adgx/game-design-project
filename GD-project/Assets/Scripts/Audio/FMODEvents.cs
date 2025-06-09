@@ -14,7 +14,15 @@ public class FMODEvents : MonoBehaviour
     [field: SerializeField] public EventReference vendingMachineItemPickUp { get; private set; }
     [field: SerializeField] public EventReference sphereDischarge { get; private set; }
     [field: SerializeField] public EventReference sphereRotation { get; private set; }
+    [field: SerializeField] public EventReference playerEatChips { get; private set; }
+    [field: SerializeField] public EventReference playerEatChocolate { get; private set; }
+    [field: SerializeField] public EventReference playerDrink { get; private set; }
+
+    [field: SerializeField] public EventReference shieldActivation { get; private set; }
+    [field: SerializeField] public EventReference shieldHit { get; private set; }
     
+    [field: SerializeField] public EventReference attackX { get; private set; }
+
     [field: Header("Ambience")]
     [field: SerializeField] public EventReference alarm { get; private set;  }
     [field: SerializeField] public EventReference serverNoise { get; private set;  }

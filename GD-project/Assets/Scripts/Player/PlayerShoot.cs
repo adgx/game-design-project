@@ -249,6 +249,9 @@ public class PlayerShoot : MonoBehaviour
 	async void SpawnMagneticShield() {
 		if(!magneticShieldOpen) {
 			if(powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DefensePowerUp)) {
+				// Audio management
+				AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldActivation, rotatingSphere.transform.position);
+				
 				if(powerUp.powerUpsObtained[PowerUp.PowerUpType.DefensePowerUp] == 1) {
 					// Spawn level 1 shield
 				}

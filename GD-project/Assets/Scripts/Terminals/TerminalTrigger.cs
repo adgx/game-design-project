@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using FMODUnity;
 using UnityEngine;
 
 // NOTE: this script is attached to each terminal individually
@@ -24,6 +26,9 @@ public class TerminalTrigger : MonoBehaviour
     }
     
     private TriggerType triggerType;
+    
+    // Audio management
+    private GameObject player;
 
     static System.Random rnd = new System.Random();
     
@@ -49,6 +54,9 @@ public class TerminalTrigger : MonoBehaviour
 
     async private void ManageVendingMachine() {
 		if(!busy) {
+			// Audio management
+			player = GameObject.Find("Player");
+			
 			switch(triggerType) {
 				case TriggerType.SphereTerminal:
 					// Give a random power up for the Sphere
@@ -90,7 +98,20 @@ public class TerminalTrigger : MonoBehaviour
 							// Generate a random power up
 							int powerUpIndexPlayer = rnd.Next(powerUps.playerPowerUps.Count);
 							Debug.Log(powerUps.playerPowerUps.Count);
-
+							
+							// Audio management
+							var obtainedPowerUp = powerUps.playerPowerUps[powerUpIndexPlayer];
+							
+							if (obtainedPowerUp == PowerUp.PowerUpType.HealthBoost)
+							{
+								AudioManager.instance.PlayOneShot(FMODEvents.instance.playerEatChips, player.transform.position);
+							}
+							
+							if (obtainedPowerUp == PowerUp.PowerUpType.MovementBoost)
+							{
+								AudioManager.instance.PlayOneShot(FMODEvents.instance.playerDrink, player.transform.position);
+							}
+							
 							// Insert the power up in the dictionary of the obtained ones
 							powerUps.ObtainPowerUp(powerUps.playerPowerUps[powerUpIndexPlayer]);
 
@@ -125,6 +146,10 @@ public class TerminalTrigger : MonoBehaviour
 
 						busy = true;
 						await Task.Delay(2000);
+						
+						// Audio management
+						AudioManager.instance.PlayOneShot(FMODEvents.instance.playerEatChocolate, player.transform.position);
+						
 						playerShoot.RecoverHealth(playerShoot.maxHealth);
 						playerShoot.DecreaseStamina(1);
 						busy = false;

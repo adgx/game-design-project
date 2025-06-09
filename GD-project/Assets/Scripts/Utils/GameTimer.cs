@@ -15,7 +15,7 @@ namespace Utils
 	public class GameTimer : MonoBehaviour
     {
         // TODO: the timer is set to 2 minutes for debugging. It should be of 10 minutes.
-	    private const float TimeLimit = 2 * 60f;
+	    private const float TimeLimit = 30f;
         private float currentTime;
 
         public TMP_Text timerText;
