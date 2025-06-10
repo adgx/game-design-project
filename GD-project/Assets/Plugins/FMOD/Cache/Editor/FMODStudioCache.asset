@@ -69,7 +69,7 @@ MonoBehaviour:
   Path: ../fmod-project/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638851536893622309
+  lastModified: 638851563989253706
   FileSizes:
   - Name: Desktop
     Value: 1524
@@ -224,7 +224,7 @@ MonoBehaviour:
   Path: ../fmod-project/Build/Desktop/Ambience.bank
   Name: Ambience
   StudioPath: bank:/Ambience
-  lastModified: 638851503648731087
+  lastModified: 638851563989253706
   FileSizes:
   - Name: Desktop
     Value: 4246272
@@ -487,7 +487,7 @@ MonoBehaviour:
   Path: ../fmod-project/Build/Desktop/Music.bank
   Name: Music
   StudioPath: bank:/Music
-  lastModified: 638850815438325393
+  lastModified: 638851563989570954
   FileSizes:
   - Name: Desktop
     Value: 3887712
@@ -534,7 +534,7 @@ MonoBehaviour:
   Path: ../fmod-project/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638851536893636155
+  lastModified: 638851563989253706
   FileSizes:
   - Name: Desktop
     Value: 2958
@@ -681,7 +681,7 @@ MonoBehaviour:
   StringsBanks:
   - {fileID: -1907387261365305477}
   cacheVersion: 131847
-  cacheTime: 638851536896583749
+  cacheTime: 638851563989570954
   SerializableEventsDict:
   - key: event:/SFX/Player/Hand dryer/HandDryerActivation04
     index: 0
@@ -741,30 +741,20 @@ MonoBehaviour:
     index: 27
   - key: event:/SFX/Player/Eating/EatingChips
     index: 28
-  - key: event:/SFX/Player/Attack/Distance 1/Version 2/Distance1
-    index: 29
-  - key: event:/SFX/Player/Attack/Distance 2/Version 1/Distance2_Shoot_1
-    index: 30
   - key: event:/SFX/Player/Sphere/SpherePartialRecharge
-    index: 31
-  - key: event:/SFX/Player/Attack/Distance 2/Version 2/Distance2_Load_2
-    index: 32
-  - key: event:/SFX/Player/Attack/Distance 2/Version 2/Distance2_Shoot_2
-    index: 33
+    index: 29
   - key: event:/SFX/Player/Sphere/SphereFullRecharge
-    index: 34
-  - key: event:/SFX/Player/Attack/Distance 1/Version 1/Distance1
-    index: 35
-  - key: event:/SFX/Player/Attack/Distance 2/Version 1/Distance2_Load_1
-    index: 36
+    index: 30
   - key: event:/SFX/Player/Sphere/SphereDischarge
-    index: 37
-  - key: event:/SFX/Player/Attack/Close 1/Close1_Load
-    index: 38
-  - key: event:/SFX/Player/Attack/Close 2/Close2
-    index: 39
-  - key: event:/SFX/Player/Attack/Close 1/Close1_Shoot
-    index: 40
+    index: 31
+  - key: event:/SFX/Player/Attack/Close/CloseLoad
+    index: 32
+  - key: event:/SFX/Player/Attack/Distance/DistanceShoot
+    index: 33
+  - key: event:/SFX/Player/Attack/Close/CloseShoot
+    index: 34
+  - key: event:/SFX/Player/Attack/Distance/DistanceLoad
+    index: 35
 --- !u!114 &1581219752721046760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1051,7 +1041,7 @@ MonoBehaviour:
   Path: ../fmod-project/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638851536896583749
+  lastModified: 638851563989570954
   FileSizes:
   - Name: Desktop
     Value: 1134752
