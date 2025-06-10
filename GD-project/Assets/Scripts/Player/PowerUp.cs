@@ -4,47 +4,48 @@ using System.Collections.Generic;
 public class PowerUp : MonoBehaviour
 {
     public enum PowerUpType {
-		// Sphere
+        // Sphere
         DistanceAttackPowerUp,
         CloseAttackPowerUp,
         DefensePowerUp,
-        DamageBoost,
 
-		// Player
+        // Player
         HealthBoost,
-		MovementBoost
+        MovementBoost
     }
 
-	// This lists contain the Sphere and Player PowerUps that have not been collected yet. When a Power Up is collected, it is removed from the list
-	public List<PowerUpType> spherePowerUps = new List<PowerUpType>();
-	public List<PowerUpType> playerPowerUps = new List<PowerUpType>();
+    // This lists contain the Sphere and Player PowerUps that have not been collected yet. When a Power Up is collected, it is removed from the list
+    public List<PowerUpType> spherePowerUps = new List<PowerUpType>();
+    public List<PowerUpType> playerPowerUps = new List<PowerUpType>();
 
-	public Dictionary<PowerUpType, int> powerUpsObtained = new Dictionary<PowerUpType, int> {};
+    public Dictionary<PowerUpType, int> powerUpsObtained = new Dictionary<PowerUpType, int> {};
 
-	private void Start() {
-		spherePowerUps.Add(PowerUpType.DistanceAttackPowerUp);
-		spherePowerUps.Add(PowerUpType.DistanceAttackPowerUp);
-		spherePowerUps.Add(PowerUpType.DefensePowerUp);
-		spherePowerUps.Add(PowerUpType.DefensePowerUp);
-		spherePowerUps.Add(PowerUpType.DefensePowerUp);
-		spherePowerUps.Add(PowerUpType.DamageBoost);
+    private void Start() {
+        spherePowerUps.Add(PowerUpType.DistanceAttackPowerUp);
+        spherePowerUps.Add(PowerUpType.DistanceAttackPowerUp);
+        spherePowerUps.Add(PowerUpType.CloseAttackPowerUp);
+        spherePowerUps.Add(PowerUpType.CloseAttackPowerUp);
+        spherePowerUps.Add(PowerUpType.DefensePowerUp);
+        spherePowerUps.Add(PowerUpType.DefensePowerUp);
 
-		playerPowerUps.Add(PowerUpType.HealthBoost);
-		playerPowerUps.Add(PowerUpType.HealthBoost);
-		playerPowerUps.Add(PowerUpType.HealthBoost);
-		playerPowerUps.Add(PowerUpType.MovementBoost);
-		playerPowerUps.Add(PowerUpType.MovementBoost);
-		playerPowerUps.Add(PowerUpType.MovementBoost);
-	}
+        playerPowerUps.Add(PowerUpType.HealthBoost);
+        playerPowerUps.Add(PowerUpType.HealthBoost);
+        playerPowerUps.Add(PowerUpType.HealthBoost);
+        playerPowerUps.Add(PowerUpType.MovementBoost);	// TODO: to be implemented
+        playerPowerUps.Add(PowerUpType.MovementBoost);
+        playerPowerUps.Add(PowerUpType.MovementBoost);
+		
+        powerUpsObtained[PowerUpType.DefensePowerUp] = 3;
+    }
 
-	public void ObtainPowerUp(PowerUpType powerUp) {
-		Debug.Log(powerUp.ToString());
+    public void ObtainPowerUp(PowerUpType powerUp) {
+        Debug.Log(powerUp.ToString());
 
-		if(powerUpsObtained.ContainsKey(powerUp)) {
-			powerUpsObtained[powerUp]++;
-		}
-		else {
-			powerUpsObtained[powerUp] = 1;
-		}
-	}
+        if(powerUpsObtained.ContainsKey(powerUp)) {
+            powerUpsObtained[powerUp]++;
+        }
+        else {
+            powerUpsObtained[powerUp] = 1;
+        }
+    }
 }

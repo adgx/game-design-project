@@ -358,7 +358,7 @@ public class PlayerShoot : MonoBehaviour
 		// The attack is shot only on "Fire1" up
 		if (Input.GetButtonDown("Fire1")) {
 			
-			// TODO: audio management
+			// Audio management
 			loadingAttack = true;
 			
 			if(!magneticShield && CheckStamina(1)) {
@@ -424,25 +424,46 @@ public class PlayerShoot : MonoBehaviour
 	// Audio management
 	private void UpdateSound() 
 	{
-		// TODO: define the code to handle the close attack
 		distanceAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
 		closeAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotateSphere.transform));
 	
 		// Start distance attack loading event if the player is using distance attack
-		if(loadingAttack && attackNumber == 1 && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DistanceAttackPowerUp))
+		if (attackNumber == 1)
 		{
-			// Get the playback state for the distance attack loading event 
-			PLAYBACK_STATE distanceAttackPlaybackState;
-			distanceAttackLoading.getPlaybackState(out distanceAttackPlaybackState);
-			if(distanceAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED)) 
+			if(loadingAttack && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DistanceAttackPowerUp))
 			{
-				distanceAttackLoading.start();
+				// Get the playback state for the distance attack loading event 
+				PLAYBACK_STATE distanceAttackPlaybackState;
+				distanceAttackLoading.getPlaybackState(out distanceAttackPlaybackState);
+				if(distanceAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED)) 
+				{
+					distanceAttackLoading.start();
+				}
+			}
+			// Otherwise, stop the distance attack loading event 
+			else
+			{
+				distanceAttackLoading.stop(STOP_MODE.ALLOWFADEOUT);
 			}
 		}
-		// Otherwise, stop the distance attack loading event 
+
 		else
 		{
-			distanceAttackLoading.stop(STOP_MODE.ALLOWFADEOUT);
+			if(loadingAttack && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.CloseAttackPowerUp))
+			{
+				// Get the playback state for the close attack loading event 
+				PLAYBACK_STATE closeAttackPlaybackState;
+				closeAttackLoading.getPlaybackState(out closeAttackPlaybackState);
+				if(closeAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED)) 
+				{
+					closeAttackLoading.start();
+				}
+			}
+			// Otherwise, stop the close attack loading event 
+			else
+			{
+				closeAttackLoading.stop(STOP_MODE.ALLOWFADEOUT);
+			}
 		}
 	}
 }
