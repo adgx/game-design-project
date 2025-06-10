@@ -19,6 +19,7 @@ public class FMODEvents : MonoBehaviour
     [field: SerializeField] public EventReference playerDrink { get; private set; }
 
     [field: SerializeField] public EventReference shieldActivation { get; private set; }
+    [field: SerializeField] public EventReference shieldDeactivation { get; private set; }
     [field: SerializeField] public EventReference shieldHit { get; private set; }
     
     [field: SerializeField] public EventReference attackX { get; private set; }

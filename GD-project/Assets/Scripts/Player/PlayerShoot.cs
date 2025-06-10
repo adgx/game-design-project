@@ -269,6 +269,10 @@ public class PlayerShoot : MonoBehaviour
 		}
 		else {
 			if(magneticShield != null) {
+				// Audio management
+				AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldDeactivation, rotatingSphere.transform.position);
+				await Task.Delay(500);
+				
 				Destroy(magneticShield);
 			}
 			magneticShieldOpen = false;
