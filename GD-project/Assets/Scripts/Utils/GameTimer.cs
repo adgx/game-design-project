@@ -52,6 +52,9 @@ namespace Utils
 		private List<StudioEventEmitter> ventilationEmitters = new List<StudioEventEmitter>();
 		private bool ventilationIsTriggered = false;
 		
+		private List<StudioEventEmitter> wcEmitters = new List<StudioEventEmitter>();
+		private bool wcIsTrigger = false;
+		
 		private MusicLoopIteration iteration = MusicLoopIteration.FIRST_ITERATION;
 		
 		private GameObject player;
@@ -126,6 +129,7 @@ namespace Utils
 			InitializeEventEmittersWithTag("SphereTerminal", FMODEvents.instance.terminalNoise, terminalEmitters);
 			InitializeEventEmittersWithTag("Elevator", FMODEvents.instance.elevatorNoise, elevatorEmitters);
 			InitializeEventEmittersWithTag("Ventilation", FMODEvents.instance.ventilationNoise, ventilationEmitters);
+			InitializeEventEmittersWithTag("FlushingWC", FMODEvents.instance.flushingWCNoise, wcEmitters);
 		}
 
         private void Update()
@@ -152,6 +156,7 @@ namespace Utils
 				stopEventEmitters(terminalEmitters);
 				stopEventEmitters(elevatorEmitters);
 				stopEventEmitters(ventilationEmitters);
+				stopEventEmitters(wcEmitters);
 				
 				switch(iteration) {
 					case MusicLoopIteration.FIRST_ITERATION:
@@ -184,6 +189,7 @@ namespace Utils
 			playEventEmitters(terminalEmitters, !terminalIsTriggered, ref terminalIsTriggered);
 			playEventEmitters(elevatorEmitters, !elevatorIsTriggered, ref elevatorIsTriggered);
 			playEventEmitters(ventilationEmitters, !ventilationIsTriggered, ref ventilationIsTriggered);
+			playEventEmitters(wcEmitters, !wcIsTrigger, ref wcIsTrigger);
 		}
 
         private void HandleRunReady()
@@ -201,6 +207,7 @@ namespace Utils
 	        resetEventEmitters(terminalEmitters, ref terminalIsTriggered);
 	        resetEventEmitters(elevatorEmitters, ref elevatorIsTriggered);
 	        resetEventEmitters(ventilationEmitters, ref ventilationIsTriggered);
+	        resetEventEmitters(wcEmitters, ref wcIsTrigger);
 
 	        InitializeEventEmittersWithTag("AlarmSpeaker", FMODEvents.instance.alarm, alarmEmitters);
 	        InitializeEventEmittersWithTag("Server", FMODEvents.instance.serverNoise, serverEmitters);
@@ -211,6 +218,7 @@ namespace Utils
 	        InitializeEventEmittersWithTag("SphereTerminal", FMODEvents.instance.terminalNoise, terminalEmitters);
 	        InitializeEventEmittersWithTag("Elevator", FMODEvents.instance.elevatorNoise, elevatorEmitters);
 	        InitializeEventEmittersWithTag("Ventilation", FMODEvents.instance.ventilationNoise, ventilationEmitters);
+	        InitializeEventEmittersWithTag("FlushingWC", FMODEvents.instance.flushingWCNoise, wcEmitters);
 	        
 	        AudioManager.instance.SetMusicLoopIteration(iteration);
         }

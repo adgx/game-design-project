@@ -1,32 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8749200571231062445
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Attack/Distance 2/Version 1/Distance2_Shoot_1
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Attack/Distance 2/Version 1/Distance2_Shoot_1
-  Guid:
-    Data1: 1745601595
-    Data2: 1114770188
-    Data3: -409871453
-    Data4: -1028367603
-  Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
 --- !u!114 &-8691732298886927386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,11 +69,38 @@ MonoBehaviour:
   Path: ../fmod-project/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638851134747826741
+  lastModified: 638851536893622309
   FileSizes:
   - Name: Desktop
     Value: 1524
   Exists: 1
+--- !u!114 &-8369502082638160690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Attack/Close/CloseShoot
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Attack/Close/CloseShoot
+  Guid:
+    Data1: 217779173
+    Data2: 1181870203
+    Data3: 1027034795
+    Data4: 1380500985
+  Banks:
+  - {fileID: 5065420971171067895}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-8113583324538508260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,33 +155,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &-7567402022298309549
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Attack/Distance 2/Version 1/Distance2_Load_1
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Attack/Distance 2/Version 1/Distance2_Load_1
-  Guid:
-    Data1: -1504091649
-    Data2: 1341889062
-    Data3: -1489269578
-    Data4: 2056284491
-  Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 4874
 --- !u!114 &-7091964592095762905
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,7 +224,7 @@ MonoBehaviour:
   Path: ../fmod-project/Build/Desktop/Ambience.bank
   Name: Ambience
   StudioPath: bank:/Ambience
-  lastModified: 638851072411790322
+  lastModified: 638851503648731087
   FileSizes:
   - Name: Desktop
     Value: 4246272
@@ -418,33 +391,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &-4291654913100434241
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Attack/Distance 1/Version 1/Distance1
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Attack/Distance 1/Version 1/Distance1
-  Guid:
-    Data1: -635794463
-    Data2: 1255129654
-    Data3: 477083055
-    Data4: 147751870
-  Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
 --- !u!114 &-4280277781347644752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -588,38 +534,11 @@ MonoBehaviour:
   Path: ../fmod-project/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638851134747836784
+  lastModified: 638851536893636155
   FileSizes:
   - Name: Desktop
-    Value: 3098
+    Value: 2958
   Exists: 1
---- !u!114 &-1780915220806678830
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Attack/Distance 2/Version 2/Distance2_Load_2
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Attack/Distance 2/Version 2/Distance2_Load_2
-  Guid:
-    Data1: 1234275442
-    Data2: 1220017165
-    Data3: 1503873679
-    Data4: 882638564
-  Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 399
 --- !u!114 &-1713145638452263593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -647,6 +566,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 2000
+--- !u!114 &-969218149281120259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Attack/Distance/DistanceShoot
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Attack/Distance/DistanceShoot
+  Guid:
+    Data1: 1745601595
+    Data2: 1114770188
+    Data3: -409871453
+    Data4: -1028367603
+  Banks:
+  - {fileID: 5065420971171067895}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &-836739769714885697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -665,33 +611,6 @@ MonoBehaviour:
     Data2: 1117672935
     Data3: 80789158
     Data4: 1299605440
-  Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &-24981856286500795
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Attack/Distance 2/Version 2/Distance2_Shoot_2
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Attack/Distance 2/Version 2/Distance2_Shoot_2
-  Guid:
-    Data1: -1568284031
-    Data2: 1296495318
-    Data3: 1059179439
-    Data4: 905726983
   Banks:
   - {fileID: 5065420971171067895}
   IsStream: 0
@@ -749,22 +668,20 @@ MonoBehaviour:
   - {fileID: 5085229492516263674}
   - {fileID: -8647355418110044154}
   - {fileID: 7876250378605590337}
-  - {fileID: 7644790558413676834}
-  - {fileID: -8749200571231062445}
   - {fileID: -6640301849430220455}
-  - {fileID: -1780915220806678830}
-  - {fileID: -24981856286500795}
   - {fileID: -4306061922007984963}
-  - {fileID: -4291654913100434241}
-  - {fileID: -7567402022298309549}
   - {fileID: -7091964592095762905}
+  - {fileID: 5140448970561231633}
+  - {fileID: -969218149281120259}
+  - {fileID: -8369502082638160690}
+  - {fileID: 5744076703543397602}
   EditorParameters: []
   MasterBanks:
   - {fileID: -8373241030047903528}
   StringsBanks:
   - {fileID: -1907387261365305477}
   cacheVersion: 131847
-  cacheTime: 638851134749271961
+  cacheTime: 638851536896583749
   SerializableEventsDict:
   - key: event:/SFX/Player/Hand dryer/HandDryerActivation04
     index: 0
@@ -802,30 +719,52 @@ MonoBehaviour:
     index: 16
   - key: event:/SFX/Player/Paper/PaperInteraction
     index: 17
-  - key: event:/SFX/Player/Sphere/SphereDischarge
-    index: 18
   - key: event:/SFX/Player/Walking/Footsteps
-    index: 19
+    index: 18
   - key: event:/SFX/Player/Vending machine/VendingMachineActivation
-    index: 20
+    index: 19
   - key: event:/SFX/Player/Door/DoorOpen
-    index: 21
+    index: 20
   - key: event:/SFX/Player/Terminal/TerminalInteraction
-    index: 22
+    index: 21
   - key: event:/Ambience/Storage room/VentilationNoise
-    index: 23
+    index: 22
   - key: event:/Ambience/Staff canteen/RefrigeratorNoise
-    index: 24
+    index: 23
   - key: event:/SFX/Player/Eating/EatingChocolate
-    index: 25
+    index: 24
   - key: event:/SFX/Player/Defense/ShieldActivation
-    index: 26
+    index: 25
   - key: event:/SFX/Player/Drinking/Drink
-    index: 27
+    index: 26
   - key: event:/SFX/Player/Defense/ShieldHit
-    index: 28
+    index: 27
   - key: event:/SFX/Player/Eating/EatingChips
+    index: 28
+  - key: event:/SFX/Player/Attack/Distance 1/Version 2/Distance1
     index: 29
+  - key: event:/SFX/Player/Attack/Distance 2/Version 1/Distance2_Shoot_1
+    index: 30
+  - key: event:/SFX/Player/Sphere/SpherePartialRecharge
+    index: 31
+  - key: event:/SFX/Player/Attack/Distance 2/Version 2/Distance2_Load_2
+    index: 32
+  - key: event:/SFX/Player/Attack/Distance 2/Version 2/Distance2_Shoot_2
+    index: 33
+  - key: event:/SFX/Player/Sphere/SphereFullRecharge
+    index: 34
+  - key: event:/SFX/Player/Attack/Distance 1/Version 1/Distance1
+    index: 35
+  - key: event:/SFX/Player/Attack/Distance 2/Version 1/Distance2_Load_1
+    index: 36
+  - key: event:/SFX/Player/Sphere/SphereDischarge
+    index: 37
+  - key: event:/SFX/Player/Attack/Close 1/Close1_Load
+    index: 38
+  - key: event:/SFX/Player/Attack/Close 2/Close2
+    index: 39
+  - key: event:/SFX/Player/Attack/Close 1/Close1_Shoot
+    index: 40
 --- !u!114 &1581219752721046760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1112,10 +1051,10 @@ MonoBehaviour:
   Path: ../fmod-project/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638851134749271961
+  lastModified: 638851536896583749
   FileSizes:
   - Name: Desktop
-    Value: 1107264
+    Value: 1134752
   Exists: 1
 --- !u!114 &5085229492516263674
 MonoBehaviour:
@@ -1144,6 +1083,60 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
+--- !u!114 &5140448970561231633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Attack/Close/CloseLoad
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Attack/Close/CloseLoad
+  Guid:
+    Data1: -703277264
+    Data2: 1223194215
+    Data3: 1297837189
+    Data4: -1550215625
+  Banks:
+  - {fileID: 5065420971171067895}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 5049
+--- !u!114 &5744076703543397602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Attack/Distance/DistanceLoad
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Attack/Distance/DistanceLoad
+  Guid:
+    Data1: -1504091649
+    Data2: 1341889062
+    Data3: -1489269578
+    Data4: 2056284491
+  Banks:
+  - {fileID: 5065420971171067895}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 4874
 --- !u!114 &6449656848823476781
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1198,33 +1191,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 96978
---- !u!114 &7644790558413676834
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Attack/Distance 1/Version 2/Distance1
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Attack/Distance 1/Version 2/Distance1
-  Guid:
-    Data1: -1608874989
-    Data2: 1162737558
-    Data3: 1850775983
-    Data4: 222910032
-  Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
 --- !u!114 &7876250378605590337
 MonoBehaviour:
   m_ObjectHideFlags: 0

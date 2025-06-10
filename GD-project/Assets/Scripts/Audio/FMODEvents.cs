@@ -32,6 +32,7 @@ public class FMODEvents : MonoBehaviour
     [field: SerializeField] public EventReference terminalNoise { get; private set;  }
     [field: SerializeField] public EventReference elevatorNoise { get; private set;  }
     [field: SerializeField] public EventReference ventilationNoise { get; private set;  }
+    [field: SerializeField] public EventReference flushingWCNoise { get; private set;  }
     
     [field: Header("Music")]
     [field: SerializeField] public EventReference music { get; private set; }

@@ -2,13 +2,13 @@
 <objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{a65961ff-9a26-4ffb-b68c-3ba74b69907a}">
 		<property name="name">
-			<value>Distance2_Load_1</value>
+			<value>DistanceLoad</value>
 		</property>
 		<property name="outputFormat">
 			<value>2</value>
 		</property>
 		<relationship name="folder">
-			<destination>{a4a776b4-2b89-40c6-96fa-28680ff20611}</destination>
+			<destination>{ddaa4d79-8439-45bd-ba9b-e55ecd5f003f}</destination>
 		</relationship>
 		<relationship name="mixer">
 			<destination>{8b526360-177b-4662-aa4f-7f8045484a01}</destination>
@@ -60,7 +60,7 @@
 	<object class="MarkerTrack" id="{745ea0a7-f816-42b6-ba2d-71bd3edc5beb}" />
 	<object class="GroupTrack" id="{7233ce6b-481c-4ffd-8d77-4b0ab0b590bb}">
 		<relationship name="modules">
-			<destination>{216e668b-f4f7-434b-af4b-a4021d9261e6}</destination>
+			<destination>{b11881eb-05e7-4e03-811e-1f40f30f46a7}</destination>
 		</relationship>
 		<relationship name="mixerGroup">
 			<destination>{ea63928b-c591-499e-a3f3-785cdffe330a}</destination>
@@ -68,7 +68,7 @@
 	</object>
 	<object class="Timeline" id="{2d97695c-0adf-4048-99d7-f9c412b024b2}">
 		<relationship name="modules">
-			<destination>{216e668b-f4f7-434b-af4b-a4021d9261e6}</destination>
+			<destination>{b11881eb-05e7-4e03-811e-1f40f30f46a7}</destination>
 		</relationship>
 		<relationship name="markers">
 			<destination>{b214a6a2-d47e-403a-98a9-2afc26cd33f7}</destination>
@@ -91,12 +91,12 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{5907b56d-6857-43fb-a7ba-aa4182e4c6f5}" />
-	<object class="SingleSound" id="{216e668b-f4f7-434b-af4b-a4021d9261e6}">
+	<object class="SingleSound" id="{b11881eb-05e7-4e03-811e-1f40f30f46a7}">
 		<property name="length">
 			<value>4.8747845804988659</value>
 		</property>
 		<relationship name="audioFile">
-			<destination>{78a3a058-34f6-40e9-b179-3fd2e05a1935}</destination>
+			<destination>{145ef4c6-266b-4f78-8972-bd3bbf9ea365}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{ea63928b-c591-499e-a3f3-785cdffe330a}">
