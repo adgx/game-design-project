@@ -130,6 +130,9 @@ public class PlayerShoot : MonoBehaviour
 	async void DistanceAttack1() {
 		// If we are here the stamina is at least 1
 		rotateSphere.positionSphere(new Vector3(0, 0, 1), RotateSphere.Animation.RotateAround);
+		
+		// Audio management
+		AudioManager.instance.PlayOneShot(FMODEvents.instance.distanceAttackShoot, rotatingSphere.transform.position);
 
 		int attackStamina = 0;
 		int maxStamina = 0;
@@ -179,6 +182,9 @@ public class PlayerShoot : MonoBehaviour
 
 	void CloseAttack1() {
 		// If we are here the stamina is at least 1
+		// Audio management
+		AudioManager.instance.PlayOneShot(FMODEvents.instance.closeAttackShoot, rotatingSphere.transform.position);
+		
 		SpawnAttackArea();
 
 		CheckForEnemies();
