@@ -1,11 +1,16 @@
 using System;
 using System.Collections;
 using System.Threading.Tasks;
+using FMOD.Studio;
 using TMPro;
 using UnityEngine;
 
 public class PlayerShoot : MonoBehaviour
 {
+	// Audio management 
+	// private EventInstance distanceAttackLoading;
+	// private EventInstance closeAttackLoading;
+	
 	// Attack1
 	[SerializeField] private float bulletSpeed;
 	// The point in which the bullet spawns
@@ -53,6 +58,13 @@ public class PlayerShoot : MonoBehaviour
 	private void Start() {
 		healthBar.SetMaxHealth(health);
 		player = GetComponent<Player>();
+		
+		// Audio management
+		// distanceAttackLoading = AudioManager.instance.CreateInstance(FMODEvents.instance.distanceAttackLoad);
+		// distanceAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
+		//
+		// closeAttackLoading = AudioManager.instance.CreateInstance(FMODEvents.instance.closeAttackLoad);
+		// closeAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
 	}
 
 	void ChangeSphereColor() {
@@ -373,5 +385,37 @@ public class PlayerShoot : MonoBehaviour
 				RecoverStamina();
 			}
 		}
+	}
+	
+	// Audio management
+	private void UpdateSound() 
+	{
+		// distanceAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
+		// closeAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotateSphere.transform));
+
+		// Start footsteps event if the player is moving
+		// if((Mathf.Abs(input.Horizontal) > 0.01f || Mathf.Abs(input.Vertical) > 0.01f) && !isFrozen)
+		// {
+		// 	// Get the playback state for the footsteps event
+		// 	PLAYBACK_STATE footstepsPlaybackState;
+		// 	playerFootsteps.getPlaybackState(out footstepsPlaybackState);
+		// 	if(footstepsPlaybackState.Equals(PLAYBACK_STATE.STOPPED)) 
+		// 	{
+		// 		playerFootsteps.start();
+		// 	}
+		// }
+		// // Otherwise, stop the footsteps event
+		// else
+		// {
+		// 	playerFootsteps.stop(STOP_MODE.ALLOWFADEOUT);
+		// }
+		//
+		// // Get the playback state for the rotation event
+		// PLAYBACK_STATE rotationPlaybackState;
+		// sphereRotation.getPlaybackState(out rotationPlaybackState);
+		// if(rotationPlaybackState.Equals(PLAYBACK_STATE.STOPPED)) 
+		// {
+		// 	sphereRotation.start();
+		// }
 	}
 }

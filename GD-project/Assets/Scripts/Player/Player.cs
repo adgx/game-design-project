@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
 	private EventInstance playerFootsteps;
 	private EventInstance sphere;
 	private EventInstance sphereRotation;
+	[SerializeField] private GameObject rotatingSphere;
 
 	public void FreezeMovement(bool freeze)
     {
@@ -86,7 +87,7 @@ public class Player : MonoBehaviour
 		playerFootsteps = AudioManager.instance.CreateInstance(FMODEvents.instance.playerFootsteps);
 		playerFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
 		sphereRotation = AudioManager.instance.CreateInstance(FMODEvents.instance.sphereRotation);
-		sphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+		sphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
 	}
 
 	// FixedUpdate is called once per frame
@@ -105,7 +106,7 @@ public class Player : MonoBehaviour
 	private void UpdateSound() 
 	{
 		playerFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-		sphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(this.transform));
+		sphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
 
 		// Start footsteps event if the player is moving
 		if((Mathf.Abs(input.Horizontal) > 0.01f || Mathf.Abs(input.Vertical) > 0.01f) && !isFrozen)
