@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class GetCollisions : MonoBehaviour
 {
-	// Audio managemen
+	// Audio management
 	private GameObject player;
 	
 	public int initialPlayerBulletDamage = 30, enemyBulletDamage = 20;

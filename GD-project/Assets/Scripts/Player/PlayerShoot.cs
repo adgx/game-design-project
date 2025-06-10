@@ -60,11 +60,11 @@ public class PlayerShoot : MonoBehaviour
 		player = GetComponent<Player>();
 		
 		// Audio management
-		// distanceAttackLoading = AudioManager.instance.CreateInstance(FMODEvents.instance.distanceAttackLoad);
-		// distanceAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
-		//
-		// closeAttackLoading = AudioManager.instance.CreateInstance(FMODEvents.instance.closeAttackLoad);
-		// closeAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
+		distanceAttackLoading = AudioManager.instance.CreateInstance(FMODEvents.instance.distanceAttackLoad);
+		distanceAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
+		
+		closeAttackLoading = AudioManager.instance.CreateInstance(FMODEvents.instance.closeAttackLoad);
+		closeAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
 	}
 
 	void ChangeSphereColor() {
@@ -90,7 +90,6 @@ public class PlayerShoot : MonoBehaviour
 				break;
 			default:
 				break;
-
 		}
 	}
 
@@ -159,8 +158,7 @@ public class PlayerShoot : MonoBehaviour
 				}
 			}
 		}
-
-		loadingAttack = true;
+		
 		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DistanceAttackPowerUp) && loadingAttack)
 		{
 			attackStamina++;
@@ -221,7 +219,6 @@ public class PlayerShoot : MonoBehaviour
 			}
 		}
 		
-		loadingAttack = true;
 		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.CloseAttackPowerUp) && loadingAttack) {
 			attackStamina++;
 			Debug.Log(attackStamina);
@@ -360,6 +357,10 @@ public class PlayerShoot : MonoBehaviour
 	void Update() {
 		// The attack is shot only on "Fire1" up
 		if (Input.GetButtonDown("Fire1")) {
+			
+			// TODO: audio management
+			loadingAttack = true;
+			
 			if(!magneticShield && CheckStamina(1)) {
 				switch(attackNumber) {
 					case 1:
@@ -373,6 +374,9 @@ public class PlayerShoot : MonoBehaviour
 				}
 			}
 		}
+		
+		// Audio management
+		UpdateSound();
 		
 		if (Input.GetButtonUp("Fire1")) {
 			if(!magneticShield && CheckStamina(1)) {
@@ -418,28 +422,27 @@ public class PlayerShoot : MonoBehaviour
 	}
 	
 	// Audio management
-	// private void UpdateSound() 
-	// {
-	// 	// TODO: define the code to handle the close attack
-	// 	distanceAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
-	// 	closeAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotateSphere.transform));
-	//
-	// 	// Start distance attack loading event if the player is using distance attack
-	// 	// TODO: add the real condition, about keeping pushed the attack button 
-	// 	if(true)
-	// 	{
-	// 		// Get the playback state for the distance attack loading event 
-	// 		PLAYBACK_STATE distanceAttackPlaybackState;
-	// 		distanceAttackLoading.getPlaybackState(out distanceAttackPlaybackState);
-	// 		if(distanceAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED)) 
-	// 		{
-	// 			distanceAttackLoading.start();
-	// 		}
-	// 	}
-	// 	// Otherwise, stop the distance attack loading event 
-	// 	else
-	// 	{
-	// 		distanceAttackLoading.stop(STOP_MODE.ALLOWFADEOUT);
-	// 	}
-	// }
+	private void UpdateSound() 
+	{
+		// TODO: define the code to handle the close attack
+		distanceAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
+		closeAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotateSphere.transform));
+	
+		// Start distance attack loading event if the player is using distance attack
+		if(loadingAttack && attackNumber == 1 && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DistanceAttackPowerUp))
+		{
+			// Get the playback state for the distance attack loading event 
+			PLAYBACK_STATE distanceAttackPlaybackState;
+			distanceAttackLoading.getPlaybackState(out distanceAttackPlaybackState);
+			if(distanceAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED)) 
+			{
+				distanceAttackLoading.start();
+			}
+		}
+		// Otherwise, stop the distance attack loading event 
+		else
+		{
+			distanceAttackLoading.stop(STOP_MODE.ALLOWFADEOUT);
+		}
+	}
 }
