@@ -1,60 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8691732298886927386
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Defense/ShieldActivation
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Defense/ShieldActivation
-  Guid:
-    Data1: -192495753
-    Data2: 1195782594
-    Data3: 479025796
-    Data4: 414164792
-  Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &-8647355418110044154
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Defense/ShieldHit
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Defense/ShieldHit
-  Guid:
-    Data1: 851313114
-    Data2: 1257598867
-    Data3: -1050364744
-    Data4: -834285941
-  Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &-8373241030047903528
+--- !u!114 &-8735521259615001257
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -74,7 +20,7 @@ MonoBehaviour:
   - Name: Desktop
     Value: 1524
   Exists: 1
---- !u!114 &-8369502082638160690
+--- !u!114 &-7366971586632511911
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -84,16 +30,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Attack/Close/CloseShoot
+  m_Name: event:/SFX/Player/Defense/ShieldHit
   m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Attack/Close/CloseShoot
+  Path: event:/SFX/Player/Defense/ShieldHit
   Guid:
-    Data1: 217779173
-    Data2: 1181870203
-    Data3: 1027034795
-    Data4: 1380500985
+    Data1: 851313114
+    Data2: 1257598867
+    Data3: -1050364744
+    Data4: -834285941
   Banks:
-  - {fileID: 5065420971171067895}
+  - {fileID: -2530364673873735608}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -101,270 +47,7 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &-8113583324538508260
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Ambience/General/TerminalNoise
-  m_EditorClassIdentifier: 
-  Path: event:/Ambience/General/TerminalNoise
-  Guid:
-    Data1: -175314623
-    Data2: 1255852906
-    Data3: 1178096001
-    Data4: 1697852409
-  Banks:
-  - {fileID: -6364876755650830886}
-  IsStream: 1
-  Is3D: 1
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 13012
---- !u!114 &-7636290080626979296
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Hand dryer/HandDryerActivation01
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Hand dryer/HandDryerActivation01
-  Guid:
-    Data1: -1240823736
-    Data2: 1220343280
-    Data3: 1576120448
-    Data4: -542193976
-  Banks:
-  - {fileID: -6364876755650830886}
-  IsStream: 1
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &-7091964592095762905
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Sphere/SphereDischarge
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Sphere/SphereDischarge
-  Guid:
-    Data1: -1812742576
-    Data2: 1321843028
-    Data3: 149478297
-    Data4: -1084694590
-  Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &-6640301849430220455
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Sphere/SpherePartialRecharge
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Sphere/SpherePartialRecharge
-  Guid:
-    Data1: -173376928
-    Data2: 1284800641
-    Data3: -1552988530
-    Data4: 378764851
-  Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &-6364876755650830886
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Ambience.bank
-  m_EditorClassIdentifier: 
-  Path: ../fmod-project/Build/Desktop/Ambience.bank
-  Name: Ambience
-  StudioPath: bank:/Ambience
-  lastModified: 638851563989253706
-  FileSizes:
-  - Name: Desktop
-    Value: 4246272
-  Exists: 1
---- !u!114 &-6027150723121088722
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Sphere/SphereRotation
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Sphere/SphereRotation
-  Guid:
-    Data1: 784200999
-    Data2: 1239473725
-    Data3: -2005726846
-    Data4: 1834673606
-  Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 3700
---- !u!114 &-5580528737027272712
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Ambience/Storage room/VentilationNoise
-  m_EditorClassIdentifier: 
-  Path: event:/Ambience/Storage room/VentilationNoise
-  Guid:
-    Data1: -849333374
-    Data2: 1300067871
-    Data3: 1301444737
-    Data4: 1296470915
-  Banks:
-  - {fileID: -6364876755650830886}
-  IsStream: 1
-  Is3D: 1
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 24500
---- !u!114 &-4962972040068344876
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Door/DoorClose
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Door/DoorClose
-  Guid:
-    Data1: 1243160138
-    Data2: 1126404859
-    Data3: 1977504399
-    Data4: -1866376778
-  Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &-4942565569585935716
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Hand dryer/HandDryerActivation03
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Hand dryer/HandDryerActivation03
-  Guid:
-    Data1: 1682601842
-    Data2: 1182135712
-    Data3: -1286113637
-    Data4: -2087330309
-  Banks:
-  - {fileID: -6364876755650830886}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &-4733962489775154289
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Ambience/General/Alarm
-  m_EditorClassIdentifier: 
-  Path: event:/Ambience/General/Alarm
-  Guid:
-    Data1: 1373224865
-    Data2: 1258097855
-    Data3: -654289524
-    Data4: 410566001
-  Banks:
-  - {fileID: -6364876755650830886}
-  IsStream: 1
-  Is3D: 1
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 27774
---- !u!114 &-4306061922007984963
+--- !u!114 &-6808253220737427559
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -383,7 +66,7 @@ MonoBehaviour:
     Data3: 1585470126
     Data4: 409065975
   Banks:
-  - {fileID: 5065420971171067895}
+  - {fileID: -2530364673873735608}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -391,7 +74,7 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &-4280277781347644752
+--- !u!114 &-6733604156770578926
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -410,7 +93,7 @@ MonoBehaviour:
     Data3: -1191157100
     Data4: -1598563209
   Banks:
-  - {fileID: -6364876755650830886}
+  - {fileID: -5331371180799144171}
   IsStream: 1
   Is3D: 1
   IsOneShot: 1
@@ -418,7 +101,7 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &-3108508968580700337
+--- !u!114 &-5622548409023159438
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -428,24 +111,253 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Ambience/Hallway/FlickeringLED
+  m_Name: event:/SFX/Player/Eating/EatingChips
   m_EditorClassIdentifier: 
-  Path: event:/Ambience/Hallway/FlickeringLED
+  Path: event:/SFX/Player/Eating/EatingChips
   Guid:
-    Data1: 28823743
-    Data2: 1225098834
-    Data3: 1945257915
-    Data4: 1039743675
+    Data1: 802410230
+    Data2: 1129170750
+    Data3: 792859547
+    Data4: 80374644
   Banks:
-  - {fileID: -6364876755650830886}
+  - {fileID: -2530364673873735608}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-5331371180799144171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Ambience.bank
+  m_EditorClassIdentifier: 
+  Path: ../fmod-project/Build/Desktop/Ambience.bank
+  Name: Ambience
+  StudioPath: bank:/Ambience
+  lastModified: 638851647336218382
+  FileSizes:
+  - Name: Desktop
+    Value: 4246272
+  Exists: 1
+--- !u!114 &-4355489118699216125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Vending machine/VendingMachineItemPickup
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Vending machine/VendingMachineItemPickup
+  Guid:
+    Data1: 626503219
+    Data2: 1117672935
+    Data3: 80789158
+    Data4: 1299605440
+  Banks:
+  - {fileID: -2530364673873735608}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-4294747805787824888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Door/DoorOpen
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Door/DoorOpen
+  Guid:
+    Data1: -305465452
+    Data2: 1338532496
+    Data3: -674571377
+    Data4: 1673984798
+  Banks:
+  - {fileID: -2530364673873735608}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-3274494135017263608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Hand dryer/HandDryerActivation01
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Hand dryer/HandDryerActivation01
+  Guid:
+    Data1: -1240823736
+    Data2: 1220343280
+    Data3: 1576120448
+    Data4: -542193976
+  Banks:
+  - {fileID: -5331371180799144171}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-3126300209738789509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Defense/ShieldActivation
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Defense/ShieldActivation
+  Guid:
+    Data1: -192495753
+    Data2: 1195782594
+    Data3: 479025796
+    Data4: 414164792
+  Banks:
+  - {fileID: -2530364673873735608}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-2877389323152655992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Sphere/SpherePartialRecharge
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Sphere/SpherePartialRecharge
+  Guid:
+    Data1: -173376928
+    Data2: 1284800641
+    Data3: -1552988530
+    Data4: 378764851
+  Banks:
+  - {fileID: -2530364673873735608}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-2871351742747663180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Ambience/General/TerminalNoise
+  m_EditorClassIdentifier: 
+  Path: event:/Ambience/General/TerminalNoise
+  Guid:
+    Data1: -175314623
+    Data2: 1255852906
+    Data3: 1178096001
+    Data4: 1697852409
+  Banks:
+  - {fileID: -5331371180799144171}
   IsStream: 1
   Is3D: 1
   IsOneShot: 0
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 30968
---- !u!114 &-2733488232268042225
+  Length: 13012
+--- !u!114 &-2530364673873735608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/SFX.bank
+  m_EditorClassIdentifier: 
+  Path: ../fmod-project/Build/Desktop/SFX.bank
+  Name: SFX
+  StudioPath: bank:/SFX
+  lastModified: 638851650388137392
+  FileSizes:
+  - Name: Desktop
+    Value: 1134752
+  Exists: 1
+--- !u!114 &-1216635055360954151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Waking up/WakingUp
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Waking up/WakingUp
+  Guid:
+    Data1: 776900939
+    Data2: 1206370472
+    Data3: -1873415267
+    Data4: 2015559660
+  Banks:
+  - {fileID: -2530364673873735608}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &-923303162765585856
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -464,7 +376,7 @@ MonoBehaviour:
     Data3: 166545854
     Data4: 1583370833
   Banks:
-  - {fileID: -6364876755650830886}
+  - {fileID: -5331371180799144171}
   IsStream: 1
   Is3D: 1
   IsOneShot: 0
@@ -472,27 +384,7 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 5100
---- !u!114 &-2486597083803716208
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/Music.bank
-  m_EditorClassIdentifier: 
-  Path: ../fmod-project/Build/Desktop/Music.bank
-  Name: Music
-  StudioPath: bank:/Music
-  lastModified: 638851563989570954
-  FileSizes:
-  - Name: Desktop
-    Value: 3887712
-  Exists: 1
---- !u!114 &-2182497379548351049
+--- !u!114 &-903005095787862668
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -502,24 +394,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Eating/EatingChocolate
+  m_Name: event:/Ambience/Server room/ServerNoise
   m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Eating/EatingChocolate
+  Path: event:/Ambience/Server room/ServerNoise
   Guid:
-    Data1: 2115817834
-    Data2: 1321077471
-    Data3: -218120781
-    Data4: 1914792332
+    Data1: -2014649865
+    Data2: 1292488745
+    Data3: 1648386715
+    Data4: -700621535
   Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
+  - {fileID: -5331371180799144171}
+  IsStream: 1
   Is3D: 1
-  IsOneShot: 1
+  IsOneShot: 0
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 0
---- !u!114 &-1907387261365305477
+  Length: 96978
+--- !u!114 &-829727430361058815
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -539,7 +431,27 @@ MonoBehaviour:
   - Name: Desktop
     Value: 2958
   Exists: 1
---- !u!114 &-1713145638452263593
+--- !u!114 &-661358537572209219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
+  m_Name: bank:/Music.bank
+  m_EditorClassIdentifier: 
+  Path: ../fmod-project/Build/Desktop/Music.bank
+  Name: Music
+  StudioPath: bank:/Music
+  lastModified: 638851647353757398
+  FileSizes:
+  - Name: Desktop
+    Value: 3887712
+  Exists: 1
+--- !u!114 &-93329804189012801
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -549,70 +461,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Walking/Footsteps
+  m_Name: event:/SFX/Player/Paper/PaperInteraction
   m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Walking/Footsteps
+  Path: event:/SFX/Player/Paper/PaperInteraction
   Guid:
-    Data1: 1166419053
-    Data2: 1320623170
-    Data3: 292728493
-    Data4: -596124364
+    Data1: 1770494798
+    Data2: 1123593310
+    Data3: -90282078
+    Data4: 1208520339
   Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 2000
---- !u!114 &-969218149281120259
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Attack/Distance/DistanceShoot
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Attack/Distance/DistanceShoot
-  Guid:
-    Data1: 1745601595
-    Data2: 1114770188
-    Data3: -409871453
-    Data4: -1028367603
-  Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &-836739769714885697
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Vending machine/VendingMachineItemPickup
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Vending machine/VendingMachineItemPickup
-  Guid:
-    Data1: 626503219
-    Data2: 1117672935
-    Data3: 80789158
-    Data4: 1299605440
-  Banks:
-  - {fileID: 5065420971171067895}
+  - {fileID: -2530364673873735608}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -633,55 +491,55 @@ MonoBehaviour:
   m_Name: FMODStudioCache
   m_EditorClassIdentifier: 
   EditorBanks:
-  - {fileID: -1907387261365305477}
-  - {fileID: -6364876755650830886}
-  - {fileID: -8373241030047903528}
-  - {fileID: -2486597083803716208}
-  - {fileID: 5065420971171067895}
+  - {fileID: -829727430361058815}
+  - {fileID: -5331371180799144171}
+  - {fileID: -8735521259615001257}
+  - {fileID: -661358537572209219}
+  - {fileID: -2530364673873735608}
   EditorEvents:
-  - {fileID: 2203762415597302721}
-  - {fileID: 2396848833514303920}
-  - {fileID: -8113583324538508260}
-  - {fileID: -7636290080626979296}
-  - {fileID: -4942565569585935716}
-  - {fileID: 1744471336597025380}
-  - {fileID: 3919632692583140827}
-  - {fileID: -4733962489775154289}
-  - {fileID: -4280277781347644752}
-  - {fileID: -3108508968580700337}
-  - {fileID: -2733488232268042225}
-  - {fileID: 7519991482771592523}
-  - {fileID: 2322915356205362958}
-  - {fileID: -6027150723121088722}
-  - {fileID: -836739769714885697}
-  - {fileID: -4962972040068344876}
-  - {fileID: 2261422203105267080}
-  - {fileID: 4153006918751333011}
-  - {fileID: -1713145638452263593}
-  - {fileID: 8787916688092567399}
-  - {fileID: 6449656848823476781}
-  - {fileID: 3171561564293508089}
-  - {fileID: -5580528737027272712}
-  - {fileID: 2578424069092996616}
-  - {fileID: -2182497379548351049}
-  - {fileID: -8691732298886927386}
-  - {fileID: 5085229492516263674}
-  - {fileID: -8647355418110044154}
-  - {fileID: 7876250378605590337}
-  - {fileID: -6640301849430220455}
-  - {fileID: -4306061922007984963}
-  - {fileID: -7091964592095762905}
-  - {fileID: 5140448970561231633}
-  - {fileID: -969218149281120259}
-  - {fileID: -8369502082638160690}
-  - {fileID: 5744076703543397602}
+  - {fileID: 3063298435567384054}
+  - {fileID: 5726377219685168684}
+  - {fileID: -2871351742747663180}
+  - {fileID: -3274494135017263608}
+  - {fileID: 5009651952867378451}
+  - {fileID: 673272280617689897}
+  - {fileID: 8367470714323726950}
+  - {fileID: 5127227454615500312}
+  - {fileID: 1728376832585067138}
+  - {fileID: -6733604156770578926}
+  - {fileID: 8555098503461885332}
+  - {fileID: 4655253493138030911}
+  - {fileID: -923303162765585856}
+  - {fileID: -903005095787862668}
+  - {fileID: 6841171548164016288}
+  - {fileID: 6994565573152995076}
+  - {fileID: 3363844897071198210}
+  - {fileID: -4355489118699216125}
+  - {fileID: 8811185480590797719}
+  - {fileID: 8709775333964046577}
+  - {fileID: -1216635055360954151}
+  - {fileID: -93329804189012801}
+  - {fileID: 6222194119777196012}
+  - {fileID: -2877389323152655992}
+  - {fileID: 8688324538162080065}
+  - {fileID: 7012151789157190901}
+  - {fileID: -3126300209738789509}
+  - {fileID: 6191706562598327190}
+  - {fileID: -4294747805787824888}
+  - {fileID: 5576041958582567386}
+  - {fileID: -6808253220737427559}
+  - {fileID: 1679316561728140398}
+  - {fileID: -7366971586632511911}
+  - {fileID: 6649242530762159757}
+  - {fileID: -5622548409023159438}
+  - {fileID: 6153097681313562253}
   EditorParameters: []
   MasterBanks:
-  - {fileID: -8373241030047903528}
+  - {fileID: -8735521259615001257}
   StringsBanks:
-  - {fileID: -1907387261365305477}
+  - {fileID: -829727430361058815}
   cacheVersion: 131847
-  cacheTime: 638851563989570954
+  cacheTime: 638851650388137392
   SerializableEventsDict:
   - key: event:/SFX/Player/Hand dryer/HandDryerActivation04
     index: 0
@@ -693,69 +551,150 @@ MonoBehaviour:
     index: 3
   - key: event:/SFX/Player/Hand dryer/HandDryerActivation03
     index: 4
-  - key: event:/SFX/Player/Hand dryer/HandDryerActivationDegradated
-    index: 5
-  - key: event:/Ambience/Bathroom/FlushingWater
-    index: 6
-  - key: event:/Ambience/General/Alarm
-    index: 7
-  - key: event:/SFX/Player/Hand dryer/HandDryerActivation02
-    index: 8
-  - key: event:/Ambience/Hallway/FlickeringLED
-    index: 9
-  - key: event:/Ambience/Hallway/ElevatorNoise
-    index: 10
-  - key: event:/Ambience/Server room/ServerNoise
-    index: 11
-  - key: event:/Music/Soundtrack
-    index: 12
-  - key: event:/SFX/Player/Sphere/SphereRotation
-    index: 13
-  - key: event:/SFX/Player/Vending machine/VendingMachineItemPickup
-    index: 14
-  - key: event:/SFX/Player/Door/DoorClose
-    index: 15
-  - key: event:/SFX/Player/Waking up/WakingUp
-    index: 16
-  - key: event:/SFX/Player/Paper/PaperInteraction
-    index: 17
-  - key: event:/SFX/Player/Walking/Footsteps
-    index: 18
-  - key: event:/SFX/Player/Vending machine/VendingMachineActivation
-    index: 19
-  - key: event:/SFX/Player/Door/DoorOpen
-    index: 20
-  - key: event:/SFX/Player/Terminal/TerminalInteraction
-    index: 21
   - key: event:/Ambience/Storage room/VentilationNoise
-    index: 22
+    index: 5
+  - key: event:/SFX/Player/Hand dryer/HandDryerActivationDegradated
+    index: 6
+  - key: event:/Ambience/Bathroom/FlushingWater
+    index: 7
+  - key: event:/Ambience/General/Alarm
+    index: 8
+  - key: event:/SFX/Player/Hand dryer/HandDryerActivation02
+    index: 9
+  - key: event:/Ambience/Hallway/FlickeringLED
+    index: 10
   - key: event:/Ambience/Staff canteen/RefrigeratorNoise
+    index: 11
+  - key: event:/Ambience/Hallway/ElevatorNoise
+    index: 12
+  - key: event:/Ambience/Server room/ServerNoise
+    index: 13
+  - key: event:/Music/Soundtrack
+    index: 14
+  - key: event:/SFX/Player/Sphere/SphereRotation
+    index: 15
+  - key: event:/SFX/Player/Attack/Close/CloseLoad
+    index: 16
+  - key: event:/SFX/Player/Vending machine/VendingMachineItemPickup
+    index: 17
+  - key: event:/SFX/Player/Attack/Distance/DistanceShoot
+    index: 18
+  - key: event:/SFX/Player/Door/DoorClose
+    index: 19
+  - key: event:/SFX/Player/Waking up/WakingUp
+    index: 20
+  - key: event:/SFX/Player/Paper/PaperInteraction
+    index: 21
+  - key: event:/SFX/Player/Sphere/SphereDischarge
+    index: 22
+  - key: event:/SFX/Player/Sphere/SpherePartialRecharge
     index: 23
   - key: event:/SFX/Player/Eating/EatingChocolate
     index: 24
-  - key: event:/SFX/Player/Defense/ShieldActivation
+  - key: event:/SFX/Player/Walking/Footsteps
     index: 25
-  - key: event:/SFX/Player/Drinking/Drink
+  - key: event:/SFX/Player/Defense/ShieldActivation
     index: 26
-  - key: event:/SFX/Player/Defense/ShieldHit
+  - key: event:/SFX/Player/Vending machine/VendingMachineActivation
     index: 27
-  - key: event:/SFX/Player/Eating/EatingChips
+  - key: event:/SFX/Player/Door/DoorOpen
     index: 28
-  - key: event:/SFX/Player/Sphere/SpherePartialRecharge
+  - key: event:/SFX/Player/Drinking/Drink
     index: 29
   - key: event:/SFX/Player/Sphere/SphereFullRecharge
     index: 30
-  - key: event:/SFX/Player/Sphere/SphereDischarge
+  - key: event:/SFX/Player/Terminal/TerminalInteraction
     index: 31
-  - key: event:/SFX/Player/Attack/Close/CloseLoad
+  - key: event:/SFX/Player/Defense/ShieldHit
     index: 32
-  - key: event:/SFX/Player/Attack/Distance/DistanceShoot
-    index: 33
   - key: event:/SFX/Player/Attack/Close/CloseShoot
+    index: 33
+  - key: event:/SFX/Player/Eating/EatingChips
     index: 34
   - key: event:/SFX/Player/Attack/Distance/DistanceLoad
     index: 35
---- !u!114 &1581219752721046760
+--- !u!114 &673272280617689897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Ambience/Storage room/VentilationNoise
+  m_EditorClassIdentifier: 
+  Path: event:/Ambience/Storage room/VentilationNoise
+  Guid:
+    Data1: -849333374
+    Data2: 1300067871
+    Data3: 1301444737
+    Data4: 1296470915
+  Banks:
+  - {fileID: -5331371180799144171}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 24500
+--- !u!114 &1679316561728140398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Terminal/TerminalInteraction
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Terminal/TerminalInteraction
+  Guid:
+    Data1: 1322266566
+    Data2: 1189502893
+    Data3: 494775174
+    Data4: -2079637945
+  Banks:
+  - {fileID: -2530364673873735608}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &1728376832585067138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Ambience/General/Alarm
+  m_EditorClassIdentifier: 
+  Path: event:/Ambience/General/Alarm
+  Guid:
+    Data1: 1373224865
+    Data2: 1258097855
+    Data3: -654289524
+    Data4: 410566001
+  Banks:
+  - {fileID: -5331371180799144171}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 27774
+--- !u!114 &2507491304139267101
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -782,34 +721,7 @@ MonoBehaviour:
   - SecondIteration
   - ThirdIteration
   Exists: 1
---- !u!114 &1744471336597025380
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Hand dryer/HandDryerActivationDegradated
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Hand dryer/HandDryerActivationDegradated
-  Guid:
-    Data1: 1948375943
-    Data2: 1284228956
-    Data3: 661065657
-    Data4: 1515753981
-  Banks:
-  - {fileID: -6364876755650830886}
-  IsStream: 1
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &2203762415597302721
+--- !u!114 &3063298435567384054
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -828,7 +740,7 @@ MonoBehaviour:
     Data3: 1388579214
     Data4: -1893743165
   Banks:
-  - {fileID: -6364876755650830886}
+  - {fileID: -5331371180799144171}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1
@@ -836,244 +748,7 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 0
---- !u!114 &2261422203105267080
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Waking up/WakingUp
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Waking up/WakingUp
-  Guid:
-    Data1: 776900939
-    Data2: 1206370472
-    Data3: -1873415267
-    Data4: 2015559660
-  Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &2322915356205362958
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Music/Soundtrack
-  m_EditorClassIdentifier: 
-  Path: event:/Music/Soundtrack
-  Guid:
-    Data1: -2119342206
-    Data2: 1082500063
-    Data3: 1155554688
-    Data4: -1221304368
-  Banks:
-  - {fileID: -2486597083803716208}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
-  Parameters:
-  - {fileID: 1581219752721046760}
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &2396848833514303920
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Ambience/General/VendingMachineNoise
-  m_EditorClassIdentifier: 
-  Path: event:/Ambience/General/VendingMachineNoise
-  Guid:
-    Data1: 1484193312
-    Data2: 1244157275
-    Data3: 1979302808
-    Data4: -1684614068
-  Banks:
-  - {fileID: -6364876755650830886}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 5889
---- !u!114 &2578424069092996616
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Ambience/Staff canteen/RefrigeratorNoise
-  m_EditorClassIdentifier: 
-  Path: event:/Ambience/Staff canteen/RefrigeratorNoise
-  Guid:
-    Data1: 1227867096
-    Data2: 1232235182
-    Data3: 1331899567
-    Data4: 1296162209
-  Banks:
-  - {fileID: -6364876755650830886}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 3287
---- !u!114 &3171561564293508089
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Terminal/TerminalInteraction
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Terminal/TerminalInteraction
-  Guid:
-    Data1: 1322266566
-    Data2: 1189502893
-    Data3: 494775174
-    Data4: -2079637945
-  Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &3919632692583140827
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Ambience/Bathroom/FlushingWater
-  m_EditorClassIdentifier: 
-  Path: event:/Ambience/Bathroom/FlushingWater
-  Guid:
-    Data1: -283890271
-    Data2: 1141973038
-    Data3: 987327118
-    Data4: -2100846542
-  Banks:
-  - {fileID: -6364876755650830886}
-  IsStream: 1
-  Is3D: 1
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 8129
---- !u!114 &4153006918751333011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Paper/PaperInteraction
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Paper/PaperInteraction
-  Guid:
-    Data1: 1770494798
-    Data2: 1123593310
-    Data3: -90282078
-    Data4: 1208520339
-  Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &5065420971171067895
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c18180ecb35941f4682ae60107b85b7c, type: 3}
-  m_Name: bank:/SFX.bank
-  m_EditorClassIdentifier: 
-  Path: ../fmod-project/Build/Desktop/SFX.bank
-  Name: SFX
-  StudioPath: bank:/SFX
-  lastModified: 638851563989570954
-  FileSizes:
-  - Name: Desktop
-    Value: 1134752
-  Exists: 1
---- !u!114 &5085229492516263674
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Drinking/Drink
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Drinking/Drink
-  Guid:
-    Data1: -1592788327
-    Data2: 1145508056
-    Data3: 1240228743
-    Data4: -543696551
-  Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &5140448970561231633
+--- !u!114 &3363844897071198210
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1092,7 +767,7 @@ MonoBehaviour:
     Data3: 1297837189
     Data4: -1550215625
   Banks:
-  - {fileID: 5065420971171067895}
+  - {fileID: -2530364673873735608}
   IsStream: 0
   Is3D: 1
   IsOneShot: 0
@@ -1100,7 +775,142 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 5049
---- !u!114 &5744076703543397602
+--- !u!114 &4655253493138030911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Ambience/Staff canteen/RefrigeratorNoise
+  m_EditorClassIdentifier: 
+  Path: event:/Ambience/Staff canteen/RefrigeratorNoise
+  Guid:
+    Data1: 1227867096
+    Data2: 1232235182
+    Data3: 1331899567
+    Data4: 1296162209
+  Banks:
+  - {fileID: -5331371180799144171}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 3287
+--- !u!114 &5009651952867378451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Hand dryer/HandDryerActivation03
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Hand dryer/HandDryerActivation03
+  Guid:
+    Data1: 1682601842
+    Data2: 1182135712
+    Data3: -1286113637
+    Data4: -2087330309
+  Banks:
+  - {fileID: -5331371180799144171}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &5127227454615500312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Ambience/Bathroom/FlushingWater
+  m_EditorClassIdentifier: 
+  Path: event:/Ambience/Bathroom/FlushingWater
+  Guid:
+    Data1: -283890271
+    Data2: 1141973038
+    Data3: 987327118
+    Data4: -2100846542
+  Banks:
+  - {fileID: -5331371180799144171}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 8129
+--- !u!114 &5576041958582567386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Drinking/Drink
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Drinking/Drink
+  Guid:
+    Data1: -1592788327
+    Data2: 1145508056
+    Data3: 1240228743
+    Data4: -543696551
+  Banks:
+  - {fileID: -2530364673873735608}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &5726377219685168684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Ambience/General/VendingMachineNoise
+  m_EditorClassIdentifier: 
+  Path: event:/Ambience/General/VendingMachineNoise
+  Guid:
+    Data1: 1484193312
+    Data2: 1244157275
+    Data3: 1979302808
+    Data4: -1684614068
+  Banks:
+  - {fileID: -5331371180799144171}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 5889
+--- !u!114 &6153097681313562253
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1119,7 +929,7 @@ MonoBehaviour:
     Data3: -1489269578
     Data4: 2056284491
   Banks:
-  - {fileID: 5065420971171067895}
+  - {fileID: -2530364673873735608}
   IsStream: 0
   Is3D: 1
   IsOneShot: 0
@@ -1127,88 +937,7 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 4874
---- !u!114 &6449656848823476781
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Door/DoorOpen
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Door/DoorOpen
-  Guid:
-    Data1: -305465452
-    Data2: 1338532496
-    Data3: -674571377
-    Data4: 1673984798
-  Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &7519991482771592523
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Ambience/Server room/ServerNoise
-  m_EditorClassIdentifier: 
-  Path: event:/Ambience/Server room/ServerNoise
-  Guid:
-    Data1: -2014649865
-    Data2: 1292488745
-    Data3: 1648386715
-    Data4: -700621535
-  Banks:
-  - {fileID: -6364876755650830886}
-  IsStream: 1
-  Is3D: 1
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 96978
---- !u!114 &7876250378605590337
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Eating/EatingChips
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Eating/EatingChips
-  Guid:
-    Data1: 802410230
-    Data2: 1129170750
-    Data3: 792859547
-    Data4: 80374644
-  Banks:
-  - {fileID: 5065420971171067895}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
---- !u!114 &8787916688092567399
+--- !u!114 &6191706562598327190
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1227,7 +956,278 @@ MonoBehaviour:
     Data3: 1763239348
     Data4: 33930138
   Banks:
-  - {fileID: 5065420971171067895}
+  - {fileID: -2530364673873735608}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &6222194119777196012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Sphere/SphereDischarge
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Sphere/SphereDischarge
+  Guid:
+    Data1: -1812742576
+    Data2: 1321843028
+    Data3: 149478297
+    Data4: -1084694590
+  Banks:
+  - {fileID: -2530364673873735608}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &6649242530762159757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Attack/Close/CloseShoot
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Attack/Close/CloseShoot
+  Guid:
+    Data1: 217779173
+    Data2: 1181870203
+    Data3: 1027034795
+    Data4: 1380500985
+  Banks:
+  - {fileID: -2530364673873735608}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &6841171548164016288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Music/Soundtrack
+  m_EditorClassIdentifier: 
+  Path: event:/Music/Soundtrack
+  Guid:
+    Data1: -2119342206
+    Data2: 1082500063
+    Data3: 1155554688
+    Data4: -1221304368
+  Banks:
+  - {fileID: -661358537572209219}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters:
+  - {fileID: 2507491304139267101}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &6994565573152995076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Sphere/SphereRotation
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Sphere/SphereRotation
+  Guid:
+    Data1: 784200999
+    Data2: 1239473725
+    Data3: -2005726846
+    Data4: 1834673606
+  Banks:
+  - {fileID: -2530364673873735608}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 3700
+--- !u!114 &7012151789157190901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Walking/Footsteps
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Walking/Footsteps
+  Guid:
+    Data1: 1166419053
+    Data2: 1320623170
+    Data3: 292728493
+    Data4: -596124364
+  Banks:
+  - {fileID: -2530364673873735608}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2000
+--- !u!114 &8367470714323726950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Hand dryer/HandDryerActivationDegradated
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Hand dryer/HandDryerActivationDegradated
+  Guid:
+    Data1: 1948375943
+    Data2: 1284228956
+    Data3: 661065657
+    Data4: 1515753981
+  Banks:
+  - {fileID: -5331371180799144171}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &8555098503461885332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Ambience/Hallway/FlickeringLED
+  m_EditorClassIdentifier: 
+  Path: event:/Ambience/Hallway/FlickeringLED
+  Guid:
+    Data1: 28823743
+    Data2: 1225098834
+    Data3: 1945257915
+    Data4: 1039743675
+  Banks:
+  - {fileID: -5331371180799144171}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 30968
+--- !u!114 &8688324538162080065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Eating/EatingChocolate
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Eating/EatingChocolate
+  Guid:
+    Data1: 2115817834
+    Data2: 1321077471
+    Data3: -218120781
+    Data4: 1914792332
+  Banks:
+  - {fileID: -2530364673873735608}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &8709775333964046577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Door/DoorClose
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Door/DoorClose
+  Guid:
+    Data1: 1243160138
+    Data2: 1126404859
+    Data3: 1977504399
+    Data4: -1866376778
+  Banks:
+  - {fileID: -2530364673873735608}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
+--- !u!114 &8811185480590797719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/SFX/Player/Attack/Distance/DistanceShoot
+  m_EditorClassIdentifier: 
+  Path: event:/SFX/Player/Attack/Distance/DistanceShoot
+  Guid:
+    Data1: 1745601595
+    Data2: 1114770188
+    Data3: -409871453
+    Data4: -1028367603
+  Banks:
+  - {fileID: -2530364673873735608}
   IsStream: 0
   Is3D: 1
   IsOneShot: 1

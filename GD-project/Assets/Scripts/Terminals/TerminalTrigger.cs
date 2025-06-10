@@ -33,22 +33,31 @@ public class TerminalTrigger : MonoBehaviour
     static System.Random rnd = new System.Random();
     
     private void OnTriggerEnter(Collider other) {
-        if (transform.CompareTag(TriggerType.SphereTerminal.ToString())) {
-            triggerType = TriggerType.SphereTerminal;
-        }
-        else {
-            if (transform.CompareTag(TriggerType.PowerUpSnackDistributor.ToString())) {
-                triggerType = TriggerType.PowerUpSnackDistributor;
-            }
-            else {
-                if (transform.CompareTag(TriggerType.HealthSnackDistributor.ToString())) {
-                    triggerType = TriggerType.HealthSnackDistributor;
-                }
-            }
-        }
+	    if (!other.CompareTag("Player"))
+	    {
+		    return;
+	    }
+
+	    if (transform.CompareTag(TriggerType.SphereTerminal.ToString())) {
+		    triggerType = TriggerType.SphereTerminal;
+	    }
+	    else {
+		    if (transform.CompareTag(TriggerType.PowerUpSnackDistributor.ToString())) {
+			    triggerType = TriggerType.PowerUpSnackDistributor;
+		    }
+		    else {
+			    if (transform.CompareTag(TriggerType.HealthSnackDistributor.ToString())) {
+				    triggerType = TriggerType.HealthSnackDistributor;
+			    }
+		    }
+	    }   
     }
 
     private void OnTriggerExit(Collider other) {
+	    if (!other.CompareTag("Player"))
+	    {
+		    return;
+	    }
         triggerType = TriggerType.None;
     }
 
