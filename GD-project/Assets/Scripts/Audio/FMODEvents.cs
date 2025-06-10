@@ -17,14 +17,11 @@ public class FMODEvents : MonoBehaviour
     [field: SerializeField] public EventReference playerEatChips { get; private set; }
     [field: SerializeField] public EventReference playerEatChocolate { get; private set; }
     [field: SerializeField] public EventReference playerDrink { get; private set; }
-
     [field: SerializeField] public EventReference shieldActivation { get; private set; }
     [field: SerializeField] public EventReference shieldDeactivation { get; private set; }
     [field: SerializeField] public EventReference shieldHit { get; private set; }
-    
     [field: SerializeField] public EventReference distanceAttackLoad { get; private set; }
     [field: SerializeField] public EventReference distanceAttackShoot { get; private set; }
-    
     [field: SerializeField] public EventReference closeAttackLoad { get; private set; }
     [field: SerializeField] public EventReference closeAttackShoot { get; private set; }
 

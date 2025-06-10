@@ -22,16 +22,16 @@ public class GetCollisions : MonoBehaviour
 				Destroy(contact.thisCollider.gameObject);
 
 				if(contact.thisCollider.tag == "PlayerProjectile" && contact.otherCollider.tag.Contains("Enemy")) {
-					if(contact.otherCollider.GetComponent<EnemyMaynardMovement>()) {
-						contact.otherCollider.GetComponent<EnemyMaynardMovement>().TakeDamage(playerBulletDamage);
+					if(contact.otherCollider.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyMaynardMovement>()) {
+						contact.otherCollider.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyMaynardMovement>().TakeDamage(playerBulletDamage);
 					}
 					else {
-						if(contact.otherCollider.GetComponent<EnemyDrakeMovement>()) {
-							contact.otherCollider.GetComponent<EnemyDrakeMovement>().TakeDamage(playerBulletDamage);
+						if(contact.otherCollider.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyDrakeMovement>()) {
+							contact.otherCollider.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyDrakeMovement>().TakeDamage(playerBulletDamage);
 						}
 						else {
-							if(contact.otherCollider.GetComponent<EnemyIncognitoMovement>()) {
-								contact.otherCollider.GetComponent<EnemyIncognitoMovement>().TakeDamage(playerBulletDamage);
+							if(contact.otherCollider.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyIncognitoMovement>()) {
+								contact.otherCollider.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyIncognitoMovement>().TakeDamage(playerBulletDamage);
 							}
 						}
 					}

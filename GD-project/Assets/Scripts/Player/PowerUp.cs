@@ -5,7 +5,8 @@ public class PowerUp : MonoBehaviour
 {
     public enum PowerUpType {
 		// Sphere
-        AttackPowerUp,
+        DistanceAttackPowerUp,
+        CloseAttackPowerUp,
         DefensePowerUp,
         DamageBoost,
 
@@ -21,8 +22,8 @@ public class PowerUp : MonoBehaviour
 	public Dictionary<PowerUpType, int> powerUpsObtained = new Dictionary<PowerUpType, int> {};
 
 	private void Start() {
-		spherePowerUps.Add(PowerUpType.AttackPowerUp);
-		spherePowerUps.Add(PowerUpType.AttackPowerUp);
+		spherePowerUps.Add(PowerUpType.DistanceAttackPowerUp);
+		spherePowerUps.Add(PowerUpType.DistanceAttackPowerUp);
 		spherePowerUps.Add(PowerUpType.DefensePowerUp);
 		spherePowerUps.Add(PowerUpType.DefensePowerUp);
 		spherePowerUps.Add(PowerUpType.DefensePowerUp);

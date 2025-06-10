@@ -8,8 +8,8 @@ using UnityEngine;
 public class PlayerShoot : MonoBehaviour
 {
 	// Audio management 
-	// private EventInstance distanceAttackLoading;
-	// private EventInstance closeAttackLoading;
+	private EventInstance distanceAttackLoading;
+	private EventInstance closeAttackLoading;
 	
 	// Attack1
 	[SerializeField] private float bulletSpeed;
@@ -24,17 +24,17 @@ public class PlayerShoot : MonoBehaviour
 	private float defaultDamageRadius = 2.5f;
 	private float damageRadius = 2.5f;
 
-	// The player has 3 attacks they can choose. They can change them by using the mouse scroll wheel
+	// The player has 2 attacks he can choose. He can change them by using the mouse scroll wheel
 	private int attackNumber = 1;
 	[SerializeField] TextMeshProUGUI selectedAttackText;
-
-
+	private bool loadingAttack = false;
+	private int attackStamina = 0;
+	
 	// Defense
 	[SerializeField] private GameObject magneticShieldPrefab;
     GameObject magneticShield;
 	private bool magneticShieldOpen = false;
-
-
+	
 	// Health
 	public float maxHealth = 120;
 	public float health;
@@ -94,16 +94,16 @@ public class PlayerShoot : MonoBehaviour
 		}
 	}
 
-	private bool CheckStamina(int attackStamina) {
-		if (sphereStamina >= attackStamina) {
+	private bool CheckStamina(int value) {
+		// The Sphere still has stamina
+		if (sphereStamina >= value) {
 			return true;
 		}
-		else { // The Sphere has finished the stamina
-			// Audio management
-			AudioManager.instance.PlayOneShot(FMODEvents.instance.sphereDischarge, rotatingSphere.transform.position);
-			return false;
-		}
-			
+		
+		// The Sphere has finished the stamina
+		// Audio management
+		AudioManager.instance.PlayOneShot(FMODEvents.instance.sphereDischarge, rotatingSphere.transform.position);
+		return false;
 	}
 
 	public void DecreaseStamina(int amount) {
@@ -124,57 +124,58 @@ public class PlayerShoot : MonoBehaviour
 
 	void ChangeAttack(int direction) {
 		attackNumber += direction;
-		if(attackNumber > 3) {
+		if(attackNumber > 2) {
 			attackNumber = 1;
 		}
 		else if(attackNumber < 1) {
-			attackNumber = 3;
+			attackNumber = 2;
 		}
 
-		selectedAttackText.text = "Attack " + attackNumber.ToString();
+		selectedAttackText.text = "Attack " + attackNumber;
 	}
 
 	void SetAttack(int n) {
 		attackNumber = n;
-		selectedAttackText.text = "Attack " + attackNumber.ToString();
+		selectedAttackText.text = "Attack " + attackNumber;
 	}
-
-	async void DistanceAttack1() {
+	
+	async void LoadDistanceAttack() {
 		// If we are here the stamina is at least 1
 		rotateSphere.positionSphere(new Vector3(0, 0, 1), RotateSphere.Animation.RotateAround);
-		
-		// Audio management
-		AudioManager.instance.PlayOneShot(FMODEvents.instance.distanceAttackShoot, rotatingSphere.transform.position);
 
-		int attackStamina = 0;
+		attackStamina = 0;
 		int maxStamina = 0;
-		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.AttackPowerUp))
+		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DistanceAttackPowerUp))
 		{
-			if (powerUp.powerUpsObtained[PowerUp.PowerUpType.AttackPowerUp] == 1)
+			if (powerUp.powerUpsObtained[PowerUp.PowerUpType.DistanceAttackPowerUp] == 1)
 			{
 				maxStamina = Math.Min(sphereStamina, 3);
 			}
 			else
 			{
-				if (powerUp.powerUpsObtained[PowerUp.PowerUpType.AttackPowerUp] == 2)
+				if (powerUp.powerUpsObtained[PowerUp.PowerUpType.DistanceAttackPowerUp] == 2)
 				{
 					maxStamina = Math.Min(sphereStamina, 5);
 				}
 			}
 		}
 
-		while (Input.GetButton("Fire1") && attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.AttackPowerUp))
+		loadingAttack = true;
+		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DistanceAttackPowerUp) && loadingAttack)
 		{
 			attackStamina++;
-			getCollisions.playerBulletDamage += 10;
 				
 			Debug.Log(attackStamina);
-			if (attackStamina > 1)
-				await Task.Delay(500);
-			else
-				await Task.Delay(200);
+			if (attackStamina > 1) {
+				getCollisions.playerBulletDamage += 10;
+			}
+			
+			await Task.Delay(500);
 		}
-
+	}
+	
+	async void FireDistanceAttack() {
+		loadingAttack = false;
 		GameObject bullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity);
 		bullet.tag = "PlayerProjectile";
 
@@ -190,31 +191,56 @@ public class PlayerShoot : MonoBehaviour
 		else {
 			DecreaseStamina(attackStamina);
 		}
-	}
-
-	void CloseAttack1() {
-		// If we are here the stamina is at least 1
-		// Audio management
-		AudioManager.instance.PlayOneShot(FMODEvents.instance.closeAttackShoot, rotatingSphere.transform.position);
 		
-		SpawnAttackArea();
-
-		CheckForEnemies();
-
-		DecreaseStamina(1);
+		// Audio management
+		AudioManager.instance.PlayOneShot(FMODEvents.instance.distanceAttackShoot, rotatingSphere.transform.position);
+		
+		await Task.Delay(300);
+		rotateSphere.rotateSphere = true;
+		player.isFrozen = false;
 	}
-
-	async void CloseAttack2() {
+	
+	async void LoadCloseAttack() {
 		// If we are here the stamina is at least 1
-		int attackStamina = 0;
-		while (Input.GetButton("Fire1") && attackStamina < sphereStamina) {
-			damageRadius += 1f;
-			closeAttackDamage += 20;
+		rotateSphere.positionSphere(new Vector3(0, 1, 0), RotateSphere.Animation.Linear);
+		
+		attackStamina = 0;
+		int maxStamina = 0;
+		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.CloseAttackPowerUp))
+		{
+			if (powerUp.powerUpsObtained[PowerUp.PowerUpType.CloseAttackPowerUp] == 1)
+			{
+				maxStamina = Math.Min(sphereStamina, 3);
+			}
+			else
+			{
+				if (powerUp.powerUpsObtained[PowerUp.PowerUpType.CloseAttackPowerUp] == 2)
+				{
+					maxStamina = Math.Min(sphereStamina, 5);
+				}
+			}
+		}
+		
+		loadingAttack = true;
+		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.CloseAttackPowerUp) && loadingAttack) {
 			attackStamina++;
+			Debug.Log(attackStamina);
+
+			if (attackStamina > 1) {
+				damageRadius += 1f;
+				closeAttackDamage += 20;
+			}
+			
 			await Task.Delay(500);
 		}
-
+	}
+	
+	void FireCloseAttack() {
+		loadingAttack = false;
 		DecreaseStamina(attackStamina);
+		
+		// Audio management
+		AudioManager.instance.PlayOneShot(FMODEvents.instance.closeAttackShoot, rotatingSphere.transform.position);
 
 		SpawnAttackArea();
 
@@ -222,7 +248,6 @@ public class PlayerShoot : MonoBehaviour
 	}
 
 	async void SpawnAttackArea() {
-		rotateSphere.positionSphere(new Vector3(0, 1, 0), RotateSphere.Animation.Linear);
 		
 		GameObject attackArea = Instantiate(attackAreaPrefab, transform.position, Quaternion.identity);
 		attackArea.transform.parent = transform;
@@ -248,16 +273,16 @@ public class PlayerShoot : MonoBehaviour
 		Collider[] colliders = Physics.OverlapSphere(transform.position, damageRadius);
 		foreach(Collider c in colliders) {
 			// Checks if the collider is an enemy
-			if(c.GetComponent<EnemyMaynardMovement>()) {
-				c.GetComponent<EnemyMaynardMovement>().TakeDamage(closeAttackDamage);
+			if(c.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyMaynardMovement>()) {
+				c.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyMaynardMovement>().TakeDamage(closeAttackDamage);
 			}
 			else {
-				if(c.GetComponent<EnemyDrakeMovement>()) {
-					c.GetComponent<EnemyDrakeMovement>().TakeDamage(closeAttackDamage);
+				if(c.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyDrakeMovement>()) {
+					c.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyDrakeMovement>().TakeDamage(closeAttackDamage);
 				}
 				else {
-					if(c.GetComponent<EnemyIncognitoMovement>()) {
-						c.GetComponent<EnemyIncognitoMovement>().TakeDamage(closeAttackDamage);
+					if(c.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyIncognitoMovement>()) {
+						c.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyIncognitoMovement>().TakeDamage(closeAttackDamage);
 					}
 				}
 			}
@@ -274,14 +299,9 @@ public class PlayerShoot : MonoBehaviour
 					// Spawn level 1 shield
 				}
 				else {
-					if(powerUp.powerUpsObtained[PowerUp.PowerUpType.DefensePowerUp] == 2) {
-						// Spawn level 2 shield
-					}
-					else {
-						magneticShield = Instantiate(magneticShieldPrefab, transform.position, Quaternion.identity);
-						magneticShield.transform.parent = transform;
-						magneticShieldOpen = true;
-					}
+					magneticShield = Instantiate(magneticShieldPrefab, new Vector3(player.transform.position.x, player.transform.position.y - 1f, player.transform.position.z), Quaternion.identity);
+					magneticShield.transform.parent = transform;
+					magneticShieldOpen = true;
 				}
 			}
 		}
@@ -338,17 +358,30 @@ public class PlayerShoot : MonoBehaviour
 	}
 
 	void Update() {
+		// The attack is shot only on "Fire1" up
 		if (Input.GetButtonDown("Fire1")) {
 			if(!magneticShield && CheckStamina(1)) {
 				switch(attackNumber) {
 					case 1:
-						DistanceAttack1();
+						LoadDistanceAttack();
 						break;
 					case 2:
-						CloseAttack1();
+						LoadCloseAttack();
 						break;
-					case 3:
-						CloseAttack2();
+					default:
+						break;
+				}
+			}
+		}
+		
+		if (Input.GetButtonUp("Fire1")) {
+			if(!magneticShield && CheckStamina(1)) {
+				switch(attackNumber) {
+					case 1:
+						FireDistanceAttack();
+						break;
+					case 2:
+						FireCloseAttack();
 						break;
 					default:
 						break;
@@ -356,25 +389,22 @@ public class PlayerShoot : MonoBehaviour
 			}
 		}
 
-		if (Input.GetButtonDown("Fire2")) {
+		if (Input.GetButtonDown("Fire2") && !loadingAttack) {
 			SpawnMagneticShield();
 		}
 
 		// Selecting a different attack
-		if(Input.GetAxis("Mouse ScrollWheel") > 0) {
+		if(Input.GetAxis("Mouse ScrollWheel") > 0 && !loadingAttack) {
 			ChangeAttack(1);
 		}
-		else if(Input.GetAxis("Mouse ScrollWheel") < 0) {
+		else if(Input.GetAxis("Mouse ScrollWheel") < 0 && !loadingAttack) {
 			ChangeAttack(-1);
 		}
-		if(Input.GetKeyDown(KeyCode.Alpha1)) {
+		if(Input.GetKeyDown(KeyCode.Alpha1) && !loadingAttack) {
 			SetAttack(1);
 		}
-		if(Input.GetKeyDown(KeyCode.Alpha2)) {
+		if(Input.GetKeyDown(KeyCode.Alpha2) && !loadingAttack) {
 			SetAttack(2);
-		}
-		if(Input.GetKeyDown(KeyCode.Alpha3)) {
-			SetAttack(3);
 		}
 
 		// I check the stamina every frame since it is possible that it is = 0 when I am not attacking (thanks asyncronous processes)
@@ -388,34 +418,28 @@ public class PlayerShoot : MonoBehaviour
 	}
 	
 	// Audio management
-	private void UpdateSound() 
-	{
-		// distanceAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
-		// closeAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotateSphere.transform));
-
-		// Start footsteps event if the player is moving
-		// if((Mathf.Abs(input.Horizontal) > 0.01f || Mathf.Abs(input.Vertical) > 0.01f) && !isFrozen)
-		// {
-		// 	// Get the playback state for the footsteps event
-		// 	PLAYBACK_STATE footstepsPlaybackState;
-		// 	playerFootsteps.getPlaybackState(out footstepsPlaybackState);
-		// 	if(footstepsPlaybackState.Equals(PLAYBACK_STATE.STOPPED)) 
-		// 	{
-		// 		playerFootsteps.start();
-		// 	}
-		// }
-		// // Otherwise, stop the footsteps event
-		// else
-		// {
-		// 	playerFootsteps.stop(STOP_MODE.ALLOWFADEOUT);
-		// }
-		//
-		// // Get the playback state for the rotation event
-		// PLAYBACK_STATE rotationPlaybackState;
-		// sphereRotation.getPlaybackState(out rotationPlaybackState);
-		// if(rotationPlaybackState.Equals(PLAYBACK_STATE.STOPPED)) 
-		// {
-		// 	sphereRotation.start();
-		// }
-	}
+	// private void UpdateSound() 
+	// {
+	// 	// TODO: define the code to handle the close attack
+	// 	distanceAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
+	// 	closeAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotateSphere.transform));
+	//
+	// 	// Start distance attack loading event if the player is using distance attack
+	// 	// TODO: add the real condition, about keeping pushed the attack button 
+	// 	if(true)
+	// 	{
+	// 		// Get the playback state for the distance attack loading event 
+	// 		PLAYBACK_STATE distanceAttackPlaybackState;
+	// 		distanceAttackLoading.getPlaybackState(out distanceAttackPlaybackState);
+	// 		if(distanceAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED)) 
+	// 		{
+	// 			distanceAttackLoading.start();
+	// 		}
+	// 	}
+	// 	// Otherwise, stop the distance attack loading event 
+	// 	else
+	// 	{
+	// 		distanceAttackLoading.stop(STOP_MODE.ALLOWFADEOUT);
+	// 	}
+	// }
 }
