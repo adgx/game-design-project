@@ -10,6 +10,8 @@ public class PlayerShoot : MonoBehaviour
 	// Audio management 
 	private EventInstance distanceAttackLoading;
 	private EventInstance closeAttackLoading;
+	private bool shieldActivated = false;
+	private bool isShieldCoroutineRunning = false;
 	
 	// Attack1
 	[SerializeField] private float bulletSpeed;
@@ -287,10 +289,20 @@ public class PlayerShoot : MonoBehaviour
 	}
 
 	async void SpawnMagneticShield() {
-		if(!magneticShieldOpen) {
+		// Without this check, if the button for activating/deactivating the shield is pushed and released more than once in a very fast way, then
+		// the function is called multiple times, creating a race condition among multiple concurrent instances of it (buggy code)
+		if (isShieldCoroutineRunning)
+		{
+			return;
+		}
+		
+		isShieldCoroutineRunning = true;
+		
+		if(!magneticShieldOpen && !shieldActivated) {
 			if(powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DefensePowerUp)) {
 				// Audio management
 				AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldActivation, rotatingSphere.transform.position);
+				shieldActivated = true;
 				
 				if(powerUp.powerUpsObtained[PowerUp.PowerUpType.DefensePowerUp] == 1) {
 					// Spawn level 1 shield
@@ -303,15 +315,18 @@ public class PlayerShoot : MonoBehaviour
 			}
 		}
 		else {
-			if(magneticShield != null) {
+			if(magneticShield != null && shieldActivated) {
 				// Audio management
 				AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldDeactivation, rotatingSphere.transform.position);
+				shieldActivated = false;
 				await Task.Delay(500);
 				
 				Destroy(magneticShield);
 			}
 			magneticShieldOpen = false;
 		}
+		
+		isShieldCoroutineRunning = false;
 	}
 
 	public void TakeDamage(int damage) {
