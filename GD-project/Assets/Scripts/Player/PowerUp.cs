@@ -35,7 +35,7 @@ public class PowerUp : MonoBehaviour
         playerPowerUps.Add(PowerUpType.MovementBoost);
         playerPowerUps.Add(PowerUpType.MovementBoost);
 		
-        powerUpsObtained[PowerUpType.DefensePowerUp] = 3;
+        powerUpsObtained[PowerUpType.DefensePowerUp] = 2;
     }
 
     public void ObtainPowerUp(PowerUpType powerUp) {

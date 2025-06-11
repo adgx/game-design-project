@@ -46,24 +46,22 @@ public class RotateSphere : MonoBehaviour
         else {
             switch (animation) {
                 case Animation.RotateAround:
-                    Player playerClass = player.GetComponent<Player>();
-                    transform.localPosition = Vector3.MoveTowards(transform.localPosition, new Vector3(transform.localPosition.x, 0, transform.localPosition.z), transitionSpeed * Time.deltaTime);
+                    if(transform.localPosition != desiredPosition) {
+                        Player playerClass = player.GetComponent<Player>();
+                        transform.localPosition = Vector3.MoveTowards(transform.localPosition, new Vector3(transform.localPosition.x, 0, transform.localPosition.z), transitionSpeed * Time.deltaTime);
 
-                    Vector3 currentDir = transform.localPosition.normalized;
-                    Vector3 targetDir = desiredPosition.normalized;
+                        Vector3 currentDir = transform.localPosition.normalized;
+                        Vector3 targetDir = desiredPosition.normalized;
 
-                    float angle = Vector3.Angle(currentDir, targetDir);
+                        float angle = Vector3.Angle(currentDir, targetDir);
 
-                    playerClass.isFrozen = true;
+                        playerClass.isFrozen = true;
 
-                    transform.RotateAround(player.transform.position, new Vector3(0, 1, 0), 20 * rotationSpeed * Time.deltaTime);
+                        transform.RotateAround(player.transform.position, new Vector3(0, 1, 0), 20 * rotationSpeed * Time.deltaTime);
 
-                    if(angle < 12f) {
-                        transform.localPosition = desiredPosition;
-
-                        await Task.Delay(500);
-                        rotateSphere = true;
-                        playerClass.isFrozen = false;
+                        if(angle < 12f) {
+                            transform.localPosition = desiredPosition;
+                        }
                     }
                     break;
                 case Animation.Linear:

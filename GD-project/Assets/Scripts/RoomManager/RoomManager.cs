@@ -20,7 +20,9 @@ namespace RoomManager
         [Header("Room Generation Settings")] [SerializeField]
         private List<GameObject> allRoomPrefabs;
 
-        [SerializeField] private int maxRooms = 15;
+		[SerializeField] private GameObject initialRoomPrefab;
+
+		[SerializeField] private int maxRooms = 15;
         [SerializeField] private int minRooms = 10;
         [Range(0f, 1f)] [SerializeField] private float skipConnectionChance = 0.35f;
 
@@ -154,25 +156,24 @@ namespace RoomManager
             if (sortedRoomPrefabs.Count == 0 || sortedRoomPrefabs.Values.All(list => list.Count == 0))
                 SortPrefabs();
 
-            List<GameObject> initialRoomCandidates = GetPrefabsOfType(RoomType.IncubatorRoom);
-            if (initialRoomCandidates.Count == 0)
+			if(!initialRoomPrefab) 
             {
-                Debug.LogError("Cannot start: No prefabs of type 'IncubatorRoom' found!");
-                return;
-            }
+				Debug.LogError("Cannot start: No prefabs for initial room found!");
+				return;
+			}
 
-            Vector3Int startGridIndex = new Vector3Int(GridSizeX / 2, 0, GridSizeZ / 2);
-            GameObject startPrefab = initialRoomCandidates[Random.Range(0, initialRoomCandidates.Count)];
-            Room initialRoom = PlaceNewRoomAt(startGridIndex, startPrefab);
-            if (initialRoom != null)
+			Vector3Int startGridIndex = new Vector3Int(GridSizeX / 2, 0, GridSizeZ / 2);
+			Room initialRoom = PlaceNewRoomAt(startGridIndex, initialRoomPrefab);
+
+			if(initialRoom != null)
             {
-                CurrentRoomIndex = startGridIndex;
-            }
-            else
+				CurrentRoomIndex = startGridIndex;
+			}
+			else 
             {
-                Debug.LogError("Failed to place initial room!");
-            }
-        }
+				Debug.LogError("Failed to place initial room!");
+			}
+		}
 
         private List<GameObject> GetPrefabsOfType(RoomType type)
         {
@@ -185,216 +186,194 @@ namespace RoomManager
             return new List<GameObject>();
         }
 
-        private Room PlaceNewRoomAt(Vector3Int gridIndex, GameObject prefabToUse)
-        {
-            if (prefabToUse == null)
-                return null;
-            if (!IsInBounds(gridIndex) || roomGrid[gridIndex.x, gridIndex.y, gridIndex.z] != 0)
-                return null;
+		private Room PlaceNewRoomAt(Vector3Int gridIndex, GameObject prefabToUse) {
+			if(prefabToUse == null)
+				return null;
+			if(!IsInBounds(gridIndex) || roomGrid[gridIndex.x, gridIndex.y, gridIndex.z] != 0)
+				return null;
 
-            Vector3 worldPosition = GetWorldPositionFromGridIndex(gridIndex);
-            GameObject roomGO = Instantiate(prefabToUse, worldPosition, Quaternion.identity);
-            Room newRoomScript = roomGO.GetComponent<Room>();
+			Vector3 worldPosition = GetWorldPositionFromGridIndex(gridIndex);
+			GameObject roomGO = Instantiate(prefabToUse, worldPosition, Quaternion.identity);
+			Room newRoomScript = roomGO.GetComponent<Room>();
 
-            if (newRoomScript == null)
-            {
-                Destroy(roomGO);
-                return null;
-            }
+			if(newRoomScript == null) {
+				Destroy(roomGO);
+				return null;
+			}
 
-            newRoomScript.RoomIndex = gridIndex;
-            roomGrid[gridIndex.x, gridIndex.y, gridIndex.z] = roomInstances.Count + 1;
-            roomInstances.Add(newRoomScript);
-            roomCount++;
-            if (roomCount < maxRooms)
-                roomsToProcessQueue.Enqueue(gridIndex);
-            return newRoomScript;
-        }
+			newRoomScript.RoomIndex = gridIndex;
+			roomGrid[gridIndex.x, gridIndex.y, gridIndex.z] = roomInstances.Count + 1;
+			roomInstances.Add(newRoomScript);
+			roomCount++;
+			if(roomCount < maxRooms)
+				roomsToProcessQueue.Enqueue(gridIndex);
+			return newRoomScript;
+		}
 
-        private void TryExpandFrom(Vector3Int currentRoomGridIndex)
-        {
-            Room currentRoomScript = GetRoomByGridIndex(currentRoomGridIndex);
-            if (currentRoomScript == null)
-                return;
+		private void TryExpandFrom(Vector3Int currentRoomGridIndex) {
+			Room currentRoomScript = GetRoomByGridIndex(currentRoomGridIndex);
+			if(currentRoomScript == null)
+				return;
 
-            var availableConnectors = currentRoomScript.GetAvailableConnectors();
-            if (availableConnectors.Count == 0)
-                return;
+			var availableConnectors = currentRoomScript.GetAvailableConnectors();
+			if(availableConnectors.Count == 0)
+				return;
 
-            var shuffledConnectors = availableConnectors.OrderBy(c => Random.value);
+			var shuffledConnectors = availableConnectors.OrderBy(c => Random.value);
 
-            foreach (RoomConnector currentConnectorInfo in shuffledConnectors)
-            {
-                if (roomCount >= maxRooms)
-                    break;
+			foreach(RoomConnector currentConnectorInfo in shuffledConnectors) {
+				if(roomCount >= maxRooms)
+					break;
 
-                if (roomCount > 1 && Random.value < skipConnectionChance)
-                {
-                    continue;
-                }
+				if(roomCount > 1 && Random.value < skipConnectionChance) {
+					continue;
+				}
 
-                ConnectorDirection expansionDirection = currentConnectorInfo.direction;
-                Vector3Int neighborGridIndex = currentRoomGridIndex + GetVectorFromLocalDirection(expansionDirection);
+				ConnectorDirection expansionDirection = currentConnectorInfo.direction;
+				Vector3Int neighborGridIndex = currentRoomGridIndex + GetVectorFromLocalDirection(expansionDirection);
 
-                if (!IsInBounds(neighborGridIndex) ||
-                    roomGrid[neighborGridIndex.x, neighborGridIndex.y, neighborGridIndex.z] != 0)
-                {
-                    continue;
-                }
+				if(!IsInBounds(neighborGridIndex) ||
+					roomGrid[neighborGridIndex.x, neighborGridIndex.y, neighborGridIndex.z] != 0) {
+					continue;
+				}
 
-                ConnectorDirection requiredConnectorOnNewRoom = GetOppositeDirection(expansionDirection);
+				ConnectorDirection requiredConnectorOnNewRoom = GetOppositeDirection(expansionDirection);
 
-                List<GameObject> suitablePrefabs = new List<GameObject>();
-                foreach (List<GameObject> prefabListByType in sortedRoomPrefabs.Values)
-                {
-                    foreach (GameObject prefab in prefabListByType)
-                    {
-                        Room roomData = prefab.GetComponent<Room>();
-                        if (roomData != null && roomData.GetConnector(requiredConnectorOnNewRoom) != null)
-                        {
-                            if (roomData.roomType == RoomType.IncubatorRoom)
-                            {
-                                suitablePrefabs.Add(prefab);
-                            }
-                            else if (expansionDirection == ConnectorDirection.North ||
-                                     expansionDirection == ConnectorDirection.South)
-                            {
-                                if (roomData.roomType == RoomType.OtherRoom)
-                                {
-                                    suitablePrefabs.Add(prefab);
-                                }
-                            }
-                        }
-                    }
-                }
+				List<GameObject> suitablePrefabs = new List<GameObject>();
+				foreach(List<GameObject> prefabListByType in sortedRoomPrefabs.Values) {
+					foreach(GameObject prefab in prefabListByType) {
+						Room roomData = prefab.GetComponent<Room>();
+						if(roomData != null && roomData.GetConnector(requiredConnectorOnNewRoom) != null) {
+							if(roomData.roomType == RoomType.IncubatorRoom) {
+								suitablePrefabs.Add(prefab);
+							}
+							else if(expansionDirection == ConnectorDirection.North ||
+									 expansionDirection == ConnectorDirection.South) {
+								if(roomData.roomType == RoomType.OtherRoom) {
+									suitablePrefabs.Add(prefab);
+								}
+							}
+							else {
+								if(roomData.roomType == RoomType.OtherRoom) {
+									suitablePrefabs.Add(prefab);
+								}
+							}
+						}
+					}
+				}
 
-                if (suitablePrefabs.Count == 0)
-                {
-                    continue;
-                }
+				if(suitablePrefabs.Count == 0) {
+					continue;
+				}
 
-                GameObject prefabToPlace = suitablePrefabs[Random.Range(0, suitablePrefabs.Count)];
+				GameObject prefabToPlace = suitablePrefabs[Random.Range(0, suitablePrefabs.Count)];
 
-                Room neighborRoomScript = PlaceNewRoomAt(neighborGridIndex, prefabToPlace);
-                if (neighborRoomScript != null)
-                {
-                    currentRoomScript.ActivateConnection(expansionDirection);
-                    neighborRoomScript.ActivateConnection(requiredConnectorOnNewRoom);
-                }
-            }
-        }
+				Room neighborRoomScript = PlaceNewRoomAt(neighborGridIndex, prefabToPlace);
+				if(neighborRoomScript != null) {
+					currentRoomScript.ActivateConnection(expansionDirection);
+					neighborRoomScript.ActivateConnection(requiredConnectorOnNewRoom);
+				}
+			}
+		}
 
-        public void SpawnPlayerInRoom(Vector3Int roomIndex, Vector3Int? worldEntryDirection = null)
-        {
-            if (currentPlayer == null)
-                return;
-            Room roomToSpawnIn = GetRoomByGridIndex(roomIndex);
-            if (roomToSpawnIn == null)
-                return;
-            CurrentRoomIndex = roomIndex;
-            Transform spawnPoint = worldEntryDirection.HasValue
-                ? roomToSpawnIn.GetSpawnPointForWorldEntryDirection(worldEntryDirection.Value)
-                : roomToSpawnIn.centralSpawnPoint;
-            currentPlayer.transform.position =
-                spawnPoint != null ? spawnPoint.position : roomToSpawnIn.transform.position;
-        }
+		public void SpawnPlayerInRoom(Vector3Int roomIndex, Vector3Int? worldEntryDirection = null) {
+			if(currentPlayer == null)
+				return;
+			Room roomToSpawnIn = GetRoomByGridIndex(roomIndex);
+			if(roomToSpawnIn == null)
+				return;
+			CurrentRoomIndex = roomIndex;
+			Transform spawnPoint = worldEntryDirection.HasValue
+				? roomToSpawnIn.GetSpawnPointForWorldEntryDirection(worldEntryDirection.Value)
+				: roomToSpawnIn.centralSpawnPoint;
+			currentPlayer.transform.position =
+				spawnPoint != null ? spawnPoint.position : roomToSpawnIn.transform.position;
+		}
 
-        public Room GetRoomByGridIndex(Vector3Int gridIndex)
-        {
-            return roomInstances.FirstOrDefault(r => r != null && r.RoomIndex == gridIndex);
-        }
+		public Room GetRoomByGridIndex(Vector3Int gridIndex) {
+			return roomInstances.FirstOrDefault(r => r != null && r.RoomIndex == gridIndex);
+		}
 
-        private Vector3 GetWorldPositionFromGridIndex(Vector3Int gridIndex)
-        {
-            float xPos = (gridIndex.x - GridSizeX / 2f + 0.5f) * CellWorldWidth;
-            float zPos = (gridIndex.z - GridSizeZ / 2f + 0.5f) * CellWorldDepth;
-            return new Vector3(xPos, 0, zPos);
-        }
+		private Vector3 GetWorldPositionFromGridIndex(Vector3Int gridIndex) {
+			float xPos = (gridIndex.x - GridSizeX / 2f + 0.5f) * CellWorldWidth;
+			float zPos = (gridIndex.z - GridSizeZ / 2f + 0.5f) * CellWorldDepth;
+			return new Vector3(xPos, 0, zPos);
+		}
 
-        private bool IsInBounds(Vector3Int gridIndex)
-        {
-            return gridIndex.x >= 0 && gridIndex.x < GridSizeX &&
-                   gridIndex.y >= 0 && gridIndex.y < GridSizeY &&
-                   gridIndex.z >= 0 && gridIndex.z < GridSizeZ;
-        }
+		private bool IsInBounds(Vector3Int gridIndex) {
+			return gridIndex.x >= 0 && gridIndex.x < GridSizeX &&
+				   gridIndex.y >= 0 && gridIndex.y < GridSizeY &&
+				   gridIndex.z >= 0 && gridIndex.z < GridSizeZ;
+		}
 
-        public static ConnectorDirection GetOppositeDirection(ConnectorDirection dir)
-        {
-            switch (dir)
-            {
-                case ConnectorDirection.North:
-                    return ConnectorDirection.South;
-                case ConnectorDirection.South:
-                    return ConnectorDirection.North;
-                case ConnectorDirection.East:
-                    return ConnectorDirection.West;
-                case ConnectorDirection.West:
-                    return ConnectorDirection.East;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(dir), "Invalid ConnectorDirection.");
-            }
-        }
+		public static ConnectorDirection GetOppositeDirection(ConnectorDirection dir) {
+			switch(dir) {
+				case ConnectorDirection.North:
+					return ConnectorDirection.South;
+				case ConnectorDirection.South:
+					return ConnectorDirection.North;
+				case ConnectorDirection.East:
+					return ConnectorDirection.West;
+				case ConnectorDirection.West:
+					return ConnectorDirection.East;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(dir), "Invalid ConnectorDirection.");
+			}
+		}
 
-        public static Vector3Int GetVectorFromLocalDirection(ConnectorDirection dir)
-        {
-            switch (dir)
-            {
-                case ConnectorDirection.North:
-                    return Vector3Int.forward;
-                case ConnectorDirection.South:
-                    return Vector3Int.back;
-                case ConnectorDirection.East:
-                    return Vector3Int.right;
-                case ConnectorDirection.West:
-                    return Vector3Int.left;
-                default:
-                    return Vector3Int.zero;
-            }
-        }
+		public static Vector3Int GetVectorFromLocalDirection(ConnectorDirection dir) {
+			switch(dir) {
+				case ConnectorDirection.North:
+					return Vector3Int.forward;
+				case ConnectorDirection.South:
+					return Vector3Int.back;
+				case ConnectorDirection.East:
+					return Vector3Int.right;
+				case ConnectorDirection.West:
+					return Vector3Int.left;
+				default:
+					return Vector3Int.zero;
+			}
+		}
 
-        public static ConnectorDirection GetOppositeLocalDirection(Vector3Int worldGridOffsetPlayerCameFrom)
-        {
-            if (worldGridOffsetPlayerCameFrom == Vector3Int.forward)
-                return ConnectorDirection.South;
-            if (worldGridOffsetPlayerCameFrom == Vector3Int.back)
-                return ConnectorDirection.North;
-            if (worldGridOffsetPlayerCameFrom == Vector3Int.right)
-                return ConnectorDirection.West;
-            if (worldGridOffsetPlayerCameFrom == Vector3Int.left)
-                return ConnectorDirection.East;
-            return ConnectorDirection.South;
-        }
+		public static ConnectorDirection GetOppositeLocalDirection(Vector3Int worldGridOffsetPlayerCameFrom) {
+			if(worldGridOffsetPlayerCameFrom == Vector3Int.forward)
+				return ConnectorDirection.South;
+			if(worldGridOffsetPlayerCameFrom == Vector3Int.back)
+				return ConnectorDirection.North;
+			if(worldGridOffsetPlayerCameFrom == Vector3Int.right)
+				return ConnectorDirection.West;
+			if(worldGridOffsetPlayerCameFrom == Vector3Int.left)
+				return ConnectorDirection.East;
+			return ConnectorDirection.South;
+		}
 
-        public static Vector3 GetWorldVectorFromLocalDirection(ConnectorDirection dir, Transform roomTransform)
-        {
-            switch (dir)
-            {
-                case ConnectorDirection.North:
-                    return roomTransform.forward;
-                case ConnectorDirection.South:
-                    return -roomTransform.forward;
-                case ConnectorDirection.East:
-                    return roomTransform.right;
-                case ConnectorDirection.West:
-                    return -roomTransform.right;
-                default:
-                    return Vector3.zero;
-            }
-        }
+		public static Vector3 GetWorldVectorFromLocalDirection(ConnectorDirection dir, Transform roomTransform) {
+			switch(dir) {
+				case ConnectorDirection.North:
+					return roomTransform.forward;
+				case ConnectorDirection.South:
+					return -roomTransform.forward;
+				case ConnectorDirection.East:
+					return roomTransform.right;
+				case ConnectorDirection.West:
+					return -roomTransform.right;
+				default:
+					return Vector3.zero;
+			}
+		}
 
-        public int GetGridSizeX() => GridSizeX;
-        public int GetGridSizeZ() => GridSizeZ;
+		public int GetGridSizeX() => GridSizeX;
+		public int GetGridSizeZ() => GridSizeZ;
 
-        public bool DoesRoomExistAt(Vector3Int gridIndex)
-        {
-            if (roomGrid == null || !IsInBounds(gridIndex))
-                return false;
-            return roomGrid[gridIndex.x, gridIndex.y, gridIndex.z] != 0;
-        }
+		public bool DoesRoomExistAt(Vector3Int gridIndex) {
+			if(roomGrid == null || !IsInBounds(gridIndex))
+				return false;
+			return roomGrid[gridIndex.x, gridIndex.y, gridIndex.z] != 0;
+		}
 
-        public void NotifyPlayerEnteredNewRoom(Vector3Int newRoomIndex)
-        {
-            PlayerEnteredNewRoom?.Invoke(newRoomIndex);
-        }
-    }
+		public void NotifyPlayerEnteredNewRoom(Vector3Int newRoomIndex) {
+			PlayerEnteredNewRoom?.Invoke(newRoomIndex);
+		}
+	}
 }

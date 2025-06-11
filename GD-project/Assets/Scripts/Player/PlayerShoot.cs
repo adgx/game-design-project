@@ -319,9 +319,8 @@ public class PlayerShoot : MonoBehaviour
 				// Audio management
 				AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldDeactivation, rotatingSphere.transform.position);
 				shieldActivated = false;
-				await Task.Delay(500);
-				
 				Destroy(magneticShield);
+				await Task.Delay(500);
 			}
 			magneticShieldOpen = false;
 		}
@@ -372,11 +371,10 @@ public class PlayerShoot : MonoBehaviour
 	void Update() {
 		// The attack is shot only on "Fire1" up
 		if (Input.GetButtonDown("Fire1")) {
-			
-			// Audio management
-			loadingAttack = true;
-			
 			if(!magneticShield && CheckStamina(1)) {
+				// Audio management
+				loadingAttack = true;
+
 				switch(attackNumber) {
 					case 1:
 						LoadDistanceAttack();
