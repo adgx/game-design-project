@@ -10,8 +10,7 @@ public class PlayerShoot : MonoBehaviour
 	// Audio management 
 	private EventInstance distanceAttackLoading;
 	private EventInstance closeAttackLoading;
-	private bool shieldActivated = false;
-	private bool isShieldCoroutineRunning = false;
+	private bool isShieldCoroutineRunning;
 	
 	// Attack1
 	[SerializeField] private float bulletSpeed;
@@ -298,11 +297,10 @@ public class PlayerShoot : MonoBehaviour
 		
 		isShieldCoroutineRunning = true;
 		
-		if(!magneticShieldOpen && !shieldActivated) {
+		if(!magneticShieldOpen) {
 			if(powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DefensePowerUp)) {
 				// Audio management
 				AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldActivation, rotatingSphere.transform.position);
-				shieldActivated = true;
 				
 				if(powerUp.powerUpsObtained[PowerUp.PowerUpType.DefensePowerUp] == 1) {
 					// Spawn level 1 shield
@@ -315,10 +313,9 @@ public class PlayerShoot : MonoBehaviour
 			}
 		}
 		else {
-			if(magneticShield != null && shieldActivated) {
+			if(magneticShield != null) {
 				// Audio management
 				AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldDeactivation, rotatingSphere.transform.position);
-				shieldActivated = false;
 				Destroy(magneticShield);
 				await Task.Delay(500);
 			}
@@ -451,6 +448,7 @@ public class PlayerShoot : MonoBehaviour
 				if(distanceAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED)) 
 				{
 					distanceAttackLoading.start();
+					AutoStopLoadingSound(distanceAttackLoading); // <-- AVVIO AUTO-STOP
 				}
 			}
 			// Otherwise, stop the distance attack loading event 
@@ -470,6 +468,7 @@ public class PlayerShoot : MonoBehaviour
 				if(closeAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED)) 
 				{
 					closeAttackLoading.start();
+					AutoStopLoadingSound(closeAttackLoading); // <-- AVVIO AUTO-STOP
 				}
 			}
 			// Otherwise, stop the close attack loading event 
@@ -479,4 +478,19 @@ public class PlayerShoot : MonoBehaviour
 			}
 		}
 	}
+	
+	// Audio management
+	private async void AutoStopLoadingSound(EventInstance eventInstance)
+	{
+		await Task.Delay(2500); // wait for 2.5 seconds
+
+		PLAYBACK_STATE playbackState;
+		eventInstance.getPlaybackState(out playbackState);
+
+		if (playbackState != PLAYBACK_STATE.STOPPED)
+		{
+			eventInstance.stop(STOP_MODE.ALLOWFADEOUT);
+		}
+	}
+
 }
