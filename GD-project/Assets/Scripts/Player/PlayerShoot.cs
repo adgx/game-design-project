@@ -11,6 +11,8 @@ public class PlayerShoot : MonoBehaviour
 	private EventInstance distanceAttackLoading;
 	private EventInstance closeAttackLoading;
 	private bool isShieldCoroutineRunning;
+	private bool distanceAttackSoundSuppressed = false;
+	private bool closeAttackSoundSuppressed = false;
 	
 	// Attack1
 	[SerializeField] private float bulletSpeed;
@@ -197,6 +199,7 @@ public class PlayerShoot : MonoBehaviour
 		await Task.Delay(300);
 		rotateSphere.rotateSphere = true;
 		player.isFrozen = false;
+		distanceAttackSoundSuppressed = false;
 	}
 	
 	async void LoadCloseAttack() {
@@ -243,6 +246,8 @@ public class PlayerShoot : MonoBehaviour
 		SpawnAttackArea();
 
 		CheckForEnemies();
+		
+		closeAttackSoundSuppressed = false;
 	}
 
 	async void SpawnAttackArea() {
@@ -440,7 +445,7 @@ public class PlayerShoot : MonoBehaviour
 		// Start distance attack loading event if the player is using distance attack
 		if (attackNumber == 1)
 		{
-			if(loadingAttack && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DistanceAttackPowerUp))
+			if (loadingAttack && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DistanceAttackPowerUp) && !distanceAttackSoundSuppressed)
 			{
 				// Get the playback state for the distance attack loading event 
 				PLAYBACK_STATE distanceAttackPlaybackState;
@@ -448,7 +453,7 @@ public class PlayerShoot : MonoBehaviour
 				if(distanceAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED)) 
 				{
 					distanceAttackLoading.start();
-					AutoStopLoadingSound(distanceAttackLoading); // <-- AVVIO AUTO-STOP
+					AutoStopLoadingSound(distanceAttackLoading);
 				}
 			}
 			// Otherwise, stop the distance attack loading event 
@@ -460,7 +465,7 @@ public class PlayerShoot : MonoBehaviour
 
 		else
 		{
-			if(loadingAttack && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.CloseAttackPowerUp))
+			if (loadingAttack && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.CloseAttackPowerUp) && !closeAttackSoundSuppressed)
 			{
 				// Get the playback state for the close attack loading event 
 				PLAYBACK_STATE closeAttackPlaybackState;
@@ -468,7 +473,7 @@ public class PlayerShoot : MonoBehaviour
 				if(closeAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED)) 
 				{
 					closeAttackLoading.start();
-					AutoStopLoadingSound(closeAttackLoading); // <-- AVVIO AUTO-STOP
+					AutoStopLoadingSound(closeAttackLoading);
 				}
 			}
 			// Otherwise, stop the close attack loading event 
@@ -482,7 +487,7 @@ public class PlayerShoot : MonoBehaviour
 	// Audio management
 	private async void AutoStopLoadingSound(EventInstance eventInstance)
 	{
-		await Task.Delay(2500); // wait for 2.5 seconds
+		await Task.Delay(2500);
 
 		PLAYBACK_STATE playbackState;
 		eventInstance.getPlaybackState(out playbackState);
@@ -490,7 +495,13 @@ public class PlayerShoot : MonoBehaviour
 		if (playbackState != PLAYBACK_STATE.STOPPED)
 		{
 			eventInstance.stop(STOP_MODE.ALLOWFADEOUT);
+
+			// Imposta il flag giusto
+			if (eventInstance.handle == distanceAttackLoading.handle)
+				distanceAttackSoundSuppressed = true;
+
+			if (eventInstance.handle == closeAttackLoading.handle)
+				closeAttackSoundSuppressed = true;
 		}
 	}
-
 }
