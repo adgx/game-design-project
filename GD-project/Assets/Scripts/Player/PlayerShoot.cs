@@ -31,6 +31,8 @@ public class PlayerShoot : MonoBehaviour
 	private int attackNumber = 1;
 	[SerializeField] TextMeshProUGUI selectedAttackText;
 	private bool loadingAttack = false;
+	// This flag is true if an attack is being executed. While executing it, I can not start another attack
+	private bool attacking = false;
 	private int attackStamina = 0;
 	
 	// Defense
@@ -196,9 +198,14 @@ public class PlayerShoot : MonoBehaviour
 		// Audio management
 		AudioManager.instance.PlayOneShot(FMODEvents.instance.distanceAttackShoot, rotatingSphere.transform.position);
 		
-		await Task.Delay(300);
+		await Task.Delay(100);
+		attacking = false;
+		
+		await Task.Delay(200);
 		rotateSphere.rotateSphere = true;
 		player.isFrozen = false;
+		
+		// Audio management
 		distanceAttackSoundSuppressed = false;
 	}
 	
@@ -247,6 +254,7 @@ public class PlayerShoot : MonoBehaviour
 
 		CheckForEnemies();
 		
+		// Audio management
 		closeAttackSoundSuppressed = false;
 	}
 
@@ -269,6 +277,8 @@ public class PlayerShoot : MonoBehaviour
 		// Set values back to default
 		closeAttackDamage = defaultCloseAttackDamage;
 		damageRadius = defaultDamageRadius;
+		
+		attacking = false;
 	}
 
 	// Checks if there are enemies in the attack area and, if so, damages them
@@ -373,9 +383,10 @@ public class PlayerShoot : MonoBehaviour
 	void Update() {
 		// The attack is shot only on "Fire1" up
 		if (Input.GetButtonDown("Fire1")) {
-			if(!magneticShield && CheckStamina(1)) {
+			if(!magneticShield && CheckStamina(1) && !attacking) {
 				// Audio management
 				loadingAttack = true;
+				attacking = true;
 
 				switch(attackNumber) {
 					case 1:
@@ -394,7 +405,7 @@ public class PlayerShoot : MonoBehaviour
 		UpdateSound();
 		
 		if (Input.GetButtonUp("Fire1")) {
-			if(!magneticShield && CheckStamina(1)) {
+			if(!magneticShield && CheckStamina(1) && loadingAttack) {
 				switch(attackNumber) {
 					case 1:
 						FireDistanceAttack();
