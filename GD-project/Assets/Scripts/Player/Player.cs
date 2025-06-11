@@ -46,6 +46,12 @@ public class Player : MonoBehaviour
         Vector3 direction = input.Vertical * (new Vector3(mainCamera.transform.forward.x, 0f, mainCamera.transform.forward.z)) + input.Horizontal * (new Vector3(mainCamera.transform.right.x, 0f, mainCamera.transform.right.z));
 		direction.Normalize();
 
+		//animation stuff
+		if (currentHorizontalSpeed == 0f && currentVerticalSpeed == 0f)
+		{ 
+		
+		}
+
 		player.MovePosition(player.position + direction * maxMovementSpeed * Time.fixedDeltaTime);
         
         // I need this constraint to avoid that the player turns upside down when it touches another collider
