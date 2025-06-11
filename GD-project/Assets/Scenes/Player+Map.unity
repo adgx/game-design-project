@@ -1446,7 +1446,7 @@ Transform:
   m_GameObject: {fileID: 678183996}
   serializedVersion: 2
   m_LocalRotation: {x: 0.15600722, y: -0.17145528, z: 0.027508248, w: 0.9723725}
-  m_LocalPosition: {x: 71.87838, y: 3.3088386, z: 64.83919}
+  m_LocalPosition: {x: 48.516293, y: 92.263565, z: 41.477104}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2347,14 +2347,14 @@ MonoBehaviour:
       Data2: 1129170750
       Data3: 792859547
       Data4: 80374644
-    Path: event:/SFX/Player/Eating/EatingChips
+    Path: event:/SFX/Player/Eating/EatChips
   <playerEatChocolate>k__BackingField:
     Guid:
       Data1: 2115817834
       Data2: 1321077471
       Data3: -218120781
       Data4: 1914792332
-    Path: event:/SFX/Player/Eating/EatingChocolate
+    Path: event:/SFX/Player/Eating/EatChocolate
   <playerDrink>k__BackingField:
     Guid:
       Data1: -1592788327
@@ -2383,6 +2383,20 @@ MonoBehaviour:
       Data3: -1050364744
       Data4: -834285941
     Path: event:/SFX/Player/Defense/ShieldHit
+  <playerHit>k__BackingField:
+    Guid:
+      Data1: 1792477054
+      Data2: 1106656248
+      Data3: 624404368
+      Data4: 1545182479
+    Path: event:/SFX/Player/Hit/PlayerHit
+  <playerDie>k__BackingField:
+    Guid:
+      Data1: 196964975
+      Data2: 1311451549
+      Data3: 993772194
+      Data4: -661125539
+    Path: event:/SFX/Player/Dying/PlayerDie
   <distanceAttackLoad>k__BackingField:
     Guid:
       Data1: -1504091649
@@ -3946,7 +3960,7 @@ Transform:
   m_GameObject: {fileID: 1728157138}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 70, y: 1, z: 70}
+  m_LocalPosition: {x: 46.63791, y: 89.95473, z: 46.637917}
   m_LocalScale: {x: 1, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4333,7 +4347,7 @@ Transform:
   m_GameObject: {fileID: 2143297035}
   serializedVersion: 2
   m_LocalRotation: {x: 0.15600723, y: -0.1714553, z: 0.027508251, w: 0.9723724}
-  m_LocalPosition: {x: 71.87838, y: 3.3088386, z: 64.83919}
+  m_LocalPosition: {x: 48.516293, y: 92.263565, z: 41.477104}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -341,14 +341,26 @@ public class PlayerShoot : MonoBehaviour
 	}
 
 	public void TakeDamage(int damage) {
-		health -= damage;
-		healthBar.SetHealth(health);
-
-		StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
-
-		if(health <= 0)
-			Invoke(nameof(DestroyPlayer), 0.05f);
+     		health -= damage;
+     		healthBar.SetHealth(health);
+     
+     		StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
+     
+     		if (health <= 0)
+     		{
+     			// Audio managament
+     			AudioManager.instance.PlayOneShot(FMODEvents.instance.playerDie, player.transform.position);
+     			
+     			Invoke(nameof(DestroyPlayer), 0.05f);
+     		}
+     			
+     		else
+     		{
+     			// Audio management
+     			AudioManager.instance.PlayOneShot(FMODEvents.instance.playerHit, player.transform.position);
+     		}
 	}
+	
 	// Change player color when hit and change it back to normal after "duration" seconds
 	IEnumerator ChangeColor(Renderer renderer, Color dmgColor, float duration, float delay) {
 		// Save the original color of the enemy

@@ -3532,6 +3532,7 @@ MonoBehaviour:
   player: {fileID: 1728157140}
   mainCamera: {fileID: 0}
   isFrozen: 0
+  rotatingSphere: {fileID: 0}
 --- !u!65 &1728157144
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3674,6 +3675,7 @@ MonoBehaviour:
   allRoomPrefabs:
   - {fileID: 2397693676041395911, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
   - {fileID: 4493371007400883041, guid: b7cb8cce38c99e549a3e06d400963fac, type: 3}
+  initialRoomPrefab: {fileID: 0}
   maxRooms: 15
   minRooms: 10
   skipConnectionChance: 0.35
@@ -4182,7 +4184,7 @@ MonoBehaviour:
       Data2: 1321077471
       Data3: -218120781
       Data4: 1914792332
-    Path: event:/SFX/Player/Eating/EatingChocolate
+    Path: event:/SFX/Player/Eating/EatChocolate
   <sphereRotation>k__BackingField:
     Guid:
       Data1: 626503219
@@ -4218,6 +4220,13 @@ MonoBehaviour:
       Data3: 0
       Data4: 0
     Path: 
+  <shieldDeactivation>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   <shieldHit>k__BackingField:
     Guid:
       Data1: 0
@@ -4225,7 +4234,35 @@ MonoBehaviour:
       Data3: 0
       Data4: 0
     Path: 
-  <attackX>k__BackingField:
+  <playerHit>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <distanceAttackLoad>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <distanceAttackShoot>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <closeAttackLoad>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <closeAttackShoot>k__BackingField:
     Guid:
       Data1: 0
       Data2: 0
@@ -4282,6 +4319,13 @@ MonoBehaviour:
       Data4: 0
     Path: 
   <ventilationNoise>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <flushingWCNoise>k__BackingField:
     Guid:
       Data1: 0
       Data2: 0
