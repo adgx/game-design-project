@@ -1645,12 +1645,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6748969437948877298}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8d91438e64157824ba3144f3a4fdb97d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rickAC: {fileID: 0}
+  rickAC: {fileID: 804336294992178}
   NUM_IDLE_ANIMATIONS: 2
   WAIT_IDLE_TIME: 2
 --- !u!114 &823898000
@@ -1660,7 +1660,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6748969437948877298}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 87b5d102fe9948f8a62870a5cb922bf0, type: 3}
   m_Name: 
@@ -1686,7 +1686,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6748969437948877298}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 533b0832fb85b45c6aebca3ece7c6077, type: 3}
   m_Name: 
@@ -1731,7 +1731,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6748969437948877298}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 79975468693d44d2c92222e8a3319c26, type: 3}
   m_Name: 
@@ -1762,8 +1762,8 @@ BoxCollider:
   m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1.74, z: 0.29}
-  m_Center: {x: 0, y: 0.58, z: 0}
+  m_Size: {x: 1.15, y: 1.74, z: 1.05}
+  m_Center: {x: 0, y: 0.92, z: 0}
 --- !u!1 &1048165825
 GameObject:
   m_ObjectHideFlags: 0
@@ -2608,9 +2608,9 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6748969437948877298}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 3651326e2c3fc914bbd9ee1d7721fc27, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cf2be6d876d222e4fb901c6ca90ab847, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -4313,7 +4313,7 @@ Transform:
   m_GameObject: {fileID: 6748969437948877298}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0.026, y: 0.432, z: 1.095}
+  m_LocalPosition: {x: 0.026, y: 0, z: 1.095}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

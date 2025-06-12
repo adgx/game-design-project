@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class LookAtEnemy : MonoBehaviour
@@ -38,7 +39,8 @@ public class LookAtEnemy : MonoBehaviour
             }
         }
         
+        //reposition character for fix bug when change room
         if (transform.position.y < 2)
-            transform.position = new Vector3(transform.position.x, 3, transform.position.z);
+            transform.position = new Vector3(transform.position.x, 0, transform.position.z);
     }
 }
