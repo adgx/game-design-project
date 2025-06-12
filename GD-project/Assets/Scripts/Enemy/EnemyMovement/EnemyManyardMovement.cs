@@ -7,26 +7,26 @@ namespace Enemy.EnemyData.EnemyMovement
 {
     public class EnemyMaynardMovement : MonoBehaviour, IEnemy
     {
-        private NavMeshAgent agent;
+        [SerializeField] private NavMeshAgent agent;
+        [SerializeField] private LayerMask whatIsGround, whatIsPlayer;
+        
         private Transform playerTransform;
 
-        public LayerMask whatIsGround, whatIsPlayer;
-
-        public float health;
+        private float health;
 
         //Patroling
-        public Vector3 walkPoint;
-        bool walkPointSet;
-        public float walkPointRange;
+        private Vector3 walkPoint;
+        private bool walkPointSet;
+        private float walkPointRange;
 
         //Attacking
-        public float timeBetweenAttacks;
-        bool alreadyAttacked;
-        public GameObject bulletPrefab;
+        private float timeBetweenAttacks;
+        private bool alreadyAttacked;
+        private GameObject bulletPrefab;
 
         //States
-        public float sightRange, remoteAttackRange, closeAttackRange;
-        public bool playerInSightRange, playerInRemoteAttackRange, playerInCloseAttackRange;
+        private float sightRange, remoteAttackRange, closeAttackRange;
+        private bool playerInSightRange, playerInRemoteAttackRange, playerInCloseAttackRange;
 
         private RoomManager.RoomManager roomManager;
 
@@ -36,7 +36,9 @@ namespace Enemy.EnemyData.EnemyMovement
 
             if (!agent) agent = GetComponent<NavMeshAgent>();
 
-            if (enemyData || enemyData is not EnemyManyardData maynardData) return;
+            if (!enemyData || enemyData is not EnemyManyardData maynardData) return;
+
+            agent.speed = enemyData.baseMoveSpeed;
 
             health = maynardData.maxHealth;
             walkPointRange = maynardData.walkPointRange;
@@ -91,7 +93,7 @@ namespace Enemy.EnemyData.EnemyMovement
 
         void ChasePlayer()
         {
-            if (roomManager.navMashBaked)
+            if (roomManager.IsNavMeshBaked)
                 agent.SetDestination(playerTransform.position);
         }
 

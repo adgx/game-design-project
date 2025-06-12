@@ -20605,36 +20605,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 214320ac68aae4c69932706f791e93da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomType: 1
-  connectors:
-  - id: 1
-    direction: 0
-    passageVisual: {fileID: 4431640773404220729}
-    spawnPoint: {fileID: 3783022965824425884}
-    isConnected: 0
-  - id: 2
-    direction: 1
-    passageVisual: {fileID: 6956587597791951969}
-    spawnPoint: {fileID: 6883593272374552534}
-    isConnected: 0
-  - id: 3
-    direction: 2
-    passageVisual: {fileID: 4112092101333203191}
-    spawnPoint: {fileID: 5150549151427548252}
-    isConnected: 0
-  - id: 4
-    direction: 3
-    passageVisual: {fileID: 7586700895695969247}
-    spawnPoint: {fileID: 3902946044732335304}
-    isConnected: 0
-  centralSpawnPoint: {fileID: 4872280986875945669}
-  maxSpawnCost: 10
-  hasEnemiesSpawned: 0
-  enemySpawnPoints:
-  - {fileID: 9055570650896918796}
-  - {fileID: 7507684188314882942}
-  - {fileID: 2668623601618429050}
-  - {fileID: 5854843003537160599}
+  _connectors:
+  - _id: NorthDoor
+    _direction: 0
+    _passageVisual: {fileID: 4431640773404220729}
+    _spawnPoint: {fileID: 3783022965824425884}
+    IsConnected: 0
+  - _id: SouthDoor
+    _direction: 1
+    _passageVisual: {fileID: 6956587597791951969}
+    _spawnPoint: {fileID: 6883593272374552534}
+    IsConnected: 0
+  - _id: WestDoor
+    _direction: 3
+    _passageVisual: {fileID: 7586700895695969247}
+    _spawnPoint: {fileID: 3902946044732335304}
+    IsConnected: 0
+  - _id: EastDoor
+    _direction: 2
+    _passageVisual: {fileID: 4112092101333203191}
+    _spawnPoint: {fileID: 5150549151427548252}
+    IsConnected: 0
+  _centralSpawnPoint: {fileID: 4872280986875945669}
+  _enemySpawnPoints: []
 --- !u!1 &8011959693935610524
 GameObject:
   m_ObjectHideFlags: 0

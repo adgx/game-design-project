@@ -10213,7 +10213,15 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8742712491289317470}
     - target: {fileID: 2798162152419757125, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
+      propertyPath: _centralSpawnPoint
+      value: 
+      objectReference: {fileID: 8742712491289317470}
+    - target: {fileID: 2798162152419757125, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
       propertyPath: connectors.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2798162152419757125, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
+      propertyPath: _connectors.Array.size
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2798162152419757125, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
@@ -10223,6 +10231,14 @@ PrefabInstance:
     - target: {fileID: 2798162152419757125, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
       propertyPath: enemySpawnPoints.Array.size
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2798162152419757125, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
+      propertyPath: _connectors.Array.data[0]._id
+      value: NorthCorridorEntry
+      objectReference: {fileID: 0}
+    - target: {fileID: 2798162152419757125, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
+      propertyPath: _connectors.Array.data[1]._id
+      value: SouthCorridorEntry
       objectReference: {fileID: 0}
     - target: {fileID: 2798162152419757125, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
       propertyPath: 'enemySpawnPoints.Array.data[0]'
@@ -10253,6 +10269,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2798162152419757125, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
+      propertyPath: _connectors.Array.data[1]._direction
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2798162152419757125, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
+      propertyPath: _connectors.Array.data[0]._spawnPoint
+      value: 
+      objectReference: {fileID: 1060162677341879559}
+    - target: {fileID: 2798162152419757125, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
+      propertyPath: _connectors.Array.data[1]._spawnPoint
+      value: 
+      objectReference: {fileID: 7300023365458040141}
+    - target: {fileID: 2798162152419757125, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
       propertyPath: connectors.Array.data[0].passageVisual
       value: 
       objectReference: {fileID: 5675694035970063478}
@@ -10268,6 +10296,14 @@ PrefabInstance:
       propertyPath: connectors.Array.data[3].passageVisual
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2798162152419757125, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
+      propertyPath: _connectors.Array.data[0]._passageVisual
+      value: 
+      objectReference: {fileID: 5675694035970063478}
+    - target: {fileID: 2798162152419757125, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
+      propertyPath: _connectors.Array.data[1]._passageVisual
+      value: 
+      objectReference: {fileID: 1095388908801180470}
     - target: {fileID: 3914512121518098881, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
@@ -10461,6 +10497,11 @@ PrefabInstance:
       addedObject: {fileID: 8364188460562857704}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
+--- !u!4 &1060162677341879559 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1436829788770525341, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
+  m_PrefabInstance: {fileID: 2109603556889402778}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4311258732327077920 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2779419965720303034, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
@@ -10469,6 +10510,11 @@ Transform:
 --- !u!4 &6468963621349640749 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4936140224891934647, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
+  m_PrefabInstance: {fileID: 2109603556889402778}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &7300023365458040141 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8649222255582546135, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
   m_PrefabInstance: {fileID: 2109603556889402778}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &8742712491289317470 stripped

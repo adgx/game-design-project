@@ -654,17 +654,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 214320ac68aae4c69932706f791e93da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomType: 1
-  connectors:
-  - id: 1
-    direction: 3
-    passageVisual: {fileID: 5767044318999813743}
-    spawnPoint: {fileID: 1853097851102152943}
-    isConnected: 0
-  centralSpawnPoint: {fileID: 2556233178477582439}
-  maxSpawnCost: 10
-  hasEnemiesSpawned: 0
-  enemySpawnPoints:
+  _connectors:
+  - _id: WestBathroomEntry
+    _direction: 3
+    _passageVisual: {fileID: 5767044318999813743}
+    _spawnPoint: {fileID: 1853097851102152943}
+    IsConnected: 0
+  _centralSpawnPoint: {fileID: 2556233178477582439}
+  _enemySpawnPoints:
   - {fileID: 4767255468803036353}
   - {fileID: 8919174386967214972}
   - {fileID: 8059681376415777182}

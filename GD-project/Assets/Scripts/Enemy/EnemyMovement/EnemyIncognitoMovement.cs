@@ -7,26 +7,26 @@ namespace Enemy.EnemyData.EnemyMovement
 {
     public class EnemyIncognitoMovement : MonoBehaviour, IEnemy
     {
-        private NavMeshAgent agent;
-        private Transform playerTransform;
+        [SerializeField] private NavMeshAgent agent;
+        [SerializeField] private LayerMask whatIsGround, whatIsPlayer;
+        
+        private Transform player;
 
-        public LayerMask whatIsGround, whatIsPlayer;
-
-        public float health;
+        private float health;
 
         //Patroling
-        public Vector3 walkPoint;
-        bool walkPointSet;
-        public float walkPointRange;
+        private Vector3 walkPoint;
+        private bool walkPointSet;
+        private float walkPointRange;
 
         //Attacking
-        public float timeBetweenAttacks;
-        bool alreadyAttacked;
-        public GameObject bulletPrefab;
+        private float timeBetweenAttacks;
+        private bool alreadyAttacked;
+        private GameObject bulletPrefab;
 
         //States
-        public float sightRange, attackRange;
-        public bool playerInSightRange, playerInAttackRange;
+        private float sightRange, attackRange;
+        private bool playerInSightRange, playerInAttackRange;
 
         private RoomManager.RoomManager roomManager;
 
@@ -36,7 +36,9 @@ namespace Enemy.EnemyData.EnemyMovement
 
             if (!agent) agent = GetComponent<NavMeshAgent>();
 
-            if (enemyData || enemyData is not EnemyIncognitoData incognitoData) return;
+            if (enemyData == null || enemyData is not EnemyIncognitoData incognitoData) return;
+            
+            agent.speed = enemyData.baseMoveSpeed;
 
             health = incognitoData.maxHealth;
             walkPointRange = incognitoData.walkPointRange;
@@ -89,8 +91,8 @@ namespace Enemy.EnemyData.EnemyMovement
 
         void ChasePlayer()
         {
-            if (roomManager != null && roomManager.navMashBaked)
-                agent.SetDestination(playerTransform.position);
+            if (roomManager.IsNavMeshBaked)
+                agent.SetDestination(player.position);
         }
 
         void ResetAttack()
@@ -103,7 +105,7 @@ namespace Enemy.EnemyData.EnemyMovement
             //Make sure enemy doesn't move
             agent.SetDestination(transform.position);
 
-            transform.LookAt(playerTransform);
+            transform.LookAt(player);
 
             if (!alreadyAttacked)
             {
@@ -159,8 +161,7 @@ namespace Enemy.EnemyData.EnemyMovement
 
         void Awake()
         {
-			roomManager = GameObject.Find("RoomManager").GetComponent<RoomManager.RoomManager>();
-			playerTransform = GameObject.Find("Player").transform;
+            player = GameObject.Find("Player").transform;
             agent = GetComponent<NavMeshAgent>();
         }
 

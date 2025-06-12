@@ -169,21 +169,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 1696685022012894075}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b9d18541416a3f4993734e7f02324ba, type: 3}
+  m_Script: {fileID: 11500000, guid: d5acc14ab0e266640b3ace8add86e0b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  agent: {fileID: 5576360727290648935}
+  playerTransform: {fileID: 0}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 8
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 64
-  health: 120
+  health: 0
   walkPoint: {x: 0, y: 0, z: 0}
-  walkPointRange: 5
-  timeBetweenAttacks: 2
-  bulletPrefab: {fileID: 3780818778376199547, guid: e2193c01f07e84362a8e9f21a5774953, type: 3}
-  sightRange: 20
-  attackRange: 1
+  walkPointRange: 0
+  timeBetweenAttacks: 0
+  bulletPrefab: {fileID: 0}
+  sightRange: 0
+  attackRange: 0
   playerInSightRange: 0
   playerInAttackRange: 0
+  roomManager: {fileID: 0}
