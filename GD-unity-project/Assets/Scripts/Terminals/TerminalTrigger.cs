@@ -66,13 +66,13 @@ public class TerminalTrigger : MonoBehaviour
 		if(!busy) {
 			// Audio management
 			player = GameObject.Find("Player");
-			rotateSphere.positionSphere(new Vector3(1, 0, 1), RotateSphere.Animation.Linear);
 			
 			switch(triggerType) {
 				case TriggerType.SphereTerminal:
 					// Give a random power up for the Sphere
 					if(powerUps.spherePowerUps.Count > 0) {
 						// Audio management
+						rotateSphere.positionSphere(new Vector3(1, 0, 1), RotateSphere.Animation.Linear);
 						AudioManager.instance.PlayOneShot(FMODEvents.instance.terminalInteraction, this.transform.position);
 
 						busy = true;
@@ -89,6 +89,10 @@ public class TerminalTrigger : MonoBehaviour
 						powerUps.spherePowerUps.RemoveAt(powerUpIndexSphere);
 
 						busy = false;
+						
+						// Audio manangement
+						await Task.Delay(1500);
+						rotateSphere.isRotating = true;
 					}
 
 					break;
@@ -139,11 +143,16 @@ public class TerminalTrigger : MonoBehaviour
 							Debug.Log("Getting power up: machine activation");
 							// Audio management
 							AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineActivation, this.transform.position);
-
+							rotateSphere.positionSphere(new Vector3(1, 0, 1), RotateSphere.Animation.Linear);
+							
 							busy = true;
 							await Task.Delay(700);
 							busy = false;
 							powerUpVendingMachineHacked = true;
+							
+							// Audio manangement
+							await Task.Delay(4000);
+							rotateSphere.isRotating = true;
 						}
 
 					}
@@ -171,21 +180,22 @@ public class TerminalTrigger : MonoBehaviour
 						Debug.Log("Recovering health: machine activation");
 						// Audio management
 						AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineActivation, this.transform.position);
+						rotateSphere.positionSphere(new Vector3(1, 0, 1), RotateSphere.Animation.Linear);
 
 						busy = true;
 						await Task.Delay(700);
 						busy = false;
 						healthVendingMachineHacked = true;
+						
+						// Audio manangement
+						await Task.Delay(4000);
+						rotateSphere.isRotating = true;
 					}
 
 					break;
 				default:
 					break;
 			}
-			
-			// Audio manangement
-			await Task.Delay(4500); // Pausa di 4.5 secondi
-			rotateSphere.isRotating = true;
 		}
 	}
 
