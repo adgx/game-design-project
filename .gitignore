@@ -1,0 +1,38 @@
+# ===== Unity =====
+UnityProject/Library/
+UnityProject/Temp/
+UnityProject/Obj/
+UnityProject/Build/
+UnityProject/Logs/
+UnityProject/UserSettings/
+UnityProject/MemoryCaptures/
+UnityProject/.collab/
+UnityProject/Packages/manifest.json
+UnityProject/*.csproj
+UnityProject/*.sln
+UnityProject/.vscode/
+UnityProject/.idea/
+
+# Keep Unity Assets
+!UnityProject/Assets/
+
+# Addressables (optional)
+UnityProject/Assets/AddressableAssetsData/*/*.bin*
+UnityProject/Assets/AddressableAssetsData/*/*.catalog*
+
+# ===== FMOD =====
+FMODProject/Build/
+FMODProject/Metadata/
+FMODProject/.fmod/
+FMODProject/*.fspro.user
+FMODProject/*.log
+FMODProject/*.bak
+
+# Keep FMOD assets and project file
+!FMODProject/Assets/
+!FMODProject/*.fspro
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
