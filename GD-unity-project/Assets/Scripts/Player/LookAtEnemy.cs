@@ -7,10 +7,12 @@ public class LookAtEnemy : MonoBehaviour
     [SerializeField] private LayerMask whatIsEnemy;
 
     private PlayerInput input;
+    private PlayerShoot playerShoot;
 
 	public void Awake() {
 		input = GetComponent<PlayerInput>();
-	}
+        playerShoot = GetComponent<PlayerShoot>();
+    }
 
 	// Update is called once per frame
 	void FixedUpdate()
@@ -35,6 +37,13 @@ public class LookAtEnemy : MonoBehaviour
                 Quaternion targetRotation = Quaternion.LookRotation(direction);
                 Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, Time.fixedDeltaTime * maxRotationSpeed);
                 transform.rotation = rotation;
+            }
+        }
+        else {
+            if (enemiesInRange.Length == 0 && playerShoot.sphereStamina < 5)
+            {
+                Debug.Log(playerShoot.sphereStamina);
+                playerShoot.RecoverStamina();
             }
         }
         

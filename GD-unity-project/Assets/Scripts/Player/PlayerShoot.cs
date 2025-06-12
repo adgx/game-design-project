@@ -48,7 +48,7 @@ public class PlayerShoot : MonoBehaviour
 	[SerializeField] private HealthBar healthBar;
 
 	// Stamina for the attacks
-	private int maxSphereStamina = 5;
+	public int maxSphereStamina = 5;
 	private bool increaseStamina = false, increasingStamina = false;
 	public int sphereStamina = 5;
 
@@ -117,7 +117,7 @@ public class PlayerShoot : MonoBehaviour
 		increaseStamina = false;
 	}
 
-	async void RecoverStamina() {
+	public async Task RecoverStamina() {
 		increasingStamina = true;
 		while(sphereStamina < maxSphereStamina && increaseStamina) {
 			await Task.Delay(700);
