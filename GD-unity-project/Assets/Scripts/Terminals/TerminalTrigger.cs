@@ -29,6 +29,7 @@ public class TerminalTrigger : MonoBehaviour
     
     // Audio management
     private GameObject player;
+    [SerializeField] private RotateSphere rotateSphere;
 
     static System.Random rnd = new System.Random();
     
@@ -65,6 +66,7 @@ public class TerminalTrigger : MonoBehaviour
 		if(!busy) {
 			// Audio management
 			player = GameObject.Find("Player");
+			rotateSphere.positionSphere(new Vector3(1, 0, 1), RotateSphere.Animation.Linear);
 			
 			switch(triggerType) {
 				case TriggerType.SphereTerminal:
@@ -180,6 +182,10 @@ public class TerminalTrigger : MonoBehaviour
 				default:
 					break;
 			}
+			
+			// Audio manangement
+			await Task.Delay(4500); // Pausa di 4.5 secondi
+			rotateSphere.isRotating = true;
 		}
 	}
 

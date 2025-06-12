@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class RotateSphere : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class RotateSphere : MonoBehaviour
     private float waveFrequency = 2.5f;
 
     private Vector3 desiredPosition;
-    public bool rotateSphere = true;
+    public bool isRotating = true;
 
     public enum Animation {
         RotateAround,
@@ -28,14 +29,14 @@ public class RotateSphere : MonoBehaviour
     // This function positions the Sphere in the specified position around the Player, moving it with the specified animation
     public void positionSphere(Vector3 position, Animation animationValue) {
         desiredPosition = position;
-        rotateSphere = false;
+        isRotating = false;
         animation = animationValue;
     }
 
     // Update is called once per frame
     async void Update()
     {
-        if(rotateSphere) {
+        if(isRotating) {
             transform.RotateAround(player.transform.position, new Vector3(0, 1, 0), rotationSpeed * Time.deltaTime);
             
             float waveOffset = Mathf.Sin(Time.time * waveFrequency) * waveAmplitude;

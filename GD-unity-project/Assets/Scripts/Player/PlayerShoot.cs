@@ -8,7 +8,7 @@ using UnityEngine;
 public class PlayerShoot : MonoBehaviour
 {
 	// Audio management 
-	public bool IsSphereRotating => rotateSphere.rotateSphere;
+	public bool IsSphereRotating => rotateSphere.isRotating;
 	private EventInstance distanceAttackLoading;
 	private EventInstance closeAttackLoading;
 	private bool isShieldCoroutineRunning;
@@ -203,7 +203,7 @@ public class PlayerShoot : MonoBehaviour
 		attacking = false;
 		
 		await Task.Delay(200);
-		rotateSphere.rotateSphere = true;
+		rotateSphere.isRotating = true;
 		player.isFrozen = false;
 		
 		// Audio management
@@ -273,7 +273,7 @@ public class PlayerShoot : MonoBehaviour
 
 		rotateSphere.positionSphere(new Vector3(1, 0, 0), RotateSphere.Animation.Linear);
 		await Task.Delay(300);
-		rotateSphere.rotateSphere = true;
+		rotateSphere.isRotating = true;
 
 		// Set values back to default
 		closeAttackDamage = defaultCloseAttackDamage;

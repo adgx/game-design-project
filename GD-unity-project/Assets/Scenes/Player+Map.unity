@@ -624,6 +624,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerShoot: {fileID: 1728157141}
   powerUps: {fileID: 1728157148}
+  rotateSphere: {fileID: 0}
 --- !u!114 &307148567
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1943,6 +1944,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerShoot: {fileID: 1728157141}
   powerUps: {fileID: 1728157148}
+  rotateSphere: {fileID: 1016344254}
 --- !u!114 &964185348
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2226,7 +2228,7 @@ MonoBehaviour:
   player: {fileID: 1728157138}
   rotationSpeed: 100
   transitionSpeed: 10
-  rotateSphere: 1
+  isRotating: 1
 --- !u!1 &1112334841
 GameObject:
   m_ObjectHideFlags: 0
@@ -3542,6 +3544,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerShoot: {fileID: 1728157141}
   powerUps: {fileID: 1728157148}
+  rotateSphere: {fileID: 0}
 --- !u!114 &1684111145
 MonoBehaviour:
   m_ObjectHideFlags: 0
