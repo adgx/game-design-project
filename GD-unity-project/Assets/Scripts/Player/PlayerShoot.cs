@@ -40,6 +40,7 @@ public class PlayerShoot : MonoBehaviour
 	[SerializeField] private GameObject magneticShieldPrefab;
     GameObject magneticShield;
 	private bool magneticShieldOpen = false;
+	bool shieldAwait = false;
 	
 	// Health
 	public float maxHealth = 120;
@@ -303,6 +304,25 @@ public class PlayerShoot : MonoBehaviour
 		}
 	}
 
+	async Task ManageShieldTime(int shieldTime)
+	{
+		if (!shieldAwait)
+		{
+			shieldAwait = true;
+			await Task.Delay(shieldTime * 1000);
+			shieldAwait = false;
+			if (magneticShield != null && magneticShieldOpen)
+			{
+				// Audio management
+				AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldDeactivation,
+					rotatingSphere.transform.position);
+				Destroy(magneticShield);
+				await Task.Delay(500);
+			}
+			magneticShieldOpen = false;
+		}
+	}
+
 	async void SpawnMagneticShield() {
 		// Without this check, if the button for activating/deactivating the shield is pushed and released more than once in a very fast way, then
 		// the function is called multiple times, creating a race condition among multiple concurrent instances of it (buggy code)
@@ -310,23 +330,29 @@ public class PlayerShoot : MonoBehaviour
 		{
 			return;
 		}
-		
+
+		int shieldTime = 2;
 		isShieldCoroutineRunning = true;
 		
-		if(!magneticShieldOpen) {
-			if(powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DefensePowerUp)) {
-				// Audio management
-				AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldActivation, rotatingSphere.transform.position);
+		if(!magneticShieldOpen)
+		{
+			// Audio management
+			AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldActivation, rotatingSphere.transform.position);
 				
+			magneticShield = Instantiate(magneticShieldPrefab, new Vector3(player.transform.position.x, player.transform.position.y - 1f, player.transform.position.z), Quaternion.identity);
+			magneticShield.transform.parent = transform;
+			magneticShieldOpen = true;
+			
+			if(powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DefensePowerUp)) {
 				if(powerUp.powerUpsObtained[PowerUp.PowerUpType.DefensePowerUp] == 1) {
-					// Spawn level 1 shield
+					shieldTime = 5;
 				}
 				else {
-					magneticShield = Instantiate(magneticShieldPrefab, new Vector3(player.transform.position.x, player.transform.position.y - 1f, player.transform.position.z), Quaternion.identity);
-					magneticShield.transform.parent = transform;
-					magneticShieldOpen = true;
+					shieldTime = 10;
 				}
 			}
+
+			_ = ManageShieldTime(shieldTime);
 		}
 		else {
 			if(magneticShield != null) {
@@ -432,7 +458,8 @@ public class PlayerShoot : MonoBehaviour
 			}
 		}
 
-		if (Input.GetButtonDown("Fire2") && !loadingAttack) {
+		if (Input.GetButtonDown("Fire2") && !loadingAttack)
+		{
 			SpawnMagneticShield();
 		}
 
