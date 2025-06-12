@@ -49,7 +49,7 @@ public class PlayerShoot : MonoBehaviour
 
 	// Stamina for the attacks
 	public int maxSphereStamina = 5;
-	private bool increaseStamina = false, increasingStamina = false;
+	public bool increaseStamina = false, increasingStamina = false;
 	public int sphereStamina = 5;
 
 	// PowerUps

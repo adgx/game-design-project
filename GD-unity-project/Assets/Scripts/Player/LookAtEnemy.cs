@@ -40,9 +40,10 @@ public class LookAtEnemy : MonoBehaviour
             }
         }
         else {
-            if (enemiesInRange.Length == 0 && playerShoot.sphereStamina < 5)
+            Debug.Log(playerShoot.sphereStamina);
+            if (enemiesInRange.Length == 0 && playerShoot.sphereStamina < 5 && !playerShoot.increasingStamina)
             {
-                Debug.Log(playerShoot.sphereStamina);
+                playerShoot.increaseStamina = true;
                 playerShoot.RecoverStamina();
             }
         }
