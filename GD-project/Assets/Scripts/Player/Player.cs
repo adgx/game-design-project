@@ -88,10 +88,12 @@ public class Player : MonoBehaviour
 	// Audio management
 	private void Start() 
 	{
+		/*
 		playerFootsteps = AudioManager.instance.CreateInstance(FMODEvents.instance.playerFootsteps);
 		playerFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
 		sphereRotation = AudioManager.instance.CreateInstance(FMODEvents.instance.sphereRotation);
 		sphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+		*/
 	}
 
 	// FixedUpdate is called once per frame
