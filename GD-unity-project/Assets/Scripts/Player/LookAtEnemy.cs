@@ -40,7 +40,6 @@ public class LookAtEnemy : MonoBehaviour
             }
         }
         else {
-            Debug.Log(playerShoot.sphereStamina);
             if (enemiesInRange.Length == 0 && playerShoot.sphereStamina < playerShoot.maxSphereStamina && !playerShoot.increasingStamina)
             {
                 playerShoot.increaseStamina = true;

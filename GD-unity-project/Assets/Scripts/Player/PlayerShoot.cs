@@ -303,24 +303,34 @@ public class PlayerShoot : MonoBehaviour
 			}
 		}
 	}
+	
+	async Task<bool> WaitUntilOrTimeout(Func<bool> condition, int timeoutMs, int checkIntervalMs = 25)
+	{
+		var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
+		while (stopwatch.ElapsedMilliseconds < timeoutMs)
+		{
+			if (condition())
+				return true;
+
+			await Task.Delay(checkIntervalMs);
+		}
+
+		return false; // Timeout scaduto
+	}
 
 	async Task ManageShieldTime(int shieldTime)
 	{
-		if (!shieldAwait)
+		bool shieldClosed = await WaitUntilOrTimeout(() => !magneticShieldOpen, shieldTime * 1000);
+		if (magneticShield != null && !shieldClosed)
 		{
-			shieldAwait = true;
-			await Task.Delay(shieldTime * 1000);
-			shieldAwait = false;
-			if (magneticShield != null && magneticShieldOpen)
-			{
-				// Audio management
-				AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldDeactivation,
-					rotatingSphere.transform.position);
-				Destroy(magneticShield);
-				await Task.Delay(500);
-			}
-			magneticShieldOpen = false;
+			// Audio management
+			AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldDeactivation,
+				rotatingSphere.transform.position);
+			Destroy(magneticShield);
+			await Task.Delay(500);
 		}
+		magneticShieldOpen = false;
 	}
 
 	async void SpawnMagneticShield() {
