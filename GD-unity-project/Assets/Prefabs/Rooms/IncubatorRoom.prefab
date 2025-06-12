@@ -3504,26 +3504,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 214320ac68aae4c69932706f791e93da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomType: 0
-  connectors:
-  - id: 1
-    direction: 1
-    passageVisual: {fileID: 389436675805819869}
-    spawnPoint: {fileID: 5135860356583173842}
-    isConnected: 0
-  - id: 2
-    direction: 3
-    passageVisual: {fileID: 2195987501829641308}
-    spawnPoint: {fileID: 5234518199757901082}
-    isConnected: 0
-  centralSpawnPoint: {fileID: 1974158435936280979}
-  maxSpawnCost: 10
-  hasEnemiesSpawned: 0
-  enemySpawnPoints:
-  - {fileID: 7258352243878611628}
-  - {fileID: 7952247453025531809}
-  - {fileID: 3570666117647556101}
-  - {fileID: 7759496199865350184}
+  _connectors:
+  - _id: WestEntry
+    _direction: 3
+    _passageVisual: {fileID: 2195987501829641308}
+    _spawnPoint: {fileID: 5234518199757901082}
+    IsConnected: 0
+  - _id: SouthEntry
+    _direction: 1
+    _passageVisual: {fileID: 389436675805819869}
+    _spawnPoint: {fileID: 5135860356583173842}
+    IsConnected: 0
+  _centralSpawnPoint: {fileID: 1974158435936280979}
+  _enemySpawnPoints: []
 --- !u!1 &2852206494316794774
 GameObject:
   m_ObjectHideFlags: 0

@@ -4205,19 +4205,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4db81237abb1948529dd419e41cbb730, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allRoomPrefabs:
-  - {fileID: 7322676706815848639, guid: 749e0c624e2284a32a91ce8ea873aefe, type: 3}
-  - {fileID: 4323597427231605597, guid: e777373a16ad74ddda553cbe908201dc, type: 3}
-  - {fileID: 8883446361754839683, guid: 97e90130d42de4ac1ab90fe47dc2dd5b, type: 3}
-  - {fileID: 2832233379016002258, guid: f2d07e8b647bd4ee39c42ced636a4d3d, type: 3}
-  - {fileID: 2360249369967940935, guid: daa318099b1de994a92ef799a2b2d8a3, type: 3}
-  - {fileID: 7999259401534772710, guid: feddfe1391a645f4aa37fc25cff55ab5, type: 3}
-  initialRoomPrefab: {fileID: 2832233379016002258, guid: f2d07e8b647bd4ee39c42ced636a4d3d, type: 3}
-  maxRooms: 18
-  minRooms: 6
-  skipConnectionChance: 0.35
-  currentPlayer: {fileID: 1728157138}
-  navMashBaked: 0
+  _availableRooms:
+  - {fileID: 11400000, guid: 649cc90d5260341558b2b3e1c6e993e6, type: 2}
+  - {fileID: 11400000, guid: 31ef2464399d944218fa84404292c004, type: 2}
+  _initialRoomData: {fileID: 11400000, guid: 6eb0b70f4a33646a5a0c387fa73d7366, type: 2}
+  _maxRooms: 15
+  _minRooms: 10
+  _skipConnectionChance: 0.35
+  _currentPlayer: {fileID: 1728157138}
+  _gridSizeX: 14
+  _gridSizeZ: 14
 --- !u!4 &1738691464
 Transform:
   m_ObjectHideFlags: 0
@@ -4291,12 +4288,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f538bfb57677d426496e9e95e13ab2b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minimapRoomIconPrefab: {fileID: 6662264308540135868, guid: 3d287f8a3d8b2574ab0db1630cf34f83, type: 3}
-  minimapGridParent: {fileID: 1373405848}
-  emptyGridCellColor: {r: 0, g: 0, b: 0, a: 0}
-  undiscoveredRoomColor: {r: 0.2, g: 0.2, b: 0.2, a: 0}
-  visitedRoomColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
-  currentPlayerColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!114 &1738691470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4354,10 +4345,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c9c20bcbff9b45d4bcaf572ee643233, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  availableEnemyTypes:
-  - {fileID: 11400000, guid: 8158b0295563c43c7aa696777996f264, type: 2}
+  _availableEnemyData:
   - {fileID: 11400000, guid: d628d10d2db4548ec94973aa4b57d7ef, type: 2}
-  - {fileID: 11400000, guid: b39eedc323f9a44b789682e1655c6221, type: 2}
+  _minEnemiesPerRoom: 1
+  _maxEnemiesPerRoom: 5
 --- !u!1 &1828405966 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5548963736841642456, guid: 83bb9d48145747f4784acf553b1e9ede, type: 3}

@@ -1,63 +1,41 @@
-using System.Collections;
 using Helper;
-using TMPro;
 using UnityEngine;
+using Utils;
 
 namespace RoomManager
 {
+    /// <summary>
+    /// Handles player interaction with a door to traverse to an adjacent room.
+    /// </summary>
     public class DoorInteraction : MonoBehaviour
     {
-        public Vector3Int leadsToWorldDirection;
-        private RoomManager roomManager;
-        private Room parentRoom;
+        [Header("Door Configuration")]
+        [Tooltip(
+            "The world direction this door leads to (e.g., Vector3Int.forward for North). Inferred from name if left at zero.")]
+        [SerializeField]
+        private Vector3Int _leadsToWorldDirection;
 
-        private const float INTERACTION_DISTANCE = 6f;
-        public KeyCode interactionKey = KeyCode.E;
-        
-        private TextMeshProUGUI helpText;
-        private GameObject helpTextContainer;
+        [Tooltip("The distance within which the player can interact with this door.")] [SerializeField]
+        private float _interactionDistance = 6f;
 
-        // Audio management
-		private GameObject player;
-		private IEnumerator PlayDoorCloseAfterDelay(float delay) {
-			yield return new WaitForSeconds(delay);
-			AudioManager.instance.PlayOneShot(FMODEvents.instance.doorClose, player.transform.position);
-		}
-        
-        private void OnTriggerEnter(Collider other)
+        [Tooltip("The key the player must press to use the door.")] [SerializeField]
+        private KeyCode _interactionKey = KeyCode.E;
+
+        private RoomManager _roomManager;
+        private Room _parentRoom;
+
+        private void Start()
         {
-            if (other.CompareTag("Player") && helpTextContainer != null && helpText != null)
-            {
-                helpText.text = "Press E to change room";
-                helpTextContainer.SetActive(true);
-            }   
-        }
-        
-        private void OnTriggerExit(Collider other)
-        {
-            if (other.CompareTag("Player") && helpTextContainer != null)
-            {
-                helpTextContainer.SetActive(false);
-            }   
-        }
+            _roomManager = RoomManager.Instance;
+            _parentRoom = GetComponentInParent<Room>();
 
-		void Start()
-        {
-            roomManager = RoomManager.Instance;
-            parentRoom = GetComponentInParent<Room>();
-            
-            helpTextContainer = GameObject.Find("FadeCanvasGroup").transform.Find("HelpTextContainer").gameObject;
-            helpText = helpTextContainer.transform.Find("HelpText").GetComponent<TextMeshProUGUI>();
-
-			// Audio management
-			player = GameObject.Find("Player");
-
-			if (roomManager == null)
+            if (_roomManager == null)
                 Debug.LogError("DoorInteraction: RoomManager.Instance not found!", this);
-            if (parentRoom == null)
-                Debug.LogError("DoorInteraction: Parent Room component not found!", this);
+            if (_parentRoom == null)
+                Debug.LogError(
+                    "DoorInteraction: Parent Room component not found! This object must be a child of a Room.", this);
 
-            if (leadsToWorldDirection == Vector3Int.zero && parentRoom != null)
+            if (_leadsToWorldDirection == Vector3Int.zero && _parentRoom != null)
             {
                 InferDirectionFromName();
             }
@@ -67,77 +45,58 @@ namespace RoomManager
         {
             string myNameLower = gameObject.name.ToLower();
             if (myNameLower.Contains("north") || myNameLower.Contains("top"))
-                leadsToWorldDirection = Vector3Int.forward;
+                _leadsToWorldDirection = Vector3Int.forward;
             else if (myNameLower.Contains("south") || myNameLower.Contains("bottom"))
-                leadsToWorldDirection = Vector3Int.back;
+                _leadsToWorldDirection = Vector3Int.back;
             else if (myNameLower.Contains("east") || myNameLower.Contains("right"))
-                leadsToWorldDirection = Vector3Int.right;
+                _leadsToWorldDirection = Vector3Int.right;
             else if (myNameLower.Contains("west") || myNameLower.Contains("left"))
-                leadsToWorldDirection = Vector3Int.left;
+                _leadsToWorldDirection = Vector3Int.left;
             else
-                Debug.LogWarning($"DoorInteraction on '{gameObject.name}': Could not infer direction.", this);
+                Debug.LogWarning($"DoorInteraction on '{gameObject.name}': Could not infer direction from name.", this);
         }
 
-        void Update()
+        private void Update()
         {
-            if (roomManager == null || parentRoom == null || roomManager.currentPlayer == null ||
-                !roomManager.playerHasSpawned)
-                return;
-            if (leadsToWorldDirection == Vector3Int.zero)
+            if (_roomManager == null || _parentRoom == null || _roomManager.CurrentPlayer == null ||
+                !_roomManager.IsPlayerSpawned)
                 return;
 
-            ConnectorDirection thisDoorsLocalConnectorDirection;
-            if (leadsToWorldDirection == Vector3Int.forward)
-                thisDoorsLocalConnectorDirection = ConnectorDirection.North;
-            else if (leadsToWorldDirection == Vector3Int.back)
-                thisDoorsLocalConnectorDirection = ConnectorDirection.South;
-            else if (leadsToWorldDirection == Vector3Int.right)
-                thisDoorsLocalConnectorDirection = ConnectorDirection.East;
-            else if (leadsToWorldDirection == Vector3Int.left)
-                thisDoorsLocalConnectorDirection = ConnectorDirection.West;
-            else
-            {
-                Debug.LogError($"DoorInteraction on {gameObject.name}: Invalid direction {leadsToWorldDirection}.",
-                    this);
-                return;
-            }
-
-            RoomConnector connector = parentRoom.GetConnector(thisDoorsLocalConnectorDirection);
-
-            if (connector == null || !connector.isConnected ||
-                (connector.passageVisual != null && !connector.passageVisual.activeSelf))
+            if (_leadsToWorldDirection == Vector3Int.zero)
                 return;
 
-            float distanceToPlayer = Vector3.Distance(transform.position, roomManager.currentPlayer.transform.position);
+            ConnectorDirection thisDoorsLocalConnectorDirection =
+                RoomManager.GetOppositeLocalDirection(_leadsToWorldDirection * -1);
+            RoomConnector connector = _parentRoom.GetConnector(thisDoorsLocalConnectorDirection);
 
-            if (distanceToPlayer <= INTERACTION_DISTANCE && Input.GetKeyDown(interactionKey))
+            if (connector == null || !connector.IsConnected)
+                return;
+
+            float distanceToPlayer =
+                Vector3.Distance(transform.position, _roomManager.CurrentPlayer.transform.position);
+
+            if (distanceToPlayer <= _interactionDistance && Input.GetKeyDown(_interactionKey))
             {
                 TryTraverse();
             }
         }
 
-        void TryTraverse()
+        private void TryTraverse()
         {
-            Vector3Int nextRoomGridIndex = parentRoom.RoomIndex + leadsToWorldDirection;
-            Room nextRoomScript = roomManager.GetRoomByGridIndex(nextRoomGridIndex);
+            Vector3Int nextRoomGridIndex = _parentRoom.RoomIndex + _leadsToWorldDirection;
 
-            if (nextRoomScript != null)
+            if (_roomManager.DoesRoomExistAt(nextRoomGridIndex))
             {
-				// Audio management
-				AudioManager.instance.PlayOneShot(FMODEvents.instance.doorOpen, this.transform.position);
-
-				FadeManager.Instance.FadeOutIn(() =>
+                FadeManager.Instance.FadeOutIn(() =>
                 {
-                    roomManager.SpawnPlayerInRoom(nextRoomGridIndex, leadsToWorldDirection);
-                    roomManager.NotifyPlayerEnteredNewRoom(nextRoomGridIndex);
-
-					// Audio management
-					StartCoroutine(PlayDoorCloseAfterDelay(0.5f)); // ritardo di 1,15 secondi
-				});
+                    _roomManager.SpawnPlayerInRoom(nextRoomGridIndex, _leadsToWorldDirection);
+                    _roomManager.NotifyPlayerEnteredNewRoom(nextRoomGridIndex);
+                });
             }
             else
             {
-                Debug.LogWarning($"DoorInteraction: No room found at {nextRoomGridIndex}.");
+                Debug.LogWarning(
+                    $"DoorInteraction: Tried to traverse to {nextRoomGridIndex}, but no room exists there.");
             }
         }
     }

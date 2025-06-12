@@ -21815,36 +21815,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 214320ac68aae4c69932706f791e93da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomType: 1
-  connectors:
-  - id: 1
-    direction: 0
-    passageVisual: {fileID: 7512268324317396802}
-    spawnPoint: {fileID: 1357889070140232470}
-    isConnected: 0
-  - id: 2
-    direction: 1
-    passageVisual: {fileID: 3474607605913643638}
-    spawnPoint: {fileID: 5250949559553176675}
-    isConnected: 0
-  - id: 3
-    direction: 2
-    passageVisual: {fileID: 5813925234364257596}
-    spawnPoint: {fileID: 3153790544220107005}
-    isConnected: 0
-  - id: 4
-    direction: 3
-    passageVisual: {fileID: 7068378841814847266}
-    spawnPoint: {fileID: 5868341663748810029}
-    isConnected: 0
-  centralSpawnPoint: {fileID: 1192671830562555378}
-  maxSpawnCost: 10
-  hasEnemiesSpawned: 0
-  enemySpawnPoints:
-  - {fileID: 1251652190938562735}
-  - {fileID: 7883990703501759548}
-  - {fileID: 8550132777244263208}
-  - {fileID: 7402882031084017344}
+  _connectors:
+  - _id: NorthEntry
+    _direction: 0
+    _passageVisual: {fileID: 7512268324317396802}
+    _spawnPoint: {fileID: 1357889070140232470}
+    IsConnected: 0
+  - _id: SouthEntry
+    _direction: 1
+    _passageVisual: {fileID: 3474607605913643638}
+    _spawnPoint: {fileID: 5250949559553176675}
+    IsConnected: 0
+  - _id: EastEntry
+    _direction: 2
+    _passageVisual: {fileID: 5813925234364257596}
+    _spawnPoint: {fileID: 3153790544220107005}
+    IsConnected: 0
+  - _id: WestEntry
+    _direction: 3
+    _passageVisual: {fileID: 7068378841814847266}
+    _spawnPoint: {fileID: 5868341663748810029}
+    IsConnected: 0
+  _centralSpawnPoint: {fileID: 0}
+  _enemySpawnPoints: []
 --- !u!1 &7338609310666617836
 GameObject:
   m_ObjectHideFlags: 0

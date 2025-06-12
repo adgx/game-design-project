@@ -7,36 +7,38 @@ namespace Enemy.EnemyData.EnemyMovement
 {
     public class EnemyDrakeMovement : MonoBehaviour, IEnemy
     {
-        private NavMeshAgent agent;
+        [SerializeField] private NavMeshAgent agent;
+        [SerializeField] private LayerMask whatIsGround, whatIsPlayer;
+        
         private Transform playerTransform;
 
-        public LayerMask whatIsGround, whatIsPlayer;
-
-        public float health;
+        private float health;
 
         //Patroling
-        public Vector3 walkPoint;
-        bool walkPointSet;
-        public float walkPointRange;
+        private Vector3 walkPoint;
+        private bool walkPointSet;
+        private float walkPointRange;
 
         //Attacking
-        public float timeBetweenAttacks;
-        bool alreadyAttacked;
-        public GameObject bulletPrefab;
+        private float timeBetweenAttacks;
+        private bool alreadyAttacked;
+        private GameObject bulletPrefab;
 
         //States
-        public float sightRange, attackRange;
-        public bool playerInSightRange, playerInAttackRange;
+        private float sightRange, attackRange;
+        private bool playerInSightRange, playerInAttackRange;
 
         private RoomManager.RoomManager roomManager;
 
-		public void Initialize(EnemyData enemyData, RoomManager.RoomManager roomManager)
+        public void Initialize(EnemyData enemyData, RoomManager.RoomManager roomManager)
         {
             this.roomManager = roomManager;
 
             if (!agent) agent = GetComponent<NavMeshAgent>();
 
-            if (enemyData || enemyData is not EnemyDrakeData drakeData) return;
+            if (enemyData == null || enemyData is not EnemyDrakeData drakeData) return;
+            
+            agent.speed = enemyData.baseMoveSpeed;
 
             health = drakeData.maxHealth;
             walkPointRange = drakeData.walkPointRange;
@@ -89,7 +91,7 @@ namespace Enemy.EnemyData.EnemyMovement
 
         void ChasePlayer()
         {
-            if (roomManager != null && roomManager.navMashBaked)
+            if (roomManager.IsNavMeshBaked)
                 agent.SetDestination(playerTransform.position);
         }
 
@@ -160,8 +162,7 @@ namespace Enemy.EnemyData.EnemyMovement
         void Awake()
         {
             playerTransform = GameObject.Find("Player").transform;
-			roomManager = GameObject.Find("RoomManager").GetComponent<RoomManager.RoomManager>();
-			agent = GetComponent<NavMeshAgent>();
+            agent = GetComponent<NavMeshAgent>();
         }
 
         // Update is called once per frame
