@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using Helper;
+using TMPro;
 using UnityEngine;
 
 namespace RoomManager
@@ -12,6 +14,9 @@ namespace RoomManager
 
         private const float INTERACTION_DISTANCE = 6f;
         public KeyCode interactionKey = KeyCode.E;
+        
+        private TextMeshProUGUI helpText;
+        private GameObject helpTextContainer;
 
         // Audio management
 		private GameObject player;
@@ -20,10 +25,33 @@ namespace RoomManager
 			AudioManager.instance.PlayOneShot(FMODEvents.instance.doorClose, player.transform.position);
 		}
 
-		void Start()
+        private void OnTriggerEnter(Collider other)
+        {
+            Debug.Log("Ciao");
+            Debug.Log(helpTextContainer);
+            Debug.Log(helpText);
+            if (other.CompareTag("Player") && helpTextContainer != null && helpText != null)
+            {
+                helpText.text = "Press E to change room";
+                helpTextContainer.SetActive(true);
+            }   
+        }
+        
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.CompareTag("Player") && helpTextContainer != null)
+            {
+                helpTextContainer.SetActive(false);
+            }   
+        }
+
+        void Start()
         {
             roomManager = RoomManager.Instance;
             parentRoom = GetComponentInParent<Room>();
+
+            helpTextContainer = GameObject.Find("FadeCanvasGroup").transform.Find("HelpTextContainer").gameObject;
+            helpText = helpTextContainer.transform.Find("HelpText").GetComponent<TextMeshProUGUI>();
 
 			// Audio management
 			player = GameObject.Find("Player");

@@ -57,9 +57,10 @@ public class RotateSphere : MonoBehaviour
 
                         playerClass.isFrozen = true;
 
-                        transform.RotateAround(player.transform.position, new Vector3(0, 1, 0), 20 * rotationSpeed * Time.deltaTime);
+                        transform.RotateAround(player.transform.position, new Vector3(0, 1, 0), 15 * rotationSpeed * Time.deltaTime);
 
-                        if(angle <= 20f) {
+                        // TODO: test if the sphere jumps from a position to another
+                        if(angle <= 40f) {
                             transform.localPosition = desiredPosition;
                         }
                     }

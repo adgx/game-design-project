@@ -3,6 +3,7 @@ using System.Collections;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using FMODUnity;
+using TMPro;
 using UnityEngine;
 
 // NOTE: this script is attached to each terminal individually
@@ -10,6 +11,9 @@ public class TerminalTrigger : MonoBehaviour
 {
     [SerializeField] private PlayerShoot playerShoot;
     [SerializeField] private PowerUp powerUps;
+    
+    [SerializeField] private TextMeshProUGUI helpText;
+    [SerializeField] private GameObject helpTextContainer;
 
     // You first hack the machine and then you press the button again to receive the snack.
     private bool healthVendingMachineHacked = false;
@@ -40,17 +44,22 @@ public class TerminalTrigger : MonoBehaviour
 
 	    if (transform.CompareTag(TriggerType.SphereTerminal.ToString())) {
 		    triggerType = TriggerType.SphereTerminal;
+		    helpText.text = "Press E to interact with the terminal";
 	    }
 	    else {
 		    if (transform.CompareTag(TriggerType.PowerUpSnackDistributor.ToString())) {
 			    triggerType = TriggerType.PowerUpSnackDistributor;
+			    helpText.text = "Press E to interact with the snack distributor";
 		    }
 		    else {
 			    if (transform.CompareTag(TriggerType.HealthSnackDistributor.ToString())) {
 				    triggerType = TriggerType.HealthSnackDistributor;
+				    helpText.text = "Press E to interact with the snack distributor";
 			    }
 		    }
-	    }   
+	    }
+	    
+	    helpTextContainer.SetActive(true);
     }
 
     private void OnTriggerExit(Collider other) {
@@ -58,6 +67,7 @@ public class TerminalTrigger : MonoBehaviour
 	    {
 		    return;
 	    }
+		helpTextContainer.SetActive(false);
         triggerType = TriggerType.None;
     }
 
@@ -65,6 +75,7 @@ public class TerminalTrigger : MonoBehaviour
 		if(!busy) {
 			// Audio management
 			player = GameObject.Find("Player");
+			helpText.text = "";
 			
 			switch(triggerType) {
 				case TriggerType.SphereTerminal:
@@ -79,6 +90,9 @@ public class TerminalTrigger : MonoBehaviour
 						// Generate a random power up
 						int powerUpIndexSphere = rnd.Next(powerUps.spherePowerUps.Count);
 						Debug.Log(powerUps.spherePowerUps.Count);
+						
+						// Show a message to the player
+						helpText.text = "You obtained a " + powerUps.spherePowerUps[powerUpIndexSphere] + "!";
 
 						// Insert the power up in the dictionary of the obtained ones
 						powerUps.ObtainPowerUp(powerUps.spherePowerUps[powerUpIndexSphere]);
@@ -107,6 +121,9 @@ public class TerminalTrigger : MonoBehaviour
 							// Generate a random power up
 							int powerUpIndexPlayer = rnd.Next(powerUps.playerPowerUps.Count);
 							Debug.Log(powerUps.playerPowerUps.Count);
+							
+							// Show a message to the player
+							helpText.text = "You obtained a " + powerUps.playerPowerUps[powerUpIndexPlayer] + "!";
 							
 							// Audio management
 							var obtainedPowerUp = powerUps.playerPowerUps[powerUpIndexPlayer];
@@ -142,6 +159,7 @@ public class TerminalTrigger : MonoBehaviour
 							await Task.Delay(700);
 							busy = false;
 							powerUpVendingMachineHacked = true;
+							helpText.text = "Press E again to take a snack from the machine";
 						}
 
 					}
@@ -157,6 +175,9 @@ public class TerminalTrigger : MonoBehaviour
 
 						busy = true;
 						await Task.Delay(2000);
+						
+						// Show a message to the player
+						helpText.text = "Your health was recovered!";
 						
 						// Audio management
 						AudioManager.instance.PlayOneShot(FMODEvents.instance.playerEatChocolate, player.transform.position);
@@ -174,6 +195,7 @@ public class TerminalTrigger : MonoBehaviour
 						await Task.Delay(700);
 						busy = false;
 						healthVendingMachineHacked = true;
+						helpText.text = "Press E again to take a snack from the machine";
 					}
 
 					break;
