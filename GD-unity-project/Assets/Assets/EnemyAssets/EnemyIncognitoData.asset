@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 007e7740e590d4a52933ce0ea9d7b6dd, type: 3}
+  m_Name: EnemyIncognitoData
+  m_EditorClassIdentifier: 
+  enemyPrefab: {fileID: 3302499175698752664, guid: 841ffaf6fd0ee44cb9fe547040465cd2, type: 3}
+  enemyName: Paolino
+  spawnCost: 1
+  maxHealth: 100
+  baseMoveSpeed: 0
+  walkPointRange: 8
+  timeBetweenAttacks: 1.8
+  bulletPrefab: {fileID: 3780818778376199547, guid: e2193c01f07e84362a8e9f21a5774953, type: 3}
+  sightRange: 18
+  attackRange: 16
