@@ -38,8 +38,9 @@ public class PlayerShoot : MonoBehaviour
 	
 	// Defense
 	[SerializeField] private GameObject magneticShieldPrefab;
-    GameObject magneticShield;
+	GameObject magneticShield;
 	private bool magneticShieldOpen = false;
+	bool shieldAwait = false;
 	
 	// Health
 	public float maxHealth = 120;
@@ -47,8 +48,8 @@ public class PlayerShoot : MonoBehaviour
 	[SerializeField] private HealthBar healthBar;
 
 	// Stamina for the attacks
-	private int maxSphereStamina = 5;
-	private bool increaseStamina = false, increasingStamina = false;
+	public int maxSphereStamina = 5;
+	public bool increaseStamina = false, increasingStamina = false;
 	public int sphereStamina = 5;
 
 	// PowerUps
@@ -71,6 +72,14 @@ public class PlayerShoot : MonoBehaviour
 		
 		closeAttackLoading = AudioManager.instance.CreateInstance(FMODEvents.instance.closeAttackLoad);
 		closeAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
+	}
+	
+	// Audio management
+	private async void TriggerSphereRotationSound(float duration = 2f)
+	{
+		rotateSphere.isRotating = true;
+		await Task.Delay((int)(duration * 1000));
+		rotateSphere.isRotating = false;
 	}
 
 	void ChangeSphereColor() {
@@ -116,7 +125,7 @@ public class PlayerShoot : MonoBehaviour
 		increaseStamina = false;
 	}
 
-	async void RecoverStamina() {
+	public async Task RecoverStamina() {
 		increasingStamina = true;
 		while(sphereStamina < maxSphereStamina && increaseStamina) {
 			await Task.Delay(700);
@@ -203,7 +212,7 @@ public class PlayerShoot : MonoBehaviour
 		attacking = false;
 		
 		await Task.Delay(200);
-		rotateSphere.isRotating = true;
+		TriggerSphereRotationSound();
 		player.isFrozen = false;
 		
 		// Audio management
@@ -273,7 +282,7 @@ public class PlayerShoot : MonoBehaviour
 
 		rotateSphere.positionSphere(new Vector3(1, 0, 0), RotateSphere.Animation.Linear);
 		await Task.Delay(300);
-		rotateSphere.isRotating = true;
+		TriggerSphereRotationSound();
 
 		// Set values back to default
 		closeAttackDamage = defaultCloseAttackDamage;
@@ -302,6 +311,34 @@ public class PlayerShoot : MonoBehaviour
 			}
 		}
 	}
+	
+	async Task<bool> WaitUntilOrTimeout(Func<bool> condition, int timeoutMs, int checkIntervalMs = 25)
+	{
+		var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
+		while (stopwatch.ElapsedMilliseconds < timeoutMs)
+		{
+			if (condition())
+				return true;
+
+			await Task.Delay(checkIntervalMs);
+		}
+
+		return false; // Timeout scaduto
+	}
+	
+		async Task ManageShieldTime(int shieldTime)
+	{
+		bool shieldClosed = await WaitUntilOrTimeout(() => !magneticShieldOpen, shieldTime * 1000);
+		if (magneticShield != null && !shieldClosed)
+		{
+			// Audio management
+			AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldDeactivation, rotatingSphere.transform.position);
+			Destroy(magneticShield);
+			await Task.Delay(500);
+		}
+		magneticShieldOpen = false;
+	}
 
 	async void SpawnMagneticShield() {
 		// Without this check, if the button for activating/deactivating the shield is pushed and released more than once in a very fast way, then
@@ -311,24 +348,31 @@ public class PlayerShoot : MonoBehaviour
 			return;
 		}
 		
+		int shieldTime = 2;
 		isShieldCoroutineRunning = true;
 		
-		if(!magneticShieldOpen) {
+		if(!magneticShieldOpen) 
+		{
+			// Audio management
+			AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldActivation, rotatingSphere.transform.position);
+			
+			magneticShield = Instantiate(magneticShieldPrefab, new Vector3(player.transform.position.x, player.transform.position.y - 1f, player.transform.position.z), Quaternion.identity);
+			magneticShield.transform.parent = transform;
+			magneticShieldOpen = true;
+			
 			if(powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DefensePowerUp)) {
-				// Audio management
-				AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldActivation, rotatingSphere.transform.position);
-				
 				if(powerUp.powerUpsObtained[PowerUp.PowerUpType.DefensePowerUp] == 1) {
-					// Spawn level 1 shield
+					shieldTime = 5;
 				}
 				else {
-					magneticShield = Instantiate(magneticShieldPrefab, new Vector3(player.transform.position.x, player.transform.position.y - 1f, player.transform.position.z), Quaternion.identity);
-					magneticShield.transform.parent = transform;
-					magneticShieldOpen = true;
+					shieldTime = 10;
 				}
 			}
+
+			_ = ManageShieldTime(shieldTime);
 		}
-		else {
+		else 
+		{
 			if(magneticShield != null) {
 				// Audio management
 				AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldDeactivation, rotatingSphere.transform.position);
@@ -349,7 +393,7 @@ public class PlayerShoot : MonoBehaviour
      
      		if (health <= 0)
      		{
-     			// Audio managament
+     			// Audio management
      			AudioManager.instance.PlayOneShot(FMODEvents.instance.playerDie, player.transform.position);
      			
      			Invoke(nameof(DestroyPlayer), 0.05f);
@@ -432,7 +476,8 @@ public class PlayerShoot : MonoBehaviour
 			}
 		}
 
-		if (Input.GetButtonDown("Fire2") && !loadingAttack) {
+		if (Input.GetButtonDown("Fire2") && !loadingAttack)
+		{
 			SpawnMagneticShield();
 		}
 

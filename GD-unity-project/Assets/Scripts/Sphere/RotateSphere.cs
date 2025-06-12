@@ -60,7 +60,7 @@ public class RotateSphere : MonoBehaviour
 
                         transform.RotateAround(player.transform.position, new Vector3(0, 1, 0), 20 * rotationSpeed * Time.deltaTime);
 
-                        if(angle < 20f) {
+                        if(angle <= 20f) {
                             transform.localPosition = desiredPosition;
                         }
                     }
