@@ -36,6 +36,11 @@ public class RotateSphere : MonoBehaviour
     // Update is called once per frame
     async void Update()
     {
+        // Needed to avoid the sphere deforming when player collides with enemies
+        if (transform.rotation[0] != 0 || transform.rotation[2] != 0) {
+            transform.rotation = new Quaternion(0, transform.rotation[1], 0, transform.rotation[3]);
+        }
+        
         if(isRotating) {
             transform.RotateAround(player.transform.position, new Vector3(0, 1, 0), rotationSpeed * Time.deltaTime);
             
@@ -58,9 +63,9 @@ public class RotateSphere : MonoBehaviour
 
                         playerClass.isFrozen = true;
 
-                        transform.RotateAround(player.transform.position, new Vector3(0, 1, 0), 20 * rotationSpeed * Time.deltaTime);
+                        transform.RotateAround(player.transform.position, new Vector3(0, 1, 0), 15 * rotationSpeed * Time.deltaTime);
 
-                        if(angle <= 20f) {
+                        if(angle <= 40f) {
                             transform.localPosition = desiredPosition;
                         }
                     }

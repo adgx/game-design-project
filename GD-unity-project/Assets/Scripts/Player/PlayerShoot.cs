@@ -45,6 +45,7 @@ public class PlayerShoot : MonoBehaviour
 	// Health
 	public float maxHealth = 120;
 	public float health;
+	public float damageReduction = 1f;
 	[SerializeField] private HealthBar healthBar;
 
 	// Stamina for the attacks
@@ -74,14 +75,6 @@ public class PlayerShoot : MonoBehaviour
 		closeAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
 	}
 	
-	// Audio management
-	private async void TriggerSphereRotationSound(float duration = 2f)
-	{
-		rotateSphere.isRotating = true;
-		await Task.Delay((int)(duration * 1000));
-		rotateSphere.isRotating = false;
-	}
-
 	void ChangeSphereColor() {
 		// TODO: chiedere ad Antonino come cambiare il colore della sfera
 		switch(sphereStamina) {
@@ -212,7 +205,7 @@ public class PlayerShoot : MonoBehaviour
 		attacking = false;
 		
 		await Task.Delay(200);
-		TriggerSphereRotationSound();
+		rotateSphere.isRotating = true;
 		player.isFrozen = false;
 		
 		// Audio management
@@ -282,7 +275,7 @@ public class PlayerShoot : MonoBehaviour
 
 		rotateSphere.positionSphere(new Vector3(1, 0, 0), RotateSphere.Animation.Linear);
 		await Task.Delay(300);
-		TriggerSphereRotationSound();
+		rotateSphere.isRotating = true;
 
 		// Set values back to default
 		closeAttackDamage = defaultCloseAttackDamage;
@@ -386,7 +379,7 @@ public class PlayerShoot : MonoBehaviour
 	}
 
 	public void TakeDamage(int damage) {
-     		health -= damage;
+     		health -= damage * damageReduction;
      		healthBar.SetHealth(health);
      
      		StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
