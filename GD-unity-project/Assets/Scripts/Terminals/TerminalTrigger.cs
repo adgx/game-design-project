@@ -132,12 +132,17 @@ public class TerminalTrigger : MonoBehaviour
 							{
 								Debug.Log("Using power up: health boost (chips");
 								AudioManager.instance.PlayOneShot(FMODEvents.instance.playerEatChips, player.transform.position);
+
+								playerShoot.maxHealth += 20;
+								playerShoot.health += 20;
 							}
 							
-							if (obtainedPowerUp == PowerUp.PowerUpType.MovementBoost)
+							if (obtainedPowerUp == PowerUp.PowerUpType.DamageReduction)
 							{
-								Debug.Log("Using power up: movement boost (energy drink");
+								Debug.Log("Using power up: damage reduction (energy drink");
 								AudioManager.instance.PlayOneShot(FMODEvents.instance.playerDrink, player.transform.position);
+								
+								playerShoot.damageReduction -= 0.2f;
 							}
 							
 							// Insert the power up in the dictionary of the obtained ones

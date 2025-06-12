@@ -11,7 +11,7 @@ public class PowerUp : MonoBehaviour
 
         // Player
         HealthBoost,
-        MovementBoost
+        DamageReduction
     }
 
     // This lists contain the Sphere and Player PowerUps that have not been collected yet. When a Power Up is collected, it is removed from the list
@@ -31,9 +31,9 @@ public class PowerUp : MonoBehaviour
         playerPowerUps.Add(PowerUpType.HealthBoost);
         playerPowerUps.Add(PowerUpType.HealthBoost);
         playerPowerUps.Add(PowerUpType.HealthBoost);
-        playerPowerUps.Add(PowerUpType.MovementBoost);	// TODO: to be implemented
-        playerPowerUps.Add(PowerUpType.MovementBoost);
-        playerPowerUps.Add(PowerUpType.MovementBoost);
+        playerPowerUps.Add(PowerUpType.DamageReduction);
+        playerPowerUps.Add(PowerUpType.DamageReduction);
+        playerPowerUps.Add(PowerUpType.DamageReduction);
     }
 
     public void ObtainPowerUp(PowerUpType powerUp) {

@@ -45,6 +45,7 @@ public class PlayerShoot : MonoBehaviour
 	// Health
 	public float maxHealth = 120;
 	public float health;
+	public float damageReduction = 1f;
 	[SerializeField] private HealthBar healthBar;
 
 	// Stamina for the attacks
@@ -378,7 +379,7 @@ public class PlayerShoot : MonoBehaviour
 	}
 
 	public void TakeDamage(int damage) {
-     		health -= damage;
+     		health -= damage * damageReduction;
      		healthBar.SetHealth(health);
      
      		StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
