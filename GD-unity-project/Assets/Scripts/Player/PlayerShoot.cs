@@ -406,6 +406,7 @@ public class PlayerShoot : MonoBehaviour
 			// Audio management
 			AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldActivation, rotatingSphere.transform.position);
 			
+			// to modify for the instantiate the vfx and lunch the animation character
 			magneticShield = Instantiate(magneticShieldPrefab, new Vector3(player.transform.position.x, player.transform.position.y - 1f, player.transform.position.z), Quaternion.identity);
 			magneticShield.transform.parent = transform;
 			magneticShieldOpen = true;
@@ -433,6 +434,12 @@ public class PlayerShoot : MonoBehaviour
 		}
 		
 		isShieldCoroutineRunning = false;
+	}
+	
+	void SpawnMagneticShieldVFX()
+	{
+		Debug.Log("Event SpawMagneticShieldVFX");
+		AnimationManager.Instance.DefenseVFX(transform.position);
 	}
 
 	public void TakeDamage(int damage) {

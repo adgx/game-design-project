@@ -48,6 +48,6 @@ public class LookAtEnemy : MonoBehaviour
         }
         
         if (transform.position.y < 2)
-            transform.position = new Vector3(transform.position.x, 3, transform.position.z);
+            transform.position = new Vector3(transform.position.x, 0, transform.position.z);
     }
 }
