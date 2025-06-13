@@ -295,18 +295,8 @@ public class PlayerShoot : MonoBehaviour
 		Collider[] colliders = Physics.OverlapSphere(transform.position, damageRadius);
 		foreach(Collider c in colliders) {
 			// Checks if the collider is an enemy
-			if(c.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyMaynardMovement>()) {
-				c.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyMaynardMovement>().TakeDamage(closeAttackDamage);
-			}
-			else {
-				if(c.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyDrakeMovement>()) {
-					c.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyDrakeMovement>().TakeDamage(closeAttackDamage);
-				}
-				else {
-					if(c.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyIncognitoMovement>()) {
-						c.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyIncognitoMovement>().TakeDamage(closeAttackDamage);
-					}
-				}
+			if(c.transform.tag.Contains("Enemy")) {
+				c.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(closeAttackDamage);
 			}
 		}
 	}
@@ -334,6 +324,7 @@ public class PlayerShoot : MonoBehaviour
 			// Audio management
 			AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldDeactivation, rotatingSphere.transform.position);
 			Destroy(magneticShield);
+			player.isFrozen = false;
 			await Task.Delay(500);
 		}
 		magneticShieldOpen = false;
@@ -358,6 +349,7 @@ public class PlayerShoot : MonoBehaviour
 			magneticShield = Instantiate(magneticShieldPrefab, new Vector3(player.transform.position.x, player.transform.position.y - 1f, player.transform.position.z), Quaternion.identity);
 			magneticShield.transform.parent = transform;
 			magneticShieldOpen = true;
+			player.isFrozen = true;
 			
 			if(powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DefensePowerUp)) {
 				if(powerUp.powerUpsObtained[PowerUp.PowerUpType.DefensePowerUp] == 1) {
@@ -376,6 +368,7 @@ public class PlayerShoot : MonoBehaviour
 				// Audio management
 				AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldDeactivation, rotatingSphere.transform.position);
 				Destroy(magneticShield);
+				player.isFrozen = false;
 				await Task.Delay(500);
 			}
 			magneticShieldOpen = false;

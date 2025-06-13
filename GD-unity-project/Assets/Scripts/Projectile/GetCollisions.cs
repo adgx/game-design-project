@@ -20,6 +20,8 @@ public class GetCollisions : MonoBehaviour
                 Destroy(contact.thisCollider.gameObject);
 
                 if(contact.thisCollider.tag == "PlayerProjectile" && contact.otherCollider.tag.Contains("Enemy")) {
+                    contact.otherCollider.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(playerBulletDamage);
+                    
                     if(contact.otherCollider.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyMaynardMovement>()) {
                         contact.otherCollider.GetComponent<Enemy.EnemyData.EnemyMovement.EnemyMaynardMovement>().TakeDamage(playerBulletDamage);
                     }
