@@ -1,0 +1,24 @@
+# ========== FMOD Studio Project .gitignore ==========
+
+# Ignore user-specific project settings
+*.fspro.user
+
+# Ignore generated banks (optional — keep if you rebuild them)
+Build/
+*.bank
+
+# FMOD Studio intermediate files and metadata
+.fmod/
+*.log
+*.bak
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =======================
+# IMPORTANT: Do NOT ignore Assets/
+# =======================
+!Assets/
+!Assets/**/*

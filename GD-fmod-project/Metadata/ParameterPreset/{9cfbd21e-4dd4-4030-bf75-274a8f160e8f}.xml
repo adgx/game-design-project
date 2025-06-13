@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{9cfbd21e-4dd4-4030-bf75-274a8f160e8f}">
+		<property name="name">
+			<value>loopIteration</value>
+		</property>
+		<relationship name="folder">
+			<destination>{89dcf456-9aa0-4947-b862-9383d6a57e19}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{f7281408-659d-4e04-9071-69cbe9ec1060}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{f7281408-659d-4e04-9071-69cbe9ec1060}">
+		<property name="parameterType">
+			<value>2</value>
+		</property>
+		<property name="maximum">
+			<value>3</value>
+		</property>
+		<property name="enumerationLabels">
+			<value>FirstIteration</value>
+			<value>SecondIteration</value>
+			<value>ThirdIteration</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>
