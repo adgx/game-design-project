@@ -124,6 +124,12 @@ public class PlayerShoot : MonoBehaviour
 			await Task.Delay(700);
 			if(increaseStamina) {
 				sphereStamina += 1;
+				
+				// Audio management
+				if (sphereStamina == 5)
+				{
+					AudioManager.instance.PlayOneShot(FMODEvents.instance.sphereFullRecharge, rotatingSphere.transform.position);
+				}
 			}
 		}
 		increasingStamina = false;
