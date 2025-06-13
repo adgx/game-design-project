@@ -150,7 +150,7 @@ MonoBehaviour:
   Path: ../GD-fmod-project/Build/Desktop/Music.bank
   Name: Music
   StudioPath: bank:/Music
-  lastModified: 638854069212533786
+  lastModified: 638854105264200726
   FileSizes:
   - Name: Desktop
     Value: 3887712
@@ -251,38 +251,11 @@ MonoBehaviour:
   Path: ../GD-fmod-project/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638854069212619335
+  lastModified: 638854117029247406
   FileSizes:
   - Name: Desktop
-    Value: 1217760
+    Value: 1166016
   Exists: 1
---- !u!114 &-3028570521811260742
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/SFX/Player/Sphere/SpherePartialRecharge
-  m_EditorClassIdentifier: 
-  Path: event:/SFX/Player/Sphere/SpherePartialRecharge
-  Guid:
-    Data1: -173376928
-    Data2: 1284800641
-    Data3: -1552988530
-    Data4: 378764851
-  Banks:
-  - {fileID: -5245775167553915360}
-  IsStream: 0
-  Is3D: 1
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 0
 --- !u!114 &-2919376815243929847
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -676,7 +649,6 @@ MonoBehaviour:
   - {fileID: -5389901756004489020}
   - {fileID: -594442536354873650}
   - {fileID: -2739359963392846148}
-  - {fileID: -3028570521811260742}
   - {fileID: 7066914065383707541}
   - {fileID: 6959864652799258220}
   - {fileID: 8988966758186062221}
@@ -698,7 +670,7 @@ MonoBehaviour:
   StringsBanks:
   - {fileID: 4020024090059774088}
   cacheVersion: 131847
-  cacheTime: 638854069212619335
+  cacheTime: 638854117029247406
   SerializableEventsDict:
   - key: event:/SFX/Player/Hand dryer/HandDryerActivation04
     index: 0
@@ -746,38 +718,36 @@ MonoBehaviour:
     index: 21
   - key: event:/SFX/Player/Sphere/SphereDischarge
     index: 22
-  - key: event:/SFX/Player/Sphere/SpherePartialRecharge
-    index: 23
   - key: event:/SFX/Player/Eat/EatChocolate
-    index: 24
+    index: 23
   - key: event:/SFX/Player/Walk/Footsteps
-    index: 25
+    index: 24
   - key: event:/SFX/Player/Die/Die
-    index: 26
+    index: 25
   - key: event:/SFX/Player/Defense/ShieldActivation
-    index: 27
+    index: 26
   - key: event:/SFX/Player/Hit/Hit
-    index: 28
+    index: 27
   - key: event:/SFX/Player/Vending machine/VendingMachineActivation
-    index: 29
+    index: 28
   - key: event:/SFX/Player/Door/DoorOpen
-    index: 30
+    index: 29
   - key: event:/SFX/Player/Drink/Drink
-    index: 31
+    index: 30
   - key: event:/SFX/Player/Sphere/SphereFullRecharge
-    index: 32
+    index: 31
   - key: event:/SFX/Player/Defense/ShieldDeactivation
-    index: 33
+    index: 32
   - key: event:/SFX/Player/Terminal/TerminalInteraction
-    index: 34
+    index: 33
   - key: event:/SFX/Player/Defense/ShieldHit
-    index: 35
+    index: 34
   - key: event:/SFX/Player/Attack/Close/CloseShoot
-    index: 36
+    index: 35
   - key: event:/SFX/Player/Eat/EatChips
-    index: 37
+    index: 36
   - key: event:/SFX/Player/Attack/Distance/DistanceLoad
-    index: 38
+    index: 37
 --- !u!114 &998766722441512577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -847,7 +817,7 @@ MonoBehaviour:
   Path: ../GD-fmod-project/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638854069212114919
+  lastModified: 638854117028383914
   FileSizes:
   - Name: Desktop
     Value: 1524
@@ -947,10 +917,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: event:/SFX/Player/Sphere/SphereFullRecharge
   Guid:
-    Data1: 1001214641
-    Data2: 1077975843
-    Data3: 1585470126
-    Data4: 409065975
+    Data1: -173376928
+    Data2: 1284800641
+    Data3: -1552988530
+    Data4: 378764851
   Banks:
   - {fileID: -5245775167553915360}
   IsStream: 0
@@ -1002,10 +972,10 @@ MonoBehaviour:
   Path: ../GD-fmod-project/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638854069212276226
+  lastModified: 638854117028406074
   FileSizes:
   - Name: Desktop
-    Value: 3070
+    Value: 3024
   Exists: 1
 --- !u!114 &4191736961956823317
 MonoBehaviour:
@@ -1076,7 +1046,7 @@ MonoBehaviour:
   Path: ../GD-fmod-project/Build/Desktop/Ambience.bank
   Name: Ambience
   StudioPath: bank:/Ambience
-  lastModified: 638854069212114919
+  lastModified: 638854105246570066
   FileSizes:
   - Name: Desktop
     Value: 4246304

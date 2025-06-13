@@ -101,11 +101,11 @@ public class TerminalTrigger : MonoBehaviour
 
 						// Remove the power up from the list of power ups
 						powerUps.spherePowerUps.RemoveAt(powerUpIndexSphere);
-
 						busy = false;
 						
 						// Audio manangement
 						await Task.Delay(1500);
+						playerShoot.DecreaseStamina(1);
 						rotateSphere.isRotating = true;
 					}
 
@@ -156,7 +156,7 @@ public class TerminalTrigger : MonoBehaviour
 
 							// Remove the power up from the list of power ups
 							powerUps.playerPowerUps.RemoveAt(powerUpIndexPlayer);
-
+							
 							busy = false;
 						}
 
@@ -175,6 +175,7 @@ public class TerminalTrigger : MonoBehaviour
 							
 							// Audio manangement
 							await Task.Delay(3500);
+							playerShoot.DecreaseStamina(1);
 							rotateSphere.isRotating = true;
 						}
 
@@ -199,7 +200,6 @@ public class TerminalTrigger : MonoBehaviour
 						AudioManager.instance.PlayOneShot(FMODEvents.instance.playerEatChocolate, player.transform.position);
 						
 						playerShoot.RecoverHealth(playerShoot.maxHealth);
-						playerShoot.DecreaseStamina(1);
 						busy = false;
 					}
 					else {
@@ -216,6 +216,7 @@ public class TerminalTrigger : MonoBehaviour
 						
 						// Audio manangement
 						await Task.Delay(3500);
+						playerShoot.DecreaseStamina(1);
 						rotateSphere.isRotating = true;
 					}
 
