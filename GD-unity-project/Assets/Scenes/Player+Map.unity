@@ -4186,6 +4186,7 @@ GameObject:
   - component: {fileID: 1738691472}
   - component: {fileID: 1738691467}
   - component: {fileID: 1738691471}
+  - component: {fileID: 1738691473}
   m_Layer: 0
   m_Name: RoomManager
   m_TagString: Untagged
@@ -4349,6 +4350,24 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d628d10d2db4548ec94973aa4b57d7ef, type: 2}
   _minEnemiesPerRoom: 1
   _maxEnemiesPerRoom: 5
+--- !u!114 &1738691473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1738691462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3adbe536f352046cd91eb3d44707224f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _minimapIconPrefab: {fileID: 6662264308540135868, guid: 3d287f8a3d8b2574ab0db1630cf34f83, type: 3}
+  _minimapGridParent: {fileID: 1373405848}
+  _emptyCellColor: {r: 0, g: 0, b: 0, a: 0}
+  _undiscoveredRoomColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+  _visitedRoomColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
+  _currentPlayerColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!1 &1828405966 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5548963736841642456, guid: 83bb9d48145747f4784acf553b1e9ede, type: 3}
