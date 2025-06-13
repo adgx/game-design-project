@@ -75,6 +75,23 @@ public class PlayerShoot : MonoBehaviour
 		closeAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
 	}
 	
+	// Audio management
+	private async Task StopLoadingSoundAfterDelay(EventInstance instance, int delayMs)
+	{
+		await Task.Delay(delayMs);
+
+		if (!instance.isValid())
+			return;
+
+		PLAYBACK_STATE state;
+		var result = instance.getPlaybackState(out state);
+		if (result != FMOD.RESULT.OK)
+			return;
+
+		if (state != PLAYBACK_STATE.STOPPED)
+			instance.stop(STOP_MODE.ALLOWFADEOUT);
+	}
+	
 	void ChangeSphereColor() {
 		// TODO: chiedere ad Antonino come cambiare il colore della sfera
 		switch(sphereStamina) {
@@ -120,9 +137,9 @@ public class PlayerShoot : MonoBehaviour
 
 	public async Task RecoverStamina() {
 		increasingStamina = true;
-		while(sphereStamina < maxSphereStamina && increaseStamina) {
+		while(sphereStamina < maxSphereStamina && increaseStamina && !loadingAttack) {
 			await Task.Delay(700);
-			if(increaseStamina) {
+			if(increaseStamina && !loadingAttack) {
 				sphereStamina += 1;
 				
 				// Audio management
@@ -154,7 +171,24 @@ public class PlayerShoot : MonoBehaviour
 	
 	async void LoadDistanceAttack() {
 		// If we are here the stamina is at least 1
+		loadingAttack = true;
 		rotateSphere.positionSphere(new Vector3(0, 0, 1), RotateSphere.Animation.RotateAround);
+		
+		// Audio management
+		bool playDistanceAttackSound = false;
+		await Task.Delay(150);
+		
+		if (Input.GetButton("Fire1") && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DistanceAttackPowerUp))
+		{
+			playDistanceAttackSound = true;
+		}
+		
+		if (playDistanceAttackSound)
+		{
+			distanceAttackLoading.stop(STOP_MODE.IMMEDIATE); // reset
+			distanceAttackLoading.start(); // start
+			_ = StopLoadingSoundAfterDelay(distanceAttackLoading, 2500);
+		}
 
 		attackStamina = 0;
 		int maxStamina = 0;
@@ -215,12 +249,29 @@ public class PlayerShoot : MonoBehaviour
 		player.isFrozen = false;
 		
 		// Audio management
-		distanceAttackSoundSuppressed = false;
+		distanceAttackLoading.stop(STOP_MODE.ALLOWFADEOUT);
 	}
 	
 	async void LoadCloseAttack() {
 		// If we are here the stamina is at least 1
+		loadingAttack = true;
 		rotateSphere.positionSphere(new Vector3(0, 1, 0), RotateSphere.Animation.Linear);
+		
+		// Audio management
+		bool playCloseAttackSound = false;
+		await Task.Delay(150);
+		
+		if (Input.GetButton("Fire1") && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.CloseAttackPowerUp))
+		{
+			playCloseAttackSound = true;
+		}
+		
+		if (playCloseAttackSound)
+		{
+			closeAttackLoading.stop(STOP_MODE.IMMEDIATE); // reset loading SFX 
+			closeAttackLoading.start(); // start loading SFX
+			_ = StopLoadingSoundAfterDelay(closeAttackLoading, 2500);
+		}
 		
 		attackStamina = 0;
 		int maxStamina = 0;
@@ -264,7 +315,7 @@ public class PlayerShoot : MonoBehaviour
 		CheckForEnemies();
 		
 		// Audio management
-		closeAttackSoundSuppressed = false;
+		closeAttackLoading.stop(STOP_MODE.ALLOWFADEOUT);
 	}
 
 	async void SpawnAttackArea() {
@@ -509,47 +560,6 @@ public class PlayerShoot : MonoBehaviour
 	{
 		distanceAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
 		closeAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotateSphere.transform));
-	
-		// Start distance attack loading event if the player is using distance attack
-		if (attackNumber == 1)
-		{
-			if (loadingAttack && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DistanceAttackPowerUp) && !distanceAttackSoundSuppressed)
-			{
-				// Get the playback state for the distance attack loading event 
-				PLAYBACK_STATE distanceAttackPlaybackState;
-				distanceAttackLoading.getPlaybackState(out distanceAttackPlaybackState);
-				if(distanceAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED)) 
-				{
-					distanceAttackLoading.start();
-					AutoStopLoadingSound(distanceAttackLoading);
-				}
-			}
-			// Otherwise, stop the distance attack loading event 
-			else
-			{
-				distanceAttackLoading.stop(STOP_MODE.ALLOWFADEOUT);
-			}
-		}
-
-		else
-		{
-			if (loadingAttack && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.CloseAttackPowerUp) && !closeAttackSoundSuppressed)
-			{
-				// Get the playback state for the close attack loading event 
-				PLAYBACK_STATE closeAttackPlaybackState;
-				closeAttackLoading.getPlaybackState(out closeAttackPlaybackState);
-				if(closeAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED)) 
-				{
-					closeAttackLoading.start();
-					AutoStopLoadingSound(closeAttackLoading);
-				}
-			}
-			// Otherwise, stop the close attack loading event 
-			else
-			{
-				closeAttackLoading.stop(STOP_MODE.ALLOWFADEOUT);
-			}
-		}
 	}
 	
 	// Audio management
