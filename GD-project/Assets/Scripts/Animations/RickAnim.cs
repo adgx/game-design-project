@@ -5,15 +5,18 @@ using System.Threading.Tasks;
 
 public class RickAnim : MonoBehaviour
 {
+    //Rick stuff
     [SerializeField] private Animator rickAC;
     [SerializeField] private byte NUM_IDLE_ANIMATIONS = 2;
     [SerializeField] private float WAIT_IDLE_TIME = 10f;
     private bool randomIdleIsDone = true;
     private bool activeRandomIdle = true;
+    //AnimatorController parameters
     private int idleTriggerHash;
     private int runTriggerHash;
     private int idleIndexHash;
     private int velocityHash;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -29,15 +32,12 @@ public class RickAnim : MonoBehaviour
         idleIndexHash = Animator.StringToHash("IdleIndex");
     }
 
-    // Update is called once per frame
     void Update()
     {
 
         if (randomIdleIsDone && activeRandomIdle)
         {
             randomIdleIsDone = false;
-            //RandomizeIdle();
-
             RandomizeIdleAsync();
         }
 

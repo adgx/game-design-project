@@ -14,10 +14,10 @@ public class PowerUp : MonoBehaviour
 		MovementBoost
     }
 
-	// This lists contain the Sphere and Player PowerUps that have not been collected yet. When a Power Up is collected, it is removed from the list
+	// This lists contain the Sphere and Player PowerUps that have not been collected yet. When a Power Up is collected, it is removed from the list (why?)
 	public List<PowerUpType> spherePowerUps = new List<PowerUpType>();
 	public List<PowerUpType> playerPowerUps = new List<PowerUpType>();
-
+	//track the powerups 
 	public Dictionary<PowerUpType, int> powerUpsObtained = new Dictionary<PowerUpType, int> {};
 
 	private void Start() {

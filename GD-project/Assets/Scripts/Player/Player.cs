@@ -12,21 +12,26 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float currentVerticalSpeed;
     [SerializeField] private float currentHorizontalSpeed;
-	[SerializeField] private float maxMovementSpeed = 10f;
+	[SerializeField] private float maxMovementSpeed = 5f;
 	[SerializeField] private float maxRotationSpeed = 15f;
     
     [SerializeField] private Rigidbody player;
 	[SerializeField] private Camera mainCamera;
     
+    
     private PlayerInput input;
-    public bool isFrozen;
+	public bool isFrozen;
 
 	// Audio management
 	private EventInstance playerFootsteps;
 	private EventInstance sphere;
 	private EventInstance sphereRotation;
 
-	public void FreezeMovement(bool freeze)
+    //animation stuff
+    //private RickAnim rickAnim;
+	//private bool inIdle = true; 
+
+    public void FreezeMovement(bool freeze)
     {
         isFrozen = freeze;
     }
@@ -36,20 +41,38 @@ public class Player : MonoBehaviour
         Instance = this;
 
         input = GetComponent<PlayerInput>();
-        player.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+		//animation scripts
+		//now we use the manager
+		//rickAnim = GetComponent<RickAnim>();
+
+		player.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
     }
 
 	private void Move() {
+		//this is ds not speed
         currentVerticalSpeed = maxMovementSpeed * input.Vertical * Time.fixedDeltaTime;
         currentHorizontalSpeed = maxMovementSpeed * input.Horizontal * Time.fixedDeltaTime;
 
-        Vector3 direction = input.Vertical * (new Vector3(mainCamera.transform.forward.x, 0f, mainCamera.transform.forward.z)) + input.Horizontal * (new Vector3(mainCamera.transform.right.x, 0f, mainCamera.transform.right.z));
+        Vector3 direction = input.Vertical * (new Vector3(mainCamera.transform.forward.x, 0f, mainCamera.transform.forward.z)) 
+			+ input.Horizontal * (new Vector3(mainCamera.transform.right.x, 0f, mainCamera.transform.right.z));
 		direction.Normalize();
 
-		//animation stuff
-		if (currentHorizontalSpeed == 0f && currentVerticalSpeed == 0f)
-		{ 
-		
+        //animation stuff
+        //now there are no acceleration property 
+        //costant velocity 
+        //this line is usefull if the acceleration is handled
+        //float runBlendVal = ORF.Utils.Math.NormalizeValueByRage(0f, maxMovementSpeed, Math.Max(Math.Abs(currentVerticalSpeed), Math.Abs(currentHorizontalSpeed)));
+        float runBlendVal = Math.Max(Math.Abs(input.Vertical), Math.Abs(input.Horizontal));
+		AnimationManager.Instance.SetRunBledingAnim(runBlendVal);
+        //rickAnim.SetRunBledingAnim(runBlendVal);
+		if(runBlendVal == 0f && !AnimationManager.Instance.rickState.Equals(RickStates.Idle))
+		{
+            AnimationManager.Instance.Idle();
+		}
+		else if (runBlendVal != 0f && AnimationManager.Instance.rickState.Equals(RickStates.Idle)) 
+		{
+
+            AnimationManager.Instance.Run();
 		}
 
 		player.MovePosition(player.position + direction * maxMovementSpeed * Time.fixedDeltaTime);
