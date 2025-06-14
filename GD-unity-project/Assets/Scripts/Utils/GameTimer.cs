@@ -179,7 +179,6 @@ namespace Utils
             UpdateTimerUI();
 
 			// Audio management
-			// TODO: for the activation time for the alarm is 10 seconds, but it will be 60 seconds
 			playEventEmitters(alarmEmitters, !alarmIsTriggered && currentTime <= 10f, ref alarmIsTriggered);
 			playEventEmitters(serverEmitters, !serverIsTriggered, ref serverIsTriggered);
 			playEventEmitters(ledEmitters, !ledIsTriggered, ref ledIsTriggered);
