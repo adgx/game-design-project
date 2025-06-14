@@ -1,4 +1,5 @@
 using FMOD.Studio;
+using System;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -8,7 +9,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float currentVerticalSpeed;
     [SerializeField] private float currentHorizontalSpeed;
-	[SerializeField] private float maxMovementSpeed = 10f;
+	[SerializeField] private float maxMovementSpeed = 5f;
 	[SerializeField] private float maxRotationSpeed = 15f;
     
     [SerializeField] private Rigidbody player;
@@ -39,6 +40,8 @@ public class Player : MonoBehaviour
 
 	private void Move() {
 		RaycastHit hit, hitBack;
+		
+		//this is ds not speed
         currentVerticalSpeed = maxMovementSpeed * input.Vertical * Time.fixedDeltaTime;
         currentHorizontalSpeed = maxMovementSpeed * input.Horizontal * Time.fixedDeltaTime;
 
@@ -47,7 +50,27 @@ public class Player : MonoBehaviour
 
 		player.MovePosition(player.position + direction * maxMovementSpeed * Time.fixedDeltaTime);
         
-        // I need this constraint to avoid that the player turns upside down when it touches another collider
+		//animation stuff
+		//now there are no acceleration property 
+		//costant velocity 
+		//this line is usefull if the acceleration is handled
+		//float runBlendVal = ORF.Utils.Math.NormalizeValueByRage(0f, maxMovementSpeed, Math.Max(Math.Abs(currentVerticalSpeed), Math.Abs(currentHorizontalSpeed)));
+		float runBlendVal = Math.Max(Math.Abs(input.Vertical), Math.Abs(input.Horizontal));
+		AnimationManager.Instance.SetRunBledingAnim(runBlendVal);
+		//rickAnim.SetRunBledingAnim(runBlendVal);
+		if(runBlendVal == 0f && !AnimationManager.Instance.rickState.Equals(RickStates.Idle))
+		{
+			AnimationManager.Instance.Idle();
+		}
+		else if (runBlendVal != 0f && AnimationManager.Instance.rickState.Equals(RickStates.Idle)) 
+		{
+
+			AnimationManager.Instance.Run();
+		}
+
+		player.MovePosition(player.position + direction * maxMovementSpeed * Time.fixedDeltaTime);
+		
+		// I need this constraint to avoid that the player turns upside down when it touches another collider
         player.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
     }
 
