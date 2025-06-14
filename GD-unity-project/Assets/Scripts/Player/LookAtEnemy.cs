@@ -1,3 +1,5 @@
+using FMOD;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class LookAtEnemy : MonoBehaviour
@@ -6,12 +8,38 @@ public class LookAtEnemy : MonoBehaviour
     [SerializeField] private float sightRange = 20;
     [SerializeField] private LayerMask whatIsEnemy;
 
+    private float playerPivotOffset;
+    private float heightY;
+
     private PlayerInput input;
     private PlayerShoot playerShoot;
 
 	public void Awake() {
 		input = GetComponent<PlayerInput>();
         playerShoot = GetComponent<PlayerShoot>();
+    }
+
+    public void Start()
+    {
+        // Calculate the offset between the player’s pivot and its "foot"
+        Renderer renderer = GetComponent<Renderer>();
+
+        if (renderer == null)
+        {
+            playerPivotOffset = 0;
+        }
+
+        else
+        {
+            playerPivotOffset = transform.position.y - renderer.bounds.min.y;   
+        }
+        
+        // Find the floor in the scene
+        GameObject floor = GameObject.FindGameObjectWithTag("Floor");
+        heightY = floor.transform.position.y - transform.position.y;
+
+        transform.position = new Vector3(transform.position.x, transform.position.y + heightY - playerPivotOffset, transform.position.z);
+
     }
 
 	// Update is called once per frame
@@ -46,8 +74,5 @@ public class LookAtEnemy : MonoBehaviour
                 playerShoot.RecoverStamina();
             }
         }
-        
-        if (transform.position.y < 2)
-            transform.position = new Vector3(transform.position.x, 3, transform.position.z);
     }
 }
