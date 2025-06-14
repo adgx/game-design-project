@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FMOD.Studio;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerShoot : MonoBehaviour
 {
@@ -30,7 +31,10 @@ public class PlayerShoot : MonoBehaviour
 
 	// The player has 2 attacks he can choose. He can change them by using the mouse scroll wheel
 	private int attackNumber = 1;
-	[SerializeField] TextMeshProUGUI selectedAttackText;
+	[SerializeField] Image distanceAttackImage;
+	[SerializeField] Image closeAttackImage;
+	[SerializeField] Image distanceAttackLoadingBar;
+	[SerializeField] Image closeAttackLoadingBar;
 	private bool loadingAttack = false;
 	// This flag is true if an attack is being executed. While executing it, I can not start another attack
 	private bool attacking = false;
@@ -135,6 +139,29 @@ public class PlayerShoot : MonoBehaviour
 		increasingStamina = false;
 	}
 
+	void setSelectedAttackImage() {
+		if(attackNumber == 1) {
+			// Distance attack selected
+			distanceAttackImage.transform.localScale = new Vector3(1, 1, 1);
+			distanceAttackImage.color = new Color(255 / 255f, 255 / 255f, 255 / 255f);
+
+			closeAttackImage.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+			closeAttackImage.color = new Color(87 / 255f, 87 / 255f, 87 / 255f);
+
+			closeAttackLoadingBar.fillAmount = 0;
+		}
+		else {
+			// Close attack selected
+			closeAttackImage.transform.localScale = new Vector3(1, 1, 1);
+			closeAttackImage.color = new Color(255 / 255f, 255 / 255f, 255 / 255f);
+
+			distanceAttackImage.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
+			distanceAttackImage.color = new (87 / 255f, 87 / 255f, 87 / 255f);
+
+			distanceAttackLoadingBar.fillAmount = 0;
+		}
+	}
+
 	void ChangeAttack(int direction) {
 		attackNumber += direction;
 		if(attackNumber > 2) {
@@ -144,12 +171,13 @@ public class PlayerShoot : MonoBehaviour
 			attackNumber = 2;
 		}
 
-		selectedAttackText.text = "Attack " + attackNumber;
+		setSelectedAttackImage();
 	}
 
 	void SetAttack(int n) {
 		attackNumber = n;
-		selectedAttackText.text = "Attack " + attackNumber;
+
+		setSelectedAttackImage();
 	}
 	
 	async void LoadDistanceAttack() {
@@ -176,8 +204,9 @@ public class PlayerShoot : MonoBehaviour
 		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DistanceAttackPowerUp) && loadingAttack)
 		{
 			attackStamina++;
-				
-			Debug.Log(attackStamina);
+
+			distanceAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
+
 			if (attackStamina > 1) {
 				getCollisions.playerBulletDamage += 10;
 			}
@@ -206,7 +235,9 @@ public class PlayerShoot : MonoBehaviour
 		
 		// Audio management
 		AudioManager.instance.PlayOneShot(FMODEvents.instance.distanceAttackShoot, rotatingSphere.transform.position);
-		
+
+		distanceAttackLoadingBar.fillAmount = 0;
+
 		await Task.Delay(100);
 		attacking = false;
 		
@@ -241,7 +272,8 @@ public class PlayerShoot : MonoBehaviour
 		
 		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.CloseAttackPowerUp) && loadingAttack) {
 			attackStamina++;
-			Debug.Log(attackStamina);
+
+			closeAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
 
 			if (attackStamina > 1) {
 				damageRadius += 1f;
@@ -258,6 +290,8 @@ public class PlayerShoot : MonoBehaviour
 		
 		// Audio management
 		AudioManager.instance.PlayOneShot(FMODEvents.instance.closeAttackShoot, rotatingSphere.transform.position);
+
+		closeAttackLoadingBar.fillAmount = 0;
 
 		SpawnAttackArea();
 

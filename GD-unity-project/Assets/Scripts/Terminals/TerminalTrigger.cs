@@ -77,7 +77,8 @@ public class TerminalTrigger : MonoBehaviour
 			// Audio management
 			player = GameObject.Find("Player");
 			helpText.text = "";
-			
+			helpTextContainer.SetActive(false);
+
 			switch(triggerType) {
 				case TriggerType.SphereTerminal:
 					// Give a random power up for the Sphere
@@ -95,6 +96,7 @@ public class TerminalTrigger : MonoBehaviour
 						
 						// Show a message to the player
 						helpText.text = "You obtained a " + powerUps.spherePowerUps[powerUpIndexSphere] + "!";
+						helpTextContainer.SetActive(true);
 
 						// Insert the power up in the dictionary of the obtained ones
 						powerUps.ObtainPowerUp(powerUps.spherePowerUps[powerUpIndexSphere]);
@@ -130,7 +132,8 @@ public class TerminalTrigger : MonoBehaviour
 							
 							// Show a message to the player
 							helpText.text = "You obtained a " + powerUps.playerPowerUps[powerUpIndexPlayer] + "!";
-							
+							helpTextContainer.SetActive(true);
+
 							// Audio management
 							var obtainedPowerUp = powerUps.playerPowerUps[powerUpIndexPlayer];
 							
@@ -172,7 +175,8 @@ public class TerminalTrigger : MonoBehaviour
 							busy = false;
 							powerUpVendingMachineHacked = true;
 							helpText.text = "Press E again to take a snack from the machine";
-							
+							helpTextContainer.SetActive(true);
+
 							// Audio manangement
 							await Task.Delay(3500);
 							playerShoot.DecreaseStamina(1);
@@ -195,7 +199,8 @@ public class TerminalTrigger : MonoBehaviour
 						
 						// Show a message to the player
 						helpText.text = "Your health was recovered!";
-						
+						helpTextContainer.SetActive(true);
+
 						// Audio management
 						AudioManager.instance.PlayOneShot(FMODEvents.instance.playerEatChocolate, player.transform.position);
 						
@@ -213,7 +218,8 @@ public class TerminalTrigger : MonoBehaviour
 						busy = false;
 						healthVendingMachineHacked = true;
 						helpText.text = "Press E again to take a snack from the machine";
-						
+						helpTextContainer.SetActive(true);
+
 						// Audio manangement
 						await Task.Delay(3500);
 						playerShoot.DecreaseStamina(1);
