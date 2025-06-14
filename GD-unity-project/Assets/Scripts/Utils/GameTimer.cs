@@ -249,7 +249,7 @@ namespace Utils
 	        {
 		        // Scale pulse
 		        float scale = Mathf.PingPong(Time.time * 0.7f, 1f);
-		        scale = Mathf.Lerp(0.93f, 1f, scale);
+		        scale = Mathf.Lerp(0.9f, 1f, scale);
 		        timerText.transform.localScale = new Vector3(1 * scale, 1 * scale, 1f);
 		        yield return null;
 	        }
