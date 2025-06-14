@@ -6,6 +6,7 @@ using UnityEngine;
 
 // Audio management
 using FMODUnity;
+using UnityEngine.UI;
 
 namespace Utils
 {
@@ -14,11 +15,14 @@ namespace Utils
 
 	public class GameTimer : MonoBehaviour
     {
-        // TODO: the timer is set to 2 minutes for debugging. It should be of 10 minutes.
-	    private const float TimeLimit = 2 * 60f;
+        // TODO: the timer is set to 1 minute for debugging. It should be of 10 minutes.
+	    private const float TimeLimit = 0.6f * 60f;
         private float currentTime;
 
         public TMP_Text timerText;
+        [SerializeField] private Image timerOutlineImage;
+        [SerializeField] private Sprite timerOutlineSpriteRed;
+        [SerializeField] private Sprite timerOutlineSpriteNormal;
 
         private bool isRunning;
 
@@ -229,7 +233,26 @@ namespace Utils
             var minutes = Mathf.FloorToInt(currentTime / 60f);
             var seconds = Mathf.FloorToInt(currentTime % 60f);
 
+            if (currentTime <= 30f && timerOutlineImage.sprite != timerOutlineSpriteRed)
+            {
+	            timerOutlineImage.sprite = timerOutlineSpriteRed;
+	            StartCoroutine(Pulse());
+            }
+
             timerText.text = $"{minutes:00}:{seconds:00}";
+        }
+        
+        // Coroutine that produces a pulse effect on the text
+        IEnumerator Pulse()
+        {
+	        while (currentTime <= 30f)
+	        {
+		        // Scale pulse
+		        float scale = Mathf.PingPong(Time.time * 0.7f, 1f);
+		        scale = Mathf.Lerp(0.93f, 1f, scale);
+		        timerText.transform.localScale = new Vector3(1 * scale, 1 * scale, 1f);
+		        yield return null;
+	        }
         }
 
         private void ResetRun()
@@ -241,6 +264,8 @@ namespace Utils
             {
                 roomManager.RegenerateRooms();
                 currentTime = TimeLimit;
+                timerOutlineImage.sprite = timerOutlineSpriteNormal;
+                StopCoroutine(Pulse());
                 isRunning = true;
             });
         }
