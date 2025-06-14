@@ -21,7 +21,8 @@ public class LookAtEnemy : MonoBehaviour
 
     public void Start()
     {
-        // Calculate the offset between the player’s pivot and its "foot"
+        //useless
+        /* Calculate the offset between the player’s pivot and its "foot"
         Renderer renderer = GetComponent<Renderer>();
 
         if (renderer == null)
@@ -39,7 +40,7 @@ public class LookAtEnemy : MonoBehaviour
         heightY = floor.transform.position.y - transform.position.y;
 
         transform.position = new Vector3(transform.position.x, transform.position.y + heightY - playerPivotOffset, transform.position.z);
-
+        */
     }
 
 	// Update is called once per frame

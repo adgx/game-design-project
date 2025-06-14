@@ -986,6 +986,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: cf2be6d876d222e4fb901c6ca90ab847, type: 2}
     - target: {fileID: 6386480451222621022, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -1627,11 +1631,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d6474f5ca2e4594fbe3c104bb5607c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rickAC: {fileID: 0}
+  rickAC: {fileID: 2096753638}
   NUM_IDLE_ANIMATIONS: 2
   WAIT_IDLE_TIME: 2
   rickState: 0
-  prefabSheildVFX: {fileID: 0}
+  prefabSheildVFX: {fileID: 1861958121312818245, guid: a4dd536f609ecc8479b7e157bffc3f17, type: 3}
 --- !u!1 &1386329521
 GameObject:
   m_ObjectHideFlags: 0
@@ -2640,6 +2644,11 @@ Transform:
 --- !u!4 &2096753637 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
+  m_PrefabInstance: {fileID: 806423214}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &2096753638 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
   m_PrefabInstance: {fileID: 806423214}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &2143297035
