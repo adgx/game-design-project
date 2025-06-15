@@ -689,20 +689,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 214320ac68aae4c69932706f791e93da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomType: 1
-  connectors:
-  - id: 1
-    direction: 3
-    passageVisual: {fileID: 4102838232327037574}
-    spawnPoint: {fileID: 1853097851102152943}
-    isConnected: 0
-  centralSpawnPoint: {fileID: 2556233178477582439}
-  maxSpawnCost: 10
-  hasEnemiesSpawned: 0
-  enemySpawnPoints:
-  - {fileID: 6699836270811194891}
-  - {fileID: 8552814928818375167}
-  - {fileID: 4599900656103918150}
+  _connectors: []
+  _centralSpawnPoint: {fileID: 0}
+  _enemySpawnPoints: []
 --- !u!1 &3240836616390050879
 GameObject:
   m_ObjectHideFlags: 0
@@ -5408,11 +5397,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 817b803970ec2446ab5048dae50558e7, type: 3}
---- !u!1 &4102838232327037574 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6082520245590755020, guid: 817b803970ec2446ab5048dae50558e7, type: 3}
-  m_PrefabInstance: {fileID: 7825363126763758666}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8421527785396887276 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1749086241658796710, guid: 817b803970ec2446ab5048dae50558e7, type: 3}
