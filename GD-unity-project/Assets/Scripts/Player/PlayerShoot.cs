@@ -176,7 +176,7 @@ public class PlayerShoot : MonoBehaviour
 		
 		// Audio management
 		bool playDistanceAttackSound = false;
-		await Task.Delay(150);
+		await Task.Delay(50);
 		
 		if (Input.GetButton("Fire1") && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DistanceAttackPowerUp))
 		{
@@ -259,7 +259,7 @@ public class PlayerShoot : MonoBehaviour
 		
 		// Audio management
 		bool playCloseAttackSound = false;
-		await Task.Delay(150);
+		await Task.Delay(50);
 		
 		if (Input.GetButton("Fire1") && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.CloseAttackPowerUp))
 		{
