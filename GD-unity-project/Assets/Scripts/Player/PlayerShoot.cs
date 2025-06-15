@@ -464,69 +464,70 @@ public class PlayerShoot : MonoBehaviour
 	}
 
 	void Update() {
-		// The attack is shot only on "Fire1" up
-		if (Input.GetButtonDown("Fire1")) {
-			if(!magneticShield && CheckStamina(1) && !attacking) {
-				// Audio management
-				loadingAttack = true;
-				attacking = true;
+		if(!GameStatus.gamePaused) {
+			// The attack is shot only on "Fire1" up
+			if(Input.GetButtonDown("Fire1")) {
+				if(!magneticShield && CheckStamina(1) && !attacking) {
+					// Audio management
+					loadingAttack = true;
+					attacking = true;
 
-				switch(attackNumber) {
-					case 1:
-						LoadDistanceAttack();
-						break;
-					case 2:
-						LoadCloseAttack();
-						break;
-					default:
-						break;
+					switch(attackNumber) {
+						case 1:
+							LoadDistanceAttack();
+							break;
+						case 2:
+							LoadCloseAttack();
+							break;
+						default:
+							break;
+					}
 				}
 			}
-		}
-		
-		// Audio management
-		UpdateSound();
-		
-		if (Input.GetButtonUp("Fire1")) {
-			if(!magneticShield && CheckStamina(1) && loadingAttack) {
-				switch(attackNumber) {
-					case 1:
-						FireDistanceAttack();
-						break;
-					case 2:
-						FireCloseAttack();
-						break;
-					default:
-						break;
+
+			// Audio management
+			UpdateSound();
+
+			if(Input.GetButtonUp("Fire1")) {
+				if(!magneticShield && CheckStamina(1) && loadingAttack) {
+					switch(attackNumber) {
+						case 1:
+							FireDistanceAttack();
+							break;
+						case 2:
+							FireCloseAttack();
+							break;
+						default:
+							break;
+					}
 				}
 			}
-		}
 
-		if (Input.GetButtonDown("Fire2") && !loadingAttack)
-		{
-			SpawnMagneticShield();
-		}
+			if(Input.GetButtonDown("Fire2") && !loadingAttack) {
+				SpawnMagneticShield();
+			}
 
-		// Selecting a different attack
-		if(Input.GetAxis("Mouse ScrollWheel") > 0 && !loadingAttack) {
-			ChangeAttack(1);
-		}
-		else if(Input.GetAxis("Mouse ScrollWheel") < 0 && !loadingAttack) {
-			ChangeAttack(-1);
-		}
-		if(Input.GetKeyDown(KeyCode.Alpha1) && !loadingAttack) {
-			SetAttack(1);
-		}
-		if(Input.GetKeyDown(KeyCode.Alpha2) && !loadingAttack) {
-			SetAttack(2);
-		}
+			// Selecting a different attack
+			if(Input.GetAxis("Mouse ScrollWheel") > 0 && !loadingAttack) {
+				ChangeAttack(1);
+			}
+			else if(Input.GetAxis("Mouse ScrollWheel") < 0 && !loadingAttack) {
+				ChangeAttack(-1);
+			}
+			if(Input.GetKeyDown(KeyCode.Alpha1) && !loadingAttack) {
+				SetAttack(1);
+			}
+			if(Input.GetKeyDown(KeyCode.Alpha2) && !loadingAttack) {
+				SetAttack(2);
+			}
 
-		// I check the stamina every frame since it is possible that it is = 0 when I am not attacking (thanks asyncronous processes)
-		// Not that good, but I don't have better ways to manage it
-		if(sphereStamina <= 0) {
-			if(!increasingStamina) {
-				increaseStamina = true;
-				RecoverStamina();
+			// I check the stamina every frame since it is possible that it is = 0 when I am not attacking (thanks asyncronous processes)
+			// Not that good, but I don't have better ways to manage it
+			if(sphereStamina <= 0) {
+				if(!increasingStamina) {
+					increaseStamina = true;
+					RecoverStamina();
+				}
 			}
 		}
 	}

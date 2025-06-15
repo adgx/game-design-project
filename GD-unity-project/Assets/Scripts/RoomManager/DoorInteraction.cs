@@ -50,7 +50,7 @@ namespace RoomManager
             _roomManager = RoomManager.Instance;
             _parentRoom = GetComponentInParent<Room>();
             
-            helpTextContainer = GameObject.Find("CanvasGroup").transform.Find("HelpTextContainer").gameObject;
+            helpTextContainer = GameObject.Find("CanvasGroup").transform.Find("HUD").Find("HelpTextContainer").gameObject;
             helpText = helpTextContainer.transform.Find("HelpText").GetComponent<TextMeshProUGUI>();
 
             if (_roomManager == null)

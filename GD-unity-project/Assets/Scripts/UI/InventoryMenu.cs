@@ -6,12 +6,12 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class PauseMenu : MonoBehaviour
-{
+public class InventoryMenu : MonoBehaviour {
 	[SerializeField] private GameObject screenContainer;
-	[SerializeField] private GameObject pauseMenu;
-	[SerializeField] private GameObject confirmMenu;
-	[SerializeField] private VolumeMenu volumeMenuScript;
+	[SerializeField] private GameObject inventoryMenu;
+	[SerializeField] private PapersMenu papersMenuScript;
+	[SerializeField] private PowerUpMenu powerUpMenuScript;
+
 	[SerializeField] private Sprite buttonHoverSprite;
 	[SerializeField] private Sprite buttonNormalSprite;
 
@@ -21,15 +21,14 @@ public class PauseMenu : MonoBehaviour
 		playerInput = Player.Instance.GetComponent<PlayerInput>();
 
 		screenContainer.SetActive(false);
-		pauseMenu.SetActive(false);
-		confirmMenu.SetActive(false);
-		volumeMenuScript.CloseVolumeMenu();
+		inventoryMenu.SetActive(false);
+		papersMenuScript.CloseMenu();
+		powerUpMenuScript.CloseMenu();
 	}
 
 	// Update is called once per frame
-	void Update()
-    {
-		if(playerInput.PausePressed()) {
+	void Update() {
+		if(playerInput.IPressed() || (playerInput.PausePressed() && inventoryMenu.activeInHierarchy)) {
 			GameStatus.gamePaused = !GameStatus.gamePaused;
 			if(GameStatus.gamePaused) {
 				// Setting timeScale to 0 pauses the game
@@ -41,20 +40,20 @@ public class PauseMenu : MonoBehaviour
 				EventSystem.current.SetSelectedGameObject(null);
 			}
 
-			TogglePauseMenu();
+			ToggleInventoryMenu();
 		}
 	}
 
-	void TogglePauseMenu() {
+	void ToggleInventoryMenu() {
 		if(screenContainer.activeInHierarchy) {
 			screenContainer.SetActive(false);
-			pauseMenu.SetActive(false);
-			confirmMenu.SetActive(false);
-			volumeMenuScript.CloseVolumeMenu();
+			inventoryMenu.SetActive(false);
+			papersMenuScript.CloseMenu();
+			powerUpMenuScript.CloseMenu();
 		}
 		else {
 			screenContainer.SetActive(true);
-			pauseMenu.SetActive(true);
+			inventoryMenu.SetActive(true);
 		}
 	}
 
@@ -63,9 +62,9 @@ public class PauseMenu : MonoBehaviour
 		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
 
 		screenContainer.SetActive(false);
-		pauseMenu.SetActive(false);
-		confirmMenu.SetActive(false);
-		volumeMenuScript.CloseVolumeMenu();
+		inventoryMenu.SetActive(false);
+		papersMenuScript.CloseMenu();
+		powerUpMenuScript.CloseMenu();
 
 		await Task.Delay(100);
 		EventSystem.current.SetSelectedGameObject(null);
@@ -74,47 +73,19 @@ public class PauseMenu : MonoBehaviour
 		Time.timeScale = 1f;
 	}
 
-	public void NewGameButtonClick(GameObject button) {
-		button.GetComponent<Image>().sprite = buttonNormalSprite;
-		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
-
-		// TODO: to be implemented
-	}
-
 	public void VolumeSettingsButtonClick(GameObject button) {
 		button.GetComponent<Image>().sprite = buttonNormalSprite;
 		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
 
-		pauseMenu.SetActive(false);
-		volumeMenuScript.OpenVolumeMenu();
+		inventoryMenu.SetActive(false);
+		papersMenuScript.CloseMenu();
+		powerUpMenuScript.CloseMenu();
 	}
 
-	public void BackToPauseButtonClick() {
-		volumeMenuScript.CloseVolumeMenu();
-		pauseMenu.SetActive(true);
-	}
-
-	public void QuitGameButtonClick(GameObject button) {
-		button.GetComponent<Image>().sprite = buttonNormalSprite;
-		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
-
-		pauseMenu.SetActive(false);
-		confirmMenu.SetActive(true);
-	}
-
-	public void YesButtonClick(GameObject button) {
-		button.GetComponent<Image>().sprite = buttonNormalSprite;
-		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
-
-		// TODO: to be implemented
-	}
-
-	public void NoButtonClick(GameObject button) {
-		button.GetComponent<Image>().sprite = buttonNormalSprite;
-		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
-
-		confirmMenu.SetActive(false);
-		pauseMenu.SetActive(true);
+	public void BackToInventoryButtonClick() {
+		papersMenuScript.CloseMenu();
+		powerUpMenuScript.CloseMenu();
+		inventoryMenu.SetActive(true);
 	}
 
 	public void OnMouseEnter(GameObject button) {
