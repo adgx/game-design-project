@@ -72,7 +72,7 @@ public class LookAtEnemy : MonoBehaviour
             if (enemiesInRange.Length == 0 && playerShoot.sphereStamina < playerShoot.maxSphereStamina && !playerShoot.increasingStamina)
             {
                 playerShoot.increaseStamina = true;
-                playerShoot.RecoverStamina();
+                _ = playerShoot.RecoverStamina();
             }
         }
     }

@@ -39,9 +39,7 @@ public class Player : MonoBehaviour
     }
 
 	private void Move() {
-		RaycastHit hit, hitBack;
-		
-		//this is ds not speed
+		// this is ds not speed
         currentVerticalSpeed = maxMovementSpeed * input.Vertical * Time.fixedDeltaTime;
         currentHorizontalSpeed = maxMovementSpeed * input.Horizontal * Time.fixedDeltaTime;
 

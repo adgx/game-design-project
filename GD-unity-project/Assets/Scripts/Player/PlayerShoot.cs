@@ -12,8 +12,6 @@ public class PlayerShoot : MonoBehaviour
 	private EventInstance distanceAttackLoading;
 	private EventInstance closeAttackLoading;
 	private bool isShieldCoroutineRunning;
-	private bool distanceAttackSoundSuppressed = false;
-	private bool closeAttackSoundSuppressed = false;
 	
 	// Attack1
 	[SerializeField] private float bulletSpeed;
@@ -40,7 +38,6 @@ public class PlayerShoot : MonoBehaviour
 	[SerializeField] private GameObject magneticShieldPrefab;
 	GameObject magneticShield;
 	private bool magneticShieldOpen = false;
-	bool shieldAwait = false;
 	
 	// Health
 	public float maxHealth = 120;
@@ -406,7 +403,7 @@ public class PlayerShoot : MonoBehaviour
 			// Audio management
 			AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldActivation, rotatingSphere.transform.position);
 			
-			// to modify for the instantiate the vfx and lunch the animation character
+			// to modify for instantiate the vfx and lunch the animation character
 			magneticShield = Instantiate(magneticShieldPrefab, new Vector3(player.transform.position.x, player.transform.position.y - 1f, player.transform.position.z), Quaternion.identity);
 			magneticShield.transform.parent = transform;
 			magneticShieldOpen = true;
@@ -552,12 +549,12 @@ public class PlayerShoot : MonoBehaviour
 			SetAttack(2);
 		}
 
-		// I check the stamina every frame since it is possible that it is = 0 when I am not attacking (thanks asyncronous processes)
+		// I check the stamina every frame since it is possible that it is = 0 when I am not attacking (thanks asynchronous processes)
 		// Not that good, but I don't have better ways to manage it
 		if(sphereStamina <= 0) {
 			if(!increasingStamina) {
 				increaseStamina = true;
-				RecoverStamina();
+				_ = RecoverStamina();
 			}
 		}
 	}
@@ -567,26 +564,5 @@ public class PlayerShoot : MonoBehaviour
 	{
 		distanceAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
 		closeAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotateSphere.transform));
-	}
-	
-	// Audio management
-	private async void AutoStopLoadingSound(EventInstance eventInstance)
-	{
-		await Task.Delay(2500);
-
-		PLAYBACK_STATE playbackState;
-		eventInstance.getPlaybackState(out playbackState);
-
-		if (playbackState != PLAYBACK_STATE.STOPPED)
-		{
-			eventInstance.stop(STOP_MODE.ALLOWFADEOUT);
-
-			// Imposta il flag giusto
-			if (eventInstance.handle == distanceAttackLoading.handle)
-				distanceAttackSoundSuppressed = true;
-
-			if (eventInstance.handle == closeAttackLoading.handle)
-				closeAttackSoundSuppressed = true;
-		}
 	}
 }
