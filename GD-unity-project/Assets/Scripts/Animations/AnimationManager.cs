@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using System.Threading.Tasks;
+using UnityEngine.Serialization;
 
 public enum RickStates
 {
@@ -27,7 +28,7 @@ public class AnimationManager : MonoBehaviour
     private bool randomIdleIsDone = true;
     private bool activeRandomIdle = true;
     //sheildVFX  gameObj
-    [SerializeField] GameObject prefabSheildVFX;
+    [FormerlySerializedAs("prefabSheildVFX")] [SerializeField] GameObject prefabShieldVFX;
     private static AnimationManager instance;
 
     public static AnimationManager Instance { get { return instance; } }
@@ -60,7 +61,7 @@ public class AnimationManager : MonoBehaviour
         rickState = RickStates.Idle;
 
         //sheild check
-        if (prefabSheildVFX == null)
+        if (prefabShieldVFX == null)
             Debug.LogError("The sheild VFX not found!");
     }
 
@@ -111,6 +112,6 @@ public class AnimationManager : MonoBehaviour
 
     public void DefenseVFX(Vector3 pos)
     {
-        Instantiate(prefabSheildVFX, pos, Quaternion.identity); 
+        Instantiate(prefabShieldVFX, pos, Quaternion.identity); 
     }
 }
