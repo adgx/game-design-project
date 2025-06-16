@@ -4,7 +4,7 @@ namespace ORF.Utils
     {
         public static float NormalizeValueByRage(float minRange, float maxRange, float value) 
         {
-            return (value - minRange)/(minRange - maxRange);
+            return (value - minRange)/(maxRange -minRange);
         }
     }
 };
