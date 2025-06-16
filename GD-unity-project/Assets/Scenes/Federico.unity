@@ -1565,6 +1565,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29d305a98692fc14583778897324f611, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!225 &1662159660 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 4398049158021365803, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+  m_PrefabInstance: {fileID: 361144709}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1684111138
 GameObject:
   m_ObjectHideFlags: 0
@@ -2074,7 +2079,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1027fffed39994e7ba05e1f494acf175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeCanvasGroup: {fileID: 0}
+  fadeCanvasGroup: {fileID: 1662159660}
   fadeDuration: 0.5
 --- !u!114 &1738691467
 MonoBehaviour:
@@ -2120,7 +2125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 096196de0169bd34f891c432c786bce8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timerText: {fileID: 0}
+  timerText: {fileID: 1797088046}
   roomManager: {fileID: 1738691463}
 --- !u!114 &1738691471
 MonoBehaviour:
@@ -2187,6 +2192,17 @@ MonoBehaviour:
   _undiscoveredRoomColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   _visitedRoomColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
   _currentPlayerColor: {r: 0, g: 1, b: 0, a: 1}
+--- !u!114 &1797088046 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1314497162688995127, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+  m_PrefabInstance: {fileID: 361144709}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1868746625
 GameObject:
   m_ObjectHideFlags: 0
