@@ -235,27 +235,7 @@ namespace Utils
 	        isRunning = true;
 
 	        // Audio management
-	        resetEventEmitters(alarmEmitters, ref alarmIsTriggered);
-	        resetEventEmitters(serverEmitters, ref serverIsTriggered);
-	        resetEventEmitters(ledEmitters, ref ledIsTriggered);
-	        resetEventEmitters(refrigeratorEmitters, ref refrigeratorIsTriggered);
-	        resetEventEmitters(healthVendingMachineEmitters, ref HealthVendingMachineIsTriggered);
-	        resetEventEmitters(powerUpVendingMachineEmitters, ref PowerUpVendingMachineIsTriggered);
-	        resetEventEmitters(terminalEmitters, ref terminalIsTriggered);
-	        resetEventEmitters(elevatorEmitters, ref elevatorIsTriggered);
-	        resetEventEmitters(ventilationEmitters, ref ventilationIsTriggered);
-	        resetEventEmitters(wcEmitters, ref wcIsTriggered);
-
-	        InitializeEventEmittersWithTag("AlarmSpeaker", FMODEvents.instance.alarm, alarmEmitters);
-	        InitializeEventEmittersWithTag("Server", FMODEvents.instance.serverNoise, serverEmitters);
-	        InitializeEventEmittersWithTag("FlickeringLED", FMODEvents.instance.flickeringLED, ledEmitters);
-	        InitializeEventEmittersWithTag("Refrigerator", FMODEvents.instance.refrigeratorNoise, refrigeratorEmitters);
-	        InitializeEventEmittersWithTag("HealthSnackDistributor", FMODEvents.instance.vendingMachineNoise, healthVendingMachineEmitters);
-	        InitializeEventEmittersWithTag("PowerUpSnackDistributor", FMODEvents.instance.vendingMachineNoise, powerUpVendingMachineEmitters);
-	        InitializeEventEmittersWithTag("SphereTerminal", FMODEvents.instance.terminalNoise, terminalEmitters);
-	        InitializeEventEmittersWithTag("Elevator", FMODEvents.instance.elevatorNoise, elevatorEmitters);
-	        InitializeEventEmittersWithTag("Ventilation", FMODEvents.instance.ventilationNoise, ventilationEmitters);
-	        InitializeEventEmittersWithTag("FlushingWC", FMODEvents.instance.flushingWCNoise, wcEmitters);
+	        InitializeAmbientEmitters();
 	        
 	        AudioManager.instance.SetMusicLoopIteration(iteration);
         }
