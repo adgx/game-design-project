@@ -40,7 +40,10 @@ public class Player : MonoBehaviour
 
 	private void Move() {
 		RaycastHit hit, hitBack;
-		
+
+		//this could be integrated in input class
+		Vector2 move = new Vector2(input.Horizontal, input.Vertical);
+		Vector3 currentHorizontalSpeedV3 = new Vector3(player.linearVelocity.x, 0f, player.linearVelocity.z);
 		//this is ds not speed
         currentVerticalSpeed = maxMovementSpeed * input.Vertical * Time.fixedDeltaTime;
         currentHorizontalSpeed = maxMovementSpeed * input.Horizontal * Time.fixedDeltaTime;
