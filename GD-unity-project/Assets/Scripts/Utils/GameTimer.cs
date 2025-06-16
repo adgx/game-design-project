@@ -209,6 +209,9 @@ namespace Utils
 				StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
 				
 				ResetRun();
+				
+				// Exit the Update for this frame, preventing sounds from being reactivated immediately afterwards.
+				return; 
 			}
 
             UpdateTimerUI();
