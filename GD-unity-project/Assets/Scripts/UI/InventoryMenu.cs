@@ -17,6 +17,8 @@ public class InventoryMenu : MonoBehaviour {
 
 	private PlayerInput playerInput;
 
+	private bool inventoryMenuActive = false;
+
 	private void Start() {
 		playerInput = Player.Instance.GetComponent<PlayerInput>();
 
@@ -28,7 +30,8 @@ public class InventoryMenu : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
-		if(playerInput.IPressed() || (playerInput.PausePressed() && inventoryMenu.activeInHierarchy)) {
+		if(playerInput.IPressed()) {
+
 			GameStatus.gamePaused = !GameStatus.gamePaused;
 			if(GameStatus.gamePaused) {
 				// Setting timeScale to 0 pauses the game
@@ -73,13 +76,20 @@ public class InventoryMenu : MonoBehaviour {
 		Time.timeScale = 1f;
 	}
 
-	public void VolumeSettingsButtonClick(GameObject button) {
+	public void PapersButtonClick(GameObject button) {
 		button.GetComponent<Image>().sprite = buttonNormalSprite;
 		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
 
 		inventoryMenu.SetActive(false);
-		papersMenuScript.CloseMenu();
-		powerUpMenuScript.CloseMenu();
+		papersMenuScript.OpenMenu();
+	}
+
+	public void PowerUpButtonClick(GameObject button) {
+		button.GetComponent<Image>().sprite = buttonNormalSprite;
+		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
+
+		inventoryMenu.SetActive(false);
+		powerUpMenuScript.OpenMenu();
 	}
 
 	public void BackToInventoryButtonClick() {

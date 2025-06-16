@@ -12,6 +12,7 @@ public class PauseMenu : MonoBehaviour
 	[SerializeField] private GameObject pauseMenu;
 	[SerializeField] private GameObject confirmMenu;
 	[SerializeField] private VolumeMenu volumeMenuScript;
+
 	[SerializeField] private Sprite buttonHoverSprite;
 	[SerializeField] private Sprite buttonNormalSprite;
 
@@ -48,9 +49,9 @@ public class PauseMenu : MonoBehaviour
 	void TogglePauseMenu() {
 		if(screenContainer.activeInHierarchy) {
 			screenContainer.SetActive(false);
-			pauseMenu.SetActive(false);
-			confirmMenu.SetActive(false);
-			volumeMenuScript.CloseVolumeMenu();
+			foreach(Transform child in screenContainer.transform) {
+				child.gameObject.SetActive(false);
+			}
 		}
 		else {
 			screenContainer.SetActive(true);

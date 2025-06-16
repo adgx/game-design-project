@@ -11,20 +11,18 @@ public class CollectablePapers : MonoBehaviour
     private const int N_PAPERS = 7;
     
     private bool[] papers = new bool[N_PAPERS];
-    private int lastPaperCollected = 0;
+    public int lastPaperCollected = 0;
 
-    private string[] messages =
+    public string[] messages =
     {
         "- What happened? Where am I?\n" +
         "- Something with your experiments went horribly wrong, you are trapped here now\n" +
         "- Wait... who are you?\n" +
-        "- Find the next paper and you'll know\n" +
-        "Press E to continue",
+        "- Find the next paper and you'll know",
 
         "- Oh, here you are again. I am yourself... from the past\n" +
         "- What do you mean... from the past?\n" +
-        "- Oh so you don't remember. You wrote these notes, while making all your fancy experiments on magnetism. Those experiments were not so fancy, I guess\n" +
-        "Press E to continue",
+        "- Oh so you don't remember. You wrote these notes, while making all your fancy experiments on magnetism. Those experiments were not so fancy, I guess",
         
         "Paper 3",
         
@@ -42,7 +40,7 @@ public class CollectablePapers : MonoBehaviour
             papers[lastPaperCollected] = true;
             
             player.isFrozen = true;
-            paperText.SetText(messages[lastPaperCollected]);
+            paperText.SetText(messages[lastPaperCollected] + "\nPress E to continue");
             paperTextContainer.SetActive(true);
 
             lastPaperCollected++;
