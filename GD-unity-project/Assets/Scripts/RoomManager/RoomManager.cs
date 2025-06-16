@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using RoomManager.RoomData;
@@ -51,6 +52,10 @@ namespace RoomManager
 
         public event Action OnRunReady;
         public event Action<Vector3Int> PlayerEnteredNewRoom;
+        
+        // Audio management
+        public event Action OnRoomFullyInstantiated;
+
 
         public bool IsPlayerSpawned { get; private set; }
         public Vector3Int CurrentRoomIndex { get; private set; }
@@ -179,8 +184,17 @@ namespace RoomManager
             Room initialRoom = LoadRoomAt(CurrentRoomIndex);
             SpawnPlayerInRoom(initialRoom);
             IsPlayerSpawned = true;
+            
             OnRunReady?.Invoke();
         }
+        
+        // Audio management
+        private IEnumerator NotifyRoomReady()
+        {
+            yield return new WaitForEndOfFrame(); // assicura che la stanza sia completamente visibile
+            OnRoomFullyInstantiated?.Invoke();
+        }
+
 
         private Room LoadRoomAt(Vector3Int gridIndex)
         {
@@ -290,6 +304,10 @@ namespace RoomManager
 
             UnloadCurrentRoom();
             Room newRoom = LoadRoomAt(newRoomIndex);
+            
+            // Audio management
+            StartCoroutine(NotifyRoomReady());
+
             SpawnPlayerInRoom(newRoom, entryDirection);
             NotifyPlayerEnteredNewRoom(newRoomIndex);
         }
