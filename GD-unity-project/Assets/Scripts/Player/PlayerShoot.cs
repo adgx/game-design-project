@@ -12,8 +12,6 @@ public class PlayerShoot : MonoBehaviour
 	private EventInstance distanceAttackLoading;
 	private EventInstance closeAttackLoading;
 	private bool isShieldCoroutineRunning;
-	private bool distanceAttackSoundSuppressed = false;
-	private bool closeAttackSoundSuppressed = false;
 	
 	// Attack1
 	[SerializeField] private float bulletSpeed;
@@ -40,7 +38,6 @@ public class PlayerShoot : MonoBehaviour
 	[SerializeField] private GameObject magneticShieldPrefab;
 	GameObject magneticShield;
 	private bool magneticShieldOpen = false;
-	bool shieldAwait = false;
 	
 	// Health
 	public float maxHealth = 120;
@@ -176,7 +173,7 @@ public class PlayerShoot : MonoBehaviour
 		
 		// Audio management
 		bool playDistanceAttackSound = false;
-		await Task.Delay(150);
+		await Task.Delay(50);
 		
 		if (Input.GetButton("Fire1") && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DistanceAttackPowerUp))
 		{
@@ -259,7 +256,7 @@ public class PlayerShoot : MonoBehaviour
 		
 		// Audio management
 		bool playCloseAttackSound = false;
-		await Task.Delay(150);
+		await Task.Delay(50);
 		
 		if (Input.GetButton("Fire1") && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.CloseAttackPowerUp))
 		{
@@ -548,12 +545,12 @@ public class PlayerShoot : MonoBehaviour
 			SetAttack(2);
 		}
 
-		// I check the stamina every frame since it is possible that it is = 0 when I am not attacking (thanks asyncronous processes)
+		// I check the stamina every frame since it is possible that it is = 0 when I am not attacking (thanks asynchronous processes)
 		// Not that good, but I don't have better ways to manage it
 		if(sphereStamina <= 0) {
 			if(!increasingStamina) {
 				increaseStamina = true;
-				RecoverStamina();
+				_ = RecoverStamina();
 			}
 		}
 	}
@@ -563,26 +560,5 @@ public class PlayerShoot : MonoBehaviour
 	{
 		distanceAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
 		closeAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotateSphere.transform));
-	}
-	
-	// Audio management
-	private async void AutoStopLoadingSound(EventInstance eventInstance)
-	{
-		await Task.Delay(2500);
-
-		PLAYBACK_STATE playbackState;
-		eventInstance.getPlaybackState(out playbackState);
-
-		if (playbackState != PLAYBACK_STATE.STOPPED)
-		{
-			eventInstance.stop(STOP_MODE.ALLOWFADEOUT);
-
-			// Imposta il flag giusto
-			if (eventInstance.handle == distanceAttackLoading.handle)
-				distanceAttackSoundSuppressed = true;
-
-			if (eventInstance.handle == closeAttackLoading.handle)
-				closeAttackSoundSuppressed = true;
-		}
 	}
 }

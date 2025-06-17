@@ -3,8 +3,6 @@ using System;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace ORF
-{
 	public class Player : MonoBehaviour
 	{
         public static Player Instance { get; private set; }
@@ -219,4 +217,3 @@ namespace ORF
 
 		}
 	}
-};

@@ -21,7 +21,7 @@ public class RotateSphere : MonoBehaviour
         Linear
     }
 
-    private Animation animation;
+    private new Animation animation;
 
     void Start() {
         transform.localPosition = player.transform.forward * 1f;
@@ -35,7 +35,7 @@ public class RotateSphere : MonoBehaviour
     }
 
     // Update is called once per frame
-    async void Update()
+    void Update()
     {
         // Needed to avoid the sphere deforming when player collides with enemies
         if (transform.rotation[0] != 0 || transform.rotation[2] != 0) {
