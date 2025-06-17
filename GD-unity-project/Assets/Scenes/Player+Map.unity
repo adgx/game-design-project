@@ -1133,6 +1133,17 @@ MonoBehaviour:
   rotationSpeed: 100
   transitionSpeed: 10
   isRotating: 1
+--- !u!114 &1034838304 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1314497162688995127, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+  m_PrefabInstance: {fileID: 361144709}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1122996922 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2707180735598033718, guid: b359c5325223b4d46af9ec7411c23a21, type: 3}
@@ -1794,8 +1805,6 @@ GameObject:
   - component: {fileID: 1728157140}
   - component: {fileID: 1728157139}
   - component: {fileID: 1728157148}
-  - component: {fileID: 1728157150}
-  - component: {fileID: 1728157149}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -1948,30 +1957,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spherePowerUps: 
   playerPowerUps: 
---- !u!114 &1728157149
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1728157138}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79975468693d44d2c92222e8a3319c26, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1728157150
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1728157138}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79975468693d44d2c92222e8a3319c26, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1728157151
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2169,7 +2154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 096196de0169bd34f891c432c786bce8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timerText: {fileID: 0}
+  timerText: {fileID: 1034838304}
   roomManager: {fileID: 1738691463}
 --- !u!114 &1738691471
 MonoBehaviour:
