@@ -1983,6 +1983,92 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!1001 &294002091
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1728157147}
+    m_Modifications:
+    - target: {fileID: 7310133868445848391, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_Name
+      value: RickHumanoid
+      objectReference: {fileID: 0}
+    - target: {fileID: 7942380145102555645, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7942380145102555645, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7942380145102555645, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7942380145102555645, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7942380145102555645, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7942380145102555645, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7942380145102555645, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7942380145102555645, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7942380145102555645, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7942380145102555645, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7942380145102555645, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7310133868445848391, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 294002094}
+  m_SourcePrefab: {fileID: 100100000, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+--- !u!4 &294002092 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7942380145102555645, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+  m_PrefabInstance: {fileID: 294002091}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &294002093 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7310133868445848391, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+  m_PrefabInstance: {fileID: 294002091}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &294002094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 294002093}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19dd169a45f819e4bad3695a77bfb39d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &296352422
 GameObject:
   m_ObjectHideFlags: 0
@@ -7014,13 +7100,20 @@ MonoBehaviour:
       Data3: 987327118
       Data4: -2100846542
     Path: event:/Ambience/Bathroom/FlushingWater
-  <music>k__BackingField:
+  <gameplayMusic>k__BackingField:
     Guid:
       Data1: -2119342206
       Data2: 1082500063
       Data3: 1155554688
       Data4: -1221304368
     Path: event:/Music/GameplaySoundtrack
+  <mainMenuMusic>k__BackingField:
+    Guid:
+      Data1: 1420891451
+      Data2: 1270281740
+      Data3: -1673499477
+      Data4: -370306340
+    Path: event:/Music/MainMenuSoundtrack
 --- !u!1 &1116585146
 GameObject:
   m_ObjectHideFlags: 0
@@ -10828,10 +10921,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79975468693d44d2c92222e8a3319c26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentVerticalSpeed: 0
-  currentHorizontalSpeed: 0
   maxMovementSpeed: 10
   maxRotationSpeed: 20
+  speedChangeRate: 10
   player: {fileID: 1728157140}
   mainCamera: {fileID: 2143297039}
   isFrozen: 0
@@ -10925,6 +11017,7 @@ Transform:
   m_Children:
   - {fileID: 1469227814}
   - {fileID: 1016344252}
+  - {fileID: 294002092}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1728157148

@@ -204,7 +204,7 @@ public class PlayerShoot : MonoBehaviour
 		bool playDistanceAttackSound = false;
 		await Task.Delay(50);
 		
-		if (Input.GetButton("Fire1") && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DistanceAttackPowerUp))
+		if (Input.GetButton("Fire1") && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp))
 		{
 			playDistanceAttackSound = true;
 		}
@@ -290,7 +290,7 @@ public class PlayerShoot : MonoBehaviour
 		bool playCloseAttackSound = false;
 		await Task.Delay(50);
 		
-		if (Input.GetButton("Fire1") && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.CloseAttackPowerUp))
+		if (Input.GetButton("Fire1") && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp))
 		{
 			playCloseAttackSound = true;
 		}
@@ -516,15 +516,19 @@ public class PlayerShoot : MonoBehaviour
 	}
 
 	void Update() {
-		if(!GameStatus.gamePaused) {
+		if (!GameStatus.gamePaused)
+		{
 			// The attack is shot only on "Fire1" up
-			if(Input.GetButtonDown("Fire1")) {
-				if(!magneticShield && CheckStamina(1) && !attacking) {
+			if (Input.GetButtonDown("Fire1"))
+			{
+				if (!magneticShield && CheckStamina(1) && !attacking)
+				{
 					// Audio management
 					loadingAttack = true;
 					attacking = true;
 
-					switch(attackNumber) {
+					switch (attackNumber)
+					{
 						case 1:
 							LoadDistanceAttack();
 							break;
@@ -540,9 +544,12 @@ public class PlayerShoot : MonoBehaviour
 			// Audio management
 			UpdateSound();
 
-			if(Input.GetButtonUp("Fire1")) {
-				if(!magneticShield && CheckStamina(1) && loadingAttack) {
-					switch(attackNumber) {
+			if (Input.GetButtonUp("Fire1"))
+			{
+				if (!magneticShield && CheckStamina(1) && loadingAttack)
+				{
+					switch (attackNumber)
+					{
 						case 1:
 							FireDistanceAttack();
 							break;
@@ -555,30 +562,40 @@ public class PlayerShoot : MonoBehaviour
 				}
 			}
 
-			if(Input.GetButtonDown("Fire2") && !loadingAttack) {
+			if (Input.GetButtonDown("Fire2") && !loadingAttack)
+			{
 				SpawnMagneticShield();
 			}
 
 			// Selecting a different attack
-			if(Input.GetAxis("Mouse ScrollWheel") > 0 && !loadingAttack) {
+			if (Input.GetAxis("Mouse ScrollWheel") > 0 && !loadingAttack)
+			{
 				ChangeAttack(1);
 			}
-			else if(Input.GetAxis("Mouse ScrollWheel") < 0 && !loadingAttack) {
+			else if (Input.GetAxis("Mouse ScrollWheel") < 0 && !loadingAttack)
+			{
 				ChangeAttack(-1);
 			}
-			if(Input.GetKeyDown(KeyCode.Alpha1) && !loadingAttack) {
+
+			if (Input.GetKeyDown(KeyCode.Alpha1) && !loadingAttack)
+			{
 				SetAttack(1);
 			}
-			if(Input.GetKeyDown(KeyCode.Alpha2) && !loadingAttack) {
+
+			if (Input.GetKeyDown(KeyCode.Alpha2) && !loadingAttack)
+			{
 				SetAttack(2);
 			}
 
-		// I check the stamina every frame since it is possible that it is = 0 when I am not attacking (thanks asynchronous processes)
-		// Not that good, but I don't have better ways to manage it
-		if(sphereStamina <= 0) {
-			if(!increasingStamina) {
-				increaseStamina = true;
-				_ = RecoverStamina();
+			// I check the stamina every frame since it is possible that it is = 0 when I am not attacking (thanks asynchronous processes)
+			// Not that good, but I don't have better ways to manage it
+			if (sphereStamina <= 0)
+			{
+				if (!increasingStamina)
+				{
+					increaseStamina = true;
+					_ = RecoverStamina();
+				}
 			}
 		}
 	}
