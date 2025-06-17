@@ -22,6 +22,8 @@ public class PowerUpMenu : MonoBehaviour {
 		int spherePowerUps = 0;
 		int playerPowerUps = 0;
 		
+		powerUpText.text = "PowerUps obtained will be shown here";
+		
 		foreach ((object pu, int level) in powerUpScript.powerUpsObtained)
 		{
 			object puTemp = pu;
