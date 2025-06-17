@@ -44,7 +44,6 @@ public class PlayerShoot : MonoBehaviour
 	[SerializeField] private GameObject magneticShieldPrefab;
 	GameObject magneticShield;
 	private bool magneticShieldOpen = false;
-	bool shieldAwait = false;
 	
 	// Health
 	public float maxHealth = 120;
@@ -186,22 +185,22 @@ public class PlayerShoot : MonoBehaviour
 
 		attackStamina = 0;
 		int maxStamina = 0;
-		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DistanceAttackPowerUp))
+		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp))
 		{
-			if (powerUp.powerUpsObtained[PowerUp.PowerUpType.DistanceAttackPowerUp] == 1)
+			if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 1)
 			{
 				maxStamina = Math.Min(sphereStamina, 3);
 			}
 			else
 			{
-				if (powerUp.powerUpsObtained[PowerUp.PowerUpType.DistanceAttackPowerUp] == 2)
+				if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 2)
 				{
 					maxStamina = Math.Min(sphereStamina, 5);
 				}
 			}
 		}
 		
-		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DistanceAttackPowerUp) && loadingAttack)
+		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp) && loadingAttack)
 		{
 			attackStamina++;
 
@@ -255,22 +254,22 @@ public class PlayerShoot : MonoBehaviour
 		
 		attackStamina = 0;
 		int maxStamina = 0;
-		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.CloseAttackPowerUp))
+		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp))
 		{
-			if (powerUp.powerUpsObtained[PowerUp.PowerUpType.CloseAttackPowerUp] == 1)
+			if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 1)
 			{
 				maxStamina = Math.Min(sphereStamina, 3);
 			}
 			else
 			{
-				if (powerUp.powerUpsObtained[PowerUp.PowerUpType.CloseAttackPowerUp] == 2)
+				if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 2)
 				{
 					maxStamina = Math.Min(sphereStamina, 5);
 				}
 			}
 		}
 		
-		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.CloseAttackPowerUp) && loadingAttack) {
+		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp) && loadingAttack) {
 			attackStamina++;
 
 			closeAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
@@ -385,8 +384,8 @@ public class PlayerShoot : MonoBehaviour
 			magneticShieldOpen = true;
 			player.isFrozen = true;
 			
-			if(powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DefensePowerUp)) {
-				if(powerUp.powerUpsObtained[PowerUp.PowerUpType.DefensePowerUp] == 1) {
+			if(powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp)) {
+				if(powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1) {
 					shieldTime = 5;
 				}
 				else {
@@ -541,7 +540,7 @@ public class PlayerShoot : MonoBehaviour
 		// Start distance attack loading event if the player is using distance attack
 		if (attackNumber == 1)
 		{
-			if (loadingAttack && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.DistanceAttackPowerUp) && !distanceAttackSoundSuppressed)
+			if (loadingAttack && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp) && !distanceAttackSoundSuppressed)
 			{
 				// Get the playback state for the distance attack loading event 
 				PLAYBACK_STATE distanceAttackPlaybackState;
@@ -561,7 +560,7 @@ public class PlayerShoot : MonoBehaviour
 
 		else
 		{
-			if (loadingAttack && powerUp.powerUpsObtained.ContainsKey(PowerUp.PowerUpType.CloseAttackPowerUp) && !closeAttackSoundSuppressed)
+			if (loadingAttack && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp) && !closeAttackSoundSuppressed)
 			{
 				// Get the playback state for the close attack loading event 
 				PLAYBACK_STATE closeAttackPlaybackState;

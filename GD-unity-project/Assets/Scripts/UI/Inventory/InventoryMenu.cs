@@ -17,8 +17,6 @@ public class InventoryMenu : MonoBehaviour {
 
 	private PlayerInput playerInput;
 
-	private bool inventoryMenuActive = false;
-
 	private void Start() {
 		playerInput = Player.Instance.GetComponent<PlayerInput>();
 

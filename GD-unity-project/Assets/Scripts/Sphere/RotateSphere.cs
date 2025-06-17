@@ -34,7 +34,7 @@ public class RotateSphere : MonoBehaviour
     }
 
     // Update is called once per frame
-    async void Update()
+    void Update()
     {
         // Needed to avoid the sphere deforming when player collides with enemies
         if (transform.rotation[0] != 0 || transform.rotation[2] != 0) {
@@ -72,8 +72,6 @@ public class RotateSphere : MonoBehaviour
                     break;
                 case Animation.Linear:
                     transform.localPosition = Vector3.MoveTowards(transform.localPosition, desiredPosition, transitionSpeed * Time.deltaTime);
-                    break;
-                default:
                     break;
             }
         }

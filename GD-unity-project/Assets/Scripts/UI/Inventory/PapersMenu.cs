@@ -29,7 +29,7 @@ public class PapersMenu : MonoBehaviour {
 			int buttonIndex = i;
 			GameObject button = Instantiate(paperButton);
 
-			button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Paper " + (i + 1).ToString();
+			button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Paper " + (i + 1);
 			button.GetComponent<Button>().onClick.AddListener(() => ShowPaper(buttonIndex));
 
 			button.transform.SetParent(paperScrollContent.transform, true);
@@ -41,7 +41,8 @@ public class PapersMenu : MonoBehaviour {
 			// This await is needed because otherwise the localPosition of the button would be changed in a weird way
 			await Task.Delay(1);
 
-			button.transform.localPosition = new Vector3(141, -61 - (78 * i), 0);
+			button.transform.localPosition = new Vector3(141, -30 - (78 * i), 0);
+			button.transform.localScale = Vector3.one;
 
 			button.SetActive(true);
 		}

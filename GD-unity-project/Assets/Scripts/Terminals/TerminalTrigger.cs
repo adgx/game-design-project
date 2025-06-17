@@ -137,7 +137,7 @@ public class TerminalTrigger : MonoBehaviour
 							// Audio management
 							var obtainedPowerUp = powerUps.playerPowerUps[powerUpIndexPlayer];
 							
-							if (obtainedPowerUp == PowerUp.PowerUpType.HealthBoost)
+							if (obtainedPowerUp == PowerUp.PlayerPowerUpTypes.HealthBoost)
 							{
 								Debug.Log("Using power up: health boost (chips");
 								AudioManager.instance.PlayOneShot(FMODEvents.instance.playerEatChips, player.transform.position);
@@ -146,7 +146,7 @@ public class TerminalTrigger : MonoBehaviour
 								playerShoot.health += 20;
 							}
 							
-							if (obtainedPowerUp == PowerUp.PowerUpType.DamageReduction)
+							if (obtainedPowerUp == PowerUp.PlayerPowerUpTypes.DamageReduction)
 							{
 								Debug.Log("Using power up: damage reduction (energy drink");
 								AudioManager.instance.PlayOneShot(FMODEvents.instance.playerDrink, player.transform.position);
