@@ -74,8 +74,6 @@ public class RotateSphere : MonoBehaviour
                 case Animation.Linear:
                     transform.localPosition = Vector3.MoveTowards(transform.localPosition, desiredPosition, transitionSpeed * Time.deltaTime);
                     break;
-                default:
-                    break;
             }
         }
     }

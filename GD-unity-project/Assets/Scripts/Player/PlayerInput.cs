@@ -41,6 +41,10 @@ public class PlayerInput : MonoBehaviour
 		return Input.GetKeyDown(pauseInput);
 	}
 
+    public bool IPressed() {
+        return Input.GetKeyDown(KeyCode.I);
+    }
+
 	private void GetInput()
     {
         //Get horizontal input

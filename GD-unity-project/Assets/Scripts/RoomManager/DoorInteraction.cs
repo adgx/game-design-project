@@ -1,4 +1,5 @@
 using Helper;
+using TMPro;
 using UnityEngine;
 using Utils;
 
@@ -23,11 +24,34 @@ namespace RoomManager
 
         private RoomManager _roomManager;
         private Room _parentRoom;
+        
+        private GameObject helpTextContainer;
+        private TextMeshProUGUI helpText;
+        
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Player") && helpTextContainer != null && helpText != null)
+            {
+                helpText.text = "Press E to change room";
+                helpTextContainer.SetActive(true);
+            }   
+        }
+        
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.CompareTag("Player") && helpTextContainer != null)
+            {
+                helpTextContainer.SetActive(false);
+            }   
+        }
 
         private void Start()
         {
             _roomManager = RoomManager.Instance;
             _parentRoom = GetComponentInParent<Room>();
+            
+            helpTextContainer = GameObject.Find("CanvasGroup").transform.Find("HUD").Find("HelpTextContainer").gameObject;
+            helpText = helpTextContainer.transform.Find("HelpText").GetComponent<TextMeshProUGUI>();
 
             if (_roomManager == null)
                 Debug.LogError("DoorInteraction: RoomManager.Instance not found!", this);
