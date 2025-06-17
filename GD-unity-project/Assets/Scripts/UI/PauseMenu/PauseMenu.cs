@@ -14,6 +14,7 @@ public class PauseMenu : MonoBehaviour
 	[SerializeField] private VolumeMenu volumeMenuScript;
 
 	[SerializeField] private GameObject firstSelected;
+	[SerializeField] private GameObject noButton;
 
 	[SerializeField] private Sprite buttonHoverSprite;
 	[SerializeField] private Sprite buttonNormalSprite;
@@ -96,7 +97,8 @@ public class PauseMenu : MonoBehaviour
 	public void BackToPauseButtonClick() {
 		volumeMenuScript.CloseVolumeMenu();
 		pauseMenu.SetActive(true);
-		EventSystem.current.SetSelectedGameObject(firstSelected);
+		if (!EventSystem.current.alreadySelecting)
+			EventSystem.current.SetSelectedGameObject(firstSelected);
 	}
 
 	public void QuitGameButtonClick(GameObject button) {
@@ -105,6 +107,7 @@ public class PauseMenu : MonoBehaviour
 
 		pauseMenu.SetActive(false);
 		confirmMenu.SetActive(true);
+		EventSystem.current.SetSelectedGameObject(noButton);
 	}
 
 	public void YesButtonClick(GameObject button) {
@@ -120,13 +123,15 @@ public class PauseMenu : MonoBehaviour
 
 		confirmMenu.SetActive(false);
 		pauseMenu.SetActive(true);
-		EventSystem.current.SetSelectedGameObject(firstSelected);
+		if (!EventSystem.current.alreadySelecting)
+			EventSystem.current.SetSelectedGameObject(firstSelected);
 	}
 
 	public void OnMouseEnter(GameObject button) {
 		button.GetComponent<Image>().sprite = buttonHoverSprite;
 		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.black;
-		EventSystem.current.SetSelectedGameObject(button);
+		if (!EventSystem.current.alreadySelecting)
+			EventSystem.current.SetSelectedGameObject(button);
 	}
 
 	public void OnMouseExit(GameObject button) {

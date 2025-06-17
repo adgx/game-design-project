@@ -57,7 +57,6 @@ public class RickAnim : MonoBehaviour
         Debug.Log("RandomizeIdle called");
         await Task.Delay(10000);
         int idleIndex = Random.Range(0, NUM_IDLE_ANIMATIONS);
-        Debug.Log($"indexIdle: {idleIndex}");
         rickAC.SetInteger("IdleIndex", idleIndex);
         randomIdleIsDone = true;
     }
@@ -67,7 +66,6 @@ public class RickAnim : MonoBehaviour
         Debug.Log("Start waiting");
         yield return new WaitForSeconds(WAIT_IDLE_TIME);
         int idleIndex = Random.Range(0, NUM_IDLE_ANIMATIONS);
-        Debug.Log($"indexIdle: {idleIndex}");
         rickAC.SetInteger(idleIndexHash, idleIndex);
         randomIdleIsDone = true;
     }

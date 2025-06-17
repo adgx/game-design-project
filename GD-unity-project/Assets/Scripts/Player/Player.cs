@@ -70,7 +70,6 @@ using UnityEngine.Assertions;
 
             //currentHorizontalSpeed = new Vector3(player.linearVelocity.x, 0f, player.linearVelocity.z).magnitude;
             currentHorizontalSpeed = speed;
-            Debug.Log($"Player currentHorizontalSpeed: {currentHorizontalSpeed}");
             
 			//acceleration stuff
             float speedOffset = 0.1f;
