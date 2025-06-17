@@ -61,8 +61,6 @@ using UnityEngine.Assertions;
 
 		private void Move()
 		{
-			RaycastHit hit, hitBack;
-
             //this could be integrated in input class
             Vector2 move = new Vector2(input.Horizontal, input.Vertical);
 

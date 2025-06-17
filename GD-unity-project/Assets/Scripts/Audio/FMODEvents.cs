@@ -40,7 +40,8 @@ public class FMODEvents : MonoBehaviour
     [field: SerializeField] public EventReference flushingWCNoise { get; private set;  }
     
     [field: Header("Music")]
-    [field: SerializeField] public EventReference music { get; private set; }
+    [field: SerializeField] public EventReference gameplayMusic { get; private set; }
+    [field: SerializeField] public EventReference mainMenuMusic { get; private set; }
     
     public static FMODEvents instance { get; private set; }
 
