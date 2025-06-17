@@ -11,6 +11,8 @@ public class InventoryMenu : MonoBehaviour {
 	[SerializeField] private GameObject inventoryMenu;
 	[SerializeField] private PapersMenu papersMenuScript;
 	[SerializeField] private PowerUpMenu powerUpMenuScript;
+	
+	[SerializeField] private GameObject firstSelected;
 
 	[SerializeField] private Sprite buttonHoverSprite;
 	[SerializeField] private Sprite buttonNormalSprite;
@@ -55,6 +57,8 @@ public class InventoryMenu : MonoBehaviour {
 		else {
 			screenContainer.SetActive(true);
 			inventoryMenu.SetActive(true);
+			
+			EventSystem.current.SetSelectedGameObject(firstSelected);
 		}
 	}
 
@@ -94,12 +98,16 @@ public class InventoryMenu : MonoBehaviour {
 		papersMenuScript.CloseMenu();
 		powerUpMenuScript.CloseMenu();
 		inventoryMenu.SetActive(true);
+		
+		if (!EventSystem.current.alreadySelecting)
+			EventSystem.current.SetSelectedGameObject(firstSelected);
 	}
 
 	public void OnMouseEnter(GameObject button) {
 		button.GetComponent<Image>().sprite = buttonHoverSprite;
 		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.black;
-		EventSystem.current.SetSelectedGameObject(button);
+		if (!EventSystem.current.alreadySelecting)
+			EventSystem.current.SetSelectedGameObject(button);
 	}
 
 	public void OnMouseExit(GameObject button) {
