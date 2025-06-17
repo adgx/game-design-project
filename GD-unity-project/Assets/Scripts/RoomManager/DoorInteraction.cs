@@ -87,7 +87,10 @@ namespace RoomManager
 
             if (_roomManager.DoesRoomExistAt(nextRoomGridIndex))
             {
-                _roomManager.TraverseRoom(nextRoomGridIndex, _leadsToWorldDirection);
+                FadeManager.Instance.FadeOutIn(() =>
+                {
+                    _roomManager.TraverseRoom(nextRoomGridIndex, _leadsToWorldDirection);
+                });
             }
             else
             {
