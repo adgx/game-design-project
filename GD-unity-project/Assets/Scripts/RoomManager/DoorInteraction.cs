@@ -1,5 +1,7 @@
+using System.Threading.Tasks;
 using Helper;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using Utils;
 
@@ -10,6 +12,8 @@ namespace RoomManager
     /// </summary>
     public class DoorInteraction : MonoBehaviour
     {
+        private GameObject player; 
+        
         [Header("Door Configuration")]
         [Tooltip(
             "The world direction this door leads to (e.g., Vector3Int.forward for North). Inferred from name if left at zero.")]
@@ -101,17 +105,27 @@ namespace RoomManager
 
             if (distanceToPlayer <= _interactionDistance && Input.GetKeyDown(_interactionKey))
             {
-                TryTraverse();
+                _ =TryTraverse();
             }
         }
 
-        private void TryTraverse()
+        private async Task TryTraverse()
         {
             Vector3Int nextRoomGridIndex = _parentRoom.RoomIndex + _leadsToWorldDirection;
 
             if (_roomManager.DoesRoomExistAt(nextRoomGridIndex))
             {
+                // Audio management
+                player = GameObject.FindWithTag("Player");
+                Debug.Log("Door opened");
+                AudioManager.instance.PlayOneShot(FMODEvents.instance.doorOpen, player.transform.position);
+                await Task.Delay(1000); 
+                
                 _roomManager.TraverseRoom(nextRoomGridIndex, _leadsToWorldDirection);
+                
+                // Audio management
+                Debug.Log("Door closed");
+                AudioManager.instance.PlayOneShot(FMODEvents.instance.doorClose, player.transform.position);
             }
             else
             {

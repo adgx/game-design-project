@@ -2,10 +2,15 @@ using UnityEngine;
 
 public class RickAnimationsEvents : MonoBehaviour
 {
+    [SerializeField] private GameObject rotatingSphere;
+    
     //wrapper to lunch shield VFX
     void SpawnMagneticShieldVFX()
     {
         Debug.Log("Event SpawMagneticShieldVFX");
         AnimationManager.Instance.DefenseVFX(transform.position);
+        
+        // Audio management
+        AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldActivation, rotatingSphere.transform.position);
     }
 }
