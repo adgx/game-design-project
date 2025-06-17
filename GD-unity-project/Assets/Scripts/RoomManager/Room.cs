@@ -210,6 +210,19 @@ namespace RoomManager
             return _centralSpawnPoint;
         }
 
+        public void PostInitializeConnections(RoomManager roomManager)
+        {
+            foreach (ConnectorDirection dir in System.Enum.GetValues(typeof(ConnectorDirection)))
+            {
+                Vector3Int neighborIndex = this.RoomIndex + RoomManager.GetVectorFromLocalDirection(dir);
+
+                if (roomManager.DoesRoomExistAt(neighborIndex))
+                {
+                    this.ActivateConnection(dir);
+                }
+            }
+        }
+
         private void OnDrawGizmosSelected()
         {
             float cellWidth = (Application.isPlaying && RoomManager.Instance != null)

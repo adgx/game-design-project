@@ -57,7 +57,7 @@ namespace Utils
 		private bool ventilationIsTriggered = false;
 		
 		private List<StudioEventEmitter> wcEmitters = new List<StudioEventEmitter>();
-		private bool wcIsTrigger = false;
+		private bool wcIsTriggered = false;
 		
 		private MusicLoopIteration iteration = MusicLoopIteration.FIRST_ITERATION;
 		
@@ -81,13 +81,6 @@ namespace Utils
 			}
 		}
 		
-		private void stopEventEmitters(List<StudioEventEmitter> emitters)
-		{
-			foreach(var emitter in emitters) {
-				emitter.Stop();
-			}
-		}
-		
 		private void playEventEmitters(List<StudioEventEmitter> emitters, bool condition, ref bool isTriggered)
 		{
 			if(condition) {
@@ -108,21 +101,18 @@ namespace Utils
 			emitters.Clear();
 		}
 		
-		private void OnDestroy()
-        {
-            if (roomManager)
-                roomManager.OnRunReady -= HandleRunReady;
-        }
-
-        private void Start()
-        {
-            if (roomManager)
-            {
-                roomManager.OnRunReady += HandleRunReady;
-            }
-
-			// Audio management
-			player = GameObject.Find("Player");
+		private void InitializeAmbientEmitters()
+		{
+			resetEventEmitters(alarmEmitters, ref alarmIsTriggered);
+			resetEventEmitters(serverEmitters, ref serverIsTriggered);
+			resetEventEmitters(ledEmitters, ref ledIsTriggered);
+			resetEventEmitters(refrigeratorEmitters, ref refrigeratorIsTriggered);
+			resetEventEmitters(healthVendingMachineEmitters, ref HealthVendingMachineIsTriggered);
+			resetEventEmitters(powerUpVendingMachineEmitters, ref PowerUpVendingMachineIsTriggered);
+			resetEventEmitters(terminalEmitters, ref terminalIsTriggered);
+			resetEventEmitters(elevatorEmitters, ref elevatorIsTriggered);
+			resetEventEmitters(ventilationEmitters, ref ventilationIsTriggered);
+			resetEventEmitters(wcEmitters, ref wcIsTriggered);
 
 			InitializeEventEmittersWithTag("AlarmSpeaker", FMODEvents.instance.alarm, alarmEmitters);
 			InitializeEventEmittersWithTag("Server", FMODEvents.instance.serverNoise, serverEmitters);
@@ -134,6 +124,60 @@ namespace Utils
 			InitializeEventEmittersWithTag("Elevator", FMODEvents.instance.elevatorNoise, elevatorEmitters);
 			InitializeEventEmittersWithTag("Ventilation", FMODEvents.instance.ventilationNoise, ventilationEmitters);
 			InitializeEventEmittersWithTag("FlushingWC", FMODEvents.instance.flushingWCNoise, wcEmitters);
+		}
+		
+		private void StopAllAmbientSounds()
+		{
+			FMOD.Studio.Bus ambientBus = FMODUnity.RuntimeManager.GetBus("bus:/Ambience"); 
+			if (ambientBus.isValid())
+			{
+				// Stop all events routed on this bus and its sub-buses
+				ambientBus.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
+			}
+			else
+			{
+				Debug.LogWarning("FMOD Bus 'bus:/Ambience' not find!");
+			}
+
+			// Resets the Boolean flags as well, since all sounds have been stopped
+			alarmIsTriggered = false;
+			serverIsTriggered = false;
+			ledIsTriggered = false;
+			refrigeratorIsTriggered = false;
+			HealthVendingMachineIsTriggered = false;
+			PowerUpVendingMachineIsTriggered = false;
+			terminalIsTriggered = false;
+			elevatorIsTriggered = false;
+			ventilationIsTriggered = false;
+			wcIsTriggered = false;
+		}
+		
+		private void OnDestroy()
+        {
+            if (roomManager)
+            {
+	            roomManager.OnRunReady -= HandleRunReady;
+	            
+	            // Audio management
+	            roomManager.OnRoomFullyInstantiated -= InitializeAmbientEmitters;
+            }
+        }
+
+        private void Awake()
+        {
+	        if (roomManager)
+	        {
+		        roomManager.OnRunReady += HandleRunReady;
+		        
+		        // Audio management
+		        roomManager.OnRoomFullyInstantiated += InitializeAmbientEmitters;
+	        }
+        }
+
+        private void Start()
+        {
+			// Audio management
+			player = GameObject.FindWithTag("Player");
 		}
 
         private void Update()
@@ -148,19 +192,8 @@ namespace Utils
                 currentTime = 0f;
                 isRunning = false;
 
-                ResetRun();
-
 				// Audio management
-				stopEventEmitters(alarmEmitters);
-				stopEventEmitters(serverEmitters);
-				stopEventEmitters(ledEmitters);
-				stopEventEmitters(refrigeratorEmitters);
-				stopEventEmitters(healthVendingMachineEmitters);
-				stopEventEmitters(powerUpVendingMachineEmitters);
-				stopEventEmitters(terminalEmitters);
-				stopEventEmitters(elevatorEmitters);
-				stopEventEmitters(ventilationEmitters);
-				stopEventEmitters(wcEmitters);
+				StopAllAmbientSounds();
 				
 				switch(iteration) {
 					case MusicLoopIteration.FIRST_ITERATION:
@@ -178,12 +211,16 @@ namespace Utils
 				
 				AudioManager.instance.SetMusicLoopIteration(iteration);
 				StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
+				
+				ResetRun();
+				
+				// Exit the Update for this frame, preventing sounds from being reactivated immediately afterwards.
+				return; 
 			}
 
             UpdateTimerUI();
 
 			// Audio management
-			// TODO: for the activation time for the alarm is 10 seconds, but it will be 60 seconds
 			playEventEmitters(alarmEmitters, !alarmIsTriggered && currentTime <= 10f, ref alarmIsTriggered);
 			playEventEmitters(serverEmitters, !serverIsTriggered, ref serverIsTriggered);
 			playEventEmitters(ledEmitters, !ledIsTriggered, ref ledIsTriggered);
@@ -193,7 +230,7 @@ namespace Utils
 			playEventEmitters(terminalEmitters, !terminalIsTriggered, ref terminalIsTriggered);
 			playEventEmitters(elevatorEmitters, !elevatorIsTriggered, ref elevatorIsTriggered);
 			playEventEmitters(ventilationEmitters, !ventilationIsTriggered, ref ventilationIsTriggered);
-			playEventEmitters(wcEmitters, !wcIsTrigger, ref wcIsTrigger);
+			playEventEmitters(wcEmitters, !wcIsTriggered, ref wcIsTriggered);
 		}
 
         private void HandleRunReady()
@@ -202,27 +239,7 @@ namespace Utils
 	        isRunning = true;
 
 	        // Audio management
-	        resetEventEmitters(alarmEmitters, ref alarmIsTriggered);
-	        resetEventEmitters(serverEmitters, ref serverIsTriggered);
-	        resetEventEmitters(ledEmitters, ref ledIsTriggered);
-	        resetEventEmitters(refrigeratorEmitters, ref refrigeratorIsTriggered);
-	        resetEventEmitters(healthVendingMachineEmitters, ref HealthVendingMachineIsTriggered);
-	        resetEventEmitters(powerUpVendingMachineEmitters, ref PowerUpVendingMachineIsTriggered);
-	        resetEventEmitters(terminalEmitters, ref terminalIsTriggered);
-	        resetEventEmitters(elevatorEmitters, ref elevatorIsTriggered);
-	        resetEventEmitters(ventilationEmitters, ref ventilationIsTriggered);
-	        resetEventEmitters(wcEmitters, ref wcIsTrigger);
-
-	        InitializeEventEmittersWithTag("AlarmSpeaker", FMODEvents.instance.alarm, alarmEmitters);
-	        InitializeEventEmittersWithTag("Server", FMODEvents.instance.serverNoise, serverEmitters);
-	        InitializeEventEmittersWithTag("FlickeringLED", FMODEvents.instance.flickeringLED, ledEmitters);
-	        InitializeEventEmittersWithTag("Refrigerator", FMODEvents.instance.refrigeratorNoise, refrigeratorEmitters);
-	        InitializeEventEmittersWithTag("HealthSnackDistributor", FMODEvents.instance.vendingMachineNoise, healthVendingMachineEmitters);
-	        InitializeEventEmittersWithTag("PowerUpSnackDistributor", FMODEvents.instance.vendingMachineNoise, powerUpVendingMachineEmitters);
-	        InitializeEventEmittersWithTag("SphereTerminal", FMODEvents.instance.terminalNoise, terminalEmitters);
-	        InitializeEventEmittersWithTag("Elevator", FMODEvents.instance.elevatorNoise, elevatorEmitters);
-	        InitializeEventEmittersWithTag("Ventilation", FMODEvents.instance.ventilationNoise, ventilationEmitters);
-	        InitializeEventEmittersWithTag("FlushingWC", FMODEvents.instance.flushingWCNoise, wcEmitters);
+	        InitializeAmbientEmitters();
 	        
 	        AudioManager.instance.SetMusicLoopIteration(iteration);
         }

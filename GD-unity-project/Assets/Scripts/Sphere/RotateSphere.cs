@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Serialization;
+using ORF;
 
 public class RotateSphere : MonoBehaviour
 {
@@ -20,7 +21,7 @@ public class RotateSphere : MonoBehaviour
         Linear
     }
 
-    private Animation animation;
+    private new Animation animation;
 
     void Start() {
         transform.localPosition = player.transform.forward * 1f;

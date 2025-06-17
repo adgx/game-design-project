@@ -111,11 +111,7 @@ namespace RoomManager
 
             if (_roomManager.DoesRoomExistAt(nextRoomGridIndex))
             {
-                FadeManager.Instance.FadeOutIn(() =>
-                {
-                    _roomManager.SpawnPlayerInRoom(nextRoomGridIndex, _leadsToWorldDirection);
-                    _roomManager.NotifyPlayerEnteredNewRoom(nextRoomGridIndex);
-                });
+                _roomManager.TraverseRoom(nextRoomGridIndex, _leadsToWorldDirection);
             }
             else
             {

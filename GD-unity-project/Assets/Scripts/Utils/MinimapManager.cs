@@ -34,7 +34,7 @@ namespace Utils
         private RoomManager.RoomManager _roomManager;
         private Vector3Int? _currentPlayerMinimapIndex;
 
-        private void Start()
+        private void Awake()
         {
             _roomManager = RoomManager.RoomManager.Instance;
             if (_roomManager == null)
