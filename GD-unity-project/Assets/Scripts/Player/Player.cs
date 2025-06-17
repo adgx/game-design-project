@@ -49,6 +49,12 @@ using UnityEngine.Assertions;
 
 		public void Awake()
 		{
+			if (Instance != null)
+			{
+				Debug.LogError("Found more than one Player in the scene.");
+			}
+			Instance = this;
+			
 			input = GetComponent<PlayerInput>();
 			player.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 		}
