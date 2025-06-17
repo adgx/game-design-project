@@ -13,6 +13,8 @@ public class PauseMenu : MonoBehaviour
 	[SerializeField] private GameObject confirmMenu;
 	[SerializeField] private VolumeMenu volumeMenuScript;
 
+	[SerializeField] private GameObject firstSelected;
+
 	[SerializeField] private Sprite buttonHoverSprite;
 	[SerializeField] private Sprite buttonNormalSprite;
 
@@ -56,6 +58,7 @@ public class PauseMenu : MonoBehaviour
 		else {
 			screenContainer.SetActive(true);
 			pauseMenu.SetActive(true);
+			EventSystem.current.SetSelectedGameObject(firstSelected);
 		}
 	}
 
@@ -93,6 +96,7 @@ public class PauseMenu : MonoBehaviour
 	public void BackToPauseButtonClick() {
 		volumeMenuScript.CloseVolumeMenu();
 		pauseMenu.SetActive(true);
+		EventSystem.current.SetSelectedGameObject(firstSelected);
 	}
 
 	public void QuitGameButtonClick(GameObject button) {
@@ -116,6 +120,7 @@ public class PauseMenu : MonoBehaviour
 
 		confirmMenu.SetActive(false);
 		pauseMenu.SetActive(true);
+		EventSystem.current.SetSelectedGameObject(firstSelected);
 	}
 
 	public void OnMouseEnter(GameObject button) {
