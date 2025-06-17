@@ -92,6 +92,7 @@ namespace RoomManager
 
             CacheRoomDataByType();
 
+            //find the player 
             if (_currentPlayer == null)
             {
                 _currentPlayer = GameObject.FindWithTag("Player");
@@ -142,6 +143,7 @@ namespace RoomManager
             GenerateLayout();
         }
 
+        //to see
         private void GenerateLayout()
         {
             _roomGridData = new RoomData.RoomData[_gridSizeX, GridSizeY, _gridSizeZ];
@@ -182,6 +184,7 @@ namespace RoomManager
             _isLayoutGenerated = true;
             CurrentRoomIndex = startGridIndex;
             Room initialRoom = LoadRoomAt(CurrentRoomIndex);
+            //Spawn the player for the first time
             SpawnPlayerInRoom(initialRoom);
             IsPlayerSpawned = true;
             
