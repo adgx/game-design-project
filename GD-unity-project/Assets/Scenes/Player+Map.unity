@@ -2200,9 +2200,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _availableEnemyData:
-  - {fileID: 11400000, guid: d628d10d2db4548ec94973aa4b57d7ef, type: 2}
-  - {fileID: 11400000, guid: b39eedc323f9a44b789682e1655c6221, type: 2}
-  - {fileID: 11400000, guid: 8158b0295563c43c7aa696777996f264, type: 2}
+  - {fileID: 0}
   _minEnemiesPerRoom: 1
   _maxEnemiesPerRoom: 5
 --- !u!114 &1738691473
@@ -2308,6 +2306,46 @@ PrefabInstance:
     - target: {fileID: 2790420675413420707, guid: 3be3347198f4941448250e9e3c013016, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5147317051003203798, guid: 3be3347198f4941448250e9e3c013016, type: 3}
+      propertyPath: <gameplayMusic>k__BackingField.Path
+      value: event:/Music/GameplaySoundtrack
+      objectReference: {fileID: 0}
+    - target: {fileID: 5147317051003203798, guid: 3be3347198f4941448250e9e3c013016, type: 3}
+      propertyPath: <mainMenuMusic>k__BackingField.Path
+      value: event:/Music/MainMenuSoundtrack
+      objectReference: {fileID: 0}
+    - target: {fileID: 5147317051003203798, guid: 3be3347198f4941448250e9e3c013016, type: 3}
+      propertyPath: <gameplayMusic>k__BackingField.Guid.Data1
+      value: -2119342206
+      objectReference: {fileID: 0}
+    - target: {fileID: 5147317051003203798, guid: 3be3347198f4941448250e9e3c013016, type: 3}
+      propertyPath: <gameplayMusic>k__BackingField.Guid.Data2
+      value: 1082500063
+      objectReference: {fileID: 0}
+    - target: {fileID: 5147317051003203798, guid: 3be3347198f4941448250e9e3c013016, type: 3}
+      propertyPath: <gameplayMusic>k__BackingField.Guid.Data3
+      value: 1155554688
+      objectReference: {fileID: 0}
+    - target: {fileID: 5147317051003203798, guid: 3be3347198f4941448250e9e3c013016, type: 3}
+      propertyPath: <gameplayMusic>k__BackingField.Guid.Data4
+      value: -1221304368
+      objectReference: {fileID: 0}
+    - target: {fileID: 5147317051003203798, guid: 3be3347198f4941448250e9e3c013016, type: 3}
+      propertyPath: <mainMenuMusic>k__BackingField.Guid.Data1
+      value: 1420891451
+      objectReference: {fileID: 0}
+    - target: {fileID: 5147317051003203798, guid: 3be3347198f4941448250e9e3c013016, type: 3}
+      propertyPath: <mainMenuMusic>k__BackingField.Guid.Data2
+      value: 1270281740
+      objectReference: {fileID: 0}
+    - target: {fileID: 5147317051003203798, guid: 3be3347198f4941448250e9e3c013016, type: 3}
+      propertyPath: <mainMenuMusic>k__BackingField.Guid.Data3
+      value: -1673499477
+      objectReference: {fileID: 0}
+    - target: {fileID: 5147317051003203798, guid: 3be3347198f4941448250e9e3c013016, type: 3}
+      propertyPath: <mainMenuMusic>k__BackingField.Guid.Data4
+      value: -370306340
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
