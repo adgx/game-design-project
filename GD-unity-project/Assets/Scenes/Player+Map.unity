@@ -2966,8 +2966,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _availableRooms:
-  - {fileID: 11400000, guid: 649cc90d5260341558b2b3e1c6e993e6, type: 2}
   - {fileID: 11400000, guid: 31ef2464399d944218fa84404292c004, type: 2}
+  - {fileID: 11400000, guid: c73775d08b746476da8663f3ab5c1bd0, type: 2}
+  - {fileID: 11400000, guid: 7812fa5919ace45669b148a1c0556990, type: 2}
+  - {fileID: 11400000, guid: 649cc90d5260341558b2b3e1c6e993e6, type: 2}
   _initialRoomData: {fileID: 11400000, guid: 6eb0b70f4a33646a5a0c387fa73d7366, type: 2}
   _maxRooms: 15
   _minRooms: 10
@@ -3099,6 +3101,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _availableEnemyData:
   - {fileID: 11400000, guid: d628d10d2db4548ec94973aa4b57d7ef, type: 2}
+  - {fileID: 11400000, guid: b39eedc323f9a44b789682e1655c6221, type: 2}
+  - {fileID: 11400000, guid: 8158b0295563c43c7aa696777996f264, type: 2}
   _minEnemiesPerRoom: 1
   _maxEnemiesPerRoom: 5
 --- !u!114 &1738691473
@@ -3113,12 +3117,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3adbe536f352046cd91eb3d44707224f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minimapIconPrefab: {fileID: 6662264308540135868, guid: 3d287f8a3d8b2574ab0db1630cf34f83, type: 3}
   _minimapGridParent: {fileID: 1356130334}
-  _emptyCellColor: {r: 0, g: 0, b: 0, a: 0}
-  _undiscoveredRoomColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
-  _visitedRoomColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
-  _currentPlayerColor: {r: 0, g: 1, b: 0, a: 1}
+  _minimapCellPrefab: {fileID: 623424356459799459, guid: d691d07940a564673a44f58bb4e56258, type: 3}
+  _emptyCellColor: {r: 0.34509805, g: 0.34509805, b: 0.34509805, a: 0}
+  _currentRoomSprite: {fileID: 21300000, guid: d1108ee16b71c48598fb791a6f392fa8, type: 3}
+  _visitedRoomSprite: {fileID: 21300000, guid: 0e57c41e96763469cbebcd0fa9a76f82, type: 3}
+  _unvisitedRoomSprite: {fileID: 21300000, guid: 646ba59bcb5474ee68019d25ae6e03fe, type: 3}
 --- !u!1 &1775261780 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4991121351296382175, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
