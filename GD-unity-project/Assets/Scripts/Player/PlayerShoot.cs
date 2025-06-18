@@ -70,10 +70,10 @@ public class PlayerShoot : MonoBehaviour
 		player = GetComponent<Player>();
 		
 		// Audio management
-		distanceAttackLoading = AudioManager.instance.CreateInstance(FMODEvents.instance.distanceAttackLoad);
+		distanceAttackLoading = AudioManager.instance.CreateInstance(FMODEvents.instance.playerDistanceAttackLoad);
 		distanceAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
 		
-		closeAttackLoading = AudioManager.instance.CreateInstance(FMODEvents.instance.closeAttackLoad);
+		closeAttackLoading = AudioManager.instance.CreateInstance(FMODEvents.instance.playerCloseAttackLoad);
 		closeAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
 	}
 	
@@ -266,7 +266,7 @@ public class PlayerShoot : MonoBehaviour
 		}
 		
 		// Audio management
-		AudioManager.instance.PlayOneShot(FMODEvents.instance.distanceAttackShoot, rotatingSphere.transform.position);
+		AudioManager.instance.PlayOneShot(FMODEvents.instance.playerDistanceAttackShoot, rotatingSphere.transform.position);
 
 		distanceAttackLoadingBar.fillAmount = 0;
 
@@ -338,7 +338,7 @@ public class PlayerShoot : MonoBehaviour
 		DecreaseStamina(attackStamina);
 		
 		// Audio management
-		AudioManager.instance.PlayOneShot(FMODEvents.instance.closeAttackShoot, rotatingSphere.transform.position);
+		AudioManager.instance.PlayOneShot(FMODEvents.instance.playerCloseAttackShoot, rotatingSphere.transform.position);
 
 		closeAttackLoadingBar.fillAmount = 0;
 
