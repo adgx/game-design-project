@@ -81,6 +81,8 @@ namespace Enemy.EnemyData.EnemyMovement
 
         void Patroling()
         {
+            if (agent == null || !agent.isOnNavMesh) return;
+            
             if (!walkPointSet)
                 SearchWalkPoint();
 
@@ -96,6 +98,8 @@ namespace Enemy.EnemyData.EnemyMovement
 
         void ChasePlayer()
         {
+            if (agent == null || !agent.isOnNavMesh) return;
+            
             if (roomManager.IsNavMeshBaked)
                 agent.SetDestination(playerTransform.position);
         }
@@ -107,6 +111,8 @@ namespace Enemy.EnemyData.EnemyMovement
 
         void RemoteAttackPlayer()
         {
+            if (agent == null || !agent.isOnNavMesh) return;
+            
             //Make sure enemy doesn't move
             agent.SetDestination(transform.position);
 
@@ -130,6 +136,8 @@ namespace Enemy.EnemyData.EnemyMovement
 
         void CloseAttackPlayer()
         {
+            if (agent == null || !agent.isOnNavMesh) return;
+            
             //Make sure enemy doesn't move
             agent.SetDestination(transform.position);
 

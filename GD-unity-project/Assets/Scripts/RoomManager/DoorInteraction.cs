@@ -1,9 +1,7 @@
 using System.Threading.Tasks;
 using Helper;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using Utils;
 
 namespace RoomManager
 {
@@ -121,11 +119,13 @@ namespace RoomManager
                 AudioManager.instance.PlayOneShot(FMODEvents.instance.doorOpen, player.transform.position);
                 await Task.Delay(1000); 
                 
-                _roomManager.TraverseRoom(nextRoomGridIndex, _leadsToWorldDirection);
-                
                 // Audio management
                 Debug.Log("Door closed");
-                AudioManager.instance.PlayOneShot(FMODEvents.instance.doorClose, player.transform.position);
+                FadeManager.Instance.FadeOutIn(() =>
+                {
+                    _roomManager.TraverseRoom(nextRoomGridIndex, _leadsToWorldDirection);
+                    AudioManager.instance.PlayOneShot(FMODEvents.instance.doorClose, player.transform.position);
+                });
             }
             else
             {
