@@ -1,0 +1,135 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1779177418643411986
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 869503448333741573}
+  - component: {fileID: 1658623078756845969}
+  - component: {fileID: 415173684934062143}
+  - component: {fileID: 8774698924411829510}
+  - component: {fileID: 7076102304092396991}
+  m_Layer: 0
+  m_Name: PauseManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &869503448333741573
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779177418643411986}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1658623078756845969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779177418643411986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a21933715018ad49af5dcb1827a7449, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screenContainer: {fileID: 0}
+  pauseMenu: {fileID: 0}
+  confirmMenu: {fileID: 0}
+  volumeMenuScript: {fileID: 0}
+  firstSelected: {fileID: 0}
+  noButton: {fileID: 0}
+  buttonHoverSprite: {fileID: 21300000, guid: 2074e63cc8abfd548bd4a5d8ea9fa703, type: 3}
+  buttonNormalSprite: {fileID: 21300000, guid: 0e87d182b6961994b96d4fe5eeec8cf4, type: 3}
+--- !u!114 &415173684934062143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779177418643411986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93370edb524f48f48909243f4bb23b46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  screenContainer: {fileID: 0}
+  inventoryMenu: {fileID: 0}
+  papersMenuScript: {fileID: 7076102304092396991}
+  powerUpMenuScript: {fileID: 8774698924411829510}
+  firstSelected: {fileID: 0}
+  buttonHoverSprite: {fileID: 21300000, guid: 2074e63cc8abfd548bd4a5d8ea9fa703, type: 3}
+  buttonNormalSprite: {fileID: 21300000, guid: 0e87d182b6961994b96d4fe5eeec8cf4, type: 3}
+--- !u!114 &8774698924411829510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779177418643411986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a634a1147e57b5545954c3230ffd722d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  powerUpMenu: {fileID: 0}
+  spherePowerUpsRow: {fileID: 0}
+  playerPowerUpsRow: {fileID: 0}
+  powerUpIcons:
+  - iconId: CloseAttack1
+    icon: {fileID: 21300000, guid: 49b0af1e00ffb4b4cab72fec2f8426fb, type: 3}
+  - iconId: CloseAttack2
+    icon: {fileID: 21300000, guid: 2b39db847a6154fa3a35c2f7c0d8b86a, type: 3}
+  - iconId: DamageReduction1
+    icon: {fileID: 21300000, guid: 107790e9ce8f84a6797b90f1c626f871, type: 3}
+  - iconId: DamageReduction2
+    icon: {fileID: 21300000, guid: 7e9690aa34f5142ec87c6a4cb13ae539, type: 3}
+  - iconId: DamageReduction3
+    icon: {fileID: 21300000, guid: 9c82beaa9ece243f492f479c7c070c81, type: 3}
+  - iconId: Defense1
+    icon: {fileID: 21300000, guid: 10cb98131712a4edc975cea307ca0209, type: 3}
+  - iconId: Defense2
+    icon: {fileID: 21300000, guid: 08376996d3d23475481e8189aeba709a, type: 3}
+  - iconId: DistanceAttack1
+    icon: {fileID: 21300000, guid: 9a20893fe6c4b488385faee60ef800c6, type: 3}
+  - iconId: DistanceAttack2
+    icon: {fileID: 21300000, guid: a7bd74f1613364b9bb11da2b714f5eac, type: 3}
+  - iconId: HealthBoost1
+    icon: {fileID: 21300000, guid: 56dfa29c1990b400a8a957b0b79cab7c, type: 3}
+  - iconId: HealthBoost2
+    icon: {fileID: 21300000, guid: 10fce6415432f42dbbcff9ef7b217154, type: 3}
+  - iconId: HealthBoost3
+    icon: {fileID: 21300000, guid: 0e80ebc4107194d75a857a2f95849308, type: 3}
+  powerUpScript: {fileID: 0}
+  powerUpText: {fileID: 0}
+--- !u!114 &7076102304092396991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779177418643411986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85c3bd038850e8946988af8a5987fc5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  papersMenu: {fileID: 0}
+  paperText: {fileID: 0}
+  paperScrollContent: {fileID: 0}
+  paperButton: {fileID: 0}
+  collectablePapers: {fileID: 0}
