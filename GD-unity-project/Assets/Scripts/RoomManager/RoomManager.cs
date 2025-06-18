@@ -154,7 +154,8 @@ namespace RoomManager
             _roomCount = 0;
             _isLayoutGenerated = false;
             IsPlayerSpawned = false;
-            fadeManagerLoadingScreen.Show();
+            if (GameStatus.gameStarted)
+                fadeManagerLoadingScreen.Show();
 
             if (_roomDataByType.Count == 0 || _roomDataByType.Values.All(list => list.Count == 0))
             {
