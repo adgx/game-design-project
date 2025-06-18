@@ -1955,7 +1955,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5500006164650967211}
   m_Layer: 0
-  m_Name: SpawnPoint_0
+  m_Name: EnemySpawnPoint_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7733,7 +7733,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7001447854533772762}
   m_Layer: 0
-  m_Name: SpawnPoint_2
+  m_Name: EnemySpawnPoint_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18225,7 +18225,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1722847613102115124}
   m_Layer: 0
-  m_Name: SpawnPoint_3
+  m_Name: EnemySpawnPoint_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21502,7 +21502,11 @@ MonoBehaviour:
     _spawnPoint: {fileID: 5010666330337620128}
     IsConnected: 0
   _centralSpawnPoint: {fileID: 7338474625835606480}
-  _enemySpawnPoints: []
+  _enemySpawnPoints:
+  - {fileID: 5500006164650967211}
+  - {fileID: 362456367002567606}
+  - {fileID: 7001447854533772762}
+  - {fileID: 1722847613102115124}
 --- !u!1 &8017773276065395897
 GameObject:
   m_ObjectHideFlags: 0
@@ -23163,7 +23167,7 @@ GameObject:
   m_Component:
   - component: {fileID: 362456367002567606}
   m_Layer: 0
-  m_Name: SpawnPoint_1
+  m_Name: EnemySpawnPoint_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

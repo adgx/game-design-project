@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3453595846791868376}
   - component: {fileID: 8393864829521265333}
   - component: {fileID: 4788783228724211328}
-  - component: {fileID: 7343022016404182717}
+  - component: {fileID: 1781483260187718750}
   m_Layer: 7
   m_Name: EnemyMaynard
   m_TagString: EnemyMaynard
@@ -160,7 +160,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &7343022016404182717
+--- !u!114 &1781483260187718750
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -169,23 +169,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 859019898052101284}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e187917276f420f4d94a18540d3e119a, type: 3}
+  m_Script: {fileID: 11500000, guid: c8509fc1b469ced4ab0a8d8a5d1c3291, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  agent: {fileID: 8393864829521265333}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 8
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 64
-  health: 120
-  walkPoint: {x: 0, y: 0, z: 0}
-  walkPointRange: 5
-  timeBetweenAttacks: 2
-  bulletPrefab: {fileID: 3780818778376199547, guid: e2193c01f07e84362a8e9f21a5774953, type: 3}
-  sightRange: 20
-  remoteAttackRange: 12
-  closeAttackRange: 1
-  playerInSightRange: 0
-  playerInRemoteAttackRange: 0
-  playerInCloseAttackRange: 0
