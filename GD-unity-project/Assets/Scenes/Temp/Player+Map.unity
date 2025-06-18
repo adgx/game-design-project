@@ -298,6 +298,7 @@ MonoBehaviour:
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 64
+  damageMultiplier: 0.8
 --- !u!1 &30417867
 GameObject:
   m_ObjectHideFlags: 0
@@ -955,6 +956,30 @@ MonoBehaviour:
   paperText: {fileID: 106625138}
   paperTextContainer: {fileID: 257793580}
   player: {fileID: 1728157143}
+  lastPaperCollected: 0
+  messages:
+  - '- What happened? Where am I?
+
+    - Something with your experiments went horribly
+    wrong, you are trapped here now
+
+    - Wait... who are you?
+
+    - Find the next
+    paper and you''ll know'
+  - '- Oh, here you are again. I am yourself... from the past
+
+    - What do you
+    mean... from the past?
+
+    - Oh so you don''t remember. You wrote these notes,
+    while making all your fancy experiments on magnetism. Those experiments were
+    not so fancy, I guess'
+  - Paper 3
+  - Paper 4
+  - Paper 5
+  - Paper 6
+  - Paper 7
 --- !u!224 &375894563 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5918728198229272863, guid: 83bb9d48145747f4784acf553b1e9ede, type: 3}
@@ -1391,7 +1416,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e6f25591b3025444a326eb5ed112847, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menu: {fileID: 929684648}
+  volumeMenu: {fileID: 0}
   firstSelected: {fileID: 1052968220}
 --- !u!1001 &662606670
 PrefabInstance:
@@ -2987,6 +3012,7 @@ MonoBehaviour:
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 64
+  damageMultiplier: 1
 --- !u!1 &1656369792
 GameObject:
   m_ObjectHideFlags: 0
@@ -3472,7 +3498,10 @@ MonoBehaviour:
   bulletSpawnTransform: {fileID: 1469227814}
   bulletPrefab: {fileID: 3780818778376199547, guid: e2193c01f07e84362a8e9f21a5774953, type: 3}
   attackAreaPrefab: {fileID: 1847315181234349731, guid: 3902c314b9067494cadeb754c1359a24, type: 3}
-  selectedAttackText: {fileID: 1698784975}
+  distanceAttackImage: {fileID: 0}
+  closeAttackImage: {fileID: 0}
+  distanceAttackLoadingBar: {fileID: 0}
+  closeAttackLoadingBar: {fileID: 0}
   magneticShieldPrefab: {fileID: 5441482729280434030, guid: fd6f85ea9b1b66c4991ed3bcfbfa43d7, type: 3}
   maxHealth: 120
   health: 120
@@ -3669,6 +3698,7 @@ MonoBehaviour:
   _minRooms: 10
   _skipConnectionChance: 0.35
   _currentPlayer: {fileID: 0}
+  fadeManagerLoadingScreen: {fileID: 0}
   _gridSizeX: 14
   _gridSizeZ: 14
 --- !u!4 &1738691464
@@ -3763,6 +3793,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timerText: {fileID: 1596319027}
+  timerOutlineImage: {fileID: 0}
+  timerOutlineSpriteRed: {fileID: 0}
+  timerOutlineSpriteNormal: {fileID: 0}
   roomManager: {fileID: 1738691463}
 --- !u!114 &1738691471
 MonoBehaviour:
@@ -3974,6 +4007,7 @@ MonoBehaviour:
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 64
+  damageMultiplier: 1.2
 --- !u!1 &1868746625
 GameObject:
   m_ObjectHideFlags: 0
@@ -4107,7 +4141,7 @@ MonoBehaviour:
       Data2: 1320623170
       Data3: 292728493
       Data4: -596124364
-    Path: event:/SFX/Player/Walk/Footsteps
+    Path: event:/SFX/Player/Run/Footsteps
   <playerWakeUp>k__BackingField:
     Guid:
       Data1: 776900939
@@ -4325,13 +4359,20 @@ MonoBehaviour:
       Data3: 0
       Data4: 0
     Path: 
-  <music>k__BackingField:
+  <gameplayMusic>k__BackingField:
     Guid:
-      Data1: -2119342206
-      Data2: 1082500063
-      Data3: 1155554688
-      Data4: -1221304368
-    Path: event:/Music/GameplaySoundtrack
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <mainMenuMusic>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
 --- !u!1 &2143297035
 GameObject:
   m_ObjectHideFlags: 0
