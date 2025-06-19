@@ -198,7 +198,7 @@ public class PlayerShoot : MonoBehaviour
 	async void LoadDistanceAttack() {
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
-		rotateSphere.positionSphere(new Vector3(0, 0, 1), RotateSphere.Animation.RotateAround);
+		rotateSphere.positionSphere(new Vector3(0, 0.5f, 0.7f), RotateSphere.Animation.RotateAround);
 		
 		// Audio management
 		bool playDistanceAttackSound = false;
@@ -284,7 +284,7 @@ public class PlayerShoot : MonoBehaviour
 	async void LoadCloseAttack() {
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
-		rotateSphere.positionSphere(new Vector3(0, 1, 0), RotateSphere.Animation.Linear);
+		rotateSphere.positionSphere(new Vector3(0, 1.3f, 0), RotateSphere.Animation.Linear);
 		
 		// Audio management
 		bool playCloseAttackSound = false;
@@ -362,7 +362,7 @@ public class PlayerShoot : MonoBehaviour
 		Destroy(attackArea);
 		player.isFrozen = false;
 
-		rotateSphere.positionSphere(new Vector3(1, 0, 0), RotateSphere.Animation.Linear);
+		rotateSphere.positionSphere(new Vector3(0.7f, 0.5f, 0), RotateSphere.Animation.Linear);
 		await Task.Delay(300);
 		rotateSphere.isRotating = true;
 
@@ -399,7 +399,7 @@ public class PlayerShoot : MonoBehaviour
 		return false; // Timeout scaduto
 	}
 	
-		async Task ManageShieldTime(int shieldTime)
+	async Task ManageShieldTime(int shieldTime)
 	{
 		bool shieldClosed = await WaitUntilOrTimeout(() => !magneticShieldOpen, shieldTime * 1000);
 		if (magneticShield != null && !shieldClosed)
@@ -407,9 +407,9 @@ public class PlayerShoot : MonoBehaviour
 			// Audio management
 			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.shieldDeactivation, rotatingSphere.transform.position);
 			Destroy(magneticShield);
-			player.isFrozen = false;
 			await Task.Delay(500);
 		}
+		player.isFrozen = false;
 		magneticShieldOpen = false;
 	}
 
@@ -454,9 +454,9 @@ public class PlayerShoot : MonoBehaviour
 				// Audio management
 				GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.shieldDeactivation, rotatingSphere.transform.position);
 				Destroy(magneticShield);
-				player.isFrozen = false;
 				await Task.Delay(500);
 			}
+			player.isFrozen = false;
 			magneticShieldOpen = false;
 		}
 		
