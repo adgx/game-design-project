@@ -84,7 +84,7 @@ public class TerminalTrigger : MonoBehaviour
 					// Give a random power up for the Sphere
 					if(powerUps.spherePowerUps.Count > 0) {
 						// Audio management
-						rotateSphere.positionSphere(new Vector3(1, 0, 0), RotateSphere.Animation.Linear);
+						rotateSphere.positionSphere(new Vector3(0.7f, 0.5f, 0), RotateSphere.Animation.Linear);
 						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.terminalInteraction, this.transform.position);
 
 						busy = true;
@@ -168,7 +168,7 @@ public class TerminalTrigger : MonoBehaviour
 							Debug.Log("Getting power up: machine activation");
 							// Audio management
 							GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineActivation, this.transform.position);
-							rotateSphere.positionSphere(new Vector3(1, 0, 0), RotateSphere.Animation.Linear);
+							rotateSphere.positionSphere(new Vector3(0.7f, 0.5f, 0), RotateSphere.Animation.Linear);
 							
 							busy = true;
 							await Task.Delay(700);
@@ -211,7 +211,7 @@ public class TerminalTrigger : MonoBehaviour
 						Debug.Log("Recovering health: machine activation");
 						// Audio management
 						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineActivation, this.transform.position);
-						rotateSphere.positionSphere(new Vector3(1, 0, 0), RotateSphere.Animation.Linear);
+						rotateSphere.positionSphere(new Vector3(0.7f, 0.5f, 0), RotateSphere.Animation.Linear);
 
 						busy = true;
 						await Task.Delay(700);

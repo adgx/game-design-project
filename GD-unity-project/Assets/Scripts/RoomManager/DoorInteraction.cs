@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Helper;
+using PlayerInteraction;
 using TMPro;
 using UnityEngine;
 
@@ -8,52 +9,38 @@ namespace RoomManager
     /// <summary>
     /// Handles player interaction with a door to traverse to an adjacent room.
     /// </summary>
-    public class DoorInteraction : MonoBehaviour
+    public class DoorInteraction : MonoBehaviour, IInteractable
     {
-        private GameObject player; 
-        
+        /// <summary>
+        /// The prompt text shown to the player when they are near this door.
+        /// </summary>
+        public string InteractionPrompt => $"Press {_interactionKey} to use door";
+
+        private GameObject player;
+
         [Header("Door Configuration")]
         [Tooltip(
             "The world direction this door leads to (e.g., Vector3Int.forward for North). Inferred from name if left at zero.")]
         [SerializeField]
         private Vector3Int _leadsToWorldDirection;
 
-        [Tooltip("The distance within which the player can interact with this door.")] [SerializeField]
-        private float _interactionDistance = 6f;
-
         [Tooltip("The key the player must press to use the door.")] [SerializeField]
         private KeyCode _interactionKey = KeyCode.E;
 
         private RoomManager _roomManager;
         private Room _parentRoom;
-        
+        private bool _isTraversing = false;
+
         private GameObject helpTextContainer;
         private TextMeshProUGUI helpText;
-        
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.CompareTag("Player") && helpTextContainer != null && helpText != null)
-            {
-                helpText.text = "Press E to change room";
-                helpTextContainer.SetActive(true);
-            }   
-        }
-        
-        private void OnTriggerExit(Collider other)
-        {
-            if (other.CompareTag("Player") && helpTextContainer != null)
-            {
-                helpTextContainer.SetActive(false);
-            }   
-        }
 
+        /// <summary>
+        /// Initializes door references and optionally infers direction from the GameObject's name.
+        /// </summary>
         private void Start()
         {
             _roomManager = RoomManager.Instance;
             _parentRoom = GetComponentInParent<Room>();
-            
-            helpTextContainer = GameObject.Find("CanvasGroup").transform.Find("HUD").Find("HelpTextContainer").gameObject;
-            helpText = helpTextContainer.transform.Find("HelpText").GetComponent<TextMeshProUGUI>();
 
             if (_roomManager == null)
                 Debug.LogError("DoorInteraction: RoomManager.Instance not found!", this);
@@ -67,6 +54,66 @@ namespace RoomManager
             }
         }
 
+        /// <summary>
+        /// Called when the player interacts with the door.
+        /// Triggers room traversal if the door is connected.
+        /// </summary>
+        /// <param name="interactor">The GameObject attempting interaction.</param>
+        /// <returns>True if interaction was successful.</returns>
+        public bool Interact(GameObject interactor)
+        {
+            if (_isTraversing) return false;
+
+            ConnectorDirection thisDoorsLocalConnectorDirection =
+                RoomManager.GetOppositeLocalDirection(_leadsToWorldDirection * -1);
+            RoomConnector connector = _parentRoom.GetConnector(thisDoorsLocalConnectorDirection);
+
+            if (connector == null || !connector.IsConnected)
+            {
+                Debug.LogWarning("This door leads nowhere.", this);
+                return false;
+            }
+
+            _ = TryTraverse(interactor);
+            return true;
+        }
+
+        /// <summary>
+        /// Attempts to traverse to the next room in the specified direction with fade and delay effects.
+        /// </summary>
+        /// <param name="interactor">The GameObject initiating the traversal.</param>
+        private async Task TryTraverse(GameObject interactor)
+        {
+            _isTraversing = true;
+
+            Vector3Int nextRoomGridIndex = _parentRoom.RoomIndex + _leadsToWorldDirection;
+
+            if (_roomManager.DoesRoomExistAt(nextRoomGridIndex))
+            {
+                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.doorOpen, interactor.transform.position);
+
+                await Task.Delay(1000);
+
+                FadeManager.Instance.FadeOutIn(() =>
+                {
+                    _roomManager.TraverseRoom(nextRoomGridIndex, _leadsToWorldDirection);
+                    GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.doorClose,
+                        interactor.transform.position);
+                });
+            }
+            else
+            {
+                Debug.LogWarning(
+                    $"DoorInteraction: Tried to traverse to {nextRoomGridIndex}, but no room exists there.");
+            }
+
+            await Task.Delay(2000);
+            _isTraversing = false;
+        }
+
+        /// <summary>
+        /// Tries to infer the world direction this door leads to based on its GameObject name.
+        /// </summary>
         private void InferDirectionFromName()
         {
             string myNameLower = gameObject.name.ToLower();
@@ -80,58 +127,6 @@ namespace RoomManager
                 _leadsToWorldDirection = Vector3Int.left;
             else
                 Debug.LogWarning($"DoorInteraction on '{gameObject.name}': Could not infer direction from name.", this);
-        }
-
-        private void Update()
-        {
-            if (_roomManager == null || _parentRoom == null || _roomManager.CurrentPlayer == null ||
-                !_roomManager.IsPlayerSpawned)
-                return;
-
-            if (_leadsToWorldDirection == Vector3Int.zero)
-                return;
-
-            ConnectorDirection thisDoorsLocalConnectorDirection =
-                RoomManager.GetOppositeLocalDirection(_leadsToWorldDirection * -1);
-            RoomConnector connector = _parentRoom.GetConnector(thisDoorsLocalConnectorDirection);
-
-            if (connector == null || !connector.IsConnected)
-                return;
-
-            float distanceToPlayer =
-                Vector3.Distance(transform.position, _roomManager.CurrentPlayer.transform.position);
-
-            if (distanceToPlayer <= _interactionDistance && Input.GetKeyDown(_interactionKey))
-            {
-                _ =TryTraverse();
-            }
-        }
-
-        private async Task TryTraverse()
-        {
-            Vector3Int nextRoomGridIndex = _parentRoom.RoomIndex + _leadsToWorldDirection;
-
-            if (_roomManager.DoesRoomExistAt(nextRoomGridIndex))
-            {
-                // Audio management
-                player = GameObject.FindWithTag("Player");
-                Debug.Log("Door opened");
-                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.doorOpen, player.transform.position);
-                await Task.Delay(1000); 
-                
-                // Audio management
-                Debug.Log("Door closed");
-                FadeManager.Instance.FadeOutIn(() =>
-                {
-                    _roomManager.TraverseRoom(nextRoomGridIndex, _leadsToWorldDirection);
-                    GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.doorClose, player.transform.position);
-                });
-            }
-            else
-            {
-                Debug.LogWarning(
-                    $"DoorInteraction: Tried to traverse to {nextRoomGridIndex}, but no room exists there.");
-            }
         }
     }
 }
