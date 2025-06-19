@@ -39,7 +39,10 @@ public class FMODEvents : MonoBehaviour
     [field: SerializeField] public EventReference maynardHitFromLeftOrRight { get; private set; }
     [field: SerializeField] public EventReference maynardIdle { get; private set; }
     [field: SerializeField] public EventReference maynardFootsteps { get; private set; }
-    [field: SerializeField] public EventReference maynardStandUp { get; private set; }
+    [field: SerializeField] public EventReference maynardStandUpRoar { get; private set; }
+    [field: SerializeField] public EventReference maynardStandUpBreath { get; private set; }
+    [field: SerializeField] public EventReference maynardFootstep1 { get; private set; }
+    [field: SerializeField] public EventReference maynardFootstep2 { get; private set; }
     
     [field: Header("Ambience")]
     [field: SerializeField] public EventReference alarm { get; private set;  }

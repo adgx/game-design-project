@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2790420675413420707}
   - component: {fileID: 5156949295081283927}
+  - component: {fileID: 3317605172333357637}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -25,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2734006157922122384}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1287.5448, y: -166.84152, z: 503.9076}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -49,6 +50,20 @@ MonoBehaviour:
   musicVolume: 1
   ambienceVolume: 1
   SFXVolume: 1
+--- !u!114 &3317605172333357637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2734006157922122384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e6f25591b3025444a326eb5ed112847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  volumeMenu: {fileID: 0}
+  firstSelected: {fileID: 0}
 --- !u!1 &4634296230760136773
 GameObject:
   m_ObjectHideFlags: 0
@@ -93,104 +108,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a172540b2659d6478bffcda3bd29118, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <playerFootsteps>k__BackingField:
+  <playerCloseAttackLoad>k__BackingField:
     Guid:
-      Data1: 1166419053
-      Data2: 1320623170
-      Data3: 292728493
-      Data4: -596124364
-    Path: event:/SFX/Player/Run/Footsteps
-  <playerWakeUp>k__BackingField:
+      Data1: -703277264
+      Data2: 1223194215
+      Data3: 1297837189
+      Data4: -1550215625
+    Path: event:/SFX/Player/Attack/Close/CloseLoad
+  <playerCloseAttackShoot>k__BackingField:
     Guid:
-      Data1: 776900939
-      Data2: 1206370472
-      Data3: -1873415267
-      Data4: 2015559660
-    Path: event:/SFX/Player/Wake up/WakeUp
-  <doorOpen>k__BackingField:
+      Data1: 217779173
+      Data2: 1181870203
+      Data3: 1027034795
+      Data4: 1380500985
+    Path: event:/SFX/Player/Attack/Close/CloseShoot
+  <playerDistanceAttackLoad>k__BackingField:
     Guid:
-      Data1: -305465452
-      Data2: 1338532496
-      Data3: -674571377
-      Data4: 1673984798
-    Path: event:/SFX/Player/Door/DoorOpen
-  <doorClose>k__BackingField:
+      Data1: -1504091649
+      Data2: 1341889062
+      Data3: -1489269578
+      Data4: 2056284491
+    Path: event:/SFX/Player/Attack/Distance/DistanceLoad
+  <playerDistanceAttackShoot>k__BackingField:
     Guid:
-      Data1: 1243160138
-      Data2: 1126404859
-      Data3: 1977504399
-      Data4: -1866376778
-    Path: event:/SFX/Player/Door/DoorClose
-  <paperInteraction>k__BackingField:
-    Guid:
-      Data1: 1770494798
-      Data2: 1123593310
-      Data3: -90282078
-      Data4: 1208520339
-    Path: event:/SFX/Player/Paper/PaperInteraction
-  <terminalInteraction>k__BackingField:
-    Guid:
-      Data1: 1322266566
-      Data2: 1189502893
-      Data3: 494775174
-      Data4: -2079637945
-    Path: event:/SFX/Player/Terminal/TerminalInteraction
-  <vendingMachineActivation>k__BackingField:
-    Guid:
-      Data1: -1372758906
-      Data2: 1116038183
-      Data3: 1763239348
-      Data4: 33930138
-    Path: event:/SFX/Player/Vending machine/VendingMachineActivation
-  <vendingMachineItemPickUp>k__BackingField:
-    Guid:
-      Data1: 626503219
-      Data2: 1117672935
-      Data3: 80789158
-      Data4: 1299605440
-    Path: event:/SFX/Player/Vending machine/VendingMachineItemPickup
-  <sphereDischarge>k__BackingField:
-    Guid:
-      Data1: -1812742576
-      Data2: 1321843028
-      Data3: 149478297
-      Data4: -1084694590
-    Path: event:/SFX/Player/Sphere/SphereDischarge
-  <sphereFullRecharge>k__BackingField:
-    Guid:
-      Data1: -173376928
-      Data2: 1284800641
-      Data3: -1552988530
-      Data4: 378764851
-    Path: event:/SFX/Player/Sphere/SphereFullRecharge
-  <sphereRotation>k__BackingField:
-    Guid:
-      Data1: 784200999
-      Data2: 1239473725
-      Data3: -2005726846
-      Data4: 1834673606
-    Path: event:/SFX/Player/Sphere/SphereRotation
-  <playerEatChips>k__BackingField:
-    Guid:
-      Data1: 802410230
-      Data2: 1129170750
-      Data3: 792859547
-      Data4: 80374644
-    Path: event:/SFX/Player/Eat/EatChips
-  <playerEatChocolate>k__BackingField:
-    Guid:
-      Data1: 2115817834
-      Data2: 1321077471
-      Data3: -218120781
-      Data4: 1914792332
-    Path: event:/SFX/Player/Eat/EatChocolate
-  <playerDrink>k__BackingField:
-    Guid:
-      Data1: -1592788327
-      Data2: 1145508056
-      Data3: 1240228743
-      Data4: -543696551
-    Path: event:/SFX/Player/Drink/Drink
+      Data1: 1745601595
+      Data2: 1114770188
+      Data3: -409871453
+      Data4: -1028367603
+    Path: event:/SFX/Player/Attack/Distance/DistanceShoot
   <shieldActivation>k__BackingField:
     Guid:
       Data1: -192495753
@@ -212,13 +157,6 @@ MonoBehaviour:
       Data3: -1050364744
       Data4: -834285941
     Path: event:/SFX/Player/Defense/ShieldHit
-  <playerHit>k__BackingField:
-    Guid:
-      Data1: 1792477054
-      Data2: 1106656248
-      Data3: 624404368
-      Data4: 1545182479
-    Path: event:/SFX/Player/Hit/Hit
   <playerDie>k__BackingField:
     Guid:
       Data1: 196964975
@@ -226,34 +164,195 @@ MonoBehaviour:
       Data3: 993772194
       Data4: -661125539
     Path: event:/SFX/Player/Die/Die
-  <distanceAttackLoad>k__BackingField:
+  <doorOpen>k__BackingField:
     Guid:
-      Data1: -1504091649
-      Data2: 1341889062
-      Data3: -1489269578
-      Data4: 2056284491
-    Path: event:/SFX/Player/Attack/Distance/DistanceLoad
-  <distanceAttackShoot>k__BackingField:
+      Data1: -305465452
+      Data2: 1338532496
+      Data3: -674571377
+      Data4: 1673984798
+    Path: event:/SFX/Player/Door/DoorOpen
+  <doorClose>k__BackingField:
     Guid:
-      Data1: 1745601595
-      Data2: 1114770188
-      Data3: -409871453
-      Data4: -1028367603
-    Path: event:/SFX/Player/Attack/Distance/DistanceShoot
-  <closeAttackLoad>k__BackingField:
+      Data1: 1243160138
+      Data2: 1126404859
+      Data3: 1977504399
+      Data4: -1866376778
+    Path: event:/SFX/Player/Door/DoorClose
+  <playerDrink>k__BackingField:
     Guid:
-      Data1: -703277264
-      Data2: 1223194215
-      Data3: 1297837189
-      Data4: -1550215625
-    Path: event:/SFX/Player/Attack/Close/CloseLoad
-  <closeAttackShoot>k__BackingField:
+      Data1: -1592788327
+      Data2: 1145508056
+      Data3: 1240228743
+      Data4: -543696551
+    Path: event:/SFX/Player/Drink/Drink
+  <playerEatChips>k__BackingField:
     Guid:
-      Data1: 217779173
-      Data2: 1181870203
-      Data3: 1027034795
-      Data4: 1380500985
-    Path: event:/SFX/Player/Attack/Close/CloseShoot
+      Data1: 802410230
+      Data2: 1129170750
+      Data3: 792859547
+      Data4: 80374644
+    Path: event:/SFX/Player/Eat/EatChips
+  <playerEatChocolate>k__BackingField:
+    Guid:
+      Data1: 2115817834
+      Data2: 1321077471
+      Data3: -218120781
+      Data4: 1914792332
+    Path: event:/SFX/Player/Eat/EatChocolate
+  <playerHit>k__BackingField:
+    Guid:
+      Data1: 1792477054
+      Data2: 1106656248
+      Data3: 624404368
+      Data4: 1545182479
+    Path: event:/SFX/Player/Hit/Hit
+  <paperInteraction>k__BackingField:
+    Guid:
+      Data1: 1770494798
+      Data2: 1123593310
+      Data3: -90282078
+      Data4: 1208520339
+    Path: event:/SFX/Player/Paper/PaperInteraction
+  <playerFootsteps>k__BackingField:
+    Guid:
+      Data1: 1166419053
+      Data2: 1320623170
+      Data3: 292728493
+      Data4: -596124364
+    Path: event:/SFX/Player/Run/Footsteps
+  <sphereDischarge>k__BackingField:
+    Guid:
+      Data1: -1812742576
+      Data2: 1321843028
+      Data3: 149478297
+      Data4: -1084694590
+    Path: event:/SFX/Player/Sphere/SphereDischarge
+  <sphereFullRecharge>k__BackingField:
+    Guid:
+      Data1: -173376928
+      Data2: 1284800641
+      Data3: -1552988530
+      Data4: 378764851
+    Path: event:/SFX/Player/Sphere/SphereFullRecharge
+  <sphereRotation>k__BackingField:
+    Guid:
+      Data1: 784200999
+      Data2: 1239473725
+      Data3: -2005726846
+      Data4: 1834673606
+    Path: event:/SFX/Player/Sphere/SphereRotation
+  <terminalInteraction>k__BackingField:
+    Guid:
+      Data1: 1322266566
+      Data2: 1189502893
+      Data3: 494775174
+      Data4: -2079637945
+    Path: event:/SFX/Player/Terminal/TerminalInteraction
+  <vendingMachineActivation>k__BackingField:
+    Guid:
+      Data1: -1372758906
+      Data2: 1116038183
+      Data3: 1763239348
+      Data4: 33930138
+    Path: event:/SFX/Player/Vending machine/VendingMachineActivation
+  <vendingMachineItemPickUp>k__BackingField:
+    Guid:
+      Data1: 626503219
+      Data2: 1117672935
+      Data3: 80789158
+      Data4: 1299605440
+    Path: event:/SFX/Player/Vending machine/VendingMachineItemPickup
+  <playerWakeUp>k__BackingField:
+    Guid:
+      Data1: 776900939
+      Data2: 1206370472
+      Data3: -1873415267
+      Data4: 2015559660
+    Path: event:/SFX/Player/Wake up/WakeUp
+  <maynardCloseAttack>k__BackingField:
+    Guid:
+      Data1: -2092404042
+      Data2: 1146641370
+      Data3: -1548083792
+      Data4: 1753906422
+    Path: event:/SFX/Enemies/Maynard/Attack/Close/Close
+  <maynardDistanceAttack1>k__BackingField:
+    Guid:
+      Data1: 853445977
+      Data2: 1090340348
+      Data3: -1440677967
+      Data4: -1966661993
+    Path: event:/SFX/Enemies/Maynard/Attack/Distance/Distance1
+  <maynardDistanceAttack2>k__BackingField:
+    Guid:
+      Data1: 1687695072
+      Data2: 1074889687
+      Data3: -396223356
+      Data4: 1842774562
+    Path: event:/SFX/Enemies/Maynard/Attack/Distance/Distance2
+  <maynardDie>k__BackingField:
+    Guid:
+      Data1: 1278533537
+      Data2: 1108256286
+      Data3: -1295511404
+      Data4: 2027052920
+    Path: event:/SFX/Enemies/Maynard/Die/Die
+  <maynardHitFall>k__BackingField:
+    Guid:
+      Data1: 2091490762
+      Data2: 1250355332
+      Data3: -1932170600
+      Data4: -70072658
+    Path: event:/SFX/Enemies/Maynard/Hit/Fall
+  <maynardHitFromBack>k__BackingField:
+    Guid:
+      Data1: 1017782267
+      Data2: 1229982660
+      Data3: -1155235686
+      Data4: 1315857488
+    Path: event:/SFX/Enemies/Maynard/Hit/FromBack
+  <maynardHitFromFront>k__BackingField:
+    Guid:
+      Data1: 1779007253
+      Data2: 1184538620
+      Data3: -1444648826
+      Data4: 378201084
+    Path: event:/SFX/Enemies/Maynard/Hit/FromFront
+  <maynardHitFromLeftOrRight>k__BackingField:
+    Guid:
+      Data1: -1987806108
+      Data2: 1286467574
+      Data3: -915822919
+      Data4: -1705438728
+    Path: event:/SFX/Enemies/Maynard/Hit/FromLeftOrRight
+  <maynardIdle>k__BackingField:
+    Guid:
+      Data1: 351908810
+      Data2: 1151007455
+      Data3: 2029243520
+      Data4: -44759765
+    Path: event:/SFX/Enemies/Maynard/Idle/Idle
+  <maynardFootsteps>k__BackingField:
+    Guid:
+      Data1: -1511277516
+      Data2: 1113592575
+      Data3: -1053646681
+      Data4: 240544133
+    Path: event:/SFX/Enemies/Maynard/Run/Footsteps
+  <maynardStandUpRoar>k__BackingField:
+    Guid:
+      Data1: -118380777
+      Data2: 1153345161
+      Data3: 66719616
+      Data4: -974745851
+    Path: event:/SFX/Enemies/Maynard/Stand up/Roar
+  <maynardStandUpBreath>k__BackingField:
+    Guid:
+      Data1: -290997534
+      Data2: 1268517882
+      Data3: -891718770
+      Data4: -926425299
+    Path: event:/SFX/Enemies/Maynard/Stand up/Breath
   <alarm>k__BackingField:
     Guid:
       Data1: 1373224865
@@ -319,15 +418,15 @@ MonoBehaviour:
     Path: event:/Ambience/Bathroom/FlushingWater
   <gameplayMusic>k__BackingField:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -2119342206
+      Data2: 1082500063
+      Data3: 1155554688
+      Data4: -1221304368
+    Path: event:/Music/GameplaySoundtrack
   <mainMenuMusic>k__BackingField:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1420891451
+      Data2: 1270281740
+      Data3: -1673499477
+      Data4: -370306340
+    Path: event:/Music/MainMenuSoundtrack
