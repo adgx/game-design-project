@@ -55,7 +55,7 @@ public class RotateSphere : MonoBehaviour
                 case Animation.RotateAround:
                     if(transform.localPosition != desiredPosition) {
                         Player playerClass = player.GetComponent<Player>();
-                        transform.localPosition = Vector3.MoveTowards(transform.localPosition, new Vector3(transform.localPosition.x, 0, transform.localPosition.z), transitionSpeed * Time.deltaTime);
+                        transform.localPosition = Vector3.MoveTowards(transform.localPosition, new Vector3(transform.localPosition.x, 0.5f, transform.localPosition.z), transitionSpeed * Time.deltaTime);
 
                         Vector3 currentDir = transform.localPosition.normalized;
                         Vector3 targetDir = desiredPosition.normalized;
