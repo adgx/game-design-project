@@ -1314,6 +1314,7 @@ MonoBehaviour:
   inventoryMenu: {fileID: 2006406433}
   papersMenuScript: {fileID: 379990345}
   powerUpMenuScript: {fileID: 379990346}
+  firstSelected: {fileID: 0}
   buttonHoverSprite: {fileID: 21300000, guid: 2074e63cc8abfd548bd4a5d8ea9fa703, type: 3}
   buttonNormalSprite: {fileID: 21300000, guid: 0e87d182b6961994b96d4fe5eeec8cf4, type: 3}
 --- !u!114 &379990348
@@ -1332,6 +1333,8 @@ MonoBehaviour:
   pauseMenu: {fileID: 1997881962}
   confirmMenu: {fileID: 1997881961}
   volumeMenuScript: {fileID: 1892409782}
+  firstSelected: {fileID: 0}
+  noButton: {fileID: 0}
   buttonHoverSprite: {fileID: 21300000, guid: 2074e63cc8abfd548bd4a5d8ea9fa703, type: 3}
   buttonNormalSprite: {fileID: 21300000, guid: 0e87d182b6961994b96d4fe5eeec8cf4, type: 3}
 --- !u!114 &423648117 stripped
@@ -2974,6 +2977,8 @@ MonoBehaviour:
   _maxRooms: 15
   _minRooms: 10
   _skipConnectionChance: 0.35
+  _maxVendingMachines: 4
+  _maxUpgradeTerminal: 4
   _currentPlayer: {fileID: 1728157138}
   fadeManagerLoadingScreen: {fileID: 347109501}
   _gridSizeX: 14
@@ -3119,7 +3124,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _minimapGridParent: {fileID: 1356130334}
   _minimapCellPrefab: {fileID: 623424356459799459, guid: d691d07940a564673a44f58bb4e56258, type: 3}
-  _emptyCellColor: {r: 0.34509805, g: 0.34509805, b: 0.34509805, a: 0}
   _currentRoomSprite: {fileID: 21300000, guid: d1108ee16b71c48598fb791a6f392fa8, type: 3}
   _visitedRoomSprite: {fileID: 21300000, guid: 0e57c41e96763469cbebcd0fa9a76f82, type: 3}
   _unvisitedRoomSprite: {fileID: 21300000, guid: 646ba59bcb5474ee68019d25ae6e03fe, type: 3}
