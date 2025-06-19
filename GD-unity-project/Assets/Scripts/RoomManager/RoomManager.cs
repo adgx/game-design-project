@@ -253,6 +253,7 @@ namespace RoomManager
             _currentRoomInstance = newRoomScript;
             
             NavMeshSurface nav = GetComponent<NavMeshSurface>();
+            // The navmesh mantains the current and the previous rooms navmeshes
             nav.BuildNavMesh();
             IsNavMeshBaked = true;
             
