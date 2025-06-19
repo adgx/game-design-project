@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using Random = UnityEngine.Random;
 
 namespace RoomManager
 {
@@ -56,7 +57,26 @@ namespace RoomManager
         [Tooltip("A list of points where enemies can be spawned.")] [SerializeField]
         private List<Transform> _enemySpawnPoints;
 
-        /// <summary>Gets the type of this room (e.g., standard room, corridor).</summary>
+        [Tooltip("The prefab of the vending machine could spawn.")] [SerializeField]
+        private GameObject _vendingMachinePrefab;
+
+        [Tooltip("")] [Range(0f, 1f)] [SerializeField]
+        private float _vendingMachineSpawnChance = 0.5f;
+
+        [Tooltip("")] [SerializeField] private bool _shouldVendingMachineSpawn = false;
+
+        [Tooltip("The prefab of the upgrade terminal could spawn.")] [SerializeField]
+        private GameObject _upgradeTerminalPrefab;
+
+        [Tooltip("")] [Range(0f, 1f)] [SerializeField]
+        private float _upgradeTerminalSpawnChance = 0.5f;
+
+        [Tooltip("")] [SerializeField] private bool _shouldUpgradeTerminalSpawn = false;
+
+        /// <summary>The shared instance of the room manager class.</summary>
+        private RoomManager _roomManager;
+
+        /// <summary>Gets the type of this room.</summary>
         public RoomType RoomType { get; private set; }
 
         /// <summary>Gets the maximum budget for spawning enemies in this room.</summary>
@@ -73,8 +93,6 @@ namespace RoomManager
 
         /// <summary>Gets a read-only list of available enemy spawn points.</summary>
         public IReadOnlyList<Transform> EnemySpawnPoints => _enemySpawnPoints;
-
-        private RoomManager _roomManager;
 
         /// <summary>
         /// Initializes the room with data from a ScriptableObject.
@@ -93,10 +111,10 @@ namespace RoomManager
         {
             if (_centralSpawnPoint == null)
             {
-                GameObject csPointGO = new GameObject("CentralSpawnPoint_Generated");
-                csPointGO.transform.SetParent(transform);
-                csPointGO.transform.localPosition = Vector3.zero;
-                _centralSpawnPoint = csPointGO.transform;
+                GameObject centralSpawnPointGameObject = new GameObject("CentralSpawnPoint_Generated");
+                centralSpawnPointGameObject.transform.SetParent(transform);
+                centralSpawnPointGameObject.transform.localPosition = Vector3.zero;
+                _centralSpawnPoint = centralSpawnPointGameObject.transform;
             }
 
             foreach (var connector in _connectors)
@@ -117,8 +135,8 @@ namespace RoomManager
 
         private Transform CreateSpawnPointForConnector(RoomConnector connector)
         {
-            GameObject spGO = new GameObject($"{connector.Direction}SpawnPoint_Generated");
-            spGO.transform.SetParent(transform);
+            GameObject spawnPointGameObject = new GameObject($"{connector.Direction}SpawnPoint_Generated");
+            spawnPointGameObject.transform.SetParent(transform);
 
             Vector3 spawnLocalPos;
             const float offsetAmount = 1.5f;
@@ -154,8 +172,8 @@ namespace RoomManager
                 }
             }
 
-            spGO.transform.localPosition = spawnLocalPos;
-            return spGO.transform;
+            spawnPointGameObject.transform.localPosition = spawnLocalPos;
+            return spawnPointGameObject.transform;
         }
 
         /// <summary>
@@ -178,7 +196,7 @@ namespace RoomManager
         /// <summary>
         /// Activates the visual passage for a connector and marks it as connected.
         /// </summary>
-        public void ActivateConnection(ConnectorDirection direction)
+        private void ActivateConnection(ConnectorDirection direction)
         {
             RoomConnector connectorToActivate = GetConnector(direction);
             if (connectorToActivate != null)
@@ -210,17 +228,35 @@ namespace RoomManager
             return _centralSpawnPoint;
         }
 
-        public void PostInitializeConnections(RoomManager roomManager)
+        public void PostInitializeConnections()
         {
             foreach (ConnectorDirection dir in System.Enum.GetValues(typeof(ConnectorDirection)))
             {
                 Vector3Int neighborIndex = this.RoomIndex + RoomManager.GetVectorFromLocalDirection(dir);
 
-                if (roomManager.DoesRoomExistAt(neighborIndex))
+                if (_roomManager.DoesRoomExistAt(neighborIndex))
                 {
-                    this.ActivateConnection(dir);
+                    ActivateConnection(dir);
                 }
             }
+        }
+
+        public bool PostInitializeVendingMachine()
+        {
+            if (!_shouldVendingMachineSpawn) return false;
+
+            bool isSpawned = Random.value < _vendingMachineSpawnChance;
+            _vendingMachinePrefab.SetActive(isSpawned);
+            return isSpawned;
+        }
+
+        public bool PostInitializeUpgradeTerminal()
+        {
+            if (!_shouldUpgradeTerminalSpawn) return false;
+
+            bool isSpawned = Random.value < _upgradeTerminalSpawnChance;
+            _upgradeTerminalPrefab.SetActive(isSpawned);
+            return isSpawned;
         }
 
         private void OnDrawGizmosSelected()
