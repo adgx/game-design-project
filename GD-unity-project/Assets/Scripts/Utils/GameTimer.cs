@@ -64,14 +64,14 @@ namespace Utils
 		private GameObject player;
 		private IEnumerator PlayWakeUpAfterDelay(float delay) {
 			yield return new WaitForSeconds(delay);
-			AudioManager.instance.PlayOneShot(FMODEvents.instance.playerWakeUp, player.transform.position);
+			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.playerWakeUp, player.transform.position);
 		}
 
 		private void InitializeEventEmittersWithTag(string tagValue, EventReference eventRef, List<StudioEventEmitter> emitters)
 		{
 			GameObject[] objects = GameObject.FindGameObjectsWithTag(tagValue);
 			foreach(GameObject obj in objects) {
-				StudioEventEmitter emitter = AudioManager.instance.InitializeEventEmitter(eventRef, obj);
+				StudioEventEmitter emitter = GamePlayAudioManager.instance.InitializeEventEmitter(eventRef, obj);
 				if(emitter != null) {
 					emitters.Add(emitter);
 				}
@@ -209,7 +209,7 @@ namespace Utils
 						break;
 				}
 				
-				AudioManager.instance.SetMusicLoopIteration(iteration);
+				GamePlayAudioManager.instance.SetMusicLoopIteration(iteration);
 				StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
 				
 				ResetRun();
@@ -241,7 +241,7 @@ namespace Utils
 	        // Audio management
 	        InitializeAmbientEmitters();
 	        
-	        AudioManager.instance.SetMusicLoopIteration(iteration);
+	        GamePlayAudioManager.instance.SetMusicLoopIteration(iteration);
         }
 
 

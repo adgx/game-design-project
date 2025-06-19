@@ -2,6 +2,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class StartGameScreen : MonoBehaviour
 {
@@ -14,9 +16,14 @@ public class StartGameScreen : MonoBehaviour
 	[SerializeField] private Sprite buttonNormalSprite;
 
 	bool fadeOut = false;
-
+	bool changeScene = false;
+	
+	[SerializeField] private string gameplaySceneName = "Player+Map";
+	private bool sceneIsLoading = false;
+	
     public void StartGameButtonClicked() {
         fadeOut = true;
+        changeScene = true;
         GameStatus.gamePaused = false;
 		GameStatus.gameStarted = true;
         Time.timeScale = 1f;
@@ -36,17 +43,21 @@ public class StartGameScreen : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		if(fadeOut) {
-			if(StartGameScreenCanvas.alpha > 0) {
-				StartGameScreenCanvas.alpha -= Time.deltaTime;
-				if(StartGameScreenCanvas.alpha <= 0) {
-					StartGameScreenCanvas.alpha = 0;
-					StartGameScreenContainer.SetActive(false);
-					fadeOut = false;
-				}
-			}
-		}
-	}
+	    if (fadeOut && !sceneIsLoading) {
+		    if (StartGameScreenCanvas.alpha > 0) {
+			    StartGameScreenCanvas.alpha -= Time.unscaledDeltaTime;
+			    if (StartGameScreenCanvas.alpha <= 0) {
+				    StartGameScreenCanvas.alpha = 0;
+				    StartGameScreenContainer.SetActive(false);
+				    fadeOut = false;
+
+				    if (changeScene) {
+					    StartCoroutine(LoadGameplaySceneAsync());
+				    }
+			    }
+		    }
+	    }
+    }
 
 	public void OnMouseEnter(GameObject button) {
 		button.GetComponent<Image>().sprite = buttonHoverSprite;
@@ -59,4 +70,26 @@ public class StartGameScreen : MonoBehaviour
 		button.GetComponent<Image>().sprite = buttonNormalSprite;
 		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
 	}
+	
+	private IEnumerator LoadGameplaySceneAsync()
+	{
+		sceneIsLoading = true;
+
+		// Inizia il caricamento asincrono della scena
+		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(gameplaySceneName);
+		asyncLoad.allowSceneActivation = false;
+
+		// Attendi finché la scena è quasi pronta (>= 0.9)
+		while (asyncLoad.progress < 0.9f)
+		{
+			yield return null;
+		}
+
+		// (Qui potresti visualizzare un "Loading..." o una schermata nera, se vuoi)
+		// TODO: inserire la schermata di caricamento di Paolone
+
+		// Ora attiva effettivamente la scena
+		asyncLoad.allowSceneActivation = true;
+	}
+
 }

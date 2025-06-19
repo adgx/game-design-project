@@ -47,7 +47,7 @@ public class CollectablePapers : MonoBehaviour
             lastPaperCollected++;
 
 			// Audio management
-			AudioManager.instance.PlayOneShot(FMODEvents.instance.paperInteraction, caller.transform.position);
+			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.paperInteraction, caller.transform.position);
 		}
     }
 
