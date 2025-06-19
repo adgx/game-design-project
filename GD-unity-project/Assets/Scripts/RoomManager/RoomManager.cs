@@ -187,6 +187,9 @@ namespace RoomManager
 
             _isLayoutGenerated = true;
             CurrentRoomIndex = startGridIndex;
+            NavMeshSurface nav = GetComponent<NavMeshSurface>();
+            nav.BuildNavMesh();
+            IsNavMeshBaked = true;
             Room initialRoom = LoadRoomAt(CurrentRoomIndex);
             //Spawn the player for the first time
             SpawnPlayerInRoom(initialRoom);
