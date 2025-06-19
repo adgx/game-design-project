@@ -42,6 +42,10 @@ namespace RoomManager
         [SerializeField]
         private float _skipConnectionChance = 0.35f;
 
+        [Tooltip("")] [SerializeField] private int _maxVendingMachines = 4;
+
+        [Tooltip("")] [SerializeField] private int _maxUpgradeTerminal = 4;
+
         [Header("Player References")]
         [Tooltip("Reference to the player GameObject. Will be found by tag if not assigned.")]
         [SerializeField]
@@ -54,7 +58,7 @@ namespace RoomManager
 
         public event Action OnRunReady;
         public event Action<Vector3Int> PlayerEnteredNewRoom;
-        
+
         // Audio management
         public event Action OnRoomFullyInstantiated;
 
@@ -80,6 +84,9 @@ namespace RoomManager
         private int[,,] _roomGrid;
         private int _roomCount;
 
+        private int _vendingMachineSpawned = 0;
+        private int _upgradeTerminalSpawned = 0;
+
         private void Awake()
         {
             if (Instance == null)
@@ -94,7 +101,6 @@ namespace RoomManager
 
             CacheRoomDataByType();
 
-            //find the player 
             if (_currentPlayer == null)
             {
                 _currentPlayer = GameObject.FindWithTag("Player");
@@ -112,6 +118,7 @@ namespace RoomManager
         private void CacheRoomDataByType()
         {
             _roomDataByType.Clear();
+
             foreach (RoomType rt in Enum.GetValues(typeof(RoomType)))
             {
                 _roomDataByType.Add(rt, new List<RoomData.RoomData>());
@@ -154,6 +161,9 @@ namespace RoomManager
             _roomCount = 0;
             _isLayoutGenerated = false;
             IsPlayerSpawned = false;
+            _upgradeTerminalSpawned = 0;
+            _vendingMachineSpawned = 0;
+
             if (GameStatus.gameStarted)
                 fadeManagerLoadingScreen.Show();
 
@@ -188,14 +198,13 @@ namespace RoomManager
             _isLayoutGenerated = true;
             CurrentRoomIndex = startGridIndex;
             Room initialRoom = LoadRoomAt(CurrentRoomIndex);
-            //Spawn the player for the first time
             SpawnPlayerInRoom(initialRoom);
             IsPlayerSpawned = true;
             fadeManagerLoadingScreen.Hide();
-            
+
             OnRunReady?.Invoke();
         }
-        
+
         // Audio management
         private IEnumerator NotifyRoomReady()
         {
@@ -221,8 +230,26 @@ namespace RoomManager
 
             newRoomScript.Initialize(roomDataToLoad, this);
             newRoomScript.RoomIndex = gridIndex;
-            newRoomScript.PostInitializeConnections(this);
-            
+            newRoomScript.PostInitializeConnections();
+
+            bool isTerminalSpawned = false;
+
+            if (_upgradeTerminalSpawned < _maxUpgradeTerminal)
+            {
+                bool isSpawned = newRoomScript.PostInitializeUpgradeTerminal();
+
+                if (isSpawned) _upgradeTerminalSpawned++;
+
+                isTerminalSpawned = isSpawned;
+            }
+
+            if (!isTerminalSpawned && _vendingMachineSpawned < _maxVendingMachines)
+            {
+                bool isSpawed = newRoomScript.PostInitializeVendingMachine();
+
+                if (isSpawed) _vendingMachineSpawned++;
+            }
+
             _currentRoomInstance = newRoomScript;
             
             NavMeshSurface nav = GetComponent<NavMeshSurface>();
@@ -316,7 +343,7 @@ namespace RoomManager
 
             UnloadCurrentRoom();
             Room newRoom = LoadRoomAt(newRoomIndex);
-            
+
             // Audio management
             StartCoroutine(NotifyRoomReady());
 
@@ -332,11 +359,11 @@ namespace RoomManager
         public void SpawnPlayerInRoom(Room roomToSpawnIn, Vector3Int? worldEntryDirection = null)
         {
             if (!_currentPlayer || !roomToSpawnIn) return;
-    
+
             Transform spawnPoint = worldEntryDirection.HasValue
                 ? roomToSpawnIn.GetSpawnPointForWorldEntryDirection(worldEntryDirection.Value)
                 : roomToSpawnIn.CentralSpawnPoint;
-    
+
             _currentPlayer.transform.position = spawnPoint ? spawnPoint.position : roomToSpawnIn.transform.position;
         }
 
@@ -350,7 +377,7 @@ namespace RoomManager
             {
                 return _currentRoomInstance;
             }
-            
+
             return null;
         }
 
