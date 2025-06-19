@@ -797,7 +797,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8939150284904082296
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1034,7 +1034,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+          m_TargetAssemblyTypeName: InventoryMenu, Assembly-CSharp
           m_MethodName: OnMouseEnter
           m_Mode: 2
           m_Arguments:
@@ -1050,7 +1050,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+          m_TargetAssemblyTypeName: InventoryMenu, Assembly-CSharp
           m_MethodName: OnMouseExit
           m_Mode: 2
           m_Arguments:
@@ -1066,7 +1066,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+          m_TargetAssemblyTypeName: InventoryMenu, Assembly-CSharp
           m_MethodName: OnMouseExit
           m_Mode: 2
           m_Arguments:
@@ -1802,7 +1802,7 @@ GameObject:
   - component: {fileID: 1196554586767744406}
   - component: {fileID: 2829475919528425057}
   m_Layer: 5
-  m_Name: ResumeGameButton
+  m_Name: StartGameButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1911,12 +1911,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
-        m_MethodName: ResumeGameButtonClick
-        m_Mode: 2
+        m_TargetAssemblyTypeName: StartGameScreen, Assembly-CSharp
+        m_MethodName: StartGameButtonClicked
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 2380372699835631179}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1940,7 +1940,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+          m_TargetAssemblyTypeName: StartGameScreen, Assembly-CSharp
           m_MethodName: OnMouseEnter
           m_Mode: 2
           m_Arguments:
@@ -1956,7 +1956,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+          m_TargetAssemblyTypeName: StartGameScreen, Assembly-CSharp
           m_MethodName: OnMouseExit
           m_Mode: 2
           m_Arguments:
@@ -1972,8 +1972,24 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+          m_TargetAssemblyTypeName: StartGameScreen, Assembly-CSharp
           m_MethodName: OnMouseExit
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 2380372699835631179}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: StartGameScreen, Assembly-CSharp
+          m_MethodName: OnMouseEnter
           m_Mode: 2
           m_Arguments:
             m_ObjectArgument: {fileID: 2380372699835631179}
@@ -2722,8 +2738,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -1.1602, y: 91.565735}
-  m_SizeDelta: {x: 479.1231, y: 143.5263}
+  m_AnchoredPosition: {x: -1.1602, y: 85.583435}
+  m_SizeDelta: {x: 479.1231, y: 131.5617}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8850292372986665779
 CanvasRenderer:
@@ -2949,6 +2965,22 @@ MonoBehaviour:
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
           m_MethodName: OnMouseExit
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 3023741393306997009}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+          m_MethodName: OnMouseEnter
           m_Mode: 2
           m_Arguments:
             m_ObjectArgument: {fileID: 3023741393306997009}
@@ -3405,6 +3437,22 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+          m_MethodName: OnMouseEnter
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 3493946651796284911}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &3633536407964158890
 GameObject:
   m_ObjectHideFlags: 0
@@ -3852,6 +3900,22 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: InventoryMenu, Assembly-CSharp
+          m_MethodName: OnMouseEnter
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 3915337907012260095}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &4003074520147878139
 GameObject:
   m_ObjectHideFlags: 0
@@ -4119,6 +4183,22 @@ MonoBehaviour:
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: InventoryMenu, Assembly-CSharp
           m_MethodName: OnMouseExit
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 4026806287779652725}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: InventoryMenu, Assembly-CSharp
+          m_MethodName: OnMouseEnter
           m_Mode: 2
           m_Arguments:
             m_ObjectArgument: {fileID: 4026806287779652725}
@@ -4430,6 +4510,22 @@ MonoBehaviour:
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
           m_MethodName: OnMouseExit
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 4149022435864416728}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+          m_MethodName: OnMouseEnter
           m_Mode: 2
           m_Arguments:
             m_ObjectArgument: {fileID: 4149022435864416728}
@@ -5456,6 +5552,22 @@ MonoBehaviour:
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
           m_MethodName: OnMouseExit
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 4991121351296382175}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+          m_MethodName: OnMouseEnter
           m_Mode: 2
           m_Arguments:
             m_ObjectArgument: {fileID: 4991121351296382175}
@@ -6906,7 +7018,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.0005493164, y: 0.000030517578}
+  m_AnchoredPosition: {x: -0.0005493164, y: 2.4215088}
   m_SizeDelta: {x: -65.83729, y: -75.28775}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3073677513220703809
@@ -7194,6 +7306,22 @@ MonoBehaviour:
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: InventoryMenu, Assembly-CSharp
           m_MethodName: OnMouseExit
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 6520978016138391076}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: InventoryMenu, Assembly-CSharp
+          m_MethodName: OnMouseEnter
           m_Mode: 2
           m_Arguments:
             m_ObjectArgument: {fileID: 6520978016138391076}
@@ -7753,6 +7881,22 @@ MonoBehaviour:
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
           m_MethodName: OnMouseExit
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 7079191977039575119}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+          m_MethodName: OnMouseEnter
           m_Mode: 2
           m_Arguments:
             m_ObjectArgument: {fileID: 7079191977039575119}
@@ -8401,8 +8545,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -0.0009460449}
-  m_SizeDelta: {x: 856, y: 953.99805}
+  m_AnchoredPosition: {x: 0, y: -2.8097992}
+  m_SizeDelta: {x: 856, y: 958.73}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8112608222542555439
 CanvasRenderer:
@@ -8450,7 +8594,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7608498159157707262}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0.69
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
@@ -9982,6 +10126,22 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+          m_MethodName: OnMouseEnter
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 8969857708074013260}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &8997945320522567967
 GameObject:
   m_ObjectHideFlags: 0
@@ -10227,7 +10387,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.12261963}
+  m_AnchoredPosition: {x: 0, y: 0.122558594}
   m_SizeDelta: {x: 0, y: -1.2399902}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &9192045031451515741

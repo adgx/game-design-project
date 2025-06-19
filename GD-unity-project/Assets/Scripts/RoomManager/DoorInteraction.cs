@@ -116,7 +116,7 @@ namespace RoomManager
                 // Audio management
                 player = GameObject.FindWithTag("Player");
                 Debug.Log("Door opened");
-                AudioManager.instance.PlayOneShot(FMODEvents.instance.doorOpen, player.transform.position);
+                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.doorOpen, player.transform.position);
                 await Task.Delay(1000); 
                 
                 // Audio management
@@ -124,7 +124,7 @@ namespace RoomManager
                 FadeManager.Instance.FadeOutIn(() =>
                 {
                     _roomManager.TraverseRoom(nextRoomGridIndex, _leadsToWorldDirection);
-                    AudioManager.instance.PlayOneShot(FMODEvents.instance.doorClose, player.transform.position);
+                    GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.doorClose, player.transform.position);
                 });
             }
             else

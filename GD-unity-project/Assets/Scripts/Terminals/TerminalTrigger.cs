@@ -85,7 +85,7 @@ public class TerminalTrigger : MonoBehaviour
 					if(powerUps.spherePowerUps.Count > 0) {
 						// Audio management
 						rotateSphere.positionSphere(new Vector3(1, 0, 0), RotateSphere.Animation.Linear);
-						AudioManager.instance.PlayOneShot(FMODEvents.instance.terminalInteraction, this.transform.position);
+						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.terminalInteraction, this.transform.position);
 
 						busy = true;
 						await Task.Delay(2000);
@@ -120,7 +120,7 @@ public class TerminalTrigger : MonoBehaviour
 							// Get power up, lose 1 stamina for the Sphere
 							// Audio management
 							Debug.Log("Getting power up: taking power up from the machine");
-							AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineItemPickUp, this.transform.position);
+							GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineItemPickUp, this.transform.position);
 							powerUpVendingMachineHacked = false;
 
 							busy = true;
@@ -140,7 +140,7 @@ public class TerminalTrigger : MonoBehaviour
 							if (obtainedPowerUp == PowerUp.PlayerPowerUpTypes.HealthBoost)
 							{
 								Debug.Log("Using power up: health boost (chips");
-								AudioManager.instance.PlayOneShot(FMODEvents.instance.playerEatChips, player.transform.position);
+								GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.playerEatChips, player.transform.position);
 								
 								playerShoot.maxHealth += 20;
 								playerShoot.health += 20;
@@ -149,7 +149,7 @@ public class TerminalTrigger : MonoBehaviour
 							if (obtainedPowerUp == PowerUp.PlayerPowerUpTypes.DamageReduction)
 							{
 								Debug.Log("Using power up: damage reduction (energy drink");
-								AudioManager.instance.PlayOneShot(FMODEvents.instance.playerDrink, player.transform.position);
+								GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.playerDrink, player.transform.position);
 								
 								playerShoot.damageReduction -= 0.2f;
 							}
@@ -167,7 +167,7 @@ public class TerminalTrigger : MonoBehaviour
 						{
 							Debug.Log("Getting power up: machine activation");
 							// Audio management
-							AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineActivation, this.transform.position);
+							GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineActivation, this.transform.position);
 							rotateSphere.positionSphere(new Vector3(1, 0, 0), RotateSphere.Animation.Linear);
 							
 							busy = true;
@@ -191,7 +191,7 @@ public class TerminalTrigger : MonoBehaviour
 						// Recover health, lose 1 stamina for the Sphere
 						Debug.Log("Recovering health: taking snack from the machine");
 						// Audio management
-						AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineItemPickUp, this.transform.position);
+						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineItemPickUp, this.transform.position);
 						healthVendingMachineHacked = false;
 
 						busy = true;
@@ -202,7 +202,7 @@ public class TerminalTrigger : MonoBehaviour
 						helpTextContainer.SetActive(true);
 
 						// Audio management
-						AudioManager.instance.PlayOneShot(FMODEvents.instance.playerEatChocolate, player.transform.position);
+						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.playerEatChocolate, player.transform.position);
 						
 						playerShoot.RecoverHealth(playerShoot.maxHealth);
 						busy = false;
@@ -210,7 +210,7 @@ public class TerminalTrigger : MonoBehaviour
 					else {
 						Debug.Log("Recovering health: machine activation");
 						// Audio management
-						AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineActivation, this.transform.position);
+						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineActivation, this.transform.position);
 						rotateSphere.positionSphere(new Vector3(1, 0, 0), RotateSphere.Animation.Linear);
 
 						busy = true;

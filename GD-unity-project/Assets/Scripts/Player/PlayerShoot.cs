@@ -70,10 +70,10 @@ public class PlayerShoot : MonoBehaviour
 		player = GetComponent<Player>();
 		
 		// Audio management
-		distanceAttackLoading = AudioManager.instance.CreateInstance(FMODEvents.instance.playerDistanceAttackLoad);
+		distanceAttackLoading = GamePlayAudioManager.instance.CreateInstance(FMODEvents.instance.playerDistanceAttackLoad);
 		distanceAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
 		
-		closeAttackLoading = AudioManager.instance.CreateInstance(FMODEvents.instance.playerCloseAttackLoad);
+		closeAttackLoading = GamePlayAudioManager.instance.CreateInstance(FMODEvents.instance.playerCloseAttackLoad);
 		closeAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
 	}
 	
@@ -128,7 +128,7 @@ public class PlayerShoot : MonoBehaviour
 		
 		// The Sphere has finished the stamina
 		// Audio management
-		AudioManager.instance.PlayOneShot(FMODEvents.instance.sphereDischarge, rotatingSphere.transform.position);
+		GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.sphereDischarge, rotatingSphere.transform.position);
 		return false;
 	}
 
@@ -147,7 +147,7 @@ public class PlayerShoot : MonoBehaviour
 				// Audio management
 				if (sphereStamina == 5)
 				{
-					AudioManager.instance.PlayOneShot(FMODEvents.instance.sphereFullRecharge, rotatingSphere.transform.position);
+					GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.sphereFullRecharge, rotatingSphere.transform.position);
 				}
 			}
 		}
@@ -266,7 +266,7 @@ public class PlayerShoot : MonoBehaviour
 		}
 		
 		// Audio management
-		AudioManager.instance.PlayOneShot(FMODEvents.instance.playerDistanceAttackShoot, rotatingSphere.transform.position);
+		GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.playerDistanceAttackShoot, rotatingSphere.transform.position);
 
 		distanceAttackLoadingBar.fillAmount = 0;
 
@@ -338,7 +338,7 @@ public class PlayerShoot : MonoBehaviour
 		DecreaseStamina(attackStamina);
 		
 		// Audio management
-		AudioManager.instance.PlayOneShot(FMODEvents.instance.playerCloseAttackShoot, rotatingSphere.transform.position);
+		GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.playerCloseAttackShoot, rotatingSphere.transform.position);
 
 		closeAttackLoadingBar.fillAmount = 0;
 
@@ -405,7 +405,7 @@ public class PlayerShoot : MonoBehaviour
 		if (magneticShield != null && !shieldClosed)
 		{
 			// Audio management
-			AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldDeactivation, rotatingSphere.transform.position);
+			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.shieldDeactivation, rotatingSphere.transform.position);
 			Destroy(magneticShield);
 			player.isFrozen = false;
 			await Task.Delay(500);
@@ -427,7 +427,7 @@ public class PlayerShoot : MonoBehaviour
 		if(!magneticShieldOpen) 
 		{
 			// Audio management
-			AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldActivation, rotatingSphere.transform.position);
+			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.shieldActivation, rotatingSphere.transform.position);
 
 			// to modify for the instantiate the vfx and lunch the animation character
 			//luch defense animation
@@ -452,7 +452,7 @@ public class PlayerShoot : MonoBehaviour
 		{
 			if(magneticShield != null) {
 				// Audio management
-				AudioManager.instance.PlayOneShot(FMODEvents.instance.shieldDeactivation, rotatingSphere.transform.position);
+				GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.shieldDeactivation, rotatingSphere.transform.position);
 				Destroy(magneticShield);
 				player.isFrozen = false;
 				await Task.Delay(500);
@@ -472,7 +472,7 @@ public class PlayerShoot : MonoBehaviour
      		if (health <= 0)
      		{
      			// Audio management
-     			AudioManager.instance.PlayOneShot(FMODEvents.instance.playerDie, player.transform.position);
+     			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.playerDie, player.transform.position);
      			
      			Invoke(nameof(DestroyPlayer), 0.05f);
      		}
@@ -480,7 +480,7 @@ public class PlayerShoot : MonoBehaviour
      		else
      		{
      			// Audio management
-     			AudioManager.instance.PlayOneShot(FMODEvents.instance.playerHit, player.transform.position);
+     			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.playerHit, player.transform.position);
      		}
 	}
 	

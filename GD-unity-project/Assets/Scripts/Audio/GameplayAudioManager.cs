@@ -4,7 +4,7 @@ using UnityEngine;
 using FMODUnity;
 using FMOD.Studio;
 
-public class AudioManager : MonoBehaviour
+public class GamePlayAudioManager : MonoBehaviour
 {
     [Header("Volume")]
     [Range(0, 1)]
@@ -25,7 +25,7 @@ public class AudioManager : MonoBehaviour
     private List<StudioEventEmitter> eventEmitters;
     
     private EventInstance musicEventInstance;
-    public static AudioManager instance { get; private set; }
+    public static GamePlayAudioManager instance { get; private set; }
 
     private void Awake()
     {
@@ -67,7 +67,6 @@ public class AudioManager : MonoBehaviour
     {
         musicEventInstance.setParameterByName("loopIteration", (float) iteration);
     }
-
     
     public void PlayOneShot(EventReference sound, Vector3 worldPos)
     {
