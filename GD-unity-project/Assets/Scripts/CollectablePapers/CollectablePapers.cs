@@ -1,7 +1,6 @@
-using System;
 using TMPro;
 using UnityEngine;
-using ORF;
+using System.Threading.Tasks;
 
 public class CollectablePapers : MonoBehaviour
 {
@@ -35,11 +34,19 @@ public class CollectablePapers : MonoBehaviour
         
         "Paper 7"
     };
+    
+    private AnimationManager animationManager;
+    
+    void Start()
+    {
+	    animationManager = AnimationManager.Instance;
+    }
 
-    public void CollectPaper(PaperTrigger caller) {
+    async public void CollectPaper(PaperTrigger caller) {
         if (lastPaperCollected < N_PAPERS) {
             papers[lastPaperCollected] = true;
             
+            animationManager.Idle();
             player.isFrozen = true;
             paperText.SetText(messages[lastPaperCollected] + "\nPress E to continue");
             paperTextContainer.SetActive(true);
@@ -55,8 +62,4 @@ public class CollectablePapers : MonoBehaviour
 		paperTextContainer.SetActive(false);
 		player.isFrozen = false;
 	}
-
-    private void Update()
-    {
-    }
 }
