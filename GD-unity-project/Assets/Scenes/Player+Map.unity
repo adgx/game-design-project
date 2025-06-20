@@ -1305,6 +1305,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &851811541 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8997945320522567967, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+  m_PrefabInstance: {fileID: 361144709}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &947324215 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7942380145102555645, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
@@ -1602,6 +1607,11 @@ Transform:
 --- !u!224 &1356130334 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8580425258324078271, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+  m_PrefabInstance: {fileID: 361144709}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1380146512 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5154549814140528373, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
   m_PrefabInstance: {fileID: 361144709}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1386329521
@@ -3393,6 +3403,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1643695748}
     - target: {fileID: 7076102304092396991, guid: e717b62fa6b8eb34a907e7d7e771bfd9, type: 3}
+      propertyPath: firstSelected
+      value: 
+      objectReference: {fileID: 851811541}
+    - target: {fileID: 7076102304092396991, guid: e717b62fa6b8eb34a907e7d7e771bfd9, type: 3}
       propertyPath: collectablePapers
       value: 
       objectReference: {fileID: 347109500}
@@ -3408,6 +3422,10 @@ PrefabInstance:
       propertyPath: powerUpText
       value: 
       objectReference: {fileID: 361144713}
+    - target: {fileID: 8774698924411829510, guid: e717b62fa6b8eb34a907e7d7e771bfd9, type: 3}
+      propertyPath: firstSelected
+      value: 
+      objectReference: {fileID: 1380146512}
     - target: {fileID: 8774698924411829510, guid: e717b62fa6b8eb34a907e7d7e771bfd9, type: 3}
       propertyPath: powerUpScript
       value: 

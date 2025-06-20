@@ -33,25 +33,31 @@ public class InventoryMenu : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
-		if(playerInput.InventoryPressed()) {
+		if(playerInput.InventoryPressed() || (inventoryScreenOpen && inventoryMenu.activeInHierarchy && playerInput.backKeyPressed())) {
 
-			GameStatus.gamePaused = !GameStatus.gamePaused;
-			if(GameStatus.gamePaused) {
-				// Setting timeScale to 0 pauses the game
-				Time.timeScale = 0f;
-			}
-			else {
-				// Resume the game
-				Time.timeScale = 1f;
-				EventSystem.current.SetSelectedGameObject(null);
-			}
+			ChangeGameState(!GameStatus.gamePaused);
 
 			ToggleInventoryMenu();
 		}
 
 		if(inventoryScreenOpen && !inventoryMenu.activeInHierarchy && playerInput.backKeyPressed()) {
-			backToInventory();
+			BackToInventory();
 		}
+	}
+
+	async void ChangeGameState(bool status) {
+		if(status) {
+			// Setting timeScale to 0 pauses the game
+			Time.timeScale = 0f;
+		}
+		else {
+			// Resume the game
+			Time.timeScale = 1f;
+			await Task.Delay(100);
+			EventSystem.current.SetSelectedGameObject(null);
+		}
+
+		GameStatus.gamePaused = status;
 	}
 
 	void ToggleInventoryMenu() {
@@ -71,7 +77,7 @@ public class InventoryMenu : MonoBehaviour {
 		}
 	}
 
-	void backToInventory() {
+	void BackToInventory() {
 		papersMenuScript.CloseMenu();
 		powerUpMenuScript.CloseMenu();
 		inventoryMenu.SetActive(true);
@@ -80,17 +86,13 @@ public class InventoryMenu : MonoBehaviour {
 			EventSystem.current.SetSelectedGameObject(firstSelected);
 	}
 
-	async public void ResumeGameButtonClick(GameObject button) {
+	public void ResumeGameButtonClick(GameObject button) {
 		button.GetComponent<Image>().sprite = buttonNormalSprite;
 		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
 
 		ToggleInventoryMenu();
 
-		await Task.Delay(100);
-		EventSystem.current.SetSelectedGameObject(null);
-		GameStatus.gamePaused = false;
-		// Resume the game
-		Time.timeScale = 1f;
+		ChangeGameState(false);
 	}
 
 	public void PapersButtonClick(GameObject button) {
@@ -110,7 +112,7 @@ public class InventoryMenu : MonoBehaviour {
 	}
 
 	public void BackToInventoryButtonClick() {
-		backToInventory();
+		BackToInventory();
 	}
 
 	public void OnMouseEnter(GameObject button) {

@@ -36,24 +36,30 @@ public class PauseMenu : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
-		if(playerInput.PausePressed()) {
-			GameStatus.gamePaused = !GameStatus.gamePaused;
-			if(GameStatus.gamePaused) {
-				// Setting timeScale to 0 pauses the game
-				Time.timeScale = 0f;
-			}
-			else {
-				// Resume the game
-				Time.timeScale = 1f;
-				EventSystem.current.SetSelectedGameObject(null);
-			}
+		if(playerInput.PausePressed() || (pauseScreenOpen && pauseMenu.activeInHierarchy && playerInput.backKeyPressed())) {
+			ChangeGameState(!GameStatus.gamePaused);
 
 			TogglePauseMenu();
 		}
 
 		if(pauseScreenOpen && !pauseMenu.activeInHierarchy && playerInput.backKeyPressed()) {
-			backToPause();
+			BackToPause();
 		}
+	}
+
+	async void ChangeGameState(bool paused) {
+		if(paused) {
+			// Setting timeScale to 0 pauses the game
+			Time.timeScale = 0f;
+		}
+		else {
+			// Resume the game
+			Time.timeScale = 1f;
+			await Task.Delay(100);
+			EventSystem.current.SetSelectedGameObject(null);
+		}
+
+		GameStatus.gamePaused = paused;
 	}
 
 	void TogglePauseMenu() {
@@ -72,7 +78,7 @@ public class PauseMenu : MonoBehaviour
 		}
 	}
 
-	void backToPause() {
+	void BackToPause() {
 		volumeMenuScript.CloseVolumeMenu();
 		confirmMenu.SetActive(false);
 
@@ -87,11 +93,7 @@ public class PauseMenu : MonoBehaviour
 
 		TogglePauseMenu();
 
-		await Task.Delay(100);
-		EventSystem.current.SetSelectedGameObject(null);
-		GameStatus.gamePaused = false;
-		// Resume the game
-		Time.timeScale = 1f;
+		ChangeGameState(false);
 	}
 
 	public void NewGameButtonClick(GameObject button) {
@@ -110,7 +112,7 @@ public class PauseMenu : MonoBehaviour
 	}
 
 	public void BackToPauseButtonClick() {
-		backToPause();
+		BackToPause();
 	}
 
 	public void QuitGameButtonClick(GameObject button) {
@@ -133,7 +135,7 @@ public class PauseMenu : MonoBehaviour
 		button.GetComponent<Image>().sprite = buttonNormalSprite;
 		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
 
-		backToPause();
+		BackToPause();
 	}
 
 	public void OnMouseEnter(GameObject button) {
