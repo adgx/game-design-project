@@ -14,7 +14,7 @@ namespace RoomManager
         /// <summary>
         /// The prompt text shown to the player when they are near this door.
         /// </summary>
-        public string InteractionPrompt => $"Press {_interactionKey} to use door";
+        public string InteractionPrompt => $"Press E to use door";
 
         private GameObject player;
 
@@ -23,9 +23,6 @@ namespace RoomManager
             "The world direction this door leads to (e.g., Vector3Int.forward for North). Inferred from name if left at zero.")]
         [SerializeField]
         private Vector3Int _leadsToWorldDirection;
-
-        [Tooltip("The key the player must press to use the door.")] [SerializeField]
-        private KeyCode _interactionKey = KeyCode.E;
 
         private RoomManager _roomManager;
         private Room _parentRoom;
@@ -52,7 +49,7 @@ namespace RoomManager
             {
                 InferDirectionFromName();
             }
-        }
+		}
 
         /// <summary>
         /// Called when the player interacts with the door.

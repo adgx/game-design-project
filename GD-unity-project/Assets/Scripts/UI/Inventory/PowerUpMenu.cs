@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UI.Inventory.PowerUpIcons;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
@@ -16,6 +17,8 @@ public class PowerUpMenu : MonoBehaviour {
 	[FormerlySerializedAs("powerUp")] [SerializeField] private PowerUp powerUpScript;
 	
 	[SerializeField] private TextMeshProUGUI powerUpText;
+
+	[SerializeField] private GameObject firstSelected;
 
 	public void OpenMenu()
 	{
@@ -54,7 +57,8 @@ public class PowerUpMenu : MonoBehaviour {
 				}
 			}
 		}
-		
+
+		EventSystem.current.SetSelectedGameObject(firstSelected);
 		powerUpMenu.gameObject.SetActive(true);
 	}
 

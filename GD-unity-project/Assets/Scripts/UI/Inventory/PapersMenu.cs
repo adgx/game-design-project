@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class PapersMenu : MonoBehaviour {
@@ -14,6 +15,8 @@ public class PapersMenu : MonoBehaviour {
 
 	[SerializeField] private CollectablePapers collectablePapers;
 
+	[SerializeField] private GameObject firstSelected;
+
 	public async void OpenMenu() {
 		foreach(Transform child in paperScrollContent.transform) {
 			Destroy(child.gameObject);
@@ -23,6 +26,7 @@ public class PapersMenu : MonoBehaviour {
 
 		paperText.text = "The papers collected will be shown here";
 
+		EventSystem.current.SetSelectedGameObject(firstSelected);
 		papersMenu.gameObject.SetActive(true);
 
 		for(int i = 0; i < collectablePapers.messages.Length; i++) {

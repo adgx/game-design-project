@@ -28,8 +28,9 @@ public class PlayerShoot : MonoBehaviour
 	private float defaultDamageRadius = 2.5f;
 	private float damageRadius = 2.5f;
 
-	// The player has 2 attacks he can choose. He can change them by using the mouse scroll wheel
+	// The player has 2 attacks he can choose. He can change them by using the mouse scroll wheel or the back buttons on the controller
 	private int attackNumber = 1;
+	[SerializeField] private KeyCode increaseAttackController, decreaseAttackController;
 	[SerializeField] Image distanceAttackImage;
 	[SerializeField] Image closeAttackImage;
 	[SerializeField] Image distanceAttackLoadingBar;
@@ -568,11 +569,11 @@ public class PlayerShoot : MonoBehaviour
 			}
 
 			// Selecting a different attack
-			if (Input.GetAxis("Mouse ScrollWheel") > 0 && !loadingAttack)
+			if ((Input.GetAxis("Mouse ScrollWheel") > 0 || Input.GetKeyDown(increaseAttackController)) && !loadingAttack)
 			{
 				ChangeAttack(1);
 			}
-			else if (Input.GetAxis("Mouse ScrollWheel") < 0 && !loadingAttack)
+			else if ((Input.GetAxis("Mouse ScrollWheel") < 0 || Input.GetKeyDown(decreaseAttackController)) && !loadingAttack)
 			{
 				ChangeAttack(-1);
 			}

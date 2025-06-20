@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace PlayerInteraction
 {
@@ -15,8 +16,7 @@ namespace PlayerInteraction
         [SerializeField]
         private float _interactionDistance = 6f;
 
-        [Tooltip("Key used to trigger an interaction.")] [SerializeField]
-        private KeyCode _interactionKey = KeyCode.E;
+        private PlayerInput playerInput;
 
         [Tooltip("Layer mask to filter which objects can be interacted with.")] [SerializeField]
         private LayerMask _interactionLayer;
@@ -40,8 +40,10 @@ namespace PlayerInteraction
             if (_mainCamera == null)
             {
                 Debug.LogError("PlayerInteractor: No camera tagged 'MainCamera' was found in the scene!");
-            }
-        }
+			}
+
+			playerInput = Player.Instance.GetComponent<PlayerInput>();
+		}
 
         /// <summary>
         /// Called once per frame. Handles detection and input logic.
@@ -86,7 +88,7 @@ namespace PlayerInteraction
         /// </summary>
         private void HandleInteractionInput()
         {
-            if (Input.GetKeyDown(_interactionKey) && _currentTarget != null)
+            if (playerInput.InteractionPressed() && _currentTarget != null)
             {
                 _currentTarget.Interact(this.gameObject);
             }
