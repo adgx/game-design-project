@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using FMODUnity;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 // NOTE: this script is attached to each terminal individually
@@ -36,8 +37,14 @@ public class TerminalTrigger : MonoBehaviour
     [SerializeField] private RotateSphere rotateSphere;
 
     static System.Random rnd = new System.Random();
-    
-    private void OnTriggerEnter(Collider other) {
+
+	private PlayerInput playerInput;
+
+	private void Start() {
+		playerInput = Player.Instance.GetComponent<PlayerInput>();
+	}
+
+	private void OnTriggerEnter(Collider other) {
 	    if (!other.CompareTag("Player"))
 	    {
 		    return;
@@ -235,7 +242,7 @@ public class TerminalTrigger : MonoBehaviour
 
 
 	private void Update() {
-        if (triggerType != TriggerType.None && Input.GetKeyDown(KeyCode.E)) {
+        if (triggerType != TriggerType.None && playerInput.InteractionPressed()) {
             ManageVendingMachine();
         }
     }

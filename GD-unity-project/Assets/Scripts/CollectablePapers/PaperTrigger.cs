@@ -11,7 +11,13 @@ public class PaperTrigger : MonoBehaviour
     [SerializeField] private TextMeshProUGUI helpText;
     [SerializeField] private GameObject helpTextContainer;
 
-    void OnTriggerEnter(Collider other) {
+    private PlayerInput playerInput;
+
+	private void Start() {
+		playerInput = Player.Instance.GetComponent<PlayerInput>();
+	}
+
+	void OnTriggerEnter(Collider other) {
         if (other.CompareTag("Player")) {
             playerInTrigger = true;
             helpText.text = "Press E to collect paper";
@@ -27,7 +33,7 @@ public class PaperTrigger : MonoBehaviour
     }
 
     void Update() {
-        if (playerInTrigger && Input.GetKeyDown(KeyCode.E)) {
+        if (playerInTrigger && playerInput.InteractionPressed()) {
             if(!paperOpen) {
                 paperOpen = true;
                 collectablePapers.CollectPaper(this);

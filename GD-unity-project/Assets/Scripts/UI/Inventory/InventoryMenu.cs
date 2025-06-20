@@ -19,9 +19,12 @@ public class InventoryMenu : MonoBehaviour {
 
 	private PlayerInput playerInput;
 
+	private bool inventoryScreenOpen = false;
+
 	private void Start() {
 		playerInput = Player.Instance.GetComponent<PlayerInput>();
 
+		inventoryScreenOpen = false;
 		screenContainer.SetActive(false);
 		inventoryMenu.SetActive(false);
 		papersMenuScript.CloseMenu();
@@ -30,31 +33,43 @@ public class InventoryMenu : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
-		if(playerInput.IPressed()) {
+		if(playerInput.InventoryPressed() || (inventoryScreenOpen && inventoryMenu.activeInHierarchy && playerInput.BackKeyPressed())) {
 
-			GameStatus.gamePaused = !GameStatus.gamePaused;
-			if(GameStatus.gamePaused) {
-				// Setting timeScale to 0 pauses the game
-				Time.timeScale = 0f;
-			}
-			else {
-				// Resume the game
-				Time.timeScale = 1f;
-				EventSystem.current.SetSelectedGameObject(null);
-			}
+			ChangeGameState(!GameStatus.gamePaused);
 
 			ToggleInventoryMenu();
 		}
+
+		if(inventoryScreenOpen && !inventoryMenu.activeInHierarchy && playerInput.BackKeyPressed()) {
+			BackToInventory();
+		}
+	}
+
+	async void ChangeGameState(bool status) {
+		if(status) {
+			// Setting timeScale to 0 pauses the game
+			Time.timeScale = 0f;
+		}
+		else {
+			// Resume the game
+			Time.timeScale = 1f;
+			await Task.Delay(100);
+			EventSystem.current.SetSelectedGameObject(null);
+		}
+
+		GameStatus.gamePaused = status;
 	}
 
 	void ToggleInventoryMenu() {
 		if(screenContainer.activeInHierarchy) {
+			inventoryScreenOpen = false;
 			screenContainer.SetActive(false);
 			inventoryMenu.SetActive(false);
 			papersMenuScript.CloseMenu();
 			powerUpMenuScript.CloseMenu();
 		}
 		else {
+			inventoryScreenOpen = true;
 			screenContainer.SetActive(true);
 			inventoryMenu.SetActive(true);
 			
@@ -62,20 +77,22 @@ public class InventoryMenu : MonoBehaviour {
 		}
 	}
 
-	async public void ResumeGameButtonClick(GameObject button) {
+	void BackToInventory() {
+		papersMenuScript.CloseMenu();
+		powerUpMenuScript.CloseMenu();
+		inventoryMenu.SetActive(true);
+
+		if(!EventSystem.current.alreadySelecting)
+			EventSystem.current.SetSelectedGameObject(firstSelected);
+	}
+
+	public void ResumeGameButtonClick(GameObject button) {
 		button.GetComponent<Image>().sprite = buttonNormalSprite;
 		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
 
-		screenContainer.SetActive(false);
-		inventoryMenu.SetActive(false);
-		papersMenuScript.CloseMenu();
-		powerUpMenuScript.CloseMenu();
+		ToggleInventoryMenu();
 
-		await Task.Delay(100);
-		EventSystem.current.SetSelectedGameObject(null);
-		GameStatus.gamePaused = false;
-		// Resume the game
-		Time.timeScale = 1f;
+		ChangeGameState(false);
 	}
 
 	public void PapersButtonClick(GameObject button) {
@@ -95,12 +112,7 @@ public class InventoryMenu : MonoBehaviour {
 	}
 
 	public void BackToInventoryButtonClick() {
-		papersMenuScript.CloseMenu();
-		powerUpMenuScript.CloseMenu();
-		inventoryMenu.SetActive(true);
-		
-		if (!EventSystem.current.alreadySelecting)
-			EventSystem.current.SetSelectedGameObject(firstSelected);
+		BackToInventory();
 	}
 
 	public void OnMouseEnter(GameObject button) {

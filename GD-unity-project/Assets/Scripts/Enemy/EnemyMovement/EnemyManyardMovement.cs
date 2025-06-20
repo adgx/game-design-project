@@ -99,9 +99,11 @@ namespace Enemy.EnemyData.EnemyMovement
         void ChasePlayer()
         {
             if (agent == null || !agent.isOnNavMesh) return;
-            
+
             if (roomManager.IsNavMeshBaked)
+            {
                 agent.SetDestination(playerTransform.position);
+            }
         }
 
         void ResetAttack()
