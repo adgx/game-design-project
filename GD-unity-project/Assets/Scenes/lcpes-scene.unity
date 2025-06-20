@@ -960,6 +960,54 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2828999337452523740, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
   m_PrefabInstance: {fileID: 361144709}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &465057630
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 465057631}
+  - component: {fileID: 465057632}
+  m_Layer: 0
+  m_Name: PaperManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &465057631
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 465057630}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1684462101}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &465057632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 465057630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8aa6b7002a7c4f34948c2459f377448f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _paperText: {fileID: 235949650}
+  _paperTextContainer: {fileID: 2055002796}
+  _player: {fileID: 1728157151}
+  _interactionKey: 101
 --- !u!1 &564682552 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6520978016138391076, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
@@ -1722,12 +1770,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1386329521}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a5a930fb03f4490c97c2baae5de803c, type: 3}
+  m_Script: {fileID: 11500000, guid: 53db7d78c57b4776a257e48d45d47bca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectablePapers: {fileID: 347109500}
-  helpText: {fileID: 423648117}
-  helpTextContainer: {fileID: 423648118}
+  _interactionKey: 101
+  _paperID: 1
 --- !u!1 &1418048827
 GameObject:
   m_ObjectHideFlags: 0
@@ -2147,6 +2194,7 @@ Transform:
   - {fileID: 1012403241}
   - {fileID: 1122996922}
   - {fileID: 379990344}
+  - {fileID: 465057631}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1728157138

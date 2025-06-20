@@ -69,13 +69,19 @@ namespace PlayerInteraction
             if (Physics.SphereCast(ray, 0.5f, out RaycastHit hit, _interactionDistance, _interactionLayer) &&
                 hit.collider.TryGetComponent(out IInteractable interactable))
             {
-                if (interactable != _currentTarget)
+                if (interactable.IsInteractable)
                 {
+                    if (interactable == _currentTarget) return;
+                    
                     _currentTarget = interactable;
                     ShowPrompt();
                 }
+                else
+                {
+                    ClearTarget();
+                }
             }
-            else if (_currentTarget != null)
+            else
             {
                 ClearTarget();
             }
@@ -97,6 +103,8 @@ namespace PlayerInteraction
         /// </summary>
         private void ClearTarget()
         {
+            if (_currentTarget == null) return;
+            
             _currentTarget = null;
 
             if (_helpTextContainer != null)

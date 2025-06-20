@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
 using Helper;
-using PlayerInteraction;
+using RoomManager;
 using TMPro;
 using UnityEngine;
 
-namespace RoomManager
+namespace PlayerInteraction
 {
     /// <summary>
     /// Handles player interaction with a door to traverse to an adjacent room.
@@ -15,6 +15,8 @@ namespace RoomManager
         /// The prompt text shown to the player when they are near this door.
         /// </summary>
         public string InteractionPrompt => $"Press {_interactionKey} to use door";
+
+        public bool IsInteractable => !_isTraversing;
 
         private GameObject player;
 
@@ -27,7 +29,7 @@ namespace RoomManager
         [Tooltip("The key the player must press to use the door.")] [SerializeField]
         private KeyCode _interactionKey = KeyCode.E;
 
-        private RoomManager _roomManager;
+        private RoomManager.RoomManager _roomManager;
         private Room _parentRoom;
         private bool _isTraversing = false;
 
@@ -39,7 +41,7 @@ namespace RoomManager
         /// </summary>
         private void Start()
         {
-            _roomManager = RoomManager.Instance;
+            _roomManager = RoomManager.RoomManager.Instance;
             _parentRoom = GetComponentInParent<Room>();
 
             if (_roomManager == null)
@@ -65,7 +67,7 @@ namespace RoomManager
             if (_isTraversing) return false;
 
             ConnectorDirection thisDoorsLocalConnectorDirection =
-                RoomManager.GetOppositeLocalDirection(_leadsToWorldDirection * -1);
+                RoomManager.RoomManager.GetOppositeLocalDirection(_leadsToWorldDirection * -1);
             RoomConnector connector = _parentRoom.GetConnector(thisDoorsLocalConnectorDirection);
 
             if (connector == null || !connector.IsConnected)
@@ -117,6 +119,7 @@ namespace RoomManager
         private void InferDirectionFromName()
         {
             string myNameLower = gameObject.name.ToLower();
+            
             if (myNameLower.Contains("north") || myNameLower.Contains("top"))
                 _leadsToWorldDirection = Vector3Int.forward;
             else if (myNameLower.Contains("south") || myNameLower.Contains("bottom"))
