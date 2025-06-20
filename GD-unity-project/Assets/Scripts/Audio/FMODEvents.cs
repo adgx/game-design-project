@@ -45,8 +45,7 @@ public class FMODEvents : MonoBehaviour
     [field: SerializeField] public EventReference maynardFootstep2 { get; private set; }
     
     [field: Header("Drake SFX")]
-    [field: SerializeField] public EventReference drakeCloseAttack1Roar { get; private set; }
-    [field: SerializeField] public EventReference drakeCloseAttack1Bite { get; private set; }
+    [field: SerializeField] public EventReference drakeCloseAttack1 { get; private set; }
     [field: SerializeField] public EventReference drakeCloseAttack2 { get; private set; }
     [field: SerializeField] public EventReference drakeDefense { get; private set; }
     [field: SerializeField] public EventReference drakeDieHit { get; private set; }
