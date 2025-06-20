@@ -19,9 +19,12 @@ public class InventoryMenu : MonoBehaviour {
 
 	private PlayerInput playerInput;
 
+	private bool inventoryScreenOpen = false;
+
 	private void Start() {
 		playerInput = Player.Instance.GetComponent<PlayerInput>();
 
+		inventoryScreenOpen = false;
 		screenContainer.SetActive(false);
 		inventoryMenu.SetActive(false);
 		papersMenuScript.CloseMenu();
@@ -30,7 +33,7 @@ public class InventoryMenu : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
-		if(playerInput.IPressed()) {
+		if(playerInput.InventoryPressed()) {
 
 			GameStatus.gamePaused = !GameStatus.gamePaused;
 			if(GameStatus.gamePaused) {
@@ -45,16 +48,22 @@ public class InventoryMenu : MonoBehaviour {
 
 			ToggleInventoryMenu();
 		}
+
+		if(inventoryScreenOpen && !inventoryMenu.activeInHierarchy && playerInput.backKeyPressed()) {
+			backToInventory();
+		}
 	}
 
 	void ToggleInventoryMenu() {
 		if(screenContainer.activeInHierarchy) {
+			inventoryScreenOpen = false;
 			screenContainer.SetActive(false);
 			inventoryMenu.SetActive(false);
 			papersMenuScript.CloseMenu();
 			powerUpMenuScript.CloseMenu();
 		}
 		else {
+			inventoryScreenOpen = true;
 			screenContainer.SetActive(true);
 			inventoryMenu.SetActive(true);
 			
@@ -62,14 +71,20 @@ public class InventoryMenu : MonoBehaviour {
 		}
 	}
 
+	void backToInventory() {
+		papersMenuScript.CloseMenu();
+		powerUpMenuScript.CloseMenu();
+		inventoryMenu.SetActive(true);
+
+		if(!EventSystem.current.alreadySelecting)
+			EventSystem.current.SetSelectedGameObject(firstSelected);
+	}
+
 	async public void ResumeGameButtonClick(GameObject button) {
 		button.GetComponent<Image>().sprite = buttonNormalSprite;
 		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
 
-		screenContainer.SetActive(false);
-		inventoryMenu.SetActive(false);
-		papersMenuScript.CloseMenu();
-		powerUpMenuScript.CloseMenu();
+		ToggleInventoryMenu();
 
 		await Task.Delay(100);
 		EventSystem.current.SetSelectedGameObject(null);
@@ -95,12 +110,7 @@ public class InventoryMenu : MonoBehaviour {
 	}
 
 	public void BackToInventoryButtonClick() {
-		papersMenuScript.CloseMenu();
-		powerUpMenuScript.CloseMenu();
-		inventoryMenu.SetActive(true);
-		
-		if (!EventSystem.current.alreadySelecting)
-			EventSystem.current.SetSelectedGameObject(firstSelected);
+		backToInventory();
 	}
 
 	public void OnMouseEnter(GameObject button) {

@@ -2234,6 +2234,8 @@ MonoBehaviour:
   bulletSpawnTransform: {fileID: 1469227814}
   bulletPrefab: {fileID: 3780818778376199547, guid: e2193c01f07e84362a8e9f21a5774953, type: 3}
   attackAreaPrefab: {fileID: 1847315181234349731, guid: 3902c314b9067494cadeb754c1359a24, type: 3}
+  increaseAttackController: 335
+  decreaseAttackController: 334
   distanceAttackImage: {fileID: 766725499}
   closeAttackImage: {fileID: 766725498}
   distanceAttackLoadingBar: {fileID: 766725497}
@@ -2269,6 +2271,10 @@ MonoBehaviour:
   rightInput: 100
   leftMouseInput: 324
   pauseInput: 27
+  pauseInputController: 337
+  inventoryInput: 105
+  inventoryInputController: 336
+  backKeyController: 331
 --- !u!65 &1728157144
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2498,6 +2504,8 @@ MonoBehaviour:
   _maxRooms: 15
   _minRooms: 10
   _skipConnectionChance: 0.35
+  _maxVendingMachines: 4
+  _maxUpgradeTerminal: 4
   _currentPlayer: {fileID: 1728157138}
   fadeManagerLoadingScreen: {fileID: 347109501}
   _gridSizeX: 14
@@ -3364,6 +3372,10 @@ PrefabInstance:
       propertyPath: volumeMenuScript
       value: 
       objectReference: {fileID: 1892409782}
+    - target: {fileID: 1658623078756845969, guid: e717b62fa6b8eb34a907e7d7e771bfd9, type: 3}
+      propertyPath: backKeyController
+      value: 331
+      objectReference: {fileID: 0}
     - target: {fileID: 1779177418643411986, guid: e717b62fa6b8eb34a907e7d7e771bfd9, type: 3}
       propertyPath: m_Name
       value: PauseManager

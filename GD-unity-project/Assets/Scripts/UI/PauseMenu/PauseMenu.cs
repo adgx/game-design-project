@@ -21,9 +21,12 @@ public class PauseMenu : MonoBehaviour
 
 	private PlayerInput playerInput;
 
+	private bool pauseScreenOpen = false;
+
 	private void Start() {
 		playerInput = Player.Instance.GetComponent<PlayerInput>();
 
+		pauseScreenOpen = false;
 		screenContainer.SetActive(false);
 		pauseMenu.SetActive(false);
 		confirmMenu.SetActive(false);
@@ -47,30 +50,42 @@ public class PauseMenu : MonoBehaviour
 
 			TogglePauseMenu();
 		}
+
+		if(pauseScreenOpen && !pauseMenu.activeInHierarchy && playerInput.backKeyPressed()) {
+			backToPause();
+		}
 	}
 
 	void TogglePauseMenu() {
 		if(screenContainer.activeInHierarchy) {
+			pauseScreenOpen = false;
 			screenContainer.SetActive(false);
 			foreach(Transform child in screenContainer.transform) {
 				child.gameObject.SetActive(false);
 			}
 		}
 		else {
+			pauseScreenOpen = true;
 			screenContainer.SetActive(true);
 			pauseMenu.SetActive(true);
 			EventSystem.current.SetSelectedGameObject(firstSelected);
 		}
 	}
 
+	void backToPause() {
+		volumeMenuScript.CloseVolumeMenu();
+		confirmMenu.SetActive(false);
+
+		pauseMenu.SetActive(true);
+		if(!EventSystem.current.alreadySelecting)
+			EventSystem.current.SetSelectedGameObject(firstSelected);
+	}
+
 	async public void ResumeGameButtonClick(GameObject button) {
 		button.GetComponent<Image>().sprite = buttonNormalSprite;
 		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
 
-		screenContainer.SetActive(false);
-		pauseMenu.SetActive(false);
-		confirmMenu.SetActive(false);
-		volumeMenuScript.CloseVolumeMenu();
+		TogglePauseMenu();
 
 		await Task.Delay(100);
 		EventSystem.current.SetSelectedGameObject(null);
@@ -95,10 +110,7 @@ public class PauseMenu : MonoBehaviour
 	}
 
 	public void BackToPauseButtonClick() {
-		volumeMenuScript.CloseVolumeMenu();
-		pauseMenu.SetActive(true);
-		if (!EventSystem.current.alreadySelecting)
-			EventSystem.current.SetSelectedGameObject(firstSelected);
+		backToPause();
 	}
 
 	public void QuitGameButtonClick(GameObject button) {
@@ -121,10 +133,7 @@ public class PauseMenu : MonoBehaviour
 		button.GetComponent<Image>().sprite = buttonNormalSprite;
 		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
 
-		confirmMenu.SetActive(false);
-		pauseMenu.SetActive(true);
-		if (!EventSystem.current.alreadySelecting)
-			EventSystem.current.SetSelectedGameObject(firstSelected);
+		backToPause();
 	}
 
 	public void OnMouseEnter(GameObject button) {
