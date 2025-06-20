@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{044c6a7e-9e3e-4d17-9816-8fe9fc291f02}">
 		<property name="name">
-			<value>FromBack</value>
+			<value>FromFrontOrBack</value>
 		</property>
 		<property name="outputFormat">
 			<value>2</value>
@@ -72,6 +72,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{2a4981b6-916b-4b4f-90a4-6e346dd97c5d}">
+		<property name="volume">
+			<value>-10</value>
+		</property>
 		<relationship name="effectChain">
 			<destination>{6cc808ec-bbe8-4019-a14a-f2c7098ab100}</destination>
 		</relationship>
