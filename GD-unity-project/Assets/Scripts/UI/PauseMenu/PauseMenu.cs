@@ -36,13 +36,13 @@ public class PauseMenu : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
-		if(playerInput.PausePressed() || (pauseScreenOpen && pauseMenu.activeInHierarchy && playerInput.backKeyPressed())) {
+		if(playerInput.PausePressed() || (pauseScreenOpen && pauseMenu.activeInHierarchy && playerInput.BackKeyPressed())) {
 			ChangeGameState(!GameStatus.gamePaused);
 
 			TogglePauseMenu();
 		}
 
-		if(pauseScreenOpen && !pauseMenu.activeInHierarchy && playerInput.backKeyPressed()) {
+		if(pauseScreenOpen && !pauseMenu.activeInHierarchy && playerInput.BackKeyPressed()) {
 			BackToPause();
 		}
 	}

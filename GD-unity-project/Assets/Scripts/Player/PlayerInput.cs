@@ -12,7 +12,9 @@ public class PlayerInput : MonoBehaviour
     // Inventory
 	[SerializeField] private KeyCode inventoryInput, inventoryInputController;
     // Back
-    [SerializeField] private KeyCode backKeyController;
+    [SerializeField] private KeyCode backInputController;
+    // Interaction
+    [SerializeField] private KeyCode interactionInput, interactionInputController;
 
 
 	private float verticalInput, horizontalInput;
@@ -41,8 +43,12 @@ public class PlayerInput : MonoBehaviour
         return Input.GetKeyDown(inventoryInput) || Input.GetKeyDown(inventoryInputController);
     }
 
-    public bool backKeyPressed() {
-        return Input.GetKeyDown(backKeyController);
+    public bool BackKeyPressed() {
+        return Input.GetKeyDown(backInputController);
+    }
+
+    public bool InteractionPressed() {
+        return Input.GetKeyDown(interactionInput) || Input.GetKeyDown(interactionInputController);
     }
 
 	private void GetInput()

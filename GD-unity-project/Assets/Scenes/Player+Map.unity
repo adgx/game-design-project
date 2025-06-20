@@ -2285,7 +2285,9 @@ MonoBehaviour:
   pauseInputController: 337
   inventoryInput: 105
   inventoryInputController: 336
-  backKeyController: 331
+  backInputController: 331
+  interactionInput: 101
+  interactionInputController: 333
 --- !u!65 &1728157144
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2424,7 +2426,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interactionDistance: 3
-  _interactionKey: 101
   _interactionLayer:
     serializedVersion: 2
     m_Bits: 1

@@ -33,14 +33,14 @@ public class InventoryMenu : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
-		if(playerInput.InventoryPressed() || (inventoryScreenOpen && inventoryMenu.activeInHierarchy && playerInput.backKeyPressed())) {
+		if(playerInput.InventoryPressed() || (inventoryScreenOpen && inventoryMenu.activeInHierarchy && playerInput.BackKeyPressed())) {
 
 			ChangeGameState(!GameStatus.gamePaused);
 
 			ToggleInventoryMenu();
 		}
 
-		if(inventoryScreenOpen && !inventoryMenu.activeInHierarchy && playerInput.backKeyPressed()) {
+		if(inventoryScreenOpen && !inventoryMenu.activeInHierarchy && playerInput.BackKeyPressed()) {
 			BackToInventory();
 		}
 	}
