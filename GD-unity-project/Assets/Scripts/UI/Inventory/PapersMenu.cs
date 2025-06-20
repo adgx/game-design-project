@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using CollectablePapers;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class PapersMenu : MonoBehaviour

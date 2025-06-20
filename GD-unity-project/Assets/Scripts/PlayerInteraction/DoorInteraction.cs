@@ -14,7 +14,7 @@ namespace PlayerInteraction
         /// <summary>
         /// The prompt text shown to the player when they are near this door.
         /// </summary>
-        public string InteractionPrompt => $"Press {_interactionKey} to use door";
+        public string InteractionPrompt => $"Press E to use door";
 
         public bool IsInteractable => !_isTraversing;
 
@@ -54,7 +54,7 @@ namespace PlayerInteraction
             {
                 InferDirectionFromName();
             }
-        }
+		}
 
         /// <summary>
         /// Called when the player interacts with the door.
