@@ -29,20 +29,20 @@ public class FMODEvents : MonoBehaviour
     [field: SerializeField] public EventReference playerWakeUp { get; private set; }
     
     [field: Header("Maynard SFX")]
-    [field: SerializeField] public EventReference maynardCloseAttack { get; private set; }
-    [field: SerializeField] public EventReference maynardDistanceAttack1 { get; private set; }
-    [field: SerializeField] public EventReference maynardDistanceAttack2 { get; private set; }
-    [field: SerializeField] public EventReference maynardDie { get; private set; }
-    [field: SerializeField] public EventReference maynardHitFall { get; private set; }
-    [field: SerializeField] public EventReference maynardHitFromBack { get; private set; }
-    [field: SerializeField] public EventReference maynardHitFromFront { get; private set; }
-    [field: SerializeField] public EventReference maynardHitFromLeftOrRight { get; private set; }
-    [field: SerializeField] public EventReference maynardIdle { get; private set; }
-    [field: SerializeField] public EventReference maynardFootsteps { get; private set; }
-    [field: SerializeField] public EventReference maynardStandUpRoar { get; private set; }
-    [field: SerializeField] public EventReference maynardStandUpBreath { get; private set; }
-    [field: SerializeField] public EventReference maynardFootstep1 { get; private set; }
-    [field: SerializeField] public EventReference maynardFootstep2 { get; private set; }
+    [field: SerializeField] public EventReference MaynardCloseAttack { get; private set; }
+    [field: SerializeField] public EventReference MaynardDistanceAttack1 { get; private set; }
+    [field: SerializeField] public EventReference MaynardDistanceAttack2 { get; private set; }
+    [field: SerializeField] public EventReference MaynardDie { get; private set; }
+    [field: SerializeField] public EventReference MaynardHitFall { get; private set; }
+    [field: SerializeField] public EventReference MaynardHitFromBack { get; private set; }
+    [field: SerializeField] public EventReference MaynardHitFromFront { get; private set; }
+    [field: SerializeField] public EventReference MaynardHitFromLeftOrRight { get; private set; }
+    [field: SerializeField] public EventReference MaynardIdle { get; private set; }
+    [field: SerializeField] public EventReference MaynardFootsteps { get; private set; }
+    [field: SerializeField] public EventReference MaynardStandUpRoar { get; private set; }
+    [field: SerializeField] public EventReference MaynardStandUpBreath { get; private set; }
+    [field: SerializeField] public EventReference MaynardFootstep1 { get; private set; }
+    [field: SerializeField] public EventReference MaynardFootstep2 { get; private set; }
     
     [field: Header("Drake SFX")]
     [field: SerializeField] public EventReference DrakeCloseAttack1 { get; private set; }
