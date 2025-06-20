@@ -45,18 +45,17 @@ public class FMODEvents : MonoBehaviour
     [field: SerializeField] public EventReference maynardFootstep2 { get; private set; }
     
     [field: Header("Drake SFX")]
-    [field: SerializeField] public EventReference drakeCloseAttack1 { get; private set; }
-    [field: SerializeField] public EventReference drakeCloseAttack2 { get; private set; }
-    [field: SerializeField] public EventReference drakeDefense { get; private set; }
-    [field: SerializeField] public EventReference drakeDieHit { get; private set; }
-    [field: SerializeField] public EventReference drakeDieFoostep1 { get; private set; }
-    [field: SerializeField] public EventReference drakeDieFoostep2 { get; private set; }
-    [field: SerializeField] public EventReference drakeDieThud { get; private set; }
-    [field: SerializeField] public EventReference drakeHitFromBack { get; private set; }
-    [field: SerializeField] public EventReference drakeHitFromFront { get; private set; }
-    [field: SerializeField] public EventReference drakeHitFromLeftOrRight { get; private set; }
-    [field: SerializeField] public EventReference drakeIdle { get; private set; }
-    [field: SerializeField] public EventReference drakeFootsteps { get; private set; }
+    [field: SerializeField] public EventReference DrakeCloseAttack1 { get; private set; }
+    [field: SerializeField] public EventReference DrakeCloseAttack2 { get; private set; }
+    [field: SerializeField] public EventReference DrakeDefense { get; private set; }
+    [field: SerializeField] public EventReference DrakeDieHit { get; private set; }
+    [field: SerializeField] public EventReference DrakeDieFoostep1 { get; private set; }
+    [field: SerializeField] public EventReference DrakeDieFoostep2 { get; private set; }
+    [field: SerializeField] public EventReference DrakeDieThud { get; private set; }
+    [field: SerializeField] public EventReference DrakeHitFromFrontOrBack { get; private set; }
+    [field: SerializeField] public EventReference DrakeHitFromLeftOrRight { get; private set; }
+    [field: SerializeField] public EventReference DrakeIdle { get; private set; }
+    [field: SerializeField] public EventReference DrakeFootsteps { get; private set; }
     
     [field: Header("Ambience")]
     [field: SerializeField] public EventReference alarm { get; private set;  }
