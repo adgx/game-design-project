@@ -11,6 +11,8 @@ namespace PlayerInteraction
         /// The message to display to the player when this object can be interacted with.
         /// </summary>
         string InteractionPrompt { get; }
+        
+        bool IsInteractable { get; }
 
         /// <summary>
         /// The method to be called when the player interacts with this object.
