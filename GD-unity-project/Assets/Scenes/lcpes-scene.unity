@@ -1305,6 +1305,59 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &851811541 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8997945320522567967, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+  m_PrefabInstance: {fileID: 361144709}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &915007158
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 915007159}
+  - component: {fileID: 915007160}
+  m_Layer: 0
+  m_Name: PaperManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &915007159
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 915007158}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1684462101}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &915007160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 915007158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8aa6b7002a7c4f34948c2459f377448f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _paperText: {fileID: 235949650}
+  _paperTextContainer: {fileID: 2055002796}
+  _player: {fileID: 1728157151}
+  _interactionKey: 101
 --- !u!4 &947324215 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7942380145102555645, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
@@ -1604,6 +1657,11 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8580425258324078271, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
   m_PrefabInstance: {fileID: 361144709}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1380146512 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5154549814140528373, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+  m_PrefabInstance: {fileID: 361144709}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1386329521
 GameObject:
   m_ObjectHideFlags: 0
@@ -1722,12 +1780,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1386329521}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a5a930fb03f4490c97c2baae5de803c, type: 3}
+  m_Script: {fileID: 11500000, guid: 53db7d78c57b4776a257e48d45d47bca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectablePapers: {fileID: 347109500}
-  helpText: {fileID: 423648117}
-  helpTextContainer: {fileID: 423648118}
+  _interactionKey: 101
+  _paperID: 0
 --- !u!1 &1418048827
 GameObject:
   m_ObjectHideFlags: 0
@@ -2147,6 +2204,7 @@ Transform:
   - {fileID: 1012403241}
   - {fileID: 1122996922}
   - {fileID: 379990344}
+  - {fileID: 915007159}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1728157138
@@ -2235,6 +2293,8 @@ MonoBehaviour:
   bulletSpawnTransform: {fileID: 1469227814}
   bulletPrefab: {fileID: 3780818778376199547, guid: e2193c01f07e84362a8e9f21a5774953, type: 3}
   attackAreaPrefab: {fileID: 1847315181234349731, guid: 3902c314b9067494cadeb754c1359a24, type: 3}
+  increaseAttackController: 335
+  decreaseAttackController: 334
   distanceAttackImage: {fileID: 766725499}
   closeAttackImage: {fileID: 766725498}
   distanceAttackLoadingBar: {fileID: 766725497}
@@ -2270,6 +2330,12 @@ MonoBehaviour:
   rightInput: 100
   leftMouseInput: 324
   pauseInput: 27
+  pauseInputController: 337
+  inventoryInput: 105
+  inventoryInputController: 336
+  backInputController: 331
+  interactionInput: 101
+  interactionInputController: 333
 --- !u!65 &1728157144
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2408,7 +2474,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interactionDistance: 3
-  _interactionKey: 101
   _interactionLayer:
     serializedVersion: 2
     m_Bits: 1
@@ -2816,7 +2881,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5147317051003203798, guid: 3be3347198f4941448250e9e3c013016, type: 3}
       propertyPath: <maynardCloseAttack>k__BackingField.Path
-      value: event:/SFX/Enemies/Maynard/Attack/Close
+      value: event:/SFX/Enemies/Maynard/Attack/Close/Close
       objectReference: {fileID: 0}
     - target: {fileID: 5147317051003203798, guid: 3be3347198f4941448250e9e3c013016, type: 3}
       propertyPath: <maynardHitFromBack>k__BackingField.Path
@@ -2896,11 +2961,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5147317051003203798, guid: 3be3347198f4941448250e9e3c013016, type: 3}
       propertyPath: <maynardDistanceAttack1>k__BackingField.Path
-      value: event:/SFX/Enemies/Maynard/Attack/Distance1
+      value: event:/SFX/Enemies/Maynard/Attack/Distance/Distance1
       objectReference: {fileID: 0}
     - target: {fileID: 5147317051003203798, guid: 3be3347198f4941448250e9e3c013016, type: 3}
       propertyPath: <maynardDistanceAttack2>k__BackingField.Path
-      value: event:/SFX/Enemies/Maynard/Attack/Distance2
+      value: event:/SFX/Enemies/Maynard/Attack/Distance/Distance2
       objectReference: {fileID: 0}
     - target: {fileID: 5147317051003203798, guid: 3be3347198f4941448250e9e3c013016, type: 3}
       propertyPath: <maynardFootsteps>k__BackingField.Guid.Data1
@@ -3386,6 +3451,10 @@ PrefabInstance:
       propertyPath: volumeMenuScript
       value: 
       objectReference: {fileID: 1892409782}
+    - target: {fileID: 1658623078756845969, guid: e717b62fa6b8eb34a907e7d7e771bfd9, type: 3}
+      propertyPath: backKeyController
+      value: 331
+      objectReference: {fileID: 0}
     - target: {fileID: 1779177418643411986, guid: e717b62fa6b8eb34a907e7d7e771bfd9, type: 3}
       propertyPath: m_Name
       value: PauseManager
@@ -3403,6 +3472,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1643695748}
     - target: {fileID: 7076102304092396991, guid: e717b62fa6b8eb34a907e7d7e771bfd9, type: 3}
+      propertyPath: firstSelected
+      value: 
+      objectReference: {fileID: 851811541}
+    - target: {fileID: 7076102304092396991, guid: e717b62fa6b8eb34a907e7d7e771bfd9, type: 3}
       propertyPath: collectablePapers
       value: 
       objectReference: {fileID: 347109500}
@@ -3418,6 +3491,10 @@ PrefabInstance:
       propertyPath: powerUpText
       value: 
       objectReference: {fileID: 361144713}
+    - target: {fileID: 8774698924411829510, guid: e717b62fa6b8eb34a907e7d7e771bfd9, type: 3}
+      propertyPath: firstSelected
+      value: 
+      objectReference: {fileID: 1380146512}
     - target: {fileID: 8774698924411829510, guid: e717b62fa6b8eb34a907e7d7e771bfd9, type: 3}
       propertyPath: powerUpScript
       value: 
