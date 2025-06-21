@@ -378,36 +378,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 347109497}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ee38c88d4aac4cb2be933f553d54289, type: 3}
+  m_Script: {fileID: 11500000, guid: 8aa6b7002a7c4f34948c2459f377448f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  paperText: {fileID: 235949650}
-  paperTextContainer: {fileID: 2055002796}
-  player: {fileID: 1728157151}
-  lastPaperCollected: 0
-  messages:
-  - '- What happened? Where am I?
-
-    - Something with your experiments went horribly
-    wrong, you are trapped here now
-
-    - Wait... who are you?
-
-    - Find the next
-    paper and you''ll know'
-  - '- Oh, here you are again. I am yourself... from the past
-
-    - What do you
-    mean... from the past?
-
-    - Oh so you don''t remember. You wrote these notes,
-    while making all your fancy experiments on magnetism. Those experiments were
-    not so fancy, I guess'
-  - Paper 3
-  - Paper 4
-  - Paper 5
-  - Paper 6
-  - Paper 7
+  _paperText: {fileID: 235949650}
+  _paperTextContainer: {fileID: 2055002796}
+  _player: {fileID: 1728157151}
 --- !u!114 &347109501
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1357,7 +1333,6 @@ MonoBehaviour:
   _paperText: {fileID: 235949650}
   _paperTextContainer: {fileID: 2055002796}
   _player: {fileID: 1728157151}
-  _interactionKey: 101
 --- !u!4 &947324215 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7942380145102555645, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
@@ -1783,7 +1758,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53db7d78c57b4776a257e48d45d47bca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _interactionKey: 101
   _paperID: 0
 --- !u!1 &1418048827
 GameObject:
