@@ -23,12 +23,11 @@ namespace CollectablePapers
         [Tooltip("Reference to the player to freeze movement while reading.")] [SerializeField]
         private Player _player;
 
-        [Tooltip("Key used to close the paper UI.")] [SerializeField]
-        private KeyCode _interactionKey = KeyCode.E;
-
         private Dictionary<int, string> _paperMessages;
         private HashSet<int> _collectedPapers = new();
         private bool _isPaperUiOpen = false;
+
+        private PlayerInput playerInput;
 
         private void Awake()
         {
@@ -43,13 +42,15 @@ namespace CollectablePapers
             }
 
             LoadPaperData();
-        }
+		}
 
         private void Start()
         {
             if (_paperTextContainer != null)
                 _paperTextContainer.SetActive(false);
-        }
+
+			playerInput = Player.Instance.GetComponent<PlayerInput>();
+		}
 
         /// <summary>
         /// Loads paper message data from a JSON file in the Resources folder.
@@ -70,7 +71,7 @@ namespace CollectablePapers
 
         private void Update()
         {
-            if (_isPaperUiOpen && Input.GetKeyDown(_interactionKey))
+            if (_isPaperUiOpen && playerInput.InteractionPressed())
             {
                 ClosePaperUI();
             }

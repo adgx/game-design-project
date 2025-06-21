@@ -26,9 +26,6 @@ namespace PlayerInteraction
         [SerializeField]
         private Vector3Int _leadsToWorldDirection;
 
-        [Tooltip("The key the player must press to use the door.")] [SerializeField]
-        private KeyCode _interactionKey = KeyCode.E;
-
         private RoomManager.RoomManager _roomManager;
         private Room _parentRoom;
         private bool _isTraversing = false;
