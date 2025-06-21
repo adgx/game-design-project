@@ -16,8 +16,7 @@ public class PauseMenu : MonoBehaviour
 	[SerializeField] private GameObject firstSelected;
 	[SerializeField] private GameObject noButton;
 
-	[SerializeField] private Sprite buttonHoverSprite;
-	[SerializeField] private Sprite buttonNormalSprite;
+	[SerializeField] private ButtonEffects buttonEffects;
 
 	private PlayerInput playerInput;
 
@@ -87,9 +86,8 @@ public class PauseMenu : MonoBehaviour
 			EventSystem.current.SetSelectedGameObject(firstSelected);
 	}
 
-	async public void ResumeGameButtonClick(GameObject button) {
-		button.GetComponent<Image>().sprite = buttonNormalSprite;
-		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
+	public void ResumeGameButtonClick(GameObject button) {
+		buttonEffects.OnMouseExit(button);
 
 		TogglePauseMenu();
 
@@ -97,15 +95,13 @@ public class PauseMenu : MonoBehaviour
 	}
 
 	public void NewGameButtonClick(GameObject button) {
-		button.GetComponent<Image>().sprite = buttonNormalSprite;
-		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
+		buttonEffects.OnMouseExit(button);
 
 		// TODO: to be implemented
 	}
 
 	public void VolumeSettingsButtonClick(GameObject button) {
-		button.GetComponent<Image>().sprite = buttonNormalSprite;
-		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
+		buttonEffects.OnMouseExit(button);
 
 		pauseMenu.SetActive(false);
 		volumeMenuScript.OpenVolumeMenu();
@@ -116,8 +112,7 @@ public class PauseMenu : MonoBehaviour
 	}
 
 	public void QuitGameButtonClick(GameObject button) {
-		button.GetComponent<Image>().sprite = buttonNormalSprite;
-		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
+		buttonEffects.OnMouseExit(button);
 
 		pauseMenu.SetActive(false);
 		confirmMenu.SetActive(true);
@@ -125,28 +120,14 @@ public class PauseMenu : MonoBehaviour
 	}
 
 	public void YesButtonClick(GameObject button) {
-		button.GetComponent<Image>().sprite = buttonNormalSprite;
-		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
+		buttonEffects.OnMouseExit(button);
 
 		// TODO: to be implemented
 	}
 
 	public void NoButtonClick(GameObject button) {
-		button.GetComponent<Image>().sprite = buttonNormalSprite;
-		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
+		buttonEffects.OnMouseExit(button);
 
 		BackToPause();
-	}
-
-	public void OnMouseEnter(GameObject button) {
-		button.GetComponent<Image>().sprite = buttonHoverSprite;
-		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.black;
-		if (!EventSystem.current.alreadySelecting)
-			EventSystem.current.SetSelectedGameObject(button);
-	}
-
-	public void OnMouseExit(GameObject button) {
-		button.GetComponent<Image>().sprite = buttonNormalSprite;
-		button.transform.GetChild(0).GetComponent<TextMeshProUGUI>().color = Color.white;
 	}
 }

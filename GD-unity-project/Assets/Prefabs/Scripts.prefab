@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 598710899716386821}
   - component: {fileID: 5933718642649573765}
-  - component: {fileID: 2657602389812793355}
   - component: {fileID: 7720550596828990140}
   - component: {fileID: 8880685427538663996}
   m_Layer: 0
@@ -50,45 +49,6 @@ MonoBehaviour:
   initialPlayerBulletDamage: 30
   enemyBulletDamage: 20
   playerBulletDamage: 30
---- !u!114 &2657602389812793355
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8886068327538546041}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ee38c88d4aac4cb2be933f553d54289, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  paperText: {fileID: 0}
-  paperTextContainer: {fileID: 0}
-  player: {fileID: 0}
-  lastPaperCollected: 0
-  messages:
-  - '- What happened? Where am I?
-
-    - Something with your experiments went horribly
-    wrong, you are trapped here now
-
-    - Wait... who are you?
-
-    - Find the next
-    paper and you''ll know'
-  - '- Oh, here you are again. I am yourself... from the past
-
-    - What do you
-    mean... from the past?
-
-    - Oh so you don''t remember. You wrote these notes,
-    while making all your fancy experiments on magnetism. Those experiments were
-    not so fancy, I guess'
-  - Paper 3
-  - Paper 4
-  - Paper 5
-  - Paper 6
-  - Paper 7
 --- !u!114 &7720550596828990140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120,3 +80,4 @@ MonoBehaviour:
   firstSelected: {fileID: 0}
   buttonHoverSprite: {fileID: 21300000, guid: 2074e63cc8abfd548bd4a5d8ea9fa703, type: 3}
   buttonNormalSprite: {fileID: 21300000, guid: 0e87d182b6961994b96d4fe5eeec8cf4, type: 3}
+  gameplaySceneName: Player+Map
