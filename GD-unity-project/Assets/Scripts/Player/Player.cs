@@ -159,9 +159,9 @@ using UnityEngine.Assertions;
 		private void Start()
 		{
 			playerShoot = GetComponent<PlayerShoot>();
-			playerFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.instance.playerFootsteps);
+			playerFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.instance.PlayerFootsteps);
 			playerFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-			sphereRotation = GamePlayAudioManager.instance.CreateInstance(FMODEvents.instance.sphereRotation);
+			sphereRotation = GamePlayAudioManager.instance.CreateInstance(FMODEvents.instance.PlayerSphereRotation);
 			sphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
 		}
 

@@ -4,29 +4,29 @@ using FMODUnity;
 public class FMODEvents : MonoBehaviour
 {
     [field: Header("Player SFX")]
-    [field: SerializeField] public EventReference playerCloseAttackLoad { get; private set; }
-    [field: SerializeField] public EventReference playerCloseAttackShoot { get; private set; }
-    [field: SerializeField] public EventReference playerDistanceAttackLoad { get; private set; }
-    [field: SerializeField] public EventReference playerDistanceAttackShoot { get; private set; }
-    [field: SerializeField] public EventReference shieldActivation { get; private set; }
-    [field: SerializeField] public EventReference shieldDeactivation { get; private set; }
-    [field: SerializeField] public EventReference shieldHit { get; private set; }
-    [field: SerializeField] public EventReference playerDie { get; private set; }
-    [field: SerializeField] public EventReference doorOpen { get; private set; }
-    [field: SerializeField] public EventReference doorClose { get; private set; }
-    [field: SerializeField] public EventReference playerDrink { get; private set; }
-    [field: SerializeField] public EventReference playerEatChips { get; private set; }
-    [field: SerializeField] public EventReference playerEatChocolate { get; private set; }
-    [field: SerializeField] public EventReference playerHit { get; private set; }
-    [field: SerializeField] public EventReference paperInteraction { get; private set; }
-    [field: SerializeField] public EventReference playerFootsteps { get; private set; }
-    [field: SerializeField] public EventReference sphereDischarge { get; private set; }
-    [field: SerializeField] public EventReference sphereFullRecharge { get; private set; }
-    [field: SerializeField] public EventReference sphereRotation { get; private set; }
-    [field: SerializeField] public EventReference terminalInteraction { get; private set; }
-    [field: SerializeField] public EventReference vendingMachineActivation { get; private set; }
-    [field: SerializeField] public EventReference vendingMachineItemPickUp { get; private set; }
-    [field: SerializeField] public EventReference playerWakeUp { get; private set; }
+    [field: SerializeField] public EventReference PlayerCloseAttackLoad { get; private set; }
+    [field: SerializeField] public EventReference PlayerCloseAttackShoot { get; private set; }
+    [field: SerializeField] public EventReference PlayerDistanceAttackLoad { get; private set; }
+    [field: SerializeField] public EventReference PlayerDistanceAttackShoot { get; private set; }
+    [field: SerializeField] public EventReference PlayerShieldActivation { get; private set; }
+    [field: SerializeField] public EventReference PlayerShieldDeactivation { get; private set; }
+    [field: SerializeField] public EventReference PlayerShieldHit { get; private set; }
+    [field: SerializeField] public EventReference PlayerDie { get; private set; }
+    [field: SerializeField] public EventReference PlayerDoorOpen { get; private set; }
+    [field: SerializeField] public EventReference PlayerDoorClose { get; private set; }
+    [field: SerializeField] public EventReference PlayerDrink { get; private set; }
+    [field: SerializeField] public EventReference PlayerEatChips { get; private set; }
+    [field: SerializeField] public EventReference PlayerEatChocolate { get; private set; }
+    [field: SerializeField] public EventReference PlayerHit { get; private set; }
+    [field: SerializeField] public EventReference PlayerPaperInteraction { get; private set; }
+    [field: SerializeField] public EventReference PlayerFootsteps { get; private set; }
+    [field: SerializeField] public EventReference PlayerSphereDischarge { get; private set; }
+    [field: SerializeField] public EventReference PlayerSphereFullRecharge { get; private set; }
+    [field: SerializeField] public EventReference PlayerSphereRotation { get; private set; }
+    [field: SerializeField] public EventReference PlayerTerminalInteraction { get; private set; }
+    [field: SerializeField] public EventReference PlayerVendingMachineActivation { get; private set; }
+    [field: SerializeField] public EventReference PlayerVendingMachineItemPickUp { get; private set; }
+    [field: SerializeField] public EventReference PlayerWakeUp { get; private set; }
     
     [field: Header("Maynard SFX")]
     [field: SerializeField] public EventReference MaynardCloseAttack { get; private set; }
@@ -58,19 +58,19 @@ public class FMODEvents : MonoBehaviour
     [field: SerializeField] public EventReference DrakeFootsteps { get; private set; }
     
     [field: Header("Ambience")]
-    [field: SerializeField] public EventReference alarm { get; private set;  }
-    [field: SerializeField] public EventReference serverNoise { get; private set;  }
-    [field: SerializeField] public EventReference flickeringLED { get; private set;  }
-    [field: SerializeField] public EventReference refrigeratorNoise { get; private set;  }
-    [field: SerializeField] public EventReference vendingMachineNoise { get; private set;  }
-    [field: SerializeField] public EventReference terminalNoise { get; private set;  }
-    [field: SerializeField] public EventReference elevatorNoise { get; private set;  }
-    [field: SerializeField] public EventReference ventilationNoise { get; private set;  }
-    [field: SerializeField] public EventReference flushingWCNoise { get; private set;  }
+    [field: SerializeField] public EventReference Alarm { get; private set;  }
+    [field: SerializeField] public EventReference ServerNoise { get; private set;  }
+    [field: SerializeField] public EventReference FlickeringLed { get; private set;  }
+    [field: SerializeField] public EventReference RefrigeratorNoise { get; private set;  }
+    [field: SerializeField] public EventReference VendingMachineNoise { get; private set;  }
+    [field: SerializeField] public EventReference TerminalNoise { get; private set;  }
+    [field: SerializeField] public EventReference ElevatorNoise { get; private set;  }
+    [field: SerializeField] public EventReference VentilationNoise { get; private set;  }
+    [field: SerializeField] public EventReference FlushingWcNoise { get; private set;  }
     
     [field: Header("Music")]
-    [field: SerializeField] public EventReference gameplayMusic { get; private set; }
-    [field: SerializeField] public EventReference mainMenuMusic { get; private set; }
+    [field: SerializeField] public EventReference GameplayMusic { get; private set; }
+    [field: SerializeField] public EventReference MainMenuMusic { get; private set; }
     
     public static FMODEvents instance { get; private set; }
 
