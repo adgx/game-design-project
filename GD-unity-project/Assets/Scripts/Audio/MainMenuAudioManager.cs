@@ -7,7 +7,7 @@ public class MainMenuAudioManager : MonoBehaviour
     
     private void Start()
     {
-        InitializeMusic(FMODEvents.instance.MainMenuMusic);
+        InitializeMusic(FMODEvents.Instance.MainMenuMusic);
     }
     
     private void OnDestroy()

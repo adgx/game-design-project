@@ -11,6 +11,6 @@ public class RickAnimationsEvents : MonoBehaviour
         AnimationManager.Instance.DefenseVFX(transform.position);
         
         // Audio management
-        GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.PlayerShieldActivation, rotatingSphere.transform.position);
+        GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldActivation, rotatingSphere.transform.position);
     }
 }

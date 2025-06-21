@@ -46,7 +46,7 @@ public class GamePlayAudioManager : MonoBehaviour
     
     private void Start()
     {
-        InitializeMusic(FMODEvents.instance.GameplayMusic);
+        InitializeMusic(FMODEvents.Instance.GameplayMusic);
     }
     
     private void Update()
