@@ -329,7 +329,6 @@ GameObject:
   m_Component:
   - component: {fileID: 347109499}
   - component: {fileID: 347109498}
-  - component: {fileID: 347109500}
   - component: {fileID: 347109501}
   - component: {fileID: 347109502}
   m_Layer: 0
@@ -369,21 +368,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &347109500
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 347109497}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8aa6b7002a7c4f34948c2459f377448f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _paperText: {fileID: 235949650}
-  _paperTextContainer: {fileID: 2055002796}
-  _player: {fileID: 1728157151}
 --- !u!114 &347109501
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3452,7 +3436,7 @@ PrefabInstance:
     - target: {fileID: 7076102304092396991, guid: e717b62fa6b8eb34a907e7d7e771bfd9, type: 3}
       propertyPath: collectablePapers
       value: 
-      objectReference: {fileID: 347109500}
+      objectReference: {fileID: 0}
     - target: {fileID: 7076102304092396991, guid: e717b62fa6b8eb34a907e7d7e771bfd9, type: 3}
       propertyPath: paperScrollContent
       value: 
