@@ -7,68 +7,70 @@ using UnityEngine;
 // Audio management
 using FMODUnity;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
-namespace Utils
-{
+namespace Utils {
 	// Audio management
 	[RequireComponent(typeof(StudioEventEmitter))]
 
-	public class GameTimer : MonoBehaviour
-    {
-        // TODO: the timer is set to 2 minutes for debugging. It should be of 10 minutes.
-	    private const float TimeLimit = 2f * 60f;
-        private float currentTime;
+	public class GameTimer : MonoBehaviour {
+		// TODO: the timer is set to 2 minutes for debugging. It should be of 10 minutes.
+		private const float TimeLimit = 10f;
+		private float currentTime;
 
-        public TMP_Text timerText;
-        [SerializeField] private Image timerOutlineImage;
-        [SerializeField] private Sprite timerOutlineSpriteRed;
-        [SerializeField] private Sprite timerOutlineSpriteNormal;
+		public TMP_Text timerText;
+		[SerializeField] private Image timerOutlineImage;
+		[SerializeField] private Sprite timerOutlineSpriteRed;
+		[SerializeField] private Sprite timerOutlineSpriteNormal;
 
-        private bool isRunning;
+		private bool isRunning;
 
-        public RoomManager.RoomManager roomManager;
+		public RoomManager.RoomManager roomManager;
 
 		// Audio management
 		private List<StudioEventEmitter> alarmEmitters = new List<StudioEventEmitter>();
 		private bool alarmIsTriggered = false;
-		
+
 		private List<StudioEventEmitter> serverEmitters = new List<StudioEventEmitter>();
 		private bool serverIsTriggered = false;
-		
+
 		private List<StudioEventEmitter> ledEmitters = new List<StudioEventEmitter>();
 		private bool ledIsTriggered = false;
-		
+
 		private List<StudioEventEmitter> refrigeratorEmitters = new List<StudioEventEmitter>();
 		private bool refrigeratorIsTriggered = false;
-		
+
 		private List<StudioEventEmitter> healthVendingMachineEmitters = new List<StudioEventEmitter>();
 		private bool HealthVendingMachineIsTriggered = false;
-		
+
 		private List<StudioEventEmitter> powerUpVendingMachineEmitters = new List<StudioEventEmitter>();
 		private bool PowerUpVendingMachineIsTriggered = false;
-		
+
 		private List<StudioEventEmitter> terminalEmitters = new List<StudioEventEmitter>();
-		private bool terminalIsTriggered= false;
-		
+		private bool terminalIsTriggered = false;
+
 		private List<StudioEventEmitter> elevatorEmitters = new List<StudioEventEmitter>();
 		private bool elevatorIsTriggered = false;
-		
+
 		private List<StudioEventEmitter> ventilationEmitters = new List<StudioEventEmitter>();
 		private bool ventilationIsTriggered = false;
-		
+
 		private List<StudioEventEmitter> wcEmitters = new List<StudioEventEmitter>();
 		private bool wcIsTriggered = false;
-		
+
 		private MusicLoopIteration iteration = MusicLoopIteration.FIRST_ITERATION;
-		
+
 		private GameObject player;
+
+		[SerializeField] private string respawnSceneName = "RespawnScene";
+		private bool sceneIsLoading = false;
+
 		private IEnumerator PlayWakeUpAfterDelay(float delay) {
 			yield return new WaitForSeconds(delay);
 			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.playerWakeUp, player.transform.position);
 		}
 
-		private void InitializeEventEmittersWithTag(string tagValue, EventReference eventRef, List<StudioEventEmitter> emitters)
-		{
+		private void InitializeEventEmittersWithTag(string tagValue, EventReference eventRef, List<StudioEventEmitter> emitters) {
 			GameObject[] objects = GameObject.FindGameObjectsWithTag(tagValue);
 			foreach(GameObject obj in objects) {
 				StudioEventEmitter emitter = GamePlayAudioManager.instance.InitializeEventEmitter(eventRef, obj);
@@ -80,29 +82,24 @@ namespace Utils
 				}
 			}
 		}
-		
-		private void playEventEmitters(List<StudioEventEmitter> emitters, bool condition, ref bool isTriggered)
-		{
+
+		private void playEventEmitters(List<StudioEventEmitter> emitters, bool condition, ref bool isTriggered) {
 			if(condition) {
-				foreach (var emitter in emitters)
-				{
-					if (emitter != null && emitter.gameObject != null)
-					{
+				foreach(var emitter in emitters) {
+					if(emitter != null && emitter.gameObject != null) {
 						emitter.Play();
 					}
 				}
 				isTriggered = true;
 			}
 		}
-		
-		private void resetEventEmitters(List<StudioEventEmitter> emitters, ref bool isTriggered)
-		{
+
+		private void resetEventEmitters(List<StudioEventEmitter> emitters, ref bool isTriggered) {
 			isTriggered = false;
 			emitters.Clear();
 		}
-		
-		private void InitializeAmbientEmitters()
-		{
+
+		private void InitializeAmbientEmitters() {
 			resetEventEmitters(alarmEmitters, ref alarmIsTriggered);
 			resetEventEmitters(serverEmitters, ref serverIsTriggered);
 			resetEventEmitters(ledEmitters, ref ledIsTriggered);
@@ -125,17 +122,14 @@ namespace Utils
 			InitializeEventEmittersWithTag("Ventilation", FMODEvents.instance.ventilationNoise, ventilationEmitters);
 			InitializeEventEmittersWithTag("FlushingWC", FMODEvents.instance.flushingWCNoise, wcEmitters);
 		}
-		
-		private void StopAllAmbientSounds()
-		{
-			FMOD.Studio.Bus ambientBus = FMODUnity.RuntimeManager.GetBus("bus:/Ambience"); 
-			if (ambientBus.isValid())
-			{
+
+		private void StopAllAmbientSounds() {
+			FMOD.Studio.Bus ambientBus = FMODUnity.RuntimeManager.GetBus("bus:/Ambience");
+			if(ambientBus.isValid()) {
 				// Stop all events routed on this bus and its sub-buses
 				ambientBus.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
 			}
-			else
-			{
+			else {
 				Debug.LogWarning("FMOD Bus 'bus:/Ambience' not find!");
 			}
 
@@ -151,74 +145,75 @@ namespace Utils
 			ventilationIsTriggered = false;
 			wcIsTriggered = false;
 		}
-		
-		private void OnDestroy()
-        {
-            if (roomManager)
-            {
-	            roomManager.OnRunReady -= HandleRunReady;
-	            
-	            // Audio management
-	            roomManager.OnRoomFullyInstantiated -= InitializeAmbientEmitters;
-            }
-        }
 
-        private void Awake()
-        {
-	        if (roomManager)
-	        {
-		        roomManager.OnRunReady += HandleRunReady;
-		        
-		        // Audio management
-		        roomManager.OnRoomFullyInstantiated += InitializeAmbientEmitters;
-	        }
-        }
-
-        private void Start()
-        {
-			// Audio management
-			player = GameObject.FindWithTag("Player");
-		}
-
-        private void Update()
-        {
-            if (!isRunning)
-                return;
-
-            currentTime -= Time.deltaTime;
-
-            if (currentTime <= 0f)
-            {
-                currentTime = 0f;
-                isRunning = false;
+		private void OnDestroy() {
+			if(roomManager) {
+				roomManager.OnRunReady -= HandleRunReady;
 
 				// Audio management
-				StopAllAmbientSounds();
-				
-				switch(iteration) {
-					case MusicLoopIteration.FIRST_ITERATION:
-						iteration = MusicLoopIteration.SECOND_ITERATION;
-						break;
-					case MusicLoopIteration.SECOND_ITERATION:
-						iteration = MusicLoopIteration.THIRD_ITERATION;
-						break;
-					case MusicLoopIteration.THIRD_ITERATION:
-						iteration = MusicLoopIteration.FIRST_ITERATION;
-						break;
-					default:
-						break;
+				roomManager.OnRoomFullyInstantiated -= InitializeAmbientEmitters;
+			}
+		}
+
+		private void Awake() {
+			if(roomManager) {
+				roomManager.OnRunReady += HandleRunReady;
+
+				// Audio management
+				roomManager.OnRoomFullyInstantiated += InitializeAmbientEmitters;
+			}
+		}
+
+		private void Start() {
+			// Audio management
+			player = GameObject.FindWithTag("Player");
+
+			GameStatus.gameEnded = false;
+		}
+
+		private void Update() {
+			if(!isRunning || GameStatus.gameEnded || sceneIsLoading)
+				return;
+
+			currentTime -= Time.deltaTime;
+
+			if(currentTime <= 0f) {
+				currentTime = 0f;
+				isRunning = false;
+
+				if(iteration == MusicLoopIteration.THIRD_ITERATION) {
+					GameStatus.gameEnded = true;
+					StartCoroutine(LoadRespawnSceneAsync());
 				}
-				
-				GamePlayAudioManager.instance.SetMusicLoopIteration(iteration);
-				StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
-				
-				ResetRun();
-				
+				else {
+					// Audio management
+					StopAllAmbientSounds();
+
+					switch(iteration) {
+						case MusicLoopIteration.FIRST_ITERATION:
+							iteration = MusicLoopIteration.SECOND_ITERATION;
+							break;
+						case MusicLoopIteration.SECOND_ITERATION:
+							iteration = MusicLoopIteration.THIRD_ITERATION;
+							break;
+						case MusicLoopIteration.THIRD_ITERATION:
+							iteration = MusicLoopIteration.FIRST_ITERATION;
+							break;
+						default:
+							break;
+					}
+
+					GamePlayAudioManager.instance.SetMusicLoopIteration(iteration);
+					StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
+
+					ResetRun();
+				}
+
 				// Exit the Update for this frame, preventing sounds from being reactivated immediately afterwards.
-				return; 
+				return;
 			}
 
-            UpdateTimerUI();
+			UpdateTimerUI();
 
 			// Audio management
 			playEventEmitters(alarmEmitters, !alarmIsTriggered && currentTime <= 10f, ref alarmIsTriggered);
@@ -233,58 +228,68 @@ namespace Utils
 			playEventEmitters(wcEmitters, !wcIsTriggered, ref wcIsTriggered);
 		}
 
-        private void HandleRunReady()
-        {
-	        currentTime = TimeLimit;
-	        isRunning = true;
+		private void HandleRunReady() {
+			currentTime = TimeLimit;
+			isRunning = true;
 
-	        // Audio management
-	        InitializeAmbientEmitters();
-	        
-	        GamePlayAudioManager.instance.SetMusicLoopIteration(iteration);
-        }
+			// Audio management
+			InitializeAmbientEmitters();
+
+			GamePlayAudioManager.instance.SetMusicLoopIteration(iteration);
+		}
 
 
-        private void UpdateTimerUI()
-        {
-            var minutes = Mathf.FloorToInt(currentTime / 60f);
-            var seconds = Mathf.FloorToInt(currentTime % 60f);
+		private void UpdateTimerUI() {
+			var minutes = Mathf.FloorToInt(currentTime / 60f);
+			var seconds = Mathf.FloorToInt(currentTime % 60f);
 
-            if (currentTime <= 30f && timerOutlineImage.sprite != timerOutlineSpriteRed)
-            {
-	            timerOutlineImage.sprite = timerOutlineSpriteRed;
-	            StartCoroutine(Pulse());
-            }
+			if(currentTime <= 30f && timerOutlineImage.sprite != timerOutlineSpriteRed) {
+				timerOutlineImage.sprite = timerOutlineSpriteRed;
+				StartCoroutine(Pulse());
+			}
 
-            timerText.text = $"{minutes:00}:{seconds:00}";
-        }
-        
-        // Coroutine that produces a pulse effect on the text
-        IEnumerator Pulse()
-        {
-	        while (currentTime <= 30f)
-	        {
-		        // Scale pulse
-		        float scale = Mathf.PingPong(Time.time * 0.7f, 1f);
-		        scale = Mathf.Lerp(0.9f, 1f, scale);
-		        timerText.transform.localScale = new Vector3(1 * scale, 1 * scale, 1f);
-		        yield return null;
-	        }
-        }
+			timerText.text = $"{minutes:00}:{seconds:00}";
+		}
 
-        private void ResetRun()
-        {
-            if (!roomManager)
-                return;
+		// Coroutine that produces a pulse effect on the text
+		IEnumerator Pulse() {
+			while(currentTime <= 30f) {
+				// Scale pulse
+				float scale = Mathf.PingPong(Time.time * 0.7f, 1f);
+				scale = Mathf.Lerp(0.9f, 1f, scale);
+				timerText.transform.localScale = new Vector3(1 * scale, 1 * scale, 1f);
+				yield return null;
+			}
+		}
 
-            FadeManager.Instance.FadeOutIn(() =>
-            {
-                roomManager.RegenerateRooms();
-                currentTime = TimeLimit;
-                timerOutlineImage.sprite = timerOutlineSpriteNormal;
-                StopCoroutine(Pulse());
-                isRunning = true;
-            });
-        }
-    }
+		private void ResetRun() {
+			if(!roomManager)
+				return;
+
+			FadeManager.Instance.FadeOutIn(() => {
+				roomManager.RegenerateRooms();
+				currentTime = TimeLimit;
+				timerOutlineImage.sprite = timerOutlineSpriteNormal;
+				StopCoroutine(Pulse());
+				isRunning = true;
+			});
+		}
+
+		private IEnumerator LoadRespawnSceneAsync() {
+			sceneIsLoading = true;
+
+			// Starts async loading of the scene
+			AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(respawnSceneName);
+			asyncLoad.allowSceneActivation = false;
+
+			// Wait until the scene is almost ready (>= 0.9)
+			while(asyncLoad.progress < 0.9f) {
+				yield return null;
+			}
+
+			// Activate the scene
+			asyncLoad.allowSceneActivation = true;
+
+		}
+	}
 }

@@ -1,17 +1,21 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class DeathScreen : MonoBehaviour
+public class RespawnScreen : MonoBehaviour
 {
-    [SerializeField] private GameObject deathScreenContainer;
-	[SerializeField] private CanvasGroup deathScreenCanvas;
+    [SerializeField] private GameObject respawnScreenContainer;
+	[SerializeField] private CanvasGroup respawnScreenCanvas;
 
 	[SerializeField] private string gameplaySceneName = "Player+Map";
 
 	[SerializeField] private GameObject deathMessageContainer;
 	[SerializeField] private GameObject confirmMenu;
+
+	[SerializeField] private TextMeshProUGUI title;
+	[SerializeField] private TextMeshProUGUI subtitle;
 
 	[SerializeField] private GameObject firstSelected;
 	[SerializeField] private GameObject noButton;
@@ -21,15 +25,24 @@ public class DeathScreen : MonoBehaviour
 	private void Start() {
 		Destroy(GameObject.Find("RoomManager"));
 		EventSystem.current.SetSelectedGameObject(firstSelected);
+
+		if(GameStatus.gameEnded) {
+			title.text = "Thanks for playing!";
+			subtitle.text = "This demo ends here. If you want, you can play again";
+		}
+		else {
+			title.text = "You died!";
+			subtitle.text = "";
+		}
 	}
 
 	void Update() {
 		if(fadeOut && !sceneIsLoading) {
-			if(deathScreenCanvas.alpha > 0) {
-				deathScreenCanvas.alpha -= Time.unscaledDeltaTime;
-				if(deathScreenCanvas.alpha <= 0) {
-					deathScreenCanvas.alpha = 0;
-					deathScreenContainer.SetActive(false);
+			if(respawnScreenCanvas.alpha > 0) {
+				respawnScreenCanvas.alpha -= Time.unscaledDeltaTime;
+				if(respawnScreenCanvas.alpha <= 0) {
+					respawnScreenCanvas.alpha = 0;
+					respawnScreenContainer.SetActive(false);
 					fadeOut = false;
 
 					if(changeScene) {
@@ -43,16 +56,16 @@ public class DeathScreen : MonoBehaviour
 	private IEnumerator LoadGameplaySceneAsync() {
 		sceneIsLoading = true;
 
-		// Inizia il caricamento asincrono della scena
+		// Starts async loading of the scene
 		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(gameplaySceneName);
 		asyncLoad.allowSceneActivation = false;
 
-		// Attendi finché la scena è quasi pronta (>= 0.9)
+		// Wait until the scene is almost ready (>= 0.9)
 		while(asyncLoad.progress < 0.9f) {
 			yield return null;
 		}
 
-		// Ora attiva effettivamente la scena
+		// Activate the scene
 		asyncLoad.allowSceneActivation = true;
 	}
 
@@ -67,6 +80,7 @@ public class DeathScreen : MonoBehaviour
 	public void RespawnClicked() {
 		fadeOut = true;
 		changeScene = true;
+		GameStatus.gameEnded = false;
 	}
 
 	public void QuitGameClicked() {

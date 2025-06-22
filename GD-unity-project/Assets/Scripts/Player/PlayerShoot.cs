@@ -67,7 +67,7 @@ public class PlayerShoot : MonoBehaviour
 	[SerializeField] private RotateSphere rotateSphere;
 	[SerializeField] private GameObject rotatingSphere;
 
-	[SerializeField] private string deathSceneName = "DeathScene";
+	[SerializeField] private string respawnSceneName = "RespawnScene";
 
 	private void Start() {
 		healthBar.SetMaxHealth(health);
@@ -480,7 +480,7 @@ public class PlayerShoot : MonoBehaviour
      			
      			Invoke(nameof(DestroyPlayer), 0.05f);
 
-			StartCoroutine(LoadDeathSceneAsync());
+				StartCoroutine(LoadRespawnSceneAsync());
      		}
      			
      		else
@@ -511,10 +511,10 @@ public class PlayerShoot : MonoBehaviour
 	private void DestroyPlayer() {
 		Destroy(gameObject);
 	}
-	private IEnumerator LoadDeathSceneAsync() {
+	private IEnumerator LoadRespawnSceneAsync() {
 
 		// Inizia il caricamento asincrono della scena
-		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(deathSceneName);
+		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(respawnSceneName);
 		asyncLoad.allowSceneActivation = false;
 
 		// Attendi finché la scena è quasi pronta (>= 0.9)

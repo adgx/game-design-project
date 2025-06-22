@@ -91,8 +91,6 @@ namespace PlayerInteraction
             {
                 GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.doorOpen, interactor.transform.position);
 
-                await Task.Delay(1000);
-
                 FadeManager.Instance.FadeOutIn(() =>
                 {
                     _roomManager.TraverseRoom(nextRoomGridIndex, _leadsToWorldDirection);

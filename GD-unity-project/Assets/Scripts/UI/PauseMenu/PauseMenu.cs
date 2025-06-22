@@ -1,17 +1,27 @@
+using System.Collections;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
+	private enum ActionToConfirm {
+		QuitGame,
+		StartNewGame
+	}
+	private ActionToConfirm actionToConfirm;
+
 	[SerializeField] private GameObject screenContainer;
 	[SerializeField] private GameObject pauseMenu;
 	[SerializeField] private GameObject confirmMenu;
 	[SerializeField] private VolumeMenu volumeMenuScript;
+
+	[SerializeField] private TextMeshProUGUI confirmMenuText;
 
 	[SerializeField] private GameObject firstSelected;
 	[SerializeField] private GameObject noButton;
@@ -22,6 +32,9 @@ public class PauseMenu : MonoBehaviour
 
 	private bool pauseScreenOpen = false;
 
+	[SerializeField] private string gameplaySceneName = "Player+Map";
+	private bool sceneIsLoading = false;
+
 	private void Start() {
 		playerInput = Player.Instance.GetComponent<PlayerInput>();
 
@@ -30,19 +43,23 @@ public class PauseMenu : MonoBehaviour
 		pauseMenu.SetActive(false);
 		confirmMenu.SetActive(false);
 		volumeMenuScript.CloseVolumeMenu();
+
+		actionToConfirm = ActionToConfirm.QuitGame;
 	}
 
 	// Update is called once per frame
 	void Update()
     {
-		if(playerInput.PausePressed() || (pauseScreenOpen && pauseMenu.activeInHierarchy && playerInput.BackKeyPressed())) {
-			ChangeGameState(!GameStatus.gamePaused);
+		if(!sceneIsLoading) {
+			if(playerInput.PausePressed() || (pauseScreenOpen && pauseMenu.activeInHierarchy && playerInput.BackKeyPressed())) {
+				ChangeGameState(!GameStatus.gamePaused);
 
-			TogglePauseMenu();
-		}
+				TogglePauseMenu();
+			}
 
-		if(pauseScreenOpen && !pauseMenu.activeInHierarchy && playerInput.BackKeyPressed()) {
-			BackToPause();
+			if(pauseScreenOpen && !pauseMenu.activeInHierarchy && playerInput.BackKeyPressed()) {
+				BackToPause();
+			}
 		}
 	}
 
@@ -97,7 +114,8 @@ public class PauseMenu : MonoBehaviour
 	public void NewGameButtonClick(GameObject button) {
 		buttonEffects.OnMouseExit(button);
 
-		// TODO: to be implemented
+		actionToConfirm = ActionToConfirm.StartNewGame;
+		OpenConfirmMenu();
 	}
 
 	public void VolumeSettingsButtonClick(GameObject button) {
@@ -114,6 +132,18 @@ public class PauseMenu : MonoBehaviour
 	public void QuitGameButtonClick(GameObject button) {
 		buttonEffects.OnMouseExit(button);
 
+		actionToConfirm = ActionToConfirm.QuitGame;
+		OpenConfirmMenu();
+	}
+
+	private void OpenConfirmMenu() {
+		if(actionToConfirm == ActionToConfirm.QuitGame) {
+			confirmMenuText.text = "Are you sure you want to quit?";
+		}
+		else {
+			confirmMenuText.text = "Are you sure you want to start a new game?";
+		}
+
 		pauseMenu.SetActive(false);
 		confirmMenu.SetActive(true);
 		EventSystem.current.SetSelectedGameObject(noButton);
@@ -122,12 +152,36 @@ public class PauseMenu : MonoBehaviour
 	public void YesButtonClick(GameObject button) {
 		buttonEffects.OnMouseExit(button);
 
-		// TODO: to be implemented
+		if(actionToConfirm == ActionToConfirm.StartNewGame) {
+			Destroy(GameObject.Find("RoomManager"));
+			StartCoroutine(LoadGameplaySceneAsync());
+		}
+		else {
+			// TODO: to be implemented
+		}
 	}
 
 	public void NoButtonClick(GameObject button) {
 		buttonEffects.OnMouseExit(button);
 
 		BackToPause();
+	}
+
+	private IEnumerator LoadGameplaySceneAsync() {
+		sceneIsLoading = true;
+
+		// Starts async loading of the scene
+		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(gameplaySceneName);
+		asyncLoad.allowSceneActivation = false;
+
+		// Wait until the scene is almost ready (>= 0.9)
+		while(asyncLoad.progress < 0.9f) {
+			yield return null;
+		}
+
+		// Activate the scene
+		asyncLoad.allowSceneActivation = true;
+
+		ChangeGameState(false);
 	}
 }

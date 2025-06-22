@@ -145,6 +145,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4098809374271638049, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
   m_PrefabInstance: {fileID: 361144709}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &150900882 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4425991590383879962, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+  m_PrefabInstance: {fileID: 361144709}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &205731131 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3485552226981936514, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
@@ -2630,6 +2641,7 @@ MonoBehaviour:
   getCollisions: {fileID: 347109498}
   rotateSphere: {fileID: 1016344254}
   rotatingSphere: {fileID: 1016344253}
+  respawnSceneName: RespawnScene
 --- !u!114 &1728157142
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2985,6 +2997,7 @@ MonoBehaviour:
   timerOutlineSpriteRed: {fileID: 21300000, guid: 930c7c786fbcea84cb52fd77ec535b88, type: 3}
   timerOutlineSpriteNormal: {fileID: 21300000, guid: 696019546c7a8e7428d0f8454c944a56, type: 3}
   roomManager: {fileID: 1738691463}
+  respawnSceneName: RespawnScene
 --- !u!114 &1738691471
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3771,6 +3784,10 @@ PrefabInstance:
       propertyPath: firstSelected
       value: 
       objectReference: {fileID: 707619577}
+    - target: {fileID: 1658623078756845969, guid: e717b62fa6b8eb34a907e7d7e771bfd9, type: 3}
+      propertyPath: confirmMenuText
+      value: 
+      objectReference: {fileID: 150900882}
     - target: {fileID: 1658623078756845969, guid: e717b62fa6b8eb34a907e7d7e771bfd9, type: 3}
       propertyPath: screenContainer
       value: 
