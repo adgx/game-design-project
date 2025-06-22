@@ -42,9 +42,9 @@ namespace Audio
         [field: SerializeField] public EventReference MaynardIdle { get; private set; }
         [field: SerializeField] public EventReference MaynardFootsteps { get; private set; }
         [field: SerializeField] public EventReference MaynardStandUpRoar { get; private set; }
+        [field: SerializeField] public EventReference MaynardStandUpFootstep1 { get; private set; }
+        [field: SerializeField] public EventReference MaynardStandUpFootstep2 { get; private set; }
         [field: SerializeField] public EventReference MaynardStandUpBreath { get; private set; }
-        [field: SerializeField] public EventReference MaynardFootstep1 { get; private set; }
-        [field: SerializeField] public EventReference MaynardFootstep2 { get; private set; }
     
         [field: Header("Drake SFX")]
         [field: SerializeField] public EventReference DrakeCloseAttack1 { get; private set; }
@@ -58,6 +58,27 @@ namespace Audio
         [field: SerializeField] public EventReference DrakeHitFromLeftOrRight { get; private set; }
         [field: SerializeField] public EventReference DrakeIdle { get; private set; }
         [field: SerializeField] public EventReference DrakeFootsteps { get; private set; }
+        
+        [field: Header("Incognito SFX")]
+        [field: SerializeField] public EventReference IncognitoDistanceAttack1 { get; private set; }
+        [field: SerializeField] public EventReference IncognitoDistanceAttack2Load { get; private set; }
+        [field: SerializeField] public EventReference IncognitoDistanceAttack2Spit { get; private set; }
+        [field: SerializeField] public EventReference IncognitoDieGrunt { get; private set; }
+        [field: SerializeField] public EventReference IncognitoDieThud1 { get; private set; }
+        [field: SerializeField] public EventReference IncognitoDieThud2 { get; private set; }
+        [field: SerializeField] public EventReference IncognitoHitFromFront1 { get; private set; }
+        [field: SerializeField] public EventReference IncognitoHitFromFront2 { get; private set; }
+        [field: SerializeField] public EventReference IncognitoHitFromLeftOrRight { get; private set; }
+        [field: SerializeField] public EventReference IncognitoHitFallScream { get; private set; }
+        [field: SerializeField] public EventReference IncognitoHitFallFootstep1 { get; private set; }
+        [field: SerializeField] public EventReference IncognitoHitFallFootstep2 { get; private set; }
+        [field: SerializeField] public EventReference IncognitoHitFallThud1 { get; private set; }
+        [field: SerializeField] public EventReference IncognitoHitFallThud2 { get; private set; }
+        [field: SerializeField] public EventReference IncognitoIdle { get; private set; }
+        [field: SerializeField] public EventReference IncognitoFootsteps { get; private set; }
+        [field: SerializeField] public EventReference IncognitoStandUpRoar { get; private set; }
+        [field: SerializeField] public EventReference IncognitoStandUpFootstep1 { get; private set; }
+        [field: SerializeField] public EventReference IncognitoStandUpFootstep2 { get; private set; }
     
         [field: Header("Ambience")]
         [field: SerializeField] public EventReference Alarm { get; private set;  }

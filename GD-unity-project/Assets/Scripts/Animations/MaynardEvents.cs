@@ -83,7 +83,7 @@ namespace Animations
         
             // Audio management;
             ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardFootstep1, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardStandUpFootstep1, transform.position);
         }
     
         public void StandUpFootstep2()
@@ -92,7 +92,7 @@ namespace Animations
         
             // Audio management;
             ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardFootstep2, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardStandUpFootstep2, transform.position);
         }
     
         public void StandUpBreath()
