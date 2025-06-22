@@ -34,8 +34,10 @@ namespace Audio
         [field: SerializeField] public EventReference MaynardCloseAttack { get; private set; }
         [field: SerializeField] public EventReference MaynardDistanceAttack1 { get; private set; }
         [field: SerializeField] public EventReference MaynardDistanceAttack2 { get; private set; }
-        [field: SerializeField] public EventReference MaynardDie { get; private set; }
-        [field: SerializeField] public EventReference MaynardHitFall { get; private set; }
+        [field: SerializeField] public EventReference MaynardDieScream { get; private set; }
+        [field: SerializeField] public EventReference MaynardDieThud { get; private set; }
+        [field: SerializeField] public EventReference MaynardHitFallScream { get; private set; }
+        [field: SerializeField] public EventReference MaynardHitFallThud { get; private set; }
         [field: SerializeField] public EventReference MaynardHitFromBack { get; private set; }
         [field: SerializeField] public EventReference MaynardHitFromFront { get; private set; }
         [field: SerializeField] public EventReference MaynardHitFromLeftOrRight { get; private set; }

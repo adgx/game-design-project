@@ -59,13 +59,22 @@ namespace Animations
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardCloseAttack, transform.position);
         }
     
-        public void Fall()
+        public void FallScream()
         {
-            Debug.Log("Fall");
+            Debug.Log("FallScream");
         
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardHitFall, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardHitFallScream, transform.position);
+        }
+        
+        public void FallThud()
+        {
+            Debug.Log("FallThud");
+        
+            // Audio management
+            ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardHitFallThud, transform.position);
         }
     
         public void StandUpRoar()
@@ -140,13 +149,22 @@ namespace Animations
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardHitFromBack, transform.position);
         }
 
-        public void Death()
+        public void DeathScream()
         {
-            Debug.Log("Death");
+            Debug.Log("DeathScream");
         
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardDie, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardDieScream, transform.position);
+        }
+        
+        public void DeathThud()
+        {
+            Debug.Log("DeathThud");
+        
+            // Audio management
+            ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardDieThud, transform.position);
         }
     
         // Audio management
