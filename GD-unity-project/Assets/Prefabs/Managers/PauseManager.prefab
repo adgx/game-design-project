@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 415173684934062143}
   - component: {fileID: 8774698924411829510}
   - component: {fileID: 7076102304092396991}
+  - component: {fileID: -3958158436726632438}
   m_Layer: 0
   m_Name: PauseManager
   m_TagString: Untagged
@@ -53,8 +54,7 @@ MonoBehaviour:
   volumeMenuScript: {fileID: 0}
   firstSelected: {fileID: 0}
   noButton: {fileID: 0}
-  buttonHoverSprite: {fileID: 21300000, guid: 2074e63cc8abfd548bd4a5d8ea9fa703, type: 3}
-  buttonNormalSprite: {fileID: 21300000, guid: 0e87d182b6961994b96d4fe5eeec8cf4, type: 3}
+  buttonEffects: {fileID: -3958158436726632438}
 --- !u!114 &415173684934062143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,6 +116,7 @@ MonoBehaviour:
     icon: {fileID: 21300000, guid: 0e80ebc4107194d75a857a2f95849308, type: 3}
   powerUpScript: {fileID: 0}
   powerUpText: {fileID: 0}
+  firstSelected: {fileID: 0}
 --- !u!114 &7076102304092396991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,4 +133,17 @@ MonoBehaviour:
   paperText: {fileID: 0}
   paperScrollContent: {fileID: 0}
   paperButton: {fileID: 0}
-  collectablePapers: {fileID: 0}
+--- !u!114 &-3958158436726632438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779177418643411986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ae16aef586876a459e0836c8ebee45d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonNormalSprite: {fileID: 21300000, guid: 0e87d182b6961994b96d4fe5eeec8cf4, type: 3}
+  buttonHoverSprite: {fileID: 21300000, guid: 2074e63cc8abfd548bd4a5d8ea9fa703, type: 3}

@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine;
 using ORF;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerShoot : MonoBehaviour
 {
@@ -66,6 +67,8 @@ public class PlayerShoot : MonoBehaviour
 	private Player player;
 	[SerializeField] private RotateSphere rotateSphere;
 	[SerializeField] private GameObject rotatingSphere;
+
+	[SerializeField] private string respawnSceneName = "RespawnScene";
 
 	private void Start() {
 		healthBar.SetMaxHealth(health);
@@ -477,6 +480,8 @@ public class PlayerShoot : MonoBehaviour
      			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDie, player.transform.position);
      			
      			Invoke(nameof(DestroyPlayer), 0.05f);
+
+				StartCoroutine(LoadRespawnSceneAsync());
      		}
      			
      		else
@@ -506,6 +511,20 @@ public class PlayerShoot : MonoBehaviour
 	}
 	private void DestroyPlayer() {
 		Destroy(gameObject);
+	}
+	private IEnumerator LoadRespawnSceneAsync() {
+
+		// Inizia il caricamento asincrono della scena
+		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(respawnSceneName);
+		asyncLoad.allowSceneActivation = false;
+
+		// Attendi finché la scena è quasi pronta (>= 0.9)
+		while(asyncLoad.progress < 0.9f) {
+			yield return null;
+		}
+
+		// Ora attiva effettivamente la scena
+		asyncLoad.allowSceneActivation = true;
 	}
 
 	public void RecoverHealth(float amount) {
