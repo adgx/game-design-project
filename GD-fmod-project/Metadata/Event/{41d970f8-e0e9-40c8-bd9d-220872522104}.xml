@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{41d970f8-e0e9-40c8-bd9d-220872522104}">
 		<property name="name">
-			<value>1_Load</value>
+			<value>2_Spit</value>
 		</property>
 		<property name="outputFormat">
 			<value>2</value>
@@ -72,6 +72,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{48f36658-51f0-454f-8339-54bd83889896}">
+		<property name="volume">
+			<value>-10</value>
+		</property>
 		<relationship name="effectChain">
 			<destination>{e3475371-9531-4914-bb0c-97891da3fad1}</destination>
 		</relationship>

@@ -153,7 +153,7 @@ namespace Animations
             drakeIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
 
             // Start footsteps event if Drake is moving
-            if (isRunning) // TODO: check Drake's state (something like <<DrakState != Run>>)
+            if (isRunning) // TODO: check Drake's state (something like <<DrakeState != Run>>)
             {
                 // Get the playback state for the footsteps event
                 PLAYBACK_STATE footstepsPlaybackState;
@@ -170,7 +170,7 @@ namespace Animations
             }
         
             // Start idle event if Drake is using the idle animation
-            if (isIdle) // TODO: check Drake's state (something like <<DrakState != Idle>>)
+            if (isIdle) // TODO: check Drake's state (something like <<DrakeState != Idle>>)
             {
                 // Get the playback state for the idle event
                 PLAYBACK_STATE idlePlaybackState;

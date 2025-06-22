@@ -72,11 +72,9 @@ namespace Audio
         [field: SerializeField] public EventReference IncognitoHitFallScream { get; private set; }
         [field: SerializeField] public EventReference IncognitoHitFallFootstep1 { get; private set; }
         [field: SerializeField] public EventReference IncognitoHitFallFootstep2 { get; private set; }
-        [field: SerializeField] public EventReference IncognitoHitFallThud1 { get; private set; }
-        [field: SerializeField] public EventReference IncognitoHitFallThud2 { get; private set; }
+        [field: SerializeField] public EventReference IncognitoHitFallThud { get; private set; }
         [field: SerializeField] public EventReference IncognitoIdle { get; private set; }
         [field: SerializeField] public EventReference IncognitoFootsteps { get; private set; }
-        [field: SerializeField] public EventReference IncognitoStandUpRoar { get; private set; }
         [field: SerializeField] public EventReference IncognitoStandUpFootstep1 { get; private set; }
         [field: SerializeField] public EventReference IncognitoStandUpFootstep2 { get; private set; }
     

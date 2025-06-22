@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{05f85440-dd09-4104-a12e-eaf491342558}">
 		<property name="name">
-			<value>2_Spit</value>
+			<value>1_Load</value>
 		</property>
 		<property name="outputFormat">
 			<value>2</value>
@@ -101,6 +101,9 @@
 	</object>
 	<object class="MixerBusPanner" id="{902cddba-0d25-4bfb-ab43-8a0c23e760dd}" />
 	<object class="SingleSound" id="{a1af9fcf-5776-4b50-89b0-90080f231cac}">
+		<property name="volume">
+			<value>-10</value>
+		</property>
 		<relationship name="audioFile">
 			<destination>{7b722c24-9557-47de-b4a5-cfbad871011c}</destination>
 		</relationship>
