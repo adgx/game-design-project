@@ -18,6 +18,7 @@ namespace Helper {
 			else
 				Destroy(gameObject);
 
+			transform.SetParent(null); // Detach from "Managers" to avoid warnings
 			DontDestroyOnLoad(gameObject);
 
 			player = GameObject.FindWithTag("Player").GetComponent<Player>();

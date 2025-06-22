@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using RoomManager;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,32 +10,25 @@ namespace Utils
     public class MinimapManager : MonoBehaviour
     {
         [Header("Minimap UI References")]
-        [Tooltip("The UI Image prefab used to represent a single room on the minimap.")]
+        [Tooltip("The parent Transform with a GridLayoutGroup that will contain all minimap icons.")]
         [SerializeField]
-        private GameObject _minimapIconPrefab;
-
-        [Tooltip("The parent Transform with a GridLayoutGroup that will contain all minimap icons.")] [SerializeField]
         private Transform _minimapGridParent;
 
-        [Header("Minimap Colors")] [Tooltip("The color for a grid cell that does not contain a room.")] [SerializeField]
-        private Color _emptyCellColor = new Color(0f, 0f, 0f, 0f);
+        [Tooltip("A prefab for a single minimap cell. Should have an Image component.")] [SerializeField]
+        private GameObject _minimapCellPrefab;
 
-        [Tooltip("The color for a room that exists but has not been visited by the player.")] [SerializeField]
-        private Color _undiscoveredRoomColor = new Color(0.2f, 0.2f, 0.2f, 1f);
+        [SerializeField] private Sprite _currentRoomSprite;
+        [SerializeField] private Sprite _visitedRoomSprite;
+        [SerializeField] private Sprite _unvisitedRoomSprite;
 
-        [Tooltip("The color for a room that the player has already visited.")] [SerializeField]
-        private Color _visitedRoomColor = new Color(0.7f, 0.7f, 0.7f, 1f);
-
-        [Tooltip("The color for the icon representing the player's current room.")] [SerializeField]
-        private Color _currentPlayerColor = Color.green;
-
-        private Dictionary<Vector3Int, Image> _minimapIconsByGridIndex = new Dictionary<Vector3Int, Image>();
+        private readonly Dictionary<Vector3Int, Image> _minimapIconsByGridIndex = new Dictionary<Vector3Int, Image>();
         private RoomManager.RoomManager _roomManager;
         private Vector3Int? _currentPlayerMinimapIndex;
 
-        private void Start()
+        private void Awake()
         {
             _roomManager = RoomManager.RoomManager.Instance;
+
             if (_roomManager == null)
             {
                 Debug.LogError("MinimapManager: RoomManager.Instance not found! Disabling MinimapManager.", this);
@@ -44,9 +36,9 @@ namespace Utils
                 return;
             }
 
-            if (_minimapIconPrefab == null || _minimapGridParent == null)
+            if (_minimapGridParent == null || _minimapCellPrefab == null)
             {
-                Debug.LogError("MinimapManager: UI Prefab or Grid Parent not assigned! Disabling MinimapManager.",
+                Debug.LogError("MinimapManager: Grid Parent or Cell Prefab not assigned! Disabling MinimapManager.",
                     this);
                 enabled = false;
                 return;
@@ -82,6 +74,7 @@ namespace Utils
             {
                 gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
                 gridLayout.constraintCount = gridWidth;
+                gridLayout.spacing = new Vector2(5f, 5f);
             }
             else
             {
@@ -94,21 +87,28 @@ namespace Utils
                 for (int x = 0; x < gridWidth; x++)
                 {
                     var roomGridIndex = new Vector3Int(x, 0, z);
-                    GameObject iconGO = Instantiate(_minimapIconPrefab, _minimapGridParent);
-                    iconGO.name = $"MinimapCell_x{x}_z{z}";
 
-                    if (iconGO.GetComponent<Image>() is { } iconImage)
+                    GameObject iconGameObject = Instantiate(_minimapCellPrefab, _minimapGridParent);
+                    iconGameObject.name = $"MinimapCell_x{x}_z{z}";
+
+                    Image iconImage = iconGameObject.GetComponent<Image>();
+
+                    if (iconImage == null)
                     {
-                        iconImage.color = _roomManager.DoesRoomExistAt(roomGridIndex)
-                            ? _undiscoveredRoomColor
-                            : _emptyCellColor;
+                        Debug.LogError($"Minimap Cell Prefab is missing an Image component on '{iconGameObject.name}'");
+                        continue;
+                    }
+
+                    if (_roomManager.DoesRoomExistAt(roomGridIndex))
+                    {
+                        iconImage.sprite = _unvisitedRoomSprite;
+                        iconImage.color = Color.clear;
                         _minimapIconsByGridIndex[roomGridIndex] = iconImage;
                     }
                     else
                     {
-                        Debug.LogError(
-                            $"Minimap icon prefab '{_minimapIconPrefab.name}' is missing an Image component.", this);
-                        Destroy(iconGO);
+                        iconImage.sprite = null;
+                        iconImage.color = Color.clear;
                     }
                 }
             }
@@ -125,13 +125,15 @@ namespace Utils
             {
                 if (_minimapIconsByGridIndex.TryGetValue(_currentPlayerMinimapIndex.Value, out Image previousIcon))
                 {
-                    previousIcon.color = _visitedRoomColor;
+                    previousIcon.sprite = _visitedRoomSprite;
+                    previousIcon.color = Color.white;
                 }
             }
 
             if (_minimapIconsByGridIndex.TryGetValue(newRoomIndex, out Image currentIcon))
             {
-                currentIcon.color = _currentPlayerColor;
+                currentIcon.sprite = _currentRoomSprite;
+                currentIcon.color = Color.white;
             }
 
             _currentPlayerMinimapIndex = newRoomIndex;

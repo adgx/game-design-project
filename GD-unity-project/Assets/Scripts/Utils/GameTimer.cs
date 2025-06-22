@@ -1,73 +1,80 @@
 using Helper;
 using System.Collections;
 using System.Collections.Generic;
+using Audio;
 using TMPro;
 using UnityEngine;
 
 // Audio management
 using FMODUnity;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
-namespace Utils
-{
+namespace Utils {
 	// Audio management
 	[RequireComponent(typeof(StudioEventEmitter))]
 
-	public class GameTimer : MonoBehaviour
-    {
-        // TODO: the timer is set to 2 minutes for debugging. It should be of 10 minutes.
-	    private const float TimeLimit = 2 * 60f;
-        private float currentTime;
+	public class GameTimer : MonoBehaviour {
+		// TODO: the timer is set to 2 minutes for debugging. It should be of 10 minutes.
+		private const float TimeLimit = 2 * 60f;
+		private float currentTime;
 
-        public TMP_Text timerText;
+		public TMP_Text timerText;
+		[SerializeField] private Image timerOutlineImage;
+		[SerializeField] private Sprite timerOutlineSpriteRed;
+		[SerializeField] private Sprite timerOutlineSpriteNormal;
 
-        private bool isRunning;
+		private bool isRunning;
 
-        public RoomManager.RoomManager roomManager;
+		public RoomManager.RoomManager roomManager;
 
 		// Audio management
 		private List<StudioEventEmitter> alarmEmitters = new List<StudioEventEmitter>();
 		private bool alarmIsTriggered = false;
-		
+
 		private List<StudioEventEmitter> serverEmitters = new List<StudioEventEmitter>();
 		private bool serverIsTriggered = false;
-		
+
 		private List<StudioEventEmitter> ledEmitters = new List<StudioEventEmitter>();
 		private bool ledIsTriggered = false;
-		
+
 		private List<StudioEventEmitter> refrigeratorEmitters = new List<StudioEventEmitter>();
 		private bool refrigeratorIsTriggered = false;
-		
+
 		private List<StudioEventEmitter> healthVendingMachineEmitters = new List<StudioEventEmitter>();
 		private bool HealthVendingMachineIsTriggered = false;
-		
+
 		private List<StudioEventEmitter> powerUpVendingMachineEmitters = new List<StudioEventEmitter>();
 		private bool PowerUpVendingMachineIsTriggered = false;
-		
+
 		private List<StudioEventEmitter> terminalEmitters = new List<StudioEventEmitter>();
-		private bool terminalIsTriggered= false;
-		
+		private bool terminalIsTriggered = false;
+
 		private List<StudioEventEmitter> elevatorEmitters = new List<StudioEventEmitter>();
 		private bool elevatorIsTriggered = false;
-		
+
 		private List<StudioEventEmitter> ventilationEmitters = new List<StudioEventEmitter>();
 		private bool ventilationIsTriggered = false;
-		
+
 		private List<StudioEventEmitter> wcEmitters = new List<StudioEventEmitter>();
-		private bool wcIsTrigger = false;
-		
+		private bool wcIsTriggered = false;
+
 		private MusicLoopIteration iteration = MusicLoopIteration.FIRST_ITERATION;
-		
+
 		private GameObject player;
+
+		[SerializeField] private string respawnSceneName = "RespawnScene";
+		private bool sceneIsLoading = false;
+
 		private IEnumerator PlayWakeUpAfterDelay(float delay) {
 			yield return new WaitForSeconds(delay);
-			AudioManager.instance.PlayOneShot(FMODEvents.instance.playerWakeUp, player.transform.position);
+			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerWakeUp, player.transform.position);
 		}
 
-		private void InitializeEventEmittersWithTag(string tagValue, EventReference eventRef, List<StudioEventEmitter> emitters)
-		{
+		private void InitializeEventEmittersWithTag(string tagValue, EventReference eventRef, List<StudioEventEmitter> emitters) {
 			GameObject[] objects = GameObject.FindGameObjectsWithTag(tagValue);
 			foreach(GameObject obj in objects) {
-				StudioEventEmitter emitter = AudioManager.instance.InitializeEventEmitter(eventRef, obj);
+				StudioEventEmitter emitter = GamePlayAudioManager.instance.InitializeEventEmitter(eventRef, obj);
 				if(emitter != null) {
 					emitters.Add(emitter);
 				}
@@ -76,107 +83,138 @@ namespace Utils
 				}
 			}
 		}
-		
-		private void stopEventEmitters(List<StudioEventEmitter> emitters)
-		{
-			foreach(var emitter in emitters) {
-				emitter.Stop();
-			}
-		}
-		
-		private void playEventEmitters(List<StudioEventEmitter> emitters, bool condition, ref bool isTriggered)
-		{
+
+		private void playEventEmitters(List<StudioEventEmitter> emitters, bool condition, ref bool isTriggered) {
 			if(condition) {
-				foreach (var emitter in emitters)
-				{
-					if (emitter != null && emitter.gameObject != null)
-					{
+				foreach(var emitter in emitters) {
+					if(emitter != null && emitter.gameObject != null) {
 						emitter.Play();
 					}
 				}
 				isTriggered = true;
 			}
 		}
-		
-		private void resetEventEmitters(List<StudioEventEmitter> emitters, ref bool isTriggered)
-		{
+
+		private void resetEventEmitters(List<StudioEventEmitter> emitters, ref bool isTriggered) {
 			isTriggered = false;
 			emitters.Clear();
 		}
-		
-		private void OnDestroy()
-        {
-            if (roomManager)
-                roomManager.OnRunReady -= HandleRunReady;
-        }
 
-        private void Start()
-        {
-            if (roomManager)
-            {
-                roomManager.OnRunReady += HandleRunReady;
-            }
+		private void InitializeAmbientEmitters() {
+			resetEventEmitters(alarmEmitters, ref alarmIsTriggered);
+			resetEventEmitters(serverEmitters, ref serverIsTriggered);
+			resetEventEmitters(ledEmitters, ref ledIsTriggered);
+			resetEventEmitters(refrigeratorEmitters, ref refrigeratorIsTriggered);
+			resetEventEmitters(healthVendingMachineEmitters, ref HealthVendingMachineIsTriggered);
+			resetEventEmitters(powerUpVendingMachineEmitters, ref PowerUpVendingMachineIsTriggered);
+			resetEventEmitters(terminalEmitters, ref terminalIsTriggered);
+			resetEventEmitters(elevatorEmitters, ref elevatorIsTriggered);
+			resetEventEmitters(ventilationEmitters, ref ventilationIsTriggered);
+			resetEventEmitters(wcEmitters, ref wcIsTriggered);
 
-			// Audio management
-			player = GameObject.Find("Player");
-
-			InitializeEventEmittersWithTag("AlarmSpeaker", FMODEvents.instance.alarm, alarmEmitters);
-			InitializeEventEmittersWithTag("Server", FMODEvents.instance.serverNoise, serverEmitters);
-			InitializeEventEmittersWithTag("FlickeringLED", FMODEvents.instance.flickeringLED, ledEmitters);
-			InitializeEventEmittersWithTag("Refrigerator", FMODEvents.instance.refrigeratorNoise, refrigeratorEmitters);
-			InitializeEventEmittersWithTag("HealthSnackDistributor", FMODEvents.instance.vendingMachineNoise, healthVendingMachineEmitters);
-			InitializeEventEmittersWithTag("PowerUpSnackDistributor", FMODEvents.instance.vendingMachineNoise, powerUpVendingMachineEmitters);
-			InitializeEventEmittersWithTag("SphereTerminal", FMODEvents.instance.terminalNoise, terminalEmitters);
-			InitializeEventEmittersWithTag("Elevator", FMODEvents.instance.elevatorNoise, elevatorEmitters);
-			InitializeEventEmittersWithTag("Ventilation", FMODEvents.instance.ventilationNoise, ventilationEmitters);
-			InitializeEventEmittersWithTag("FlushingWC", FMODEvents.instance.flushingWCNoise, wcEmitters);
+			InitializeEventEmittersWithTag("AlarmSpeaker", FMODEvents.Instance.Alarm, alarmEmitters);
+			InitializeEventEmittersWithTag("Server", FMODEvents.Instance.ServerNoise, serverEmitters);
+			InitializeEventEmittersWithTag("FlickeringLED", FMODEvents.Instance.FlickeringLed, ledEmitters);
+			InitializeEventEmittersWithTag("Refrigerator", FMODEvents.Instance.RefrigeratorNoise, refrigeratorEmitters);
+			InitializeEventEmittersWithTag("HealthSnackDistributor", FMODEvents.Instance.VendingMachineNoise, healthVendingMachineEmitters);
+			InitializeEventEmittersWithTag("PowerUpSnackDistributor", FMODEvents.Instance.VendingMachineNoise, powerUpVendingMachineEmitters);
+			InitializeEventEmittersWithTag("SphereTerminal", FMODEvents.Instance.TerminalNoise, terminalEmitters);
+			InitializeEventEmittersWithTag("Elevator", FMODEvents.Instance.ElevatorNoise, elevatorEmitters);
+			InitializeEventEmittersWithTag("Ventilation", FMODEvents.Instance.VentilationNoise, ventilationEmitters);
+			InitializeEventEmittersWithTag("FlushingWC", FMODEvents.Instance.FlushingWcNoise, wcEmitters);
 		}
 
-        private void Update()
-        {
-            if (!isRunning)
-                return;
-
-            currentTime -= Time.deltaTime;
-
-            if (currentTime <= 0f)
-            {
-                currentTime = 0f;
-                isRunning = false;
-
-                ResetRun();
-
-				// Audio management
-				stopEventEmitters(alarmEmitters);
-				stopEventEmitters(serverEmitters);
-				stopEventEmitters(ledEmitters);
-				stopEventEmitters(refrigeratorEmitters);
-				stopEventEmitters(healthVendingMachineEmitters);
-				stopEventEmitters(powerUpVendingMachineEmitters);
-				stopEventEmitters(terminalEmitters);
-				stopEventEmitters(elevatorEmitters);
-				stopEventEmitters(ventilationEmitters);
-				stopEventEmitters(wcEmitters);
-				
-				switch(iteration) {
-					case MusicLoopIteration.FIRST_ITERATION:
-						iteration = MusicLoopIteration.SECOND_ITERATION;
-						break;
-					case MusicLoopIteration.SECOND_ITERATION:
-						iteration = MusicLoopIteration.THIRD_ITERATION;
-						break;
-					case MusicLoopIteration.THIRD_ITERATION:
-						iteration = MusicLoopIteration.FIRST_ITERATION;
-						break;
-					default:
-						break;
-				}
-				
-				AudioManager.instance.SetMusicLoopIteration(iteration);
-				StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
+		private void StopAllAmbientSounds() {
+			FMOD.Studio.Bus ambientBus = FMODUnity.RuntimeManager.GetBus("bus:/Ambience");
+			if(ambientBus.isValid()) {
+				// Stop all events routed on this bus and its sub-buses
+				ambientBus.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
+			}
+			else {
+				Debug.LogWarning("FMOD Bus 'bus:/Ambience' not find!");
 			}
 
-            UpdateTimerUI();
+			// Resets the Boolean flags as well, since all sounds have been stopped
+			alarmIsTriggered = false;
+			serverIsTriggered = false;
+			ledIsTriggered = false;
+			refrigeratorIsTriggered = false;
+			HealthVendingMachineIsTriggered = false;
+			PowerUpVendingMachineIsTriggered = false;
+			terminalIsTriggered = false;
+			elevatorIsTriggered = false;
+			ventilationIsTriggered = false;
+			wcIsTriggered = false;
+		}
+
+		private void OnDestroy() {
+			if(roomManager) {
+				roomManager.OnRunReady -= HandleRunReady;
+
+				// Audio management
+				roomManager.OnRoomFullyInstantiated -= InitializeAmbientEmitters;
+			}
+		}
+
+		private void Awake() {
+			if(roomManager) {
+				roomManager.OnRunReady += HandleRunReady;
+
+				// Audio management
+				roomManager.OnRoomFullyInstantiated += InitializeAmbientEmitters;
+			}
+		}
+
+		private void Start() {
+			// Audio management
+			player = GameObject.FindWithTag("Player");
+
+			GameStatus.gameEnded = false;
+		}
+
+		private void Update() {
+			if(!isRunning || GameStatus.gameEnded || sceneIsLoading)
+				return;
+
+			currentTime -= Time.deltaTime;
+
+			if(currentTime <= 0f) {
+				currentTime = 0f;
+				isRunning = false;
+
+				if(iteration == MusicLoopIteration.THIRD_ITERATION) {
+					GameStatus.gameEnded = true;
+					StartCoroutine(LoadRespawnSceneAsync());
+				}
+				else {
+					// Audio management
+					StopAllAmbientSounds();
+
+					switch(iteration) {
+						case MusicLoopIteration.FIRST_ITERATION:
+							iteration = MusicLoopIteration.SECOND_ITERATION;
+							break;
+						case MusicLoopIteration.SECOND_ITERATION:
+							iteration = MusicLoopIteration.THIRD_ITERATION;
+							break;
+						case MusicLoopIteration.THIRD_ITERATION:
+							iteration = MusicLoopIteration.FIRST_ITERATION;
+							break;
+						default:
+							break;
+					}
+
+					GamePlayAudioManager.instance.SetMusicLoopIteration(iteration);
+					StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
+
+					ResetRun();
+				}
+
+				// Exit the Update for this frame, preventing sounds from being reactivated immediately afterwards.
+				return;
+			}
+
+			UpdateTimerUI();
 
 			// Audio management
 			playEventEmitters(alarmEmitters, !alarmIsTriggered && currentTime <= 10f, ref alarmIsTriggered);
@@ -188,60 +226,71 @@ namespace Utils
 			playEventEmitters(terminalEmitters, !terminalIsTriggered, ref terminalIsTriggered);
 			playEventEmitters(elevatorEmitters, !elevatorIsTriggered, ref elevatorIsTriggered);
 			playEventEmitters(ventilationEmitters, !ventilationIsTriggered, ref ventilationIsTriggered);
-			playEventEmitters(wcEmitters, !wcIsTrigger, ref wcIsTrigger);
+			playEventEmitters(wcEmitters, !wcIsTriggered, ref wcIsTriggered);
 		}
 
-        private void HandleRunReady()
-        {
-	        currentTime = TimeLimit;
-	        isRunning = true;
+		private void HandleRunReady() {
+			currentTime = TimeLimit;
+			isRunning = true;
 
-	        // Audio management
-	        resetEventEmitters(alarmEmitters, ref alarmIsTriggered);
-	        resetEventEmitters(serverEmitters, ref serverIsTriggered);
-	        resetEventEmitters(ledEmitters, ref ledIsTriggered);
-	        resetEventEmitters(refrigeratorEmitters, ref refrigeratorIsTriggered);
-	        resetEventEmitters(healthVendingMachineEmitters, ref HealthVendingMachineIsTriggered);
-	        resetEventEmitters(powerUpVendingMachineEmitters, ref PowerUpVendingMachineIsTriggered);
-	        resetEventEmitters(terminalEmitters, ref terminalIsTriggered);
-	        resetEventEmitters(elevatorEmitters, ref elevatorIsTriggered);
-	        resetEventEmitters(ventilationEmitters, ref ventilationIsTriggered);
-	        resetEventEmitters(wcEmitters, ref wcIsTrigger);
+			// Audio management
+			InitializeAmbientEmitters();
 
-	        InitializeEventEmittersWithTag("AlarmSpeaker", FMODEvents.instance.alarm, alarmEmitters);
-	        InitializeEventEmittersWithTag("Server", FMODEvents.instance.serverNoise, serverEmitters);
-	        InitializeEventEmittersWithTag("FlickeringLED", FMODEvents.instance.flickeringLED, ledEmitters);
-	        InitializeEventEmittersWithTag("Refrigerator", FMODEvents.instance.refrigeratorNoise, refrigeratorEmitters);
-	        InitializeEventEmittersWithTag("HealthSnackDistributor", FMODEvents.instance.vendingMachineNoise, healthVendingMachineEmitters);
-	        InitializeEventEmittersWithTag("PowerUpSnackDistributor", FMODEvents.instance.vendingMachineNoise, powerUpVendingMachineEmitters);
-	        InitializeEventEmittersWithTag("SphereTerminal", FMODEvents.instance.terminalNoise, terminalEmitters);
-	        InitializeEventEmittersWithTag("Elevator", FMODEvents.instance.elevatorNoise, elevatorEmitters);
-	        InitializeEventEmittersWithTag("Ventilation", FMODEvents.instance.ventilationNoise, ventilationEmitters);
-	        InitializeEventEmittersWithTag("FlushingWC", FMODEvents.instance.flushingWCNoise, wcEmitters);
-	        
-	        AudioManager.instance.SetMusicLoopIteration(iteration);
-        }
+			GamePlayAudioManager.instance.SetMusicLoopIteration(iteration);
+		}
 
 
-        private void UpdateTimerUI()
-        {
-            var minutes = Mathf.FloorToInt(currentTime / 60f);
-            var seconds = Mathf.FloorToInt(currentTime % 60f);
+		private void UpdateTimerUI() {
+			var minutes = Mathf.FloorToInt(currentTime / 60f);
+			var seconds = Mathf.FloorToInt(currentTime % 60f);
 
-            timerText.text = $"{minutes:00}:{seconds:00}";
-        }
+			if(currentTime <= 30f && timerOutlineImage.sprite != timerOutlineSpriteRed) {
+				timerOutlineImage.sprite = timerOutlineSpriteRed;
+				StartCoroutine(Pulse());
+			}
 
-        private void ResetRun()
-        {
-            if (!roomManager)
-                return;
+			timerText.text = $"{minutes:00}:{seconds:00}";
+		}
 
-            FadeManager.Instance.FadeOutIn(() =>
-            {
-                roomManager.RegenerateRooms();
-                currentTime = TimeLimit;
-                isRunning = true;
-            });
-        }
-    }
+		// Coroutine that produces a pulse effect on the text
+		IEnumerator Pulse() {
+			while(currentTime <= 30f) {
+				// Scale pulse
+				float scale = Mathf.PingPong(Time.time * 0.7f, 1f);
+				scale = Mathf.Lerp(0.9f, 1f, scale);
+				timerText.transform.localScale = new Vector3(1 * scale, 1 * scale, 1f);
+				yield return null;
+			}
+		}
+
+		private void ResetRun() {
+			if(!roomManager)
+				return;
+
+			FadeManager.Instance.FadeOutIn(() => {
+				roomManager.RegenerateRooms();
+				currentTime = TimeLimit;
+				timerOutlineImage.sprite = timerOutlineSpriteNormal;
+				StopCoroutine(Pulse());
+				isRunning = true;
+			});
+		}
+
+		private IEnumerator LoadRespawnSceneAsync() {
+			sceneIsLoading = true;
+
+			// Starts async loading of the scene
+			AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(respawnSceneName);
+			asyncLoad.allowSceneActivation = false;
+
+			// Wait until the scene is almost ready (>= 0.9)
+			while(asyncLoad.progress < 0.9f) {
+				yield return null;
+			}
+
+			// Activate the scene
+			asyncLoad.allowSceneActivation = true;
+
+		}
+	}
 }

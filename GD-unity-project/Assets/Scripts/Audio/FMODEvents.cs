@@ -1,55 +1,109 @@
-using UnityEngine;
 using FMODUnity;
+using UnityEngine;
 
-public class FMODEvents : MonoBehaviour
+namespace Audio
 {
-    [field: Header("Player SFX")]
-    [field: SerializeField] public EventReference playerFootsteps { get; private set; }
-    [field: SerializeField] public EventReference playerWakeUp { get; private set; }
-    [field: SerializeField] public EventReference doorOpen { get; private set; }
-    [field: SerializeField] public EventReference doorClose { get; private set; }
-    [field: SerializeField] public EventReference paperInteraction { get; private set; }
-    [field: SerializeField] public EventReference terminalInteraction { get; private set; }
-    [field: SerializeField] public EventReference vendingMachineActivation { get; private set; }
-    [field: SerializeField] public EventReference vendingMachineItemPickUp { get; private set; }
-    [field: SerializeField] public EventReference sphereDischarge { get; private set; }
-    [field: SerializeField] public EventReference sphereFullRecharge { get; private set; }
-    [field: SerializeField] public EventReference sphereRotation { get; private set; }
-    [field: SerializeField] public EventReference playerEatChips { get; private set; }
-    [field: SerializeField] public EventReference playerEatChocolate { get; private set; }
-    [field: SerializeField] public EventReference playerDrink { get; private set; }
-    [field: SerializeField] public EventReference shieldActivation { get; private set; }
-    [field: SerializeField] public EventReference shieldDeactivation { get; private set; }
-    [field: SerializeField] public EventReference shieldHit { get; private set; }
-    [field: SerializeField] public EventReference playerHit { get; private set; }
-    [field: SerializeField] public EventReference playerDie { get; private set; }
-    [field: SerializeField] public EventReference distanceAttackLoad { get; private set; }
-    [field: SerializeField] public EventReference distanceAttackShoot { get; private set; }
-    [field: SerializeField] public EventReference closeAttackLoad { get; private set; }
-    [field: SerializeField] public EventReference closeAttackShoot { get; private set; }
-
-    [field: Header("Ambience")]
-    [field: SerializeField] public EventReference alarm { get; private set;  }
-    [field: SerializeField] public EventReference serverNoise { get; private set;  }
-    [field: SerializeField] public EventReference flickeringLED { get; private set;  }
-    [field: SerializeField] public EventReference refrigeratorNoise { get; private set;  }
-    [field: SerializeField] public EventReference vendingMachineNoise { get; private set;  }
-    [field: SerializeField] public EventReference terminalNoise { get; private set;  }
-    [field: SerializeField] public EventReference elevatorNoise { get; private set;  }
-    [field: SerializeField] public EventReference ventilationNoise { get; private set;  }
-    [field: SerializeField] public EventReference flushingWCNoise { get; private set;  }
-    
-    [field: Header("Music")]
-    [field: SerializeField] public EventReference music { get; private set; }
-    
-    public static FMODEvents instance { get; private set; }
-
-    private void Awake()
+    public class FMODEvents : MonoBehaviour
     {
-        if (instance != null)
+        [field: Header("Player SFX")]
+        [field: SerializeField] public EventReference PlayerCloseAttackLoad { get; private set; }
+        [field: SerializeField] public EventReference PlayerCloseAttackShoot { get; private set; }
+        [field: SerializeField] public EventReference PlayerDistanceAttackLoad { get; private set; }
+        [field: SerializeField] public EventReference PlayerDistanceAttackShoot { get; private set; }
+        [field: SerializeField] public EventReference PlayerShieldActivation { get; private set; }
+        [field: SerializeField] public EventReference PlayerShieldDeactivation { get; private set; }
+        [field: SerializeField] public EventReference PlayerShieldHit { get; private set; }
+        [field: SerializeField] public EventReference PlayerDie { get; private set; }
+        [field: SerializeField] public EventReference PlayerDoorOpen { get; private set; }
+        [field: SerializeField] public EventReference PlayerDoorClose { get; private set; }
+        [field: SerializeField] public EventReference PlayerDrink { get; private set; }
+        [field: SerializeField] public EventReference PlayerEatChips { get; private set; }
+        [field: SerializeField] public EventReference PlayerEatChocolate { get; private set; }
+        [field: SerializeField] public EventReference PlayerHit { get; private set; }
+        [field: SerializeField] public EventReference PlayerPaperInteraction { get; private set; }
+        [field: SerializeField] public EventReference PlayerFootsteps { get; private set; }
+        [field: SerializeField] public EventReference PlayerSphereDischarge { get; private set; }
+        [field: SerializeField] public EventReference PlayerSphereFullRecharge { get; private set; }
+        [field: SerializeField] public EventReference PlayerSphereRotation { get; private set; }
+        [field: SerializeField] public EventReference PlayerTerminalInteraction { get; private set; }
+        [field: SerializeField] public EventReference PlayerVendingMachineActivation { get; private set; }
+        [field: SerializeField] public EventReference PlayerVendingMachineItemPickUp { get; private set; }
+        [field: SerializeField] public EventReference PlayerWakeUp { get; private set; }
+    
+        [field: Header("Maynard SFX")]
+        [field: SerializeField] public EventReference MaynardCloseAttack { get; private set; }
+        [field: SerializeField] public EventReference MaynardDistanceAttack1 { get; private set; }
+        [field: SerializeField] public EventReference MaynardDistanceAttack2 { get; private set; }
+        [field: SerializeField] public EventReference MaynardDieScream { get; private set; }
+        [field: SerializeField] public EventReference MaynardDieThud { get; private set; }
+        [field: SerializeField] public EventReference MaynardHitFallScream { get; private set; }
+        [field: SerializeField] public EventReference MaynardHitFallThud { get; private set; }
+        [field: SerializeField] public EventReference MaynardHitFromBack { get; private set; }
+        [field: SerializeField] public EventReference MaynardHitFromFront { get; private set; }
+        [field: SerializeField] public EventReference MaynardHitFromLeftOrRight { get; private set; }
+        [field: SerializeField] public EventReference MaynardIdle { get; private set; }
+        [field: SerializeField] public EventReference MaynardFootsteps { get; private set; }
+        [field: SerializeField] public EventReference MaynardStandUpRoar { get; private set; }
+        [field: SerializeField] public EventReference MaynardStandUpFootstep1 { get; private set; }
+        [field: SerializeField] public EventReference MaynardStandUpFootstep2 { get; private set; }
+        [field: SerializeField] public EventReference MaynardStandUpBreath { get; private set; }
+    
+        [field: Header("Drake SFX")]
+        [field: SerializeField] public EventReference DrakeCloseAttack1 { get; private set; }
+        [field: SerializeField] public EventReference DrakeCloseAttack2 { get; private set; }
+        [field: SerializeField] public EventReference DrakeDefense { get; private set; }
+        [field: SerializeField] public EventReference DrakeDieHit { get; private set; }
+        [field: SerializeField] public EventReference DrakeDieFoostep1 { get; private set; }
+        [field: SerializeField] public EventReference DrakeDieFoostep2 { get; private set; }
+        [field: SerializeField] public EventReference DrakeDieThud { get; private set; }
+        [field: SerializeField] public EventReference DrakeHitFromFrontOrBack { get; private set; }
+        [field: SerializeField] public EventReference DrakeHitFromLeftOrRight { get; private set; }
+        [field: SerializeField] public EventReference DrakeIdle { get; private set; }
+        [field: SerializeField] public EventReference DrakeFootsteps { get; private set; }
+        
+        [field: Header("Incognito SFX")]
+        [field: SerializeField] public EventReference IncognitoDistanceAttack1 { get; private set; }
+        [field: SerializeField] public EventReference IncognitoDistanceAttack2Load { get; private set; }
+        [field: SerializeField] public EventReference IncognitoDistanceAttack2Spit { get; private set; }
+        [field: SerializeField] public EventReference IncognitoDieGrunt { get; private set; }
+        [field: SerializeField] public EventReference IncognitoDieThud1 { get; private set; }
+        [field: SerializeField] public EventReference IncognitoDieThud2 { get; private set; }
+        [field: SerializeField] public EventReference IncognitoHitFromFront1 { get; private set; }
+        [field: SerializeField] public EventReference IncognitoHitFromFront2 { get; private set; }
+        [field: SerializeField] public EventReference IncognitoHitFromLeftOrRight { get; private set; }
+        [field: SerializeField] public EventReference IncognitoHitFallScream { get; private set; }
+        [field: SerializeField] public EventReference IncognitoHitFallFootstep1 { get; private set; }
+        [field: SerializeField] public EventReference IncognitoHitFallFootstep2 { get; private set; }
+        [field: SerializeField] public EventReference IncognitoHitFallThud { get; private set; }
+        [field: SerializeField] public EventReference IncognitoIdle { get; private set; }
+        [field: SerializeField] public EventReference IncognitoFootsteps { get; private set; }
+        [field: SerializeField] public EventReference IncognitoStandUpFootstep1 { get; private set; }
+        [field: SerializeField] public EventReference IncognitoStandUpFootstep2 { get; private set; }
+    
+        [field: Header("Ambience")]
+        [field: SerializeField] public EventReference Alarm { get; private set;  }
+        [field: SerializeField] public EventReference ServerNoise { get; private set;  }
+        [field: SerializeField] public EventReference FlickeringLed { get; private set;  }
+        [field: SerializeField] public EventReference RefrigeratorNoise { get; private set;  }
+        [field: SerializeField] public EventReference VendingMachineNoise { get; private set;  }
+        [field: SerializeField] public EventReference TerminalNoise { get; private set;  }
+        [field: SerializeField] public EventReference ElevatorNoise { get; private set;  }
+        [field: SerializeField] public EventReference VentilationNoise { get; private set;  }
+        [field: SerializeField] public EventReference FlushingWcNoise { get; private set;  }
+    
+        [field: Header("Music")]
+        [field: SerializeField] public EventReference GameplayMusic { get; private set; }
+        [field: SerializeField] public EventReference MainMenuMusic { get; private set; }
+    
+        public static FMODEvents Instance { get; private set; }
+
+        private void Awake()
         {
-            Debug.LogError("Found more than one FMOD Events instance in the scene.");
+            if (Instance != null)
+            {
+                Debug.LogError("Found more than one FMOD Events instance in the scene.");
+            }
+            Instance = this;
         }
-        instance = this;
     }
 }

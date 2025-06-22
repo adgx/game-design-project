@@ -1,10 +1,9 @@
 using FMOD.Studio;
 using System;
+using Audio;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace ORF
-{
 	public class Player : MonoBehaviour
 	{
         public static Player Instance { get; private set; }
@@ -51,14 +50,18 @@ namespace ORF
 
 		public void Awake()
 		{
+			if (Instance != null)
+			{
+				Debug.LogError("Found more than one Player in the scene.");
+			}
+			Instance = this;
+			
 			input = GetComponent<PlayerInput>();
 			player.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 		}
 
 		private void Move()
 		{
-			RaycastHit hit, hitBack;
-
             //this could be integrated in input class
             Vector2 move = new Vector2(input.Horizontal, input.Vertical);
 
@@ -68,7 +71,6 @@ namespace ORF
 
             //currentHorizontalSpeed = new Vector3(player.linearVelocity.x, 0f, player.linearVelocity.z).magnitude;
             currentHorizontalSpeed = speed;
-            Debug.Log($"Player currentHorizontalSpeed: {currentHorizontalSpeed}");
             
 			//acceleration stuff
             float speedOffset = 0.1f;
@@ -158,9 +160,9 @@ namespace ORF
 		private void Start()
 		{
 			playerShoot = GetComponent<PlayerShoot>();
-			playerFootsteps = AudioManager.instance.CreateInstance(FMODEvents.instance.playerFootsteps);
+			playerFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerFootsteps);
 			playerFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-			sphereRotation = AudioManager.instance.CreateInstance(FMODEvents.instance.sphereRotation);
+			sphereRotation = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerSphereRotation);
 			sphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
 		}
 
@@ -219,4 +221,3 @@ namespace ORF
 
 		}
 	}
-};

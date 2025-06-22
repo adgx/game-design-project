@@ -75,12 +75,12 @@ public class AnimationManager : MonoBehaviour
 
     async void RandomizeIdleAsync(int sec)
     {
-        Debug.Log("RandomizeIdle called");
-        
         await Task.Delay(sec*1000);
         int idleIndex = Random.Range(0, NUM_IDLE_ANIMATIONS);
-        Debug.Log($"indexIdle: {idleIndex}");
-        rickAC.SetInteger("IdleIndex", idleIndex);
+        if (this != null && rickAC != null && rickAC.gameObject != null && rickAC.isActiveAndEnabled)
+        {
+            rickAC.SetInteger("IdleIndex", idleIndex);   
+        }
         randomIdleIsDone = true;
     }
 

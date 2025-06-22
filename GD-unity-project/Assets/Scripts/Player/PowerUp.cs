@@ -3,40 +3,51 @@ using System.Collections.Generic;
 
 public class PowerUp : MonoBehaviour
 {
-    public enum PowerUpType {
-        // Sphere
+    // Sphere PowerUps
+    public enum SpherePowerUpTypes {
         DistanceAttackPowerUp,
         CloseAttackPowerUp,
         DefensePowerUp,
+    }
 
-        // Player
+    // Player Powerups
+    public enum PlayerPowerUpTypes {
         HealthBoost,
         DamageReduction
     }
 
     // This lists contain the Sphere and Player PowerUps that have not been collected yet. When a Power Up is collected, it is removed from the list
-    public List<PowerUpType> spherePowerUps = new List<PowerUpType>();
-    public List<PowerUpType> playerPowerUps = new List<PowerUpType>();
+    public List<SpherePowerUpTypes> spherePowerUps = new List<SpherePowerUpTypes>();
+    public List<PlayerPowerUpTypes> playerPowerUps = new List<PlayerPowerUpTypes>();
 
-    public Dictionary<PowerUpType, int> powerUpsObtained = new Dictionary<PowerUpType, int> {};
+    public Dictionary<object, int> powerUpsObtained = new Dictionary<object, int> {};
+    
+    public Dictionary<object, string> powerUpsDescription = new Dictionary<object, string>
+    {
+        { PlayerPowerUpTypes.HealthBoost, "Increases your health" },
+        { PlayerPowerUpTypes.DamageReduction, "Reduces damages taken from enemies" },
+        { SpherePowerUpTypes.DistanceAttackPowerUp, "Allows you to charge your distance attacks, to inflict more damage" },
+        { SpherePowerUpTypes.CloseAttackPowerUp, "Allows you to charge your close attacks, to inflict more damage and increase the range" },
+        { SpherePowerUpTypes.DefensePowerUp, "Allows you to use the shield for longer" }
+    };
 
     private void Start() {
-        spherePowerUps.Add(PowerUpType.DistanceAttackPowerUp);
-        spherePowerUps.Add(PowerUpType.DistanceAttackPowerUp);
-        spherePowerUps.Add(PowerUpType.CloseAttackPowerUp);
-        spherePowerUps.Add(PowerUpType.CloseAttackPowerUp);
-        spherePowerUps.Add(PowerUpType.DefensePowerUp);
-        spherePowerUps.Add(PowerUpType.DefensePowerUp);
+        spherePowerUps.Add(SpherePowerUpTypes.DistanceAttackPowerUp);
+        spherePowerUps.Add(SpherePowerUpTypes.DistanceAttackPowerUp);
+        spherePowerUps.Add(SpherePowerUpTypes.CloseAttackPowerUp);
+        spherePowerUps.Add(SpherePowerUpTypes.CloseAttackPowerUp);
+        spherePowerUps.Add(SpherePowerUpTypes.DefensePowerUp);
+        spherePowerUps.Add(SpherePowerUpTypes.DefensePowerUp);
 
-        playerPowerUps.Add(PowerUpType.HealthBoost);
-        playerPowerUps.Add(PowerUpType.HealthBoost);
-        playerPowerUps.Add(PowerUpType.HealthBoost);
-        playerPowerUps.Add(PowerUpType.DamageReduction);
-        playerPowerUps.Add(PowerUpType.DamageReduction);
-        playerPowerUps.Add(PowerUpType.DamageReduction);
+        playerPowerUps.Add(PlayerPowerUpTypes.HealthBoost);
+        playerPowerUps.Add(PlayerPowerUpTypes.HealthBoost);
+        playerPowerUps.Add(PlayerPowerUpTypes.HealthBoost);
+        playerPowerUps.Add(PlayerPowerUpTypes.DamageReduction);
+        playerPowerUps.Add(PlayerPowerUpTypes.DamageReduction);
+        playerPowerUps.Add(PlayerPowerUpTypes.DamageReduction);
     }
 
-    public void ObtainPowerUp(PowerUpType powerUp) {
+    public void ObtainPowerUp(object powerUp) {
         Debug.Log(powerUp.ToString());
 
         if(powerUpsObtained.ContainsKey(powerUp)) {

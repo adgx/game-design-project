@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Audio;
 using FMODUnity;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 // NOTE: this script is attached to each terminal individually
@@ -36,8 +38,14 @@ public class TerminalTrigger : MonoBehaviour
     [SerializeField] private RotateSphere rotateSphere;
 
     static System.Random rnd = new System.Random();
-    
-    private void OnTriggerEnter(Collider other) {
+
+	private PlayerInput playerInput;
+
+	private void Start() {
+		playerInput = Player.Instance.GetComponent<PlayerInput>();
+	}
+
+	private void OnTriggerEnter(Collider other) {
 	    if (!other.CompareTag("Player"))
 	    {
 		    return;
@@ -77,14 +85,15 @@ public class TerminalTrigger : MonoBehaviour
 			// Audio management
 			player = GameObject.Find("Player");
 			helpText.text = "";
-			
+			helpTextContainer.SetActive(false);
+
 			switch(triggerType) {
 				case TriggerType.SphereTerminal:
 					// Give a random power up for the Sphere
 					if(powerUps.spherePowerUps.Count > 0) {
 						// Audio management
-						rotateSphere.positionSphere(new Vector3(1, 0, 0), RotateSphere.Animation.Linear);
-						AudioManager.instance.PlayOneShot(FMODEvents.instance.terminalInteraction, this.transform.position);
+						rotateSphere.positionSphere(new Vector3(0.7f, 0.5f, 0), RotateSphere.Animation.Linear);
+						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerTerminalInteraction, this.transform.position);
 
 						busy = true;
 						await Task.Delay(2000);
@@ -95,6 +104,7 @@ public class TerminalTrigger : MonoBehaviour
 						
 						// Show a message to the player
 						helpText.text = "You obtained a " + powerUps.spherePowerUps[powerUpIndexSphere] + "!";
+						helpTextContainer.SetActive(true);
 
 						// Insert the power up in the dictionary of the obtained ones
 						powerUps.ObtainPowerUp(powerUps.spherePowerUps[powerUpIndexSphere]);
@@ -118,7 +128,7 @@ public class TerminalTrigger : MonoBehaviour
 							// Get power up, lose 1 stamina for the Sphere
 							// Audio management
 							Debug.Log("Getting power up: taking power up from the machine");
-							AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineItemPickUp, this.transform.position);
+							GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineItemPickUp, this.transform.position);
 							powerUpVendingMachineHacked = false;
 
 							busy = true;
@@ -130,23 +140,24 @@ public class TerminalTrigger : MonoBehaviour
 							
 							// Show a message to the player
 							helpText.text = "You obtained a " + powerUps.playerPowerUps[powerUpIndexPlayer] + "!";
-							
+							helpTextContainer.SetActive(true);
+
 							// Audio management
 							var obtainedPowerUp = powerUps.playerPowerUps[powerUpIndexPlayer];
 							
-							if (obtainedPowerUp == PowerUp.PowerUpType.HealthBoost)
+							if (obtainedPowerUp == PowerUp.PlayerPowerUpTypes.HealthBoost)
 							{
 								Debug.Log("Using power up: health boost (chips");
-								AudioManager.instance.PlayOneShot(FMODEvents.instance.playerEatChips, player.transform.position);
+								GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChips, player.transform.position);
 								
 								playerShoot.maxHealth += 20;
 								playerShoot.health += 20;
 							}
 							
-							if (obtainedPowerUp == PowerUp.PowerUpType.DamageReduction)
+							if (obtainedPowerUp == PowerUp.PlayerPowerUpTypes.DamageReduction)
 							{
 								Debug.Log("Using power up: damage reduction (energy drink");
-								AudioManager.instance.PlayOneShot(FMODEvents.instance.playerDrink, player.transform.position);
+								GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDrink, player.transform.position);
 								
 								playerShoot.damageReduction -= 0.2f;
 							}
@@ -164,15 +175,16 @@ public class TerminalTrigger : MonoBehaviour
 						{
 							Debug.Log("Getting power up: machine activation");
 							// Audio management
-							AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineActivation, this.transform.position);
-							rotateSphere.positionSphere(new Vector3(1, 0, 0), RotateSphere.Animation.Linear);
+							GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineActivation, this.transform.position);
+							rotateSphere.positionSphere(new Vector3(0.7f, 0.5f, 0), RotateSphere.Animation.Linear);
 							
 							busy = true;
 							await Task.Delay(700);
 							busy = false;
 							powerUpVendingMachineHacked = true;
 							helpText.text = "Press E again to take a snack from the machine";
-							
+							helpTextContainer.SetActive(true);
+
 							// Audio manangement
 							await Task.Delay(3500);
 							playerShoot.DecreaseStamina(1);
@@ -187,7 +199,7 @@ public class TerminalTrigger : MonoBehaviour
 						// Recover health, lose 1 stamina for the Sphere
 						Debug.Log("Recovering health: taking snack from the machine");
 						// Audio management
-						AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineItemPickUp, this.transform.position);
+						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineItemPickUp, this.transform.position);
 						healthVendingMachineHacked = false;
 
 						busy = true;
@@ -195,9 +207,10 @@ public class TerminalTrigger : MonoBehaviour
 						
 						// Show a message to the player
 						helpText.text = "Your health was recovered!";
-						
+						helpTextContainer.SetActive(true);
+
 						// Audio management
-						AudioManager.instance.PlayOneShot(FMODEvents.instance.playerEatChocolate, player.transform.position);
+						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChocolate, player.transform.position);
 						
 						playerShoot.RecoverHealth(playerShoot.maxHealth);
 						busy = false;
@@ -205,15 +218,16 @@ public class TerminalTrigger : MonoBehaviour
 					else {
 						Debug.Log("Recovering health: machine activation");
 						// Audio management
-						AudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineActivation, this.transform.position);
-						rotateSphere.positionSphere(new Vector3(1, 0, 0), RotateSphere.Animation.Linear);
+						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineActivation, this.transform.position);
+						rotateSphere.positionSphere(new Vector3(0.7f, 0.5f, 0), RotateSphere.Animation.Linear);
 
 						busy = true;
 						await Task.Delay(700);
 						busy = false;
 						healthVendingMachineHacked = true;
 						helpText.text = "Press E again to take a snack from the machine";
-						
+						helpTextContainer.SetActive(true);
+
 						// Audio manangement
 						await Task.Delay(3500);
 						playerShoot.DecreaseStamina(1);
@@ -229,7 +243,7 @@ public class TerminalTrigger : MonoBehaviour
 
 
 	private void Update() {
-        if (triggerType != TriggerType.None && Input.GetKeyDown(KeyCode.E)) {
+        if (triggerType != TriggerType.None && playerInput.InteractionPressed()) {
             ManageVendingMachine();
         }
     }
