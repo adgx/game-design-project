@@ -186,7 +186,7 @@ PrefabInstance:
     - target: {fileID: 8880685427538663996, guid: b753b61d117e41c4bb499640c8617e2c, type: 3}
       propertyPath: firstSelected
       value: 
-      objectReference: {fileID: 900305609}
+      objectReference: {fileID: 0}
     - target: {fileID: 8880685427538663996, guid: b753b61d117e41c4bb499640c8617e2c, type: 3}
       propertyPath: StartGameScreenCanvas
       value: 
@@ -373,6 +373,34 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5017728785444344457, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5017728785444344457, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5017728785444344457, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1212067011}
+    - target: {fileID: 5017728785444344457, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5017728785444344457, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: StartGameButtonClicked
+      objectReference: {fileID: 0}
+    - target: {fileID: 5017728785444344457, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: StartGameScreen, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5017728785444344457, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 6144051657355011044, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -0.24713135
@@ -386,11 +414,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
---- !u!1 &900305609 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2380372699835631179, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
-  m_PrefabInstance: {fileID: 864968484}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1212067011 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8880685427538663996, guid: b753b61d117e41c4bb499640c8617e2c, type: 3}
