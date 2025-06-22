@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{f5aa7a60-8081-4c94-8e46-6fa3337e9316}">
 		<property name="name">
-			<value>SpherePartialRecharge</value>
+			<value>SphereFullRecharge</value>
 		</property>
 		<property name="outputFormat">
 			<value>2</value>
@@ -72,6 +72,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{a5f3e375-8a1c-4704-829e-eba4f31c3afc}">
+		<property name="volume">
+			<value>-10</value>
+		</property>
 		<relationship name="effectChain">
 			<destination>{74023835-caca-4a6f-8017-4e895e39a69f}</destination>
 		</relationship>
@@ -101,6 +104,9 @@
 	</object>
 	<object class="MixerBusPanner" id="{754d05f0-0f73-4e97-b70f-55aa3e18f1f8}" />
 	<object class="SingleSound" id="{9bd585d8-8c26-4685-9e79-ffa216180f11}">
+		<property name="pitch">
+			<value>5</value>
+		</property>
 		<relationship name="audioFile">
 			<destination>{9281e222-7813-4b13-8fb4-380d947205b0}</destination>
 		</relationship>

@@ -1955,7 +1955,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5500006164650967211}
   m_Layer: 0
-  m_Name: SpawnPoint_0
+  m_Name: EnemySpawnPoint_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7733,7 +7733,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7001447854533772762}
   m_Layer: 0
-  m_Name: SpawnPoint_2
+  m_Name: EnemySpawnPoint_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -18225,7 +18225,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1722847613102115124}
   m_Layer: 0
-  m_Name: SpawnPoint_3
+  m_Name: EnemySpawnPoint_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21480,32 +21480,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 214320ac68aae4c69932706f791e93da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomType: 1
-  connectors:
-  - id: 1
-    direction: 0
-    passageVisual: {fileID: 5715130574588074625}
-    spawnPoint: {fileID: 5087181329772240341}
-    isConnected: 0
-  - id: 2
-    direction: 1
-    passageVisual: {fileID: 1867240903971659954}
-    spawnPoint: {fileID: 113452971795974514}
-    isConnected: 0
-  - id: 3
-    direction: 2
-    passageVisual: {fileID: 2620909746107025141}
-    spawnPoint: {fileID: 5010666330337620128}
-    isConnected: 0
-  - id: 4
-    direction: 3
-    passageVisual: {fileID: 6563490189977298054}
-    spawnPoint: {fileID: 831073522273189014}
-    isConnected: 0
-  centralSpawnPoint: {fileID: 7338474625835606480}
-  maxSpawnCost: 10
-  hasEnemiesSpawned: 0
-  enemySpawnPoints:
+  _connectors:
+  - _id: NorthEntry
+    _direction: 0
+    _passageVisual: {fileID: 5715130574588074625}
+    _spawnPoint: {fileID: 5087181329772240341}
+    IsConnected: 0
+  - _id: SouthEntry
+    _direction: 1
+    _passageVisual: {fileID: 1867240903971659954}
+    _spawnPoint: {fileID: 113452971795974514}
+    IsConnected: 0
+  - _id: WestEntry
+    _direction: 3
+    _passageVisual: {fileID: 6563490189977298054}
+    _spawnPoint: {fileID: 831073522273189014}
+    IsConnected: 0
+  - _id: EastEntry
+    _direction: 2
+    _passageVisual: {fileID: 2620909746107025141}
+    _spawnPoint: {fileID: 5010666330337620128}
+    IsConnected: 0
+  _centralSpawnPoint: {fileID: 7338474625835606480}
+  _enemySpawnPoints:
   - {fileID: 5500006164650967211}
   - {fileID: 362456367002567606}
   - {fileID: 7001447854533772762}
@@ -23170,7 +23167,7 @@ GameObject:
   m_Component:
   - component: {fileID: 362456367002567606}
   m_Layer: 0
-  m_Name: SpawnPoint_1
+  m_Name: EnemySpawnPoint_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26092,6 +26089,10 @@ PrefabInstance:
     - target: {fileID: 2798162152419757125, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
       propertyPath: connectors.Array.data[2].direction
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2984569999038276245, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 3914512121518098881, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
       propertyPath: m_LocalPosition.x

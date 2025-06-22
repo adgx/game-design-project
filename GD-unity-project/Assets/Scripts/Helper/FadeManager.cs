@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using ORF;
 
 namespace Helper {
 	public class FadeManager : MonoBehaviour {
@@ -17,6 +18,7 @@ namespace Helper {
 			else
 				Destroy(gameObject);
 
+			transform.SetParent(null); // Detach from "Managers" to avoid warnings
 			DontDestroyOnLoad(gameObject);
 
 			player = GameObject.FindWithTag("Player").GetComponent<Player>();

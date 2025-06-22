@@ -292,23 +292,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 5960298}
-  player: {fileID: 1728157147}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 8
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 64
-  health: 120
-  walkPoint: {x: 0, y: 0, z: 0}
-  walkPointRange: 5
-  timeBetweenAttacks: 2
-  bulletPrefab: {fileID: 3780818778376199547, guid: e2193c01f07e84362a8e9f21a5774953, type: 3}
-  sightRange: 20
-  attackRange: 1
-  playerInSightRange: 0
-  playerInAttackRange: 0
-  roomManager: {fileID: 1738691463}
+  damageMultiplier: 0.8
 --- !u!1 &30417867
 GameObject:
   m_ObjectHideFlags: 0
@@ -900,6 +890,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerShoot: {fileID: 1728157141}
   powerUps: {fileID: 1728157148}
+  helpText: {fileID: 0}
+  helpTextContainer: {fileID: 0}
+  rotateSphere: {fileID: 0}
 --- !u!1 &347109497
 GameObject:
   m_ObjectHideFlags: 0
@@ -963,6 +956,30 @@ MonoBehaviour:
   paperText: {fileID: 106625138}
   paperTextContainer: {fileID: 257793580}
   player: {fileID: 1728157143}
+  lastPaperCollected: 0
+  messages:
+  - '- What happened? Where am I?
+
+    - Something with your experiments went horribly
+    wrong, you are trapped here now
+
+    - Wait... who are you?
+
+    - Find the next
+    paper and you''ll know'
+  - '- Oh, here you are again. I am yourself... from the past
+
+    - What do you
+    mean... from the past?
+
+    - Oh so you don''t remember. You wrote these notes,
+    while making all your fancy experiments on magnetism. Those experiments were
+    not so fancy, I guess'
+  - Paper 3
+  - Paper 4
+  - Paper 5
+  - Paper 6
+  - Paper 7
 --- !u!224 &375894563 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5918728198229272863, guid: 83bb9d48145747f4784acf553b1e9ede, type: 3}
@@ -1399,7 +1416,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e6f25591b3025444a326eb5ed112847, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menu: {fileID: 929684648}
+  volumeMenu: {fileID: 0}
   firstSelected: {fileID: 1052968220}
 --- !u!1001 &662606670
 PrefabInstance:
@@ -1947,6 +1964,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerShoot: {fileID: 1728157141}
   powerUps: {fileID: 1728157148}
+  helpText: {fileID: 0}
+  helpTextContainer: {fileID: 0}
+  rotateSphere: {fileID: 0}
 --- !u!1001 &1016344251
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2044,7 +2064,7 @@ MonoBehaviour:
   player: {fileID: 1728157138}
   rotationSpeed: 100
   transitionSpeed: 10
-  rotateSphere: 1
+  isRotating: 1
 --- !u!1 &1052968220 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5548963736841642456, guid: 83bb9d48145747f4784acf553b1e9ede, type: 3}
@@ -2419,6 +2439,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   collectablePapers: {fileID: 347109500}
+  helpText: {fileID: 0}
+  helpTextContainer: {fileID: 0}
 --- !u!1 &1418048827
 GameObject:
   m_ObjectHideFlags: 0
@@ -2984,25 +3006,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 1633870779}
-  player: {fileID: 1728157147}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 8
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 64
-  health: 120
-  walkPoint: {x: 0, y: 0, z: 0}
-  walkPointRange: 5
-  timeBetweenAttacks: 2
-  bulletPrefab: {fileID: 3780818778376199547, guid: e2193c01f07e84362a8e9f21a5774953, type: 3}
-  sightRange: 20
-  remoteAttackRange: 12
-  closeAttackRange: 1
-  playerInSightRange: 0
-  playerInRemoteAttackRange: 0
-  playerInCloseAttackRange: 0
-  roomManager: {fileID: 1738691463}
+  damageMultiplier: 1
 --- !u!1 &1656369792
 GameObject:
   m_ObjectHideFlags: 0
@@ -3205,6 +3215,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerShoot: {fileID: 1728157141}
   powerUps: {fileID: 1728157148}
+  helpText: {fileID: 0}
+  helpTextContainer: {fileID: 0}
+  rotateSphere: {fileID: 0}
 --- !u!1001 &1696704958
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3485,11 +3498,18 @@ MonoBehaviour:
   bulletSpawnTransform: {fileID: 1469227814}
   bulletPrefab: {fileID: 3780818778376199547, guid: e2193c01f07e84362a8e9f21a5774953, type: 3}
   attackAreaPrefab: {fileID: 1847315181234349731, guid: 3902c314b9067494cadeb754c1359a24, type: 3}
-  selectedAttackText: {fileID: 1698784975}
+  distanceAttackImage: {fileID: 0}
+  closeAttackImage: {fileID: 0}
+  distanceAttackLoadingBar: {fileID: 0}
+  closeAttackLoadingBar: {fileID: 0}
   magneticShieldPrefab: {fileID: 5441482729280434030, guid: fd6f85ea9b1b66c4991ed3bcfbfa43d7, type: 3}
   maxHealth: 120
   health: 120
+  damageReduction: 1
   healthBar: {fileID: 1432899843}
+  maxSphereStamina: 5
+  increaseStamina: 0
+  increasingStamina: 0
   sphereStamina: 5
   powerUp: {fileID: 1728157148}
   getCollisions: {fileID: 347109498}
@@ -3672,15 +3692,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4db81237abb1948529dd419e41cbb730, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allRoomPrefabs:
-  - {fileID: 2397693676041395911, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
-  - {fileID: 4493371007400883041, guid: b7cb8cce38c99e549a3e06d400963fac, type: 3}
-  initialRoomPrefab: {fileID: 0}
-  maxRooms: 15
-  minRooms: 10
-  skipConnectionChance: 0.35
-  currentPlayer: {fileID: 1728157138}
-  navMashBaked: 0
+  _availableRooms: []
+  _initialRoomData: {fileID: 0}
+  _maxRooms: 15
+  _minRooms: 10
+  _skipConnectionChance: 0.35
+  _currentPlayer: {fileID: 0}
+  fadeManagerLoadingScreen: {fileID: 0}
+  _gridSizeX: 14
+  _gridSizeZ: 14
 --- !u!4 &1738691464
 Transform:
   m_ObjectHideFlags: 0
@@ -3773,6 +3793,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timerText: {fileID: 1596319027}
+  timerOutlineImage: {fileID: 0}
+  timerOutlineSpriteRed: {fileID: 0}
+  timerOutlineSpriteNormal: {fileID: 0}
   roomManager: {fileID: 1738691463}
 --- !u!114 &1738691471
 MonoBehaviour:
@@ -3978,23 +4001,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 1768603424}
-  player: {fileID: 1728157147}
   whatIsGround:
     serializedVersion: 2
     m_Bits: 8
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 64
-  health: 120
-  walkPoint: {x: 0, y: 0, z: 0}
-  walkPointRange: 5
-  timeBetweenAttacks: 2
-  bulletPrefab: {fileID: 3780818778376199547, guid: e2193c01f07e84362a8e9f21a5774953, type: 3}
-  sightRange: 20
-  attackRange: 12
-  playerInSightRange: 0
-  playerInAttackRange: 0
-  roomManager: {fileID: 1738691463}
+  damageMultiplier: 1.2
 --- !u!1 &1868746625
 GameObject:
   m_ObjectHideFlags: 0
@@ -4128,7 +4141,7 @@ MonoBehaviour:
       Data2: 1320623170
       Data3: 292728493
       Data4: -596124364
-    Path: event:/SFX/Player/Walk/Footsteps
+    Path: event:/SFX/Player/Run/Footsteps
   <playerWakeUp>k__BackingField:
     Guid:
       Data1: 776900939
@@ -4185,6 +4198,13 @@ MonoBehaviour:
       Data3: -218120781
       Data4: 1914792332
     Path: event:/SFX/Player/Eat/EatChocolate
+  <sphereFullRecharge>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   <sphereRotation>k__BackingField:
     Guid:
       Data1: 626503219
@@ -4339,13 +4359,20 @@ MonoBehaviour:
       Data3: 0
       Data4: 0
     Path: 
-  <music>k__BackingField:
+  <gameplayMusic>k__BackingField:
     Guid:
-      Data1: -2119342206
-      Data2: 1082500063
-      Data3: 1155554688
-      Data4: -1221304368
-    Path: event:/Music/Soundtrack
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <mainMenuMusic>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
 --- !u!1 &2143297035
 GameObject:
   m_ObjectHideFlags: 0

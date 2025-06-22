@@ -10,6 +10,9 @@ namespace Enemy.EnemyData.EnemyMovement
         [SerializeField] private NavMeshAgent agent;
         [SerializeField] private LayerMask whatIsGround, whatIsPlayer;
         
+        // This variable increases (> 1) or reduces (< 1) the damage taken by this enemy type when attacked
+        [SerializeField] private float damageMultiplier = 1f;
+        
         private Transform playerTransform;
 
         private float health;
@@ -78,6 +81,8 @@ namespace Enemy.EnemyData.EnemyMovement
 
         void Patroling()
         {
+            if (agent == null || !agent.isOnNavMesh) return;
+            
             if (!walkPointSet)
                 SearchWalkPoint();
 
@@ -93,8 +98,12 @@ namespace Enemy.EnemyData.EnemyMovement
 
         void ChasePlayer()
         {
+            if (agent == null || !agent.isOnNavMesh) return;
+
             if (roomManager.IsNavMeshBaked)
+            {
                 agent.SetDestination(playerTransform.position);
+            }
         }
 
         void ResetAttack()
@@ -104,6 +113,8 @@ namespace Enemy.EnemyData.EnemyMovement
 
         void RemoteAttackPlayer()
         {
+            if (agent == null || !agent.isOnNavMesh) return;
+            
             //Make sure enemy doesn't move
             agent.SetDestination(transform.position);
 
@@ -127,6 +138,8 @@ namespace Enemy.EnemyData.EnemyMovement
 
         void CloseAttackPlayer()
         {
+            if (agent == null || !agent.isOnNavMesh) return;
+            
             //Make sure enemy doesn't move
             agent.SetDestination(transform.position);
 
@@ -151,7 +164,7 @@ namespace Enemy.EnemyData.EnemyMovement
 
         public void TakeDamage(int damage)
         {
-            health -= damage;
+            health -= damage * damageMultiplier;
 
             StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
 

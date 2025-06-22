@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using RoomManager.RoomData;
@@ -19,7 +20,14 @@ namespace RoomManager
         private const float CellWorldWidth = 200f;
         private const float CellWorldDepth = 200f;
 
+        /// <summary>
+        /// Gets the world width of a single grid cell.
+        /// </summary>
         public static float GetCellWorldWidth() => CellWorldWidth;
+
+        /// <summary>
+        /// Gets the world depth of a single grid cell.
+        /// </summary>
         public static float GetCellWorldDepth() => CellWorldDepth;
 
         [Header("Room Generation Settings")]
@@ -41,16 +49,38 @@ namespace RoomManager
         [SerializeField]
         private float _skipConnectionChance = 0.35f;
 
+        [Tooltip("The maximum number of vending machines that could spawn in the dungeon.")] [SerializeField]
+        private int _maxVendingMachines = 4;
+
+        [Tooltip("The maximum number of upgrade terminal that could spawn in the dungeon.")] [SerializeField]
+        private int _maxUpgradeTerminal = 4;
+
         [Header("Player References")]
         [Tooltip("Reference to the player GameObject. Will be found by tag if not assigned.")]
         [SerializeField]
         private GameObject _currentPlayer;
 
-        /// <summary>Gets the reference to the player's GameObject.</summary>
+        [SerializeField] private FadeManagerLoadingScreen fadeManagerLoadingScreen;
+
+        /// <summary>
+        /// Gets the reference to the player's GameObject.
+        /// </summary>
         public GameObject CurrentPlayer => _currentPlayer;
 
+        /// <summary>
+        /// Event triggered when the run is ready to begin.
+        /// </summary>
         public event Action OnRunReady;
+
+        /// <summary>
+        /// Event triggered when the player enters a new room.
+        /// </summary>
         public event Action<Vector3Int> PlayerEnteredNewRoom;
+
+        /// <summary>
+        /// Event triggered when a room is fully instantiated.
+        /// </summary>
+        public event Action OnRoomFullyInstantiated;
 
         public bool IsPlayerSpawned { get; private set; }
         public Vector3Int CurrentRoomIndex { get; private set; }
@@ -59,17 +89,23 @@ namespace RoomManager
         [Header("Grid Dimensions")] [SerializeField]
         private int _gridSizeX = 14;
 
-        private const int GridSizeY = 1; // Vertical grid size is fixed at 1
+        private const int GridSizeY = 1;
         [SerializeField] private int _gridSizeZ = 14;
 
         private Dictionary<RoomType, List<RoomData.RoomData>> _roomDataByType =
             new Dictionary<RoomType, List<RoomData.RoomData>>();
 
-        private List<Room> _roomInstances = new List<Room>();
+        private RoomData.RoomData[,,] _roomGridData;
+        private Room _currentRoomInstance;
+
+        private bool _isLayoutGenerated;
         private Queue<Vector3Int> _roomsToProcessQueue = new Queue<Vector3Int>();
         private int[,,] _roomGrid;
         private int _roomCount;
-        private bool _isGenerationComplete;
+
+        private int _vendingMachineSpawned = 0;
+        private int _upgradeTerminalSpawned = 0;
+        private bool _paperAlreadySpawned = false;
 
         private void Awake()
         {
@@ -84,9 +120,11 @@ namespace RoomManager
             }
 
             CacheRoomDataByType();
+
             if (_currentPlayer == null)
             {
                 _currentPlayer = GameObject.FindWithTag("Player");
+
                 if (_currentPlayer == null)
                     Debug.LogError("PLAYER NOT FOUND. Tag player or assign in Inspector.");
             }
@@ -94,47 +132,16 @@ namespace RoomManager
 
         private void Start()
         {
-            GenerateRooms();
+            GenerateLayout();
         }
 
-        private void Update()
-        {
-            if (_roomsToProcessQueue.Count > 0 && _roomCount < _maxRooms && !_isGenerationComplete)
-            {
-                Vector3Int currentRoomGridIndex = _roomsToProcessQueue.Dequeue();
-                TryExpandFrom(currentRoomGridIndex);
-            }
-            else if (!_isGenerationComplete)
-            {
-                if (_roomCount < _minRooms || _roomCount > _maxRooms)
-                {
-                    RegenerateRooms();
-                }
-                else
-                {
-                    _isGenerationComplete = true;
-                    NavMeshSurface nav = GetComponent<NavMeshSurface>();
-                    if (nav != null)
-                    {
-                        nav.BuildNavMesh();
-                    }
-
-                    IsNavMeshBaked = true;
-
-                    if (!IsPlayerSpawned)
-                    {
-                        SpawnPlayerInRoom(CurrentRoomIndex);
-                        IsPlayerSpawned = true;
-                    }
-
-                    OnRunReady?.Invoke();
-                }
-            }
-        }
-
+        /// <summary>
+        /// Caches available rooms grouped by their room type.
+        /// </summary>
         private void CacheRoomDataByType()
         {
             _roomDataByType.Clear();
+
             foreach (RoomType rt in Enum.GetValues(typeof(RoomType)))
             {
                 _roomDataByType.Add(rt, new List<RoomData.RoomData>());
@@ -149,7 +156,7 @@ namespace RoomManager
 
             foreach (RoomData.RoomData roomData in _availableRooms)
             {
-                if (roomData == null || roomData.roomPrefab == null)
+                if (!roomData || !roomData.roomPrefab)
                 {
                     Debug.LogWarning(
                         "Found a null entry or a RoomData with a missing prefab in 'Available Rooms'. Skipping.", this);
@@ -165,81 +172,151 @@ namespace RoomManager
         /// </summary>
         public void RegenerateRooms()
         {
-            GenerateRooms();
+            GenerateLayout();
         }
 
-        private void GenerateRooms()
+        /// <summary>
+        /// Generates the layout of the dungeon procedurally.
+        /// </summary>
+        private void GenerateLayout()
         {
-            foreach (var roomInst in _roomInstances.Where(r => r != null && r.gameObject != null))
-            {
-                Destroy(roomInst.gameObject);
-            }
-
-            _roomInstances.Clear();
+            _roomGridData = new RoomData.RoomData[_gridSizeX, GridSizeY, _gridSizeZ];
             _roomsToProcessQueue.Clear();
-            _roomGrid = new int[_gridSizeX, GridSizeY, _gridSizeZ];
+            UnloadCurrentRoom();
             _roomCount = 0;
-            _isGenerationComplete = false;
+            _isLayoutGenerated = false;
             IsPlayerSpawned = false;
+            _upgradeTerminalSpawned = 0;
+            _vendingMachineSpawned = 0;
+
+            if (GameStatus.gameStarted)
+                fadeManagerLoadingScreen.Show();
 
             if (_roomDataByType.Count == 0 || _roomDataByType.Values.All(list => list.Count == 0))
+            {
                 CacheRoomDataByType();
+            }
 
-            if (_initialRoomData == null)
+            if (!_initialRoomData)
             {
                 Debug.LogError("Cannot start: Initial Room Data is not assigned in the Inspector!", this);
                 return;
             }
 
             Vector3Int startGridIndex = new Vector3Int(_gridSizeX / 2, 0, _gridSizeZ / 2);
-            Room initialRoom = PlaceNewRoomAt(startGridIndex, _initialRoomData);
+            _roomGridData[startGridIndex.x, startGridIndex.y, startGridIndex.z] = _initialRoomData;
+            _roomCount++;
+            _roomsToProcessQueue.Enqueue(startGridIndex);
 
-            if (initialRoom != null)
+            while (_roomsToProcessQueue.Count > 0 && _roomCount < _maxRooms)
             {
-                CurrentRoomIndex = startGridIndex;
+                Vector3Int currentRoomGridIndex = _roomsToProcessQueue.Dequeue();
+                TryExpandFrom(currentRoomGridIndex);
             }
-            else
+
+            if (_roomCount < _minRooms)
             {
-                Debug.LogError("Failed to place initial room!", this);
+                RegenerateRooms();
+                return;
             }
+
+            _isLayoutGenerated = true;
+            CurrentRoomIndex = startGridIndex;
+            Room initialRoom = LoadRoomAt(CurrentRoomIndex);
+            SpawnPlayerInRoom(initialRoom);
+            IsPlayerSpawned = true;
+            fadeManagerLoadingScreen.Hide();
+
+            OnRunReady?.Invoke();
         }
 
-        private Room PlaceNewRoomAt(Vector3Int gridIndex, RoomData.RoomData roomData)
+        /// <summary>
+        /// Waits until end of frame before notifying that the room is ready.
+        /// </summary>
+        private IEnumerator NotifyRoomReady()
         {
-            if (roomData == null || roomData.roomPrefab == null) return null;
-            if (!IsInBounds(gridIndex) || _roomGrid[gridIndex.x, gridIndex.y, gridIndex.z] != 0) return null;
+            yield return new WaitForEndOfFrame();
+            OnRoomFullyInstantiated?.Invoke();
+        }
 
-            Vector3 worldPosition = GetWorldPositionFromGridIndex(gridIndex);
-            GameObject roomGO = Instantiate(roomData.roomPrefab, worldPosition, Quaternion.identity, this.transform);
+        /// <summary>
+        /// Instantiates and initializes the room at the specified grid index.
+        /// </summary>
+        private Room LoadRoomAt(Vector3Int gridIndex)
+        {
+            RoomData.RoomData roomDataToLoad = _roomGridData[gridIndex.x, gridIndex.y, gridIndex.z];
 
-            Room newRoomScript = roomGO.GetComponent<Room>();
-            if (newRoomScript == null)
+            if (!roomDataToLoad)
             {
-                Debug.LogError($"Prefab '{roomData.roomPrefab.name}' is missing a Room component. Destroying instance.",
-                    roomGO);
-                Destroy(roomGO);
+                Debug.LogError($"No RoomData found in layout at {gridIndex} to load.", this);
                 return null;
             }
 
-            newRoomScript.Initialize(roomData, this);
+            Vector3 worldPosition = GetWorldPositionFromGridIndex(gridIndex);
+            GameObject roomGameObject = Instantiate(roomDataToLoad.roomPrefab, worldPosition, Quaternion.identity,
+                this.transform);
+            Room newRoomScript = roomGameObject.GetComponent<Room>();
+
+            newRoomScript.Initialize(roomDataToLoad, this);
             newRoomScript.RoomIndex = gridIndex;
+            newRoomScript.PostInitializeConnections();
 
-            _roomGrid[gridIndex.x, gridIndex.y, gridIndex.z] = _roomInstances.Count + 1;
-            _roomInstances.Add(newRoomScript);
-            _roomCount++;
+            bool isTerminalSpawned = false;
 
-            if (_roomCount < _maxRooms)
-                _roomsToProcessQueue.Enqueue(gridIndex);
+            if (_upgradeTerminalSpawned < _maxUpgradeTerminal)
+            {
+                bool isSpawned = newRoomScript.PostInitializeUpgradeTerminal();
 
+                if (isSpawned) _upgradeTerminalSpawned++;
+
+                isTerminalSpawned = isSpawned;
+            }
+
+            if (!isTerminalSpawned && _vendingMachineSpawned < _maxVendingMachines)
+            {
+                bool isSpawed = newRoomScript.PostInitializeVendingMachine();
+
+                if (isSpawed) _vendingMachineSpawned++;
+            }
+
+            if (!_paperAlreadySpawned && newRoomScript.PostInitializePaper())
+            {
+                _paperAlreadySpawned = true;
+            }
+
+            _currentRoomInstance = newRoomScript;
+            
+            NavMeshSurface nav = GetComponent<NavMeshSurface>();
+            // The navmesh mantains the current and the previous rooms navmeshes
+            nav.BuildNavMesh();
+            IsNavMeshBaked = true;
+            
             return newRoomScript;
         }
 
+        /// <summary>
+        /// Destroys the currently loaded room.
+        /// </summary>
+        private void UnloadCurrentRoom()
+        {
+            if (_currentRoomInstance == null) return;
+
+            Destroy(_currentRoomInstance.gameObject);
+            _currentRoomInstance = null;
+        }
+
+        /// <summary>
+        /// Attempts to expand the dungeon layout from the specified room grid index.
+        /// </summary>
         private void TryExpandFrom(Vector3Int currentRoomGridIndex)
         {
-            Room currentRoomScript = GetRoomByGridIndex(currentRoomGridIndex);
-            if (currentRoomScript == null) return;
+            RoomData.RoomData currentRoomData =
+                _roomGridData[currentRoomGridIndex.x, currentRoomGridIndex.y, currentRoomGridIndex.z];
+            Room currentRoomPrefabScript = currentRoomData.roomPrefab.GetComponent<Room>();
 
-            var shuffledConnectors = currentRoomScript.GetAvailableConnectors().OrderBy(c => Random.value);
+            if (!currentRoomPrefabScript) return;
+
+            var shuffledConnectors = currentRoomPrefabScript.GetAvailableConnectors().OrderBy(c => Random.value);
 
             foreach (RoomConnector currentConnectorInfo in shuffledConnectors)
             {
@@ -250,62 +327,91 @@ namespace RoomManager
                 Vector3Int neighborGridIndex = currentRoomGridIndex + GetVectorFromLocalDirection(expansionDirection);
 
                 if (!IsInBounds(neighborGridIndex) ||
-                    _roomGrid[neighborGridIndex.x, neighborGridIndex.y, neighborGridIndex.z] != 0) continue;
+                    _roomGridData[neighborGridIndex.x, neighborGridIndex.y, neighborGridIndex.z]) continue;
 
                 ConnectorDirection requiredConnectorOnNewRoom = GetOppositeDirection(expansionDirection);
 
-                List<RoomData.RoomData> suitableRoomData = new List<RoomData.RoomData>();
-
-                foreach (var roomDataList in _roomDataByType.Values)
-                {
-                    foreach (var roomData in roomDataList)
-                    {
-                        if (roomData.roomPrefab.GetComponent<Room>().GetConnector(requiredConnectorOnNewRoom) != null)
-                            suitableRoomData.Add(roomData);
-                    }
-                }
+                List<RoomData.RoomData> suitableRoomData = FindSuitableRoomData(requiredConnectorOnNewRoom);
 
                 if (suitableRoomData.Count == 0) continue;
 
                 RoomData.RoomData dataToPlace = suitableRoomData[Random.Range(0, suitableRoomData.Count)];
-                Room neighborRoomScript = PlaceNewRoomAt(neighborGridIndex, dataToPlace);
 
-                if (neighborRoomScript != null)
+                _roomGridData[neighborGridIndex.x, neighborGridIndex.y, neighborGridIndex.z] = dataToPlace;
+                _roomCount++;
+                _roomsToProcessQueue.Enqueue(neighborGridIndex);
+            }
+        }
+
+        /// <summary>
+        /// Finds a list of RoomData assets that have the specified required connector direction.
+        /// </summary>
+        private List<RoomData.RoomData> FindSuitableRoomData(ConnectorDirection requiredConnector)
+        {
+            var suitableRooms = new List<RoomData.RoomData>();
+
+            foreach (var roomDataList in _roomDataByType.Values)
+            {
+                foreach (var roomData in roomDataList)
                 {
-                    currentRoomScript.ActivateConnection(expansionDirection);
-                    neighborRoomScript.ActivateConnection(requiredConnectorOnNewRoom);
+                    if (!roomData || !roomData.roomPrefab) continue;
+
+                    Room roomComponent = roomData.roomPrefab.GetComponent<Room>();
+                    if (!roomComponent) continue;
+
+                    if (roomComponent.GetConnector(requiredConnector) != null)
+                    {
+                        suitableRooms.Add(roomData);
+                    }
                 }
             }
+
+            return suitableRooms;
+        }
+
+        /// <summary>
+        /// Loads a new room and spawns the player inside it.
+        /// </summary>
+        public void TraverseRoom(Vector3Int newRoomIndex, Vector3Int entryDirection)
+        {
+            if (!_isLayoutGenerated || !DoesRoomExistAt(newRoomIndex))
+            {
+                Debug.LogError($"Attempted to traverse to a non-existent room at {newRoomIndex}", this);
+                return;
+            }
+
+            UnloadCurrentRoom();
+            Room newRoom = LoadRoomAt(newRoomIndex);
+            StartCoroutine(NotifyRoomReady());
+            SpawnPlayerInRoom(newRoom, entryDirection);
+            NotifyPlayerEnteredNewRoom(newRoomIndex);
         }
 
         /// <summary>
         /// Moves the player to a specific room and spawn point.
         /// </summary>
-        /// <param name="roomIndex">The grid index of the room to spawn in.</param>
-        /// <param name="worldEntryDirection">The world direction the player is coming from, to find the correct spawn point.</param>
-        public void SpawnPlayerInRoom(Vector3Int roomIndex, Vector3Int? worldEntryDirection = null)
+        public void SpawnPlayerInRoom(Room roomToSpawnIn, Vector3Int? worldEntryDirection = null)
         {
-            if (_currentPlayer == null) return;
+            if (!_currentPlayer || !roomToSpawnIn) return;
 
-            Room roomToSpawnIn = GetRoomByGridIndex(roomIndex);
-            if (roomToSpawnIn == null) return;
-
-            CurrentRoomIndex = roomIndex;
             Transform spawnPoint = worldEntryDirection.HasValue
                 ? roomToSpawnIn.GetSpawnPointForWorldEntryDirection(worldEntryDirection.Value)
                 : roomToSpawnIn.CentralSpawnPoint;
 
-            _currentPlayer.transform.position =
-                spawnPoint != null ? spawnPoint.position : roomToSpawnIn.transform.position;
+            _currentPlayer.transform.position = spawnPoint ? spawnPoint.position : roomToSpawnIn.transform.position;
         }
 
         /// <summary>
         /// Retrieves the Room component instance at a given grid index.
         /// </summary>
-        /// <returns>The Room script instance, or null if no room exists there.</returns>
         public Room GetRoomByGridIndex(Vector3Int gridIndex)
         {
-            return _roomInstances.FirstOrDefault(r => r != null && r.RoomIndex == gridIndex);
+            if (_currentRoomInstance != null && _currentRoomInstance.RoomIndex == gridIndex)
+            {
+                return _currentRoomInstance;
+            }
+
+            return null;
         }
 
         private Vector3 GetWorldPositionFromGridIndex(Vector3Int gridIndex)
@@ -375,8 +481,8 @@ namespace RoomManager
         /// </summary>
         public bool DoesRoomExistAt(Vector3Int gridIndex)
         {
-            if (_roomGrid == null || !IsInBounds(gridIndex)) return false;
-            return _roomGrid[gridIndex.x, gridIndex.y, gridIndex.z] != 0;
+            if (_roomGridData == null || !IsInBounds(gridIndex)) return false;
+            return _roomGridData[gridIndex.x, gridIndex.y, gridIndex.z] != null;
         }
 
         /// <summary>
