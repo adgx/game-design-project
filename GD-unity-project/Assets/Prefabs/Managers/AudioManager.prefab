@@ -157,13 +157,41 @@ MonoBehaviour:
       Data3: -1050364744
       Data4: -834285941
     Path: event:/SFX/Player/Defense/ShieldHit
-  <PlayerDie>k__BackingField:
+  <PlayerDieBackwardGrunt>k__BackingField:
     Guid:
       Data1: 196964975
       Data2: 1311451549
       Data3: 993772194
       Data4: -661125539
-    Path: event:/SFX/Player/Die/Die
+    Path: event:/SFX/Player/Die/Backward/1_Grunt
+  <PlayerDieBackwardThud>k__BackingField:
+    Guid:
+      Data1: -2759566
+      Data2: 1305583980
+      Data3: 1128245693
+      Data4: 965838199
+    Path: event:/SFX/Player/Die/Backward/2_Thud
+  <PlayerDieForwardGrunt>k__BackingField:
+    Guid:
+      Data1: -1681735762
+      Data2: 1300559804
+      Data3: -130297726
+      Data4: 562605602
+    Path: event:/SFX/Player/Die/Forward/1_Grunt
+  <PlayerDieForwardThud1>k__BackingField:
+    Guid:
+      Data1: 637397891
+      Data2: 1339006424
+      Data3: -577572676
+      Data4: 1591395041
+    Path: event:/SFX/Player/Die/Forward/2_Thud1
+  <PlayerDieForwardThud2>k__BackingField:
+    Guid:
+      Data1: -1822381764
+      Data2: 1150656886
+      Data3: 765770368
+      Data4: -1487992515
+    Path: event:/SFX/Player/Die/Forward/3_Thud2
   <PlayerDoorOpen>k__BackingField:
     Guid:
       Data1: -305465452
@@ -206,6 +234,27 @@ MonoBehaviour:
       Data3: 624404368
       Data4: 1545182479
     Path: event:/SFX/Player/Hit/Hit
+  <PlayerHitBySpit>k__BackingField:
+    Guid:
+      Data1: 1025152362
+      Data2: 1323253786
+      Data3: 958918805
+      Data4: -1893402642
+    Path: event:/SFX/Player/Hit/HitBySpit
+  <PlayerHitByBite>k__BackingField:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  <PlayerIdle>k__BackingField:
+    Guid:
+      Data1: -351354358
+      Data2: 1094868867
+      Data3: 1070708646
+      Data4: -391724231
+    Path: event:/SFX/Player/Idle/Idle
   <PlayerPaperInteraction>k__BackingField:
     Guid:
       Data1: 1770494798
@@ -213,7 +262,14 @@ MonoBehaviour:
       Data3: -90282078
       Data4: 1208520339
     Path: event:/SFX/Player/Paper/PaperInteraction
-  <PlayerFootsteps>k__BackingField:
+  <PlayerWalkFootsteps>k__BackingField:
+    Guid:
+      Data1: 1665913983
+      Data2: 1118245076
+      Data3: 11430334
+      Data4: -1716941681
+    Path: event:/SFX/Player/Walk/Footsteps
+  <PlayerRunFootsteps>k__BackingField:
     Guid:
       Data1: 1166419053
       Data2: 1320623170
