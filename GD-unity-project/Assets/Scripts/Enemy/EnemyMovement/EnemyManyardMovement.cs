@@ -82,8 +82,8 @@ namespace Enemy.EnemyData.EnemyMovement
         void Patroling()
         {
             if (agent == null || !agent.isOnNavMesh) return;
-            
-            if (!walkPointSet)
+
+			if (!walkPointSet)
                 SearchWalkPoint();
 
             if (walkPointSet)
@@ -114,9 +114,9 @@ namespace Enemy.EnemyData.EnemyMovement
         void RemoteAttackPlayer()
         {
             if (agent == null || !agent.isOnNavMesh) return;
-            
-            //Make sure enemy doesn't move
-            agent.SetDestination(transform.position);
+
+			//Make sure enemy doesn't move
+			agent.SetDestination(transform.position);
 
             transform.LookAt(playerTransform);
 

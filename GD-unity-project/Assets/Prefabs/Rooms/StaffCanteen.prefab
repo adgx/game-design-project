@@ -1060,6 +1060,15 @@ MonoBehaviour:
   - {fileID: 3485684680146483213}
   - {fileID: 7888831919474649575}
   - {fileID: 8320773062838624026}
+  _vendingMachinePrefab: {fileID: 0}
+  _vendingMachineSpawnChance: 0.5
+  _canVendingMachineSpawn: 0
+  _upgradeTerminalPrefab: {fileID: 0}
+  _upgradeTerminalSpawnChance: 0.5
+  _canUpgradeTerminalSpawn: 0
+  _paperPrefab: {fileID: 0}
+  _paperSpawnChance: 0.1
+  _canPaperSpawn: 0
 --- !u!1 &9119771467057122734
 GameObject:
   m_ObjectHideFlags: 0
@@ -5491,9 +5500,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7988620368628234395, guid: 2a366e122ff3e2743aafe6b28c5085f9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 45677506640567123}
-    - targetCorrespondingSourceObject: {fileID: 1099886303994768393, guid: 2a366e122ff3e2743aafe6b28c5085f9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2185965185755961521}
   m_SourcePrefab: {fileID: 100100000, guid: 2a366e122ff3e2743aafe6b28c5085f9, type: 3}
 --- !u!1 &101556869668470019 stripped
 GameObject:
@@ -5519,34 +5525,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.019720567, y: 0.00841372, z: 0.0075}
-  m_Center: {x: -0.00966027, y: -0.0042069196, z: 0.00375}
---- !u!1 &6986805188416973201 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1099886303994768393, guid: 2a366e122ff3e2743aafe6b28c5085f9, type: 3}
-  m_PrefabInstance: {fileID: 8049492230020253080}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &2185965185755961521
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6986805188416973201}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.020384116, y: 0.008849099, z: 0.00015000034}
-  m_Center: {x: -0.00071476033, y: -0.0013609823, z: 0.0075749992}
+  m_Size: {x: 0.021, y: 0.009, z: 0.013}
+  m_Center: {x: -0.00966027, y: -0.0042069196, z: 0.006}
 --- !u!4 &7511779828658512499 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2a366e122ff3e2743aafe6b28c5085f9, type: 3}
