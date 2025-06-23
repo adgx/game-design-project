@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{3d1a956a-401a-4edf-95f0-2739eef7248f}">
 		<property name="name">
-			<value>SpitSplash</value>
+			<value>HitBySpit</value>
 		</property>
 		<property name="outputFormat">
 			<value>2</value>
@@ -72,6 +72,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{a6f86e8e-6a1a-4c81-bd67-f8d9211f9f0a}">
+		<property name="volume">
+			<value>-15</value>
+		</property>
 		<relationship name="effectChain">
 			<destination>{35aa8bf9-6464-46b0-a8c6-111cb658dd4b}</destination>
 		</relationship>

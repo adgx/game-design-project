@@ -13,15 +13,23 @@ namespace Audio
         [field: SerializeField] public EventReference PlayerShieldActivation { get; private set; }
         [field: SerializeField] public EventReference PlayerShieldDeactivation { get; private set; }
         [field: SerializeField] public EventReference PlayerShieldHit { get; private set; }
-        [field: SerializeField] public EventReference PlayerDie { get; private set; }
+        [field: SerializeField] public EventReference PlayerDieBackwardGrunt { get; private set; }
+        [field: SerializeField] public EventReference PlayerDieBackwardThud { get; private set; }
+        [field: SerializeField] public EventReference PlayerDieForwardGrunt { get; private set; }
+        [field: SerializeField] public EventReference PlayerDieForwardThud1 { get; private set; }
+        [field: SerializeField] public EventReference PlayerDieForwardThud2 { get; private set; }
         [field: SerializeField] public EventReference PlayerDoorOpen { get; private set; }
         [field: SerializeField] public EventReference PlayerDoorClose { get; private set; }
         [field: SerializeField] public EventReference PlayerDrink { get; private set; }
         [field: SerializeField] public EventReference PlayerEatChips { get; private set; }
         [field: SerializeField] public EventReference PlayerEatChocolate { get; private set; }
         [field: SerializeField] public EventReference PlayerHit { get; private set; }
+        [field: SerializeField] public EventReference PlayerHitBySpit { get; private set; }
+        [field: SerializeField] public EventReference PlayerHitByBite { get; private set; }
+        [field: SerializeField] public EventReference PlayerIdle { get; private set; }
         [field: SerializeField] public EventReference PlayerPaperInteraction { get; private set; }
-        [field: SerializeField] public EventReference PlayerFootsteps { get; private set; }
+        [field: SerializeField] public EventReference PlayerWalkFootsteps { get; private set; }
+        [field: SerializeField] public EventReference PlayerRunFootsteps { get; private set; }
         [field: SerializeField] public EventReference PlayerSphereDischarge { get; private set; }
         [field: SerializeField] public EventReference PlayerSphereFullRecharge { get; private set; }
         [field: SerializeField] public EventReference PlayerSphereRotation { get; private set; }

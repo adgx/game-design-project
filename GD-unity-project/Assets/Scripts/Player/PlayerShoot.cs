@@ -477,7 +477,7 @@ public class PlayerShoot : MonoBehaviour
      		if (health <= 0)
      		{
      			// Audio management
-     			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDie, player.transform.position);
+     			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardGrunt, player.transform.position);
      			
      			Invoke(nameof(DestroyPlayer), 0.05f);
 
@@ -518,7 +518,7 @@ public class PlayerShoot : MonoBehaviour
 		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(respawnSceneName);
 		asyncLoad.allowSceneActivation = false;
 
-		// Attendi finché la scena è quasi pronta (>= 0.9)
+		// Attendi finchï¿½ la scena ï¿½ quasi pronta (>= 0.9)
 		while(asyncLoad.progress < 0.9f) {
 			yield return null;
 		}
