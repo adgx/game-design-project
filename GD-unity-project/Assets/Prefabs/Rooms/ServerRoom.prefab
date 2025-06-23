@@ -11284,9 +11284,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6181709616215654639}
+  - component: {fileID: 1560242246604621459}
   m_Layer: 0
   m_Name: ServerRow (2)
-  m_TagString: Untagged
+  m_TagString: Server
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11312,6 +11313,37 @@ Transform:
   - {fileID: 6896706453916022688}
   m_Father: {fileID: 4977402327728931212}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1560242246604621459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3625133915354314276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -2014649865
+      Data2: 1292488745
+      Data3: 1648386715
+      Data4: -700621535
+    Path: event:/Ambience/Server room/ServerNoise
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 1
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 30
 --- !u!1 &3740815908683010223
 GameObject:
   m_ObjectHideFlags: 0
@@ -11321,9 +11353,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3315323631935965865}
+  - component: {fileID: 7378443618815322668}
   m_Layer: 0
   m_Name: ServerRow (1)
-  m_TagString: Untagged
+  m_TagString: Server
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11349,6 +11382,37 @@ Transform:
   - {fileID: 2626614832207923189}
   m_Father: {fileID: 4977402327728931212}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7378443618815322668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3740815908683010223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -2014649865
+      Data2: 1292488745
+      Data3: 1648386715
+      Data4: -700621535
+    Path: event:/Ambience/Server room/ServerNoise
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 1
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 30
 --- !u!1 &3753227058034159912
 GameObject:
   m_ObjectHideFlags: 0
@@ -12326,9 +12390,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2137087507051134655}
+  - component: {fileID: 3458925608696858397}
   m_Layer: 0
   m_Name: ServerRow
-  m_TagString: Untagged
+  m_TagString: Server
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12354,6 +12419,37 @@ Transform:
   - {fileID: 6766990610806345794}
   m_Father: {fileID: 4977402327728931212}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3458925608696858397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4091593352680870359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -2014649865
+      Data2: 1292488745
+      Data3: 1648386715
+      Data4: -700621535
+    Path: event:/Ambience/Server room/ServerNoise
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 1
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 30
 --- !u!1 &4125537207883531027
 GameObject:
   m_ObjectHideFlags: 0
@@ -20263,9 +20359,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8228296495942259595}
+  - component: {fileID: 2221195372318461369}
   m_Layer: 0
   m_Name: ServerRow (3)
-  m_TagString: Untagged
+  m_TagString: Server
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -20291,6 +20388,37 @@ Transform:
   - {fileID: 3784905799438961347}
   m_Father: {fileID: 4977402327728931212}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2221195372318461369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6709707688790989009}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -2014649865
+      Data2: 1292488745
+      Data3: 1648386715
+      Data4: -700621535
+    Path: event:/Ambience/Server room/ServerNoise
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 1
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 30
 --- !u!1 &6763829600232765425
 GameObject:
   m_ObjectHideFlags: 0
@@ -21840,6 +21968,15 @@ MonoBehaviour:
   - {fileID: 7883990703501759548}
   - {fileID: 8550132777244263208}
   - {fileID: 7402882031084017344}
+  _vendingMachinePrefab: {fileID: 0}
+  _vendingMachineSpawnChance: 0.5
+  _canVendingMachineSpawn: 0
+  _upgradeTerminalPrefab: {fileID: 0}
+  _upgradeTerminalSpawnChance: 0.5
+  _canUpgradeTerminalSpawn: 0
+  _paperPrefab: {fileID: 0}
+  _paperSpawnChance: 0.1
+  _canPaperSpawn: 0
 --- !u!1 &7338609310666617836
 GameObject:
   m_ObjectHideFlags: 0
