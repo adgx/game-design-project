@@ -21507,6 +21507,15 @@ MonoBehaviour:
   - {fileID: 362456367002567606}
   - {fileID: 7001447854533772762}
   - {fileID: 1722847613102115124}
+  _vendingMachinePrefab: {fileID: 0}
+  _vendingMachineSpawnChance: 0.5
+  _canVendingMachineSpawn: 0
+  _upgradeTerminalPrefab: {fileID: 0}
+  _upgradeTerminalSpawnChance: 0.5
+  _canUpgradeTerminalSpawn: 0
+  _paperPrefab: {fileID: 0}
+  _paperSpawnChance: 0.1
+  _canPaperSpawn: 0
 --- !u!1 &8017773276065395897
 GameObject:
   m_ObjectHideFlags: 0
@@ -24365,6 +24374,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6364414675250900585}
     m_Modifications:
+    - target: {fileID: 7211088807668076618, guid: 2b5898e4157061c4382d3240878fb5e1, type: 3}
+      propertyPath: m_Size.z
+      value: 1.4
+      objectReference: {fileID: 0}
     - target: {fileID: 9062114317602444722, guid: 2b5898e4157061c4382d3240878fb5e1, type: 3}
       propertyPath: m_Name
       value: Chair
@@ -26799,41 +26812,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7988620368628234395, guid: 2a366e122ff3e2743aafe6b28c5085f9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2760538843432464548}
-    - targetCorrespondingSourceObject: {fileID: 1099886303994768393, guid: 2a366e122ff3e2743aafe6b28c5085f9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4667931056588351250}
   m_SourcePrefab: {fileID: 100100000, guid: 2a366e122ff3e2743aafe6b28c5085f9, type: 3}
 --- !u!4 &3794762536307920487 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 2a366e122ff3e2743aafe6b28c5085f9, type: 3}
   m_PrefabInstance: {fileID: 3684803311097440652}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &4350646370278409605 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1099886303994768393, guid: 2a366e122ff3e2743aafe6b28c5085f9, type: 3}
-  m_PrefabInstance: {fileID: 3684803311097440652}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &4667931056588351250
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4350646370278409605}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.020384116, y: 0.008849099, z: 0.00014999972}
-  m_Center: {x: -0.0007147861, y: -0.0013609823, z: 0.0075749964}
 --- !u!1 &6772933288503562519 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7988620368628234395, guid: 2a366e122ff3e2743aafe6b28c5085f9, type: 3}
@@ -26858,8 +26842,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.019720567, y: 0.00841372, z: 0.0074999984}
-  m_Center: {x: -0.009660284, y: -0.00420686, z: 0.0037499992}
+  m_Size: {x: 0.021, y: 0.009, z: 0.013}
+  m_Center: {x: -0.009660284, y: -0.00420686, z: 0.006}
 --- !u!1001 &3744805668653737318
 PrefabInstance:
   m_ObjectHideFlags: 0
