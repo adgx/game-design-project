@@ -3517,6 +3517,15 @@ MonoBehaviour:
     IsConnected: 0
   _centralSpawnPoint: {fileID: 1974158435936280979}
   _enemySpawnPoints: []
+  _vendingMachinePrefab: {fileID: 0}
+  _vendingMachineSpawnChance: 0.5
+  _canVendingMachineSpawn: 0
+  _upgradeTerminalPrefab: {fileID: 0}
+  _upgradeTerminalSpawnChance: 0.5
+  _canUpgradeTerminalSpawn: 0
+  _paperPrefab: {fileID: 0}
+  _paperSpawnChance: 0.1
+  _canPaperSpawn: 0
 --- !u!1 &2852206494316794774
 GameObject:
   m_ObjectHideFlags: 0
@@ -9448,7 +9457,7 @@ Transform:
   m_GameObject: {fileID: 8373857545393194545}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.737793, y: 2.5583029, z: 13.383217}
+  m_LocalPosition: {x: 6.211, y: 2.5583029, z: 13.383217}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -20710,27 +20719,27 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 77f68df3f052f4b41bff8066380ee9a4, type: 3}
       propertyPath: m_LocalScale.x
-      value: 200
+      value: 130.342
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 77f68df3f052f4b41bff8066380ee9a4, type: 3}
       propertyPath: m_LocalScale.y
-      value: 199.99998
+      value: 130.34198
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 77f68df3f052f4b41bff8066380ee9a4, type: 3}
       propertyPath: m_LocalScale.z
-      value: 200.00002
+      value: 130.342
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 77f68df3f052f4b41bff8066380ee9a4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9.357792
+      value: 10.904442
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 77f68df3f052f4b41bff8066380ee9a4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.48
+      value: 1.4830586
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 77f68df3f052f4b41bff8066380ee9a4, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 10.893215
+      value: 12.017043
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 77f68df3f052f4b41bff8066380ee9a4, type: 3}
       propertyPath: m_LocalRotation.w
@@ -26245,7 +26254,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 19f7ca5a6d84395458f9b1f841803c33, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.35179138
+      value: 3.45
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 19f7ca5a6d84395458f9b1f841803c33, type: 3}
       propertyPath: m_LocalPosition.y
