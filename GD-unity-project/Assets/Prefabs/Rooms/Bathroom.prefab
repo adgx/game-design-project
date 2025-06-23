@@ -698,6 +698,15 @@ MonoBehaviour:
   _centralSpawnPoint: {fileID: 2556233178477582439}
   _enemySpawnPoints:
   - {fileID: 7590300882084718737}
+  _vendingMachinePrefab: {fileID: 0}
+  _vendingMachineSpawnChance: 0.5
+  _canVendingMachineSpawn: 0
+  _upgradeTerminalPrefab: {fileID: 0}
+  _upgradeTerminalSpawnChance: 0.5
+  _canUpgradeTerminalSpawn: 0
+  _paperPrefab: {fileID: 0}
+  _paperSpawnChance: 0.1
+  _canPaperSpawn: 0
 --- !u!1 &2854547184470649121
 GameObject:
   m_ObjectHideFlags: 0
@@ -1859,7 +1868,7 @@ GameObject:
   - component: {fileID: 4407571129306278437}
   - component: {fileID: 5864591777574127175}
   - component: {fileID: 4435610676424729022}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
