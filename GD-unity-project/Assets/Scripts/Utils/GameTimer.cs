@@ -1,7 +1,9 @@
+using System;
 using Helper;
 using System.Collections;
 using System.Collections.Generic;
 using Audio;
+using FMOD;
 using TMPro;
 using UnityEngine;
 
@@ -9,11 +11,24 @@ using UnityEngine;
 using FMODUnity;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Debug = UnityEngine.Debug;
 
 namespace Utils {
 	// Audio management
 	[RequireComponent(typeof(StudioEventEmitter))]
-
+	
+	public class AmbienceSound
+	{
+		public List<StudioEventEmitter> emitters;
+		public bool isTriggered;
+		
+		public AmbienceSound(List<StudioEventEmitter> emitters)
+		{
+			this.emitters = emitters;
+			this.isTriggered = false;
+		}
+	}
+	
 	public class GameTimer : MonoBehaviour {
 		// TODO: the timer is set to 2 minutes for debugging. It should be of 10 minutes.
 		private const float TimeLimit = 2 * 60f;
@@ -29,36 +44,7 @@ namespace Utils {
 		public RoomManager.RoomManager roomManager;
 
 		// Audio management
-		private List<StudioEventEmitter> alarmEmitters = new List<StudioEventEmitter>();
-		private bool alarmIsTriggered = false;
-
-		private List<StudioEventEmitter> serverEmitters = new List<StudioEventEmitter>();
-		private bool serverIsTriggered = false;
-
-		private List<StudioEventEmitter> ledEmitters = new List<StudioEventEmitter>();
-		private bool ledIsTriggered = false;
-
-		private List<StudioEventEmitter> refrigeratorEmitters = new List<StudioEventEmitter>();
-		private bool refrigeratorIsTriggered = false;
-
-		private List<StudioEventEmitter> healthVendingMachineEmitters = new List<StudioEventEmitter>();
-		private bool HealthVendingMachineIsTriggered = false;
-
-		private List<StudioEventEmitter> powerUpVendingMachineEmitters = new List<StudioEventEmitter>();
-		private bool PowerUpVendingMachineIsTriggered = false;
-
-		private List<StudioEventEmitter> terminalEmitters = new List<StudioEventEmitter>();
-		private bool terminalIsTriggered = false;
-
-		private List<StudioEventEmitter> elevatorEmitters = new List<StudioEventEmitter>();
-		private bool elevatorIsTriggered = false;
-
-		private List<StudioEventEmitter> ventilationEmitters = new List<StudioEventEmitter>();
-		private bool ventilationIsTriggered = false;
-
-		private List<StudioEventEmitter> wcEmitters = new List<StudioEventEmitter>();
-		private bool wcIsTriggered = false;
-
+		private Dictionary<string, AmbienceSound> ambienceSounds;
 		private MusicLoopIteration iteration = MusicLoopIteration.FIRST_ITERATION;
 
 		private GameObject player;
@@ -83,46 +69,60 @@ namespace Utils {
 				}
 			}
 		}
-
-		private void playEventEmitters(List<StudioEventEmitter> emitters, bool condition, ref bool isTriggered) {
-			if(condition) {
-				foreach(var emitter in emitters) {
-					if(emitter != null && emitter.gameObject != null) {
-						emitter.Play();
-					}
-				}
-				isTriggered = true;
-			}
-		}
-
-		private void resetEventEmitters(List<StudioEventEmitter> emitters, ref bool isTriggered) {
-			isTriggered = false;
-			emitters.Clear();
+		
+		private void AddAmbienceSound(string objectTag, EventReference evRef, string key) {
+			var emitters = new List<StudioEventEmitter>();
+			InitializeEventEmittersWithTag(objectTag, evRef, emitters);
+			ambienceSounds[key] = new AmbienceSound(emitters);
 		}
 
 		private void InitializeAmbientEmitters() {
-			resetEventEmitters(alarmEmitters, ref alarmIsTriggered);
-			resetEventEmitters(serverEmitters, ref serverIsTriggered);
-			resetEventEmitters(ledEmitters, ref ledIsTriggered);
-			resetEventEmitters(refrigeratorEmitters, ref refrigeratorIsTriggered);
-			resetEventEmitters(healthVendingMachineEmitters, ref HealthVendingMachineIsTriggered);
-			resetEventEmitters(powerUpVendingMachineEmitters, ref PowerUpVendingMachineIsTriggered);
-			resetEventEmitters(terminalEmitters, ref terminalIsTriggered);
-			resetEventEmitters(elevatorEmitters, ref elevatorIsTriggered);
-			resetEventEmitters(ventilationEmitters, ref ventilationIsTriggered);
-			resetEventEmitters(wcEmitters, ref wcIsTriggered);
-
-			InitializeEventEmittersWithTag("AlarmSpeaker", FMODEvents.Instance.Alarm, alarmEmitters);
-			InitializeEventEmittersWithTag("Server", FMODEvents.Instance.ServerNoise, serverEmitters);
-			InitializeEventEmittersWithTag("FlickeringLED", FMODEvents.Instance.FlickeringLed, ledEmitters);
-			InitializeEventEmittersWithTag("Refrigerator", FMODEvents.Instance.RefrigeratorNoise, refrigeratorEmitters);
-			InitializeEventEmittersWithTag("HealthSnackDistributor", FMODEvents.Instance.VendingMachineNoise, healthVendingMachineEmitters);
-			InitializeEventEmittersWithTag("PowerUpSnackDistributor", FMODEvents.Instance.VendingMachineNoise, powerUpVendingMachineEmitters);
-			InitializeEventEmittersWithTag("SphereTerminal", FMODEvents.Instance.TerminalNoise, terminalEmitters);
-			InitializeEventEmittersWithTag("Elevator", FMODEvents.Instance.ElevatorNoise, elevatorEmitters);
-			InitializeEventEmittersWithTag("Ventilation", FMODEvents.Instance.VentilationNoise, ventilationEmitters);
-			InitializeEventEmittersWithTag("FlushingWC", FMODEvents.Instance.FlushingWcNoise, wcEmitters);
+			ambienceSounds = new Dictionary<string, AmbienceSound>();
+			
+			AddAmbienceSound("AlarmSpeaker", FMODEvents.Instance.Alarm, "alarm");
+			AddAmbienceSound("Server", FMODEvents.Instance.ServerNoise, "server");
+			AddAmbienceSound("FlickeringLED", FMODEvents.Instance.FlickeringLed, "led");
+			AddAmbienceSound("Refrigerator", FMODEvents.Instance.RefrigeratorNoise, "refrigerator");
+			AddAmbienceSound("HealthSnackDistributor", FMODEvents.Instance.VendingMachineNoise, "healthVendingMachine");
+			AddAmbienceSound("PowerUpSnackDistributor", FMODEvents.Instance.VendingMachineNoise, "powerUpVendingMachine");
+			AddAmbienceSound("SphereTerminal", FMODEvents.Instance.TerminalNoise, "terminal");
+			AddAmbienceSound("Elevator", FMODEvents.Instance.ElevatorNoise, "elevator");
+			AddAmbienceSound("Ventilation", FMODEvents.Instance.VentilationNoise, "ventilation");
+			AddAmbienceSound("FlushingWC", FMODEvents.Instance.FlushingWcNoise, "wc");
 		}
+		
+		private void playAmbientEmitters()
+		{
+			foreach (var element in ambienceSounds)
+			{
+				bool condition;
+				
+				if (element.Key == "alarm")
+				{
+					condition = currentTime <= 10f && !element.Value.isTriggered;
+				}
+				else
+				{
+					condition = !element.Value.isTriggered;
+				}
+
+				List<StudioEventEmitter> emitters = element.Value.emitters;
+				
+				if(condition) {
+					foreach(var emitter in emitters) {
+						if(emitter != null && emitter.gameObject != null) {
+							emitter.Play();
+						}
+					}
+					element.Value.isTriggered = true;
+				}
+			}
+		}
+
+		// private void resetAmbientEmitters(List<StudioEventEmitter> emitters, ref bool isTriggered) {
+		// 	isTriggered = false;
+		// 	emitters.Clear();
+		// }
 
 		private void StopAllAmbientSounds() {
 			FMOD.Studio.Bus ambientBus = FMODUnity.RuntimeManager.GetBus("bus:/Ambience");
@@ -135,16 +135,10 @@ namespace Utils {
 			}
 
 			// Resets the Boolean flags as well, since all sounds have been stopped
-			alarmIsTriggered = false;
-			serverIsTriggered = false;
-			ledIsTriggered = false;
-			refrigeratorIsTriggered = false;
-			HealthVendingMachineIsTriggered = false;
-			PowerUpVendingMachineIsTriggered = false;
-			terminalIsTriggered = false;
-			elevatorIsTriggered = false;
-			ventilationIsTriggered = false;
-			wcIsTriggered = false;
+			foreach (var sound in ambienceSounds.Values)
+			{
+				sound.isTriggered = false;
+			}
 		}
 
 		private void OnDestroy() {
@@ -217,16 +211,7 @@ namespace Utils {
 			UpdateTimerUI();
 
 			// Audio management
-			playEventEmitters(alarmEmitters, !alarmIsTriggered && currentTime <= 10f, ref alarmIsTriggered);
-			playEventEmitters(serverEmitters, !serverIsTriggered, ref serverIsTriggered);
-			playEventEmitters(ledEmitters, !ledIsTriggered, ref ledIsTriggered);
-			playEventEmitters(refrigeratorEmitters, !refrigeratorIsTriggered, ref refrigeratorIsTriggered);
-			playEventEmitters(healthVendingMachineEmitters, !HealthVendingMachineIsTriggered, ref HealthVendingMachineIsTriggered);
-			playEventEmitters(powerUpVendingMachineEmitters, !PowerUpVendingMachineIsTriggered, ref PowerUpVendingMachineIsTriggered);
-			playEventEmitters(terminalEmitters, !terminalIsTriggered, ref terminalIsTriggered);
-			playEventEmitters(elevatorEmitters, !elevatorIsTriggered, ref elevatorIsTriggered);
-			playEventEmitters(ventilationEmitters, !ventilationIsTriggered, ref ventilationIsTriggered);
-			playEventEmitters(wcEmitters, !wcIsTriggered, ref wcIsTriggered);
+			playAmbientEmitters();
 		}
 
 		private void HandleRunReady() {

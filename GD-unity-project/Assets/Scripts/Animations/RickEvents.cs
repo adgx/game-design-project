@@ -97,15 +97,18 @@ namespace Animations
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldActivation, transform.position);
-
-            if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1)
+            
+            if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
             {
-                _ = ShieldDeactivationAfterDelay(5000);
-            }
+                if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1)
+                {
+                    _ = ShieldDeactivationAfterDelay(5000);
+                }
 
-            else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 2)
-            {
-                _ = ShieldDeactivationAfterDelay(10000);
+                else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 2)
+                {
+                    _ = ShieldDeactivationAfterDelay(10000);
+                }   
             }
         }
         
