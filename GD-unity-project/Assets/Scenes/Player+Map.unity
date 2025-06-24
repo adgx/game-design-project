@@ -653,6 +653,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 379990347}
+    - target: {fileID: 1753458665747210168, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2347022518688673454, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -801,6 +805,10 @@ PrefabInstance:
       propertyPath: m_Delegates.Array.data[3].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 379990348}
+    - target: {fileID: 3485552226981936514, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3718890128462602489, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -1155,11 +1163,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
---- !u!225 &361144710 stripped
-CanvasGroup:
-  m_CorrespondingSourceObject: {fileID: 4398049158021365803, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
-  m_PrefabInstance: {fileID: 361144709}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &361144711 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5631795588879491913, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
@@ -2952,7 +2955,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1027fffed39994e7ba05e1f494acf175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeCanvasGroup: {fileID: 361144710}
+  fadeCanvasGroup: {fileID: 235949649}
   fadeDuration: 0.5
 --- !u!114 &1738691467
 MonoBehaviour:
