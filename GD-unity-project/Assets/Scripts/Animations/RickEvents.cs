@@ -7,8 +7,10 @@ namespace Animations
     public class RickEvents : MonoBehaviour
     {
         // Audio management
-        private EventInstance rickLoadCloseAttack;
-        private EventInstance rickLoadDistanceAttack;
+        private EventInstance rickLoadCloseAttackWithPowerUp1;
+        private EventInstance rickLoadDistanceAttackWithPowerUp1;
+        private EventInstance rickLoadCloseAttackWithPowerUp2;
+        private EventInstance rickLoadDistanceAttackWithPowerUp2;
         private EventInstance rickWalkFootsteps;
         private EventInstance rickRunFootsteps;
         private EventInstance rickIdle;
@@ -223,11 +225,17 @@ namespace Animations
         // Audio management
         private void Start()
         {
-            rickLoadCloseAttack = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerCloseAttackLoadWithPowerUp2);
-            rickLoadCloseAttack.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            rickLoadCloseAttackWithPowerUp1 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerCloseAttackLoadWithPowerUp1);
+            rickLoadCloseAttackWithPowerUp1.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
         
-            rickLoadDistanceAttack = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerDistanceAttackLoadWithPowerUp2);
-            rickLoadDistanceAttack.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            rickLoadDistanceAttackWithPowerUp1 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerDistanceAttackLoadWithPowerUp1);
+            rickLoadDistanceAttackWithPowerUp1.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            
+            rickLoadCloseAttackWithPowerUp2 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerCloseAttackLoadWithPowerUp2);
+            rickLoadCloseAttackWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+        
+            rickLoadDistanceAttackWithPowerUp2 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerDistanceAttackLoadWithPowerUp2);
+            rickLoadDistanceAttackWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             
             rickWalkFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerWalkFootsteps);
             rickWalkFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
@@ -248,8 +256,10 @@ namespace Animations
     
         private void UpdateSound()
         {
-            rickLoadCloseAttack.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-            rickLoadDistanceAttack.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            rickLoadCloseAttackWithPowerUp1.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            rickLoadDistanceAttackWithPowerUp1.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            rickLoadCloseAttackWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            rickLoadDistanceAttackWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             rickWalkFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             rickRunFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             rickIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
@@ -259,16 +269,19 @@ namespace Animations
             {
                 // Get the playback state for the loadCloseAttack event
                 PLAYBACK_STATE loadCloseAttackPlaybackState;
-                rickLoadCloseAttack.getPlaybackState(out loadCloseAttackPlaybackState);
+                
+                // TODO: depending on the available power up the used SFX must be different 
+                
+                rickLoadCloseAttackWithPowerUp2.getPlaybackState(out loadCloseAttackPlaybackState);
                 if (loadCloseAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
                 {
-                    rickLoadCloseAttack.start();
+                    rickLoadCloseAttackWithPowerUp2.start();
                 }
             }
             // Otherwise, stop the loadCloseAttack event
             else
             {
-                rickLoadCloseAttack.stop(STOP_MODE.ALLOWFADEOUT);
+                rickLoadCloseAttackWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);
             }
             
             // Start loadDistanceAttack event if Rick is loading the distance attack 
@@ -276,16 +289,19 @@ namespace Animations
             {
                 // Get the playback state for the loadDistanceAttack event
                 PLAYBACK_STATE loadDistanceAttackPlaybackState;
-                rickLoadDistanceAttack.getPlaybackState(out loadDistanceAttackPlaybackState);
+                
+                // TODO: depending on the available power up the used SFX must be different
+                
+                rickLoadDistanceAttackWithPowerUp2.getPlaybackState(out loadDistanceAttackPlaybackState);
                 if (loadDistanceAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
                 {
-                    rickLoadDistanceAttack.start();
+                    rickLoadDistanceAttackWithPowerUp2.start();
                 }
             }
             // Otherwise, stop the loadDistanceAttack event
             else
             {
-                rickLoadDistanceAttack.stop(STOP_MODE.ALLOWFADEOUT);
+                rickLoadDistanceAttackWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);
             }
             
             // Start walkFootsteps event if Rick is moving

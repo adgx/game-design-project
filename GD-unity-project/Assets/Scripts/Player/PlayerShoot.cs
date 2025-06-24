@@ -13,8 +13,10 @@ public class PlayerShoot : MonoBehaviour
 {
 	// Audio management 
 	public bool IsSphereRotating => rotateSphere.isRotating;
-	private EventInstance distanceAttackLoading;
-	private EventInstance closeAttackLoading;
+	private EventInstance distanceAttackLoadingWithPowerUp1;
+	private EventInstance closeAttackLoadingWithPowerUp1;
+	private EventInstance distanceAttackLoadingWithPowerUp2;
+	private EventInstance closeAttackLoadingWithPowerUp2;
 	private bool isShieldCoroutineRunning;
 	
 	// Attack1
@@ -75,11 +77,17 @@ public class PlayerShoot : MonoBehaviour
 		player = GetComponent<Player>();
 		
 		// Audio management
-		distanceAttackLoading = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerDistanceAttackLoadWithPowerUp2);
-		distanceAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
+		distanceAttackLoadingWithPowerUp1 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerDistanceAttackLoadWithPowerUp1);
+		distanceAttackLoadingWithPowerUp1.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
 		
-		closeAttackLoading = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerCloseAttackLoadWithPowerUp2);
-		closeAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
+		closeAttackLoadingWithPowerUp1 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerCloseAttackLoadWithPowerUp1);
+		closeAttackLoadingWithPowerUp1.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
+		
+		distanceAttackLoadingWithPowerUp2 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerDistanceAttackLoadWithPowerUp2);
+		distanceAttackLoadingWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
+		
+		closeAttackLoadingWithPowerUp2 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerCloseAttackLoadWithPowerUp2);
+		closeAttackLoadingWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
 	}
 	
 	// Audio management
@@ -216,9 +224,20 @@ public class PlayerShoot : MonoBehaviour
 		
 		if (playDistanceAttackSound)
 		{
-			distanceAttackLoading.stop(STOP_MODE.IMMEDIATE); // reset
-			distanceAttackLoading.start(); // start
-			_ = StopLoadingSoundAfterDelay(distanceAttackLoading, 2500);
+			// TODO: modify the delay based on the available power ups
+
+			if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 1)
+			{
+				distanceAttackLoadingWithPowerUp1.stop(STOP_MODE.IMMEDIATE); // reset
+				distanceAttackLoadingWithPowerUp1.start(); // start
+				_ = StopLoadingSoundAfterDelay(distanceAttackLoadingWithPowerUp1, 1500);
+			}
+			else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 2)
+			{
+				distanceAttackLoadingWithPowerUp2.stop(STOP_MODE.IMMEDIATE); // reset
+				distanceAttackLoadingWithPowerUp2.start(); // start
+				_ = StopLoadingSoundAfterDelay(distanceAttackLoadingWithPowerUp2, 2500);	
+			}
 		}
 
 		attackStamina = 0;
@@ -287,7 +306,8 @@ public class PlayerShoot : MonoBehaviour
 		player.isFrozen = false;
 		
 		// Audio management
-		distanceAttackLoading.stop(STOP_MODE.ALLOWFADEOUT);
+		distanceAttackLoadingWithPowerUp1.stop(STOP_MODE.ALLOWFADEOUT);
+		distanceAttackLoadingWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);
 	}
 	
 	async void LoadCloseAttack() {
@@ -306,9 +326,20 @@ public class PlayerShoot : MonoBehaviour
 		
 		if (playCloseAttackSound)
 		{
-			closeAttackLoading.stop(STOP_MODE.IMMEDIATE); // reset loading SFX 
-			closeAttackLoading.start(); // start loading SFX
-			_ = StopLoadingSoundAfterDelay(closeAttackLoading, 2500);
+			// TODO: modify the delay based on the available power ups 
+			
+			if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 1)
+			{
+				closeAttackLoadingWithPowerUp1.stop(STOP_MODE.IMMEDIATE); // reset loading SFX 
+				closeAttackLoadingWithPowerUp1.start(); // start loading SFX
+				_ = StopLoadingSoundAfterDelay(closeAttackLoadingWithPowerUp1, 1500);
+			}
+			else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 2)
+			{
+				closeAttackLoadingWithPowerUp2.stop(STOP_MODE.IMMEDIATE); // reset loading SFX 
+				closeAttackLoadingWithPowerUp2.start(); // start loading SFX
+				_ = StopLoadingSoundAfterDelay(closeAttackLoadingWithPowerUp2, 2500);	
+			}
 		}
 		
 		attackStamina = 0;
@@ -360,7 +391,8 @@ public class PlayerShoot : MonoBehaviour
 		CheckForEnemies();
 		
 		// Audio management
-		closeAttackLoading.stop(STOP_MODE.ALLOWFADEOUT);
+		closeAttackLoadingWithPowerUp1.stop(STOP_MODE.ALLOWFADEOUT);
+		closeAttackLoadingWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);
 	}
 
 	async void SpawnAttackArea() {
@@ -632,7 +664,10 @@ public class PlayerShoot : MonoBehaviour
 	// Audio management
 	private void UpdateSound() 
 	{
-		distanceAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
-		closeAttackLoading.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotateSphere.transform));
+		distanceAttackLoadingWithPowerUp1.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
+		closeAttackLoadingWithPowerUp1.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotateSphere.transform));
+		
+		distanceAttackLoadingWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
+		closeAttackLoadingWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotateSphere.transform));
 	}
 }
