@@ -2,6 +2,7 @@ using Audio;
 using UnityEngine;
 using FMODUnity;
 using FMOD.Studio;
+
 public class MainMenuAudioManager : MonoBehaviour
 {
     private EventInstance musicEventInstance;

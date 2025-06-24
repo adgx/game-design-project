@@ -100,8 +100,9 @@ namespace Audio
         [field: SerializeField] public EventReference FlushingWcNoise { get; private set;  }
     
         [field: Header("Music")]
-        [field: SerializeField] public EventReference GameplayMusic { get; private set; }
         [field: SerializeField] public EventReference MainMenuMusic { get; private set; }
+        [field: SerializeField] public EventReference GameplayMusic { get; private set; }
+        [field: SerializeField] public EventReference DeathMenuMusic { get; private set; }
     
         public static FMODEvents Instance { get; private set; }
 
