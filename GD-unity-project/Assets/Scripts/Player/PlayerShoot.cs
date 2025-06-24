@@ -306,8 +306,17 @@ public class PlayerShoot : MonoBehaviour
 		player.isFrozen = false;
 		
 		// Audio management
-		distanceAttackLoadingWithPowerUp1.stop(STOP_MODE.ALLOWFADEOUT);
-		distanceAttackLoadingWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);
+		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp))
+		{
+			if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 1)
+			{
+				distanceAttackLoadingWithPowerUp1.stop(STOP_MODE.ALLOWFADEOUT);	
+			}
+			else
+			{
+				distanceAttackLoadingWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);	
+			}
+		}
 	}
 	
 	async void LoadCloseAttack() {
@@ -391,8 +400,17 @@ public class PlayerShoot : MonoBehaviour
 		CheckForEnemies();
 		
 		// Audio management
-		closeAttackLoadingWithPowerUp1.stop(STOP_MODE.ALLOWFADEOUT);
-		closeAttackLoadingWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);
+		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp))
+		{
+			if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 1)
+			{
+				closeAttackLoadingWithPowerUp1.stop(STOP_MODE.ALLOWFADEOUT);	
+			}
+			else
+			{
+				closeAttackLoadingWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);	
+			}	
+		}
 	}
 
 	async void SpawnAttackArea() {
