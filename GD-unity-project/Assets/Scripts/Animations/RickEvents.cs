@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Audio;
 using FMOD.Studio;
 using UnityEngine;
@@ -20,6 +21,8 @@ namespace Animations
         private bool isWalking = false; // TODO: to be removed once we have Rick's FSM
         private bool isRunning = false; // TODO: to be removed once we have Rick's FSM
         private bool isIdle = false; // TODO: to be removed once we have Rick's FSM
+        
+        public PowerUp powerUp;
     
         public void Idle()
         {
@@ -93,15 +96,16 @@ namespace Animations
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldActivation, transform.position);
-        }
-        
-        public void ShieldDeactivation()
-        {
-            Debug.Log("ShieldDeactivation");
-        
-            // Audio management
-            ResetAudioState(); // TODO: to be removed once we have Rick's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldDeactivation, transform.position);
+
+            if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1)
+            {
+                _ = ShieldDeactivationAfterDelay(5000);
+            }
+
+            else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 2)
+            {
+                _ = ShieldDeactivationAfterDelay(10000);
+            }
         }
         
         public void DeathForwardGrunt()
@@ -245,6 +249,14 @@ namespace Animations
         
             rickIdle = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerIdle);
             rickIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            
+            // TODO: debug code used to test the power up mechanism related to loaded attacks 
+            powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.DefensePowerUp);
+            powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.DefensePowerUp);
+            powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp);
+            powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp);
+            powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp);
+            powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp);
         }
     
         // FixedUpdate is called once per frame
@@ -269,19 +281,37 @@ namespace Animations
             {
                 // Get the playback state for the loadCloseAttack event
                 PLAYBACK_STATE loadCloseAttackPlaybackState;
-                
-                // TODO: depending on the available power up the used SFX must be different 
-                
-                rickLoadCloseAttackWithPowerUp2.getPlaybackState(out loadCloseAttackPlaybackState);
-                if (loadCloseAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
+
+                if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 1)
                 {
-                    rickLoadCloseAttackWithPowerUp2.start();
+                    rickLoadCloseAttackWithPowerUp1.getPlaybackState(out loadCloseAttackPlaybackState);
+                    if (loadCloseAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
+                    {
+                        rickLoadCloseAttackWithPowerUp1.start();
+                        _ = StopLoadingSoundAfterDelay(rickLoadCloseAttackWithPowerUp1, 1500);
+                    }
+                }
+                else if(powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 2)
+                {
+                    rickLoadCloseAttackWithPowerUp2.getPlaybackState(out loadCloseAttackPlaybackState);
+                    if (loadCloseAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
+                    {
+                        rickLoadCloseAttackWithPowerUp2.start();
+                        _ = StopLoadingSoundAfterDelay(rickLoadCloseAttackWithPowerUp2, 2500);
+                    }
                 }
             }
             // Otherwise, stop the loadCloseAttack event
             else
             {
-                rickLoadCloseAttackWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);
+                if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 1)
+                {
+                    rickLoadCloseAttackWithPowerUp1.stop(STOP_MODE.ALLOWFADEOUT);   
+                }
+                else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 2)
+                {
+                    rickLoadCloseAttackWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);   
+                }
             }
             
             // Start loadDistanceAttack event if Rick is loading the distance attack 
@@ -289,19 +319,37 @@ namespace Animations
             {
                 // Get the playback state for the loadDistanceAttack event
                 PLAYBACK_STATE loadDistanceAttackPlaybackState;
-                
-                // TODO: depending on the available power up the used SFX must be different
-                
-                rickLoadDistanceAttackWithPowerUp2.getPlaybackState(out loadDistanceAttackPlaybackState);
-                if (loadDistanceAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
+               
+                if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 1)
                 {
-                    rickLoadDistanceAttackWithPowerUp2.start();
+                    rickLoadDistanceAttackWithPowerUp1.getPlaybackState(out loadDistanceAttackPlaybackState);
+                    if (loadDistanceAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
+                    {
+                        rickLoadDistanceAttackWithPowerUp1.start();
+                        _ = StopLoadingSoundAfterDelay(rickLoadDistanceAttackWithPowerUp1, 1500);
+                    }
+                }
+                else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 2)
+                {
+                    rickLoadDistanceAttackWithPowerUp2.getPlaybackState(out loadDistanceAttackPlaybackState);
+                    if (loadDistanceAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
+                    {
+                        rickLoadDistanceAttackWithPowerUp2.start();
+                        _ = StopLoadingSoundAfterDelay(rickLoadDistanceAttackWithPowerUp2, 2500);
+                    }
                 }
             }
             // Otherwise, stop the loadDistanceAttack event
             else
             {
-                rickLoadDistanceAttackWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);
+                if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 1)
+                {
+                    rickLoadDistanceAttackWithPowerUp1.stop(STOP_MODE.ALLOWFADEOUT);
+                }
+                else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 2)
+                {
+                    rickLoadDistanceAttackWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);   
+                }
             }
             
             // Start walkFootsteps event if Rick is moving
@@ -364,6 +412,36 @@ namespace Animations
             isWalking = false;
             isRunning = false;
             isIdle = false;
+        }
+        
+        // Audio management
+        private async Task StopLoadingSoundAfterDelay(EventInstance instance, int delayMs)
+        {
+            await Task.Delay(delayMs);
+
+            if (!instance.isValid())
+                return;
+
+            PLAYBACK_STATE state;
+            var result = instance.getPlaybackState(out state);
+            if (result != FMOD.RESULT.OK)
+                return;
+
+            if (state != PLAYBACK_STATE.STOPPED)
+                instance.stop(STOP_MODE.ALLOWFADEOUT);
+            
+            ResetAudioState();
+        }
+        
+        private async Task ShieldDeactivationAfterDelay(int delayMs)
+        {
+            await Task.Delay(delayMs);
+            
+            Debug.Log("ShieldDeactivation");
+        
+            // Audio management
+            ResetAudioState(); // TODO: to be removed once we have Rick's FSM
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldDeactivation, transform.position);
         }
     }
 }
