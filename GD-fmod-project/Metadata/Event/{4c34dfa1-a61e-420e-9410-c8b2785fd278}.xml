@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{4c34dfa1-a61e-420e-9410-c8b2785fd278}">
 		<property name="name">
-			<value>Die</value>
+			<value>1_Scream</value>
 		</property>
 		<property name="outputFormat">
 			<value>2</value>
@@ -105,21 +105,21 @@
 			<value>-10</value>
 		</property>
 		<relationship name="sounds">
-			<destination>{16a97718-36a3-4055-a89d-113d804ac8d0}</destination>
-			<destination>{2b2e2e26-3b3c-4dd2-921e-d6936d7a9932}</destination>
+			<destination>{31484d6a-51c1-409c-87b7-98b15e1897c3}</destination>
+			<destination>{aa2c2c5f-cd59-4624-8677-c288a3e51685}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{727de541-eaac-4b46-ac48-3b8129b9c06e}" />
 	<object class="MixerBusFader" id="{60365817-fd27-4f9d-a487-9b013cbcfc1e}" />
 	<object class="SpatialiserEffect" id="{9a1556e7-9f25-4b8f-83fc-28a9503b2283}" />
-	<object class="SingleSound" id="{16a97718-36a3-4055-a89d-113d804ac8d0}">
+	<object class="SingleSound" id="{31484d6a-51c1-409c-87b7-98b15e1897c3}">
 		<relationship name="audioFile">
-			<destination>{21c680b4-37c3-4dba-ab56-0f6b3049c48f}</destination>
+			<destination>{519a97d0-1ba8-4eea-bd3c-33a06f8d8780}</destination>
 		</relationship>
 	</object>
-	<object class="SingleSound" id="{2b2e2e26-3b3c-4dd2-921e-d6936d7a9932}">
+	<object class="SingleSound" id="{aa2c2c5f-cd59-4624-8677-c288a3e51685}">
 		<relationship name="audioFile">
-			<destination>{e3387366-86cd-4a68-8cc8-bb46191a55af}</destination>
+			<destination>{7d607781-c302-4f0c-971f-cfcaf3dba6ec}</destination>
 		</relationship>
 	</object>
 </objects>

@@ -1,5 +1,6 @@
 using FMOD.Studio;
 using System;
+using Audio;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -159,9 +160,9 @@ using UnityEngine.Assertions;
 		private void Start()
 		{
 			playerShoot = GetComponent<PlayerShoot>();
-			playerFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.instance.playerFootsteps);
+			playerFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerRunFootsteps);
 			playerFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-			sphereRotation = GamePlayAudioManager.instance.CreateInstance(FMODEvents.instance.sphereRotation);
+			sphereRotation = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerSphereRotation);
 			sphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
 		}
 

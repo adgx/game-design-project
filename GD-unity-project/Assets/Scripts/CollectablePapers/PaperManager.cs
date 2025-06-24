@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Audio;
 using TMPro;
 using UnityEngine;
 
@@ -95,7 +96,7 @@ namespace CollectablePapers
                 _paperText.SetText(messageContent + "\n\n<color=yellow>[Press E to Close]</color>");
                 _paperTextContainer.SetActive(true);
 
-                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.paperInteraction, paperPosition);
+                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerPaperInteraction, paperPosition);
             }
             else
             {

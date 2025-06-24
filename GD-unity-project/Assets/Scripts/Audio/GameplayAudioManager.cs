@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Audio;
 using UnityEngine;
 using FMODUnity;
 using FMOD.Studio;
@@ -46,7 +47,7 @@ public class GamePlayAudioManager : MonoBehaviour
     
     private void Start()
     {
-        InitializeMusic(FMODEvents.instance.gameplayMusic);
+        InitializeMusic(FMODEvents.Instance.GameplayMusic);
     }
     
     private void Update()

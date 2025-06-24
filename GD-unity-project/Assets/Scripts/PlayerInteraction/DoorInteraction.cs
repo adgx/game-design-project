@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Audio;
 using Helper;
 using RoomManager;
 using TMPro;
@@ -89,12 +90,12 @@ namespace PlayerInteraction
 
             if (_roomManager.DoesRoomExistAt(nextRoomGridIndex))
             {
-                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.doorOpen, interactor.transform.position);
+                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDoorOpen, interactor.transform.position);
 
                 FadeManager.Instance.FadeOutIn(() =>
                 {
                     _roomManager.TraverseRoom(nextRoomGridIndex, _leadsToWorldDirection);
-                    GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.doorClose,
+                    GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDoorClose,
                         interactor.transform.position);
                 });
             }

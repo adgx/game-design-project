@@ -1,3 +1,4 @@
+using Audio;
 using FMOD.Studio;
 using UnityEngine;
 
@@ -36,7 +37,7 @@ namespace Animations
         
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.drakeCloseAttack1, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeCloseAttack1, transform.position);
         }
     
         public void Swiping()
@@ -45,7 +46,7 @@ namespace Animations
         
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.drakeCloseAttack2, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeCloseAttack2, transform.position);
         }
     
         public void Defense()
@@ -54,7 +55,7 @@ namespace Animations
         
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.drakeDefense, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeDefense, transform.position);
         }
     
         public void ReactLargeFromRight()
@@ -63,7 +64,7 @@ namespace Animations
         
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.drakeHitFromLeftOrRight, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeHitFromLeftOrRight, transform.position);
         }
     
         public void ReactLargeFromLeft()
@@ -72,7 +73,7 @@ namespace Animations
         
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.drakeHitFromLeftOrRight, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeHitFromLeftOrRight, transform.position);
         }
     
         public void ReactLargeFromFront()
@@ -81,7 +82,7 @@ namespace Animations
         
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.drakeHitFromFront, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeHitFromFrontOrBack, transform.position);
         }
     
         public void ReactLargeFromBack()
@@ -90,7 +91,7 @@ namespace Animations
         
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.drakeHitFromBack, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeHitFromFrontOrBack, transform.position);
         }
 
         public void DeathHit()
@@ -99,7 +100,7 @@ namespace Animations
         
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.drakeDieHit, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeDieHit, transform.position);
         }
         
         public void DeathFootstep1()
@@ -108,7 +109,7 @@ namespace Animations
         
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.drakeDieFoostep1, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeDieFoostep1, transform.position);
         }
         
         public void DeathFootstep2()
@@ -117,7 +118,7 @@ namespace Animations
         
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.drakeDieFoostep2, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeDieFoostep2, transform.position);
         }
         
         public void DeathThud()
@@ -126,16 +127,16 @@ namespace Animations
         
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.drakeDieThud, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeDieThud, transform.position);
         }
     
         // Audio management
         private void Start()
         {
-            drakeFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.instance.drakeFootsteps);
+            drakeFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.DrakeFootsteps);
             drakeFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
         
-            drakeIdle = GamePlayAudioManager.instance.CreateInstance(FMODEvents.instance.drakeIdle);
+            drakeIdle = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.DrakeIdle);
             drakeIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
         }
     
@@ -152,7 +153,7 @@ namespace Animations
             drakeIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
 
             // Start footsteps event if Drake is moving
-            if (isRunning) // TODO: check Drake's state (something like <<DrakState != Run>>)
+            if (isRunning) // TODO: check Drake's state (something like <<DrakeState != Run>>)
             {
                 // Get the playback state for the footsteps event
                 PLAYBACK_STATE footstepsPlaybackState;
@@ -169,7 +170,7 @@ namespace Animations
             }
         
             // Start idle event if Drake is using the idle animation
-            if (isIdle) // TODO: check Drake's state (something like <<DrakState != Idle>>)
+            if (isIdle) // TODO: check Drake's state (something like <<DrakeState != Idle>>)
             {
                 // Get the playback state for the idle event
                 PLAYBACK_STATE idlePlaybackState;

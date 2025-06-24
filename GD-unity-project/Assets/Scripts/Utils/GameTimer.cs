@@ -1,6 +1,7 @@
 using Helper;
 using System.Collections;
 using System.Collections.Generic;
+using Audio;
 using TMPro;
 using UnityEngine;
 
@@ -67,7 +68,7 @@ namespace Utils {
 
 		private IEnumerator PlayWakeUpAfterDelay(float delay) {
 			yield return new WaitForSeconds(delay);
-			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.playerWakeUp, player.transform.position);
+			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerWakeUp, player.transform.position);
 		}
 
 		private void InitializeEventEmittersWithTag(string tagValue, EventReference eventRef, List<StudioEventEmitter> emitters) {
@@ -111,16 +112,16 @@ namespace Utils {
 			resetEventEmitters(ventilationEmitters, ref ventilationIsTriggered);
 			resetEventEmitters(wcEmitters, ref wcIsTriggered);
 
-			InitializeEventEmittersWithTag("AlarmSpeaker", FMODEvents.instance.alarm, alarmEmitters);
-			InitializeEventEmittersWithTag("Server", FMODEvents.instance.serverNoise, serverEmitters);
-			InitializeEventEmittersWithTag("FlickeringLED", FMODEvents.instance.flickeringLED, ledEmitters);
-			InitializeEventEmittersWithTag("Refrigerator", FMODEvents.instance.refrigeratorNoise, refrigeratorEmitters);
-			InitializeEventEmittersWithTag("HealthSnackDistributor", FMODEvents.instance.vendingMachineNoise, healthVendingMachineEmitters);
-			InitializeEventEmittersWithTag("PowerUpSnackDistributor", FMODEvents.instance.vendingMachineNoise, powerUpVendingMachineEmitters);
-			InitializeEventEmittersWithTag("SphereTerminal", FMODEvents.instance.terminalNoise, terminalEmitters);
-			InitializeEventEmittersWithTag("Elevator", FMODEvents.instance.elevatorNoise, elevatorEmitters);
-			InitializeEventEmittersWithTag("Ventilation", FMODEvents.instance.ventilationNoise, ventilationEmitters);
-			InitializeEventEmittersWithTag("FlushingWC", FMODEvents.instance.flushingWCNoise, wcEmitters);
+			InitializeEventEmittersWithTag("AlarmSpeaker", FMODEvents.Instance.Alarm, alarmEmitters);
+			InitializeEventEmittersWithTag("Server", FMODEvents.Instance.ServerNoise, serverEmitters);
+			InitializeEventEmittersWithTag("FlickeringLED", FMODEvents.Instance.FlickeringLed, ledEmitters);
+			InitializeEventEmittersWithTag("Refrigerator", FMODEvents.Instance.RefrigeratorNoise, refrigeratorEmitters);
+			InitializeEventEmittersWithTag("HealthSnackDistributor", FMODEvents.Instance.VendingMachineNoise, healthVendingMachineEmitters);
+			InitializeEventEmittersWithTag("PowerUpSnackDistributor", FMODEvents.Instance.VendingMachineNoise, powerUpVendingMachineEmitters);
+			InitializeEventEmittersWithTag("SphereTerminal", FMODEvents.Instance.TerminalNoise, terminalEmitters);
+			InitializeEventEmittersWithTag("Elevator", FMODEvents.Instance.ElevatorNoise, elevatorEmitters);
+			InitializeEventEmittersWithTag("Ventilation", FMODEvents.Instance.VentilationNoise, ventilationEmitters);
+			InitializeEventEmittersWithTag("FlushingWC", FMODEvents.Instance.FlushingWcNoise, wcEmitters);
 		}
 
 		private void StopAllAmbientSounds() {

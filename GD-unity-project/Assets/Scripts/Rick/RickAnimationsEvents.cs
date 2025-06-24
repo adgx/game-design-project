@@ -1,3 +1,4 @@
+using Audio;
 using UnityEngine;
 
 public class RickAnimationsEvents : MonoBehaviour
@@ -11,6 +12,6 @@ public class RickAnimationsEvents : MonoBehaviour
         AnimationManager.Instance.DefenseVFX(transform.position);
         
         // Audio management
-        GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.shieldActivation, rotatingSphere.transform.position);
+        GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldActivation, rotatingSphere.transform.position);
     }
 }

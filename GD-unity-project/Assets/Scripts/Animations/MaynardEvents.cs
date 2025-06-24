@@ -1,3 +1,4 @@
+using Audio;
 using FMOD.Studio;
 using UnityEngine;
 
@@ -37,7 +38,7 @@ namespace Animations
         
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.maynardDistanceAttack1, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardDistanceAttack1, transform.position);
         }
     
         public void MutantRoaring()
@@ -46,7 +47,7 @@ namespace Animations
         
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.maynardDistanceAttack2, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardDistanceAttack2, transform.position);
         }
     
         public void Attack()
@@ -55,16 +56,25 @@ namespace Animations
         
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.maynardCloseAttack, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardCloseAttack, transform.position);
         }
     
-        public void Fall()
+        public void FallScream()
         {
-            Debug.Log("Fall");
+            Debug.Log("FallScream");
         
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.maynardHitFall, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardHitFallScream, transform.position);
+        }
+        
+        public void FallThud()
+        {
+            Debug.Log("FallThud");
+        
+            // Audio management
+            ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardHitFallThud, transform.position);
         }
     
         public void StandUpRoar()
@@ -73,7 +83,7 @@ namespace Animations
         
             // Audio management;
             ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.maynardStandUpRoar, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardStandUpRoar, transform.position);
         }
     
         public void StandUpFootstep1()
@@ -82,7 +92,7 @@ namespace Animations
         
             // Audio management;
             ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.maynardFootstep1, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardStandUpFootstep1, transform.position);
         }
     
         public void StandUpFootstep2()
@@ -91,7 +101,7 @@ namespace Animations
         
             // Audio management;
             ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.maynardFootstep2, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardStandUpFootstep2, transform.position);
         }
     
         public void StandUpBreath()
@@ -100,7 +110,7 @@ namespace Animations
         
             // Audio management;
             ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.maynardStandUpBreath, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardStandUpBreath, transform.position);
         }
     
         public void ReactLargeFromRight()
@@ -109,7 +119,7 @@ namespace Animations
         
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.maynardHitFromLeftOrRight, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardHitFromLeftOrRight, transform.position);
         }
     
         public void ReactLargeFromLeft()
@@ -118,7 +128,7 @@ namespace Animations
         
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.maynardHitFromLeftOrRight, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardHitFromLeftOrRight, transform.position);
         }
     
         public void ReactLargeFromFront()
@@ -127,7 +137,7 @@ namespace Animations
         
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.maynardHitFromFront, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardHitFromFront, transform.position);
         }
     
         public void ReactLargeFromBack()
@@ -136,25 +146,34 @@ namespace Animations
         
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.maynardHitFromBack, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardHitFromBack, transform.position);
         }
 
-        public void Death()
+        public void DeathScream()
         {
-            Debug.Log("Death");
+            Debug.Log("DeathScream");
         
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.maynardDie, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardDieScream, transform.position);
+        }
+        
+        public void DeathThud()
+        {
+            Debug.Log("DeathThud");
+        
+            // Audio management
+            ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardDieThud, transform.position);
         }
     
         // Audio management
         private void Start()
         {
-            maynardFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.instance.maynardFootsteps);
+            maynardFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.MaynardFootsteps);
             maynardFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
         
-            maynardIdle = GamePlayAudioManager.instance.CreateInstance(FMODEvents.instance.maynardIdle);
+            maynardIdle = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.MaynardIdle);
             maynardIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
         }
     

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Audio;
 using FMODUnity;
 using TMPro;
 using Unity.VisualScripting;
@@ -92,7 +93,7 @@ public class TerminalTrigger : MonoBehaviour
 					if(powerUps.spherePowerUps.Count > 0) {
 						// Audio management
 						rotateSphere.positionSphere(new Vector3(0.7f, 0.5f, 0), RotateSphere.Animation.Linear);
-						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.terminalInteraction, this.transform.position);
+						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerTerminalInteraction, this.transform.position);
 
 						busy = true;
 						await Task.Delay(2000);
@@ -127,7 +128,7 @@ public class TerminalTrigger : MonoBehaviour
 							// Get power up, lose 1 stamina for the Sphere
 							// Audio management
 							Debug.Log("Getting power up: taking power up from the machine");
-							GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineItemPickUp, this.transform.position);
+							GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineItemPickUp, this.transform.position);
 							powerUpVendingMachineHacked = false;
 
 							busy = true;
@@ -147,7 +148,7 @@ public class TerminalTrigger : MonoBehaviour
 							if (obtainedPowerUp == PowerUp.PlayerPowerUpTypes.HealthBoost)
 							{
 								Debug.Log("Using power up: health boost (chips");
-								GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.playerEatChips, player.transform.position);
+								GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChips, player.transform.position);
 								
 								playerShoot.maxHealth += 20;
 								playerShoot.health += 20;
@@ -156,7 +157,7 @@ public class TerminalTrigger : MonoBehaviour
 							if (obtainedPowerUp == PowerUp.PlayerPowerUpTypes.DamageReduction)
 							{
 								Debug.Log("Using power up: damage reduction (energy drink");
-								GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.playerDrink, player.transform.position);
+								GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDrink, player.transform.position);
 								
 								playerShoot.damageReduction -= 0.2f;
 							}
@@ -174,7 +175,7 @@ public class TerminalTrigger : MonoBehaviour
 						{
 							Debug.Log("Getting power up: machine activation");
 							// Audio management
-							GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineActivation, this.transform.position);
+							GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineActivation, this.transform.position);
 							rotateSphere.positionSphere(new Vector3(0.7f, 0.5f, 0), RotateSphere.Animation.Linear);
 							
 							busy = true;
@@ -198,7 +199,7 @@ public class TerminalTrigger : MonoBehaviour
 						// Recover health, lose 1 stamina for the Sphere
 						Debug.Log("Recovering health: taking snack from the machine");
 						// Audio management
-						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineItemPickUp, this.transform.position);
+						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineItemPickUp, this.transform.position);
 						healthVendingMachineHacked = false;
 
 						busy = true;
@@ -209,7 +210,7 @@ public class TerminalTrigger : MonoBehaviour
 						helpTextContainer.SetActive(true);
 
 						// Audio management
-						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.playerEatChocolate, player.transform.position);
+						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChocolate, player.transform.position);
 						
 						playerShoot.RecoverHealth(playerShoot.maxHealth);
 						busy = false;
@@ -217,7 +218,7 @@ public class TerminalTrigger : MonoBehaviour
 					else {
 						Debug.Log("Recovering health: machine activation");
 						// Audio management
-						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.instance.vendingMachineActivation, this.transform.position);
+						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineActivation, this.transform.position);
 						rotateSphere.positionSphere(new Vector3(0.7f, 0.5f, 0), RotateSphere.Animation.Linear);
 
 						busy = true;
