@@ -238,6 +238,10 @@ public class PlayerShoot : MonoBehaviour
 			}
 		}
 		
+		// This delay is necessary to avoid the activation of the loading bar whenever the player press and released the attack
+		// button in a very fast way (as for the loading sound)
+		await Task.Delay(50);
+		
 		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp) && loadingAttack)
 		{
 			attackStamina++;
@@ -323,6 +327,10 @@ public class PlayerShoot : MonoBehaviour
 				}
 			}
 		}
+		
+		// This delay is necessary to avoid the activation of the loading bar whenever the player press and released the attack
+		// button in a very fast way (as for the loading sound)
+		await Task.Delay(50);
 		
 		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp) && loadingAttack) {
 			attackStamina++;
