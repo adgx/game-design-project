@@ -223,10 +223,10 @@ namespace Animations
         // Audio management
         private void Start()
         {
-            rickLoadCloseAttack = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerCloseAttackLoad);
+            rickLoadCloseAttack = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerCloseAttackLoadWithPowerUp2);
             rickLoadCloseAttack.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
         
-            rickLoadDistanceAttack = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerDistanceAttackLoad);
+            rickLoadDistanceAttack = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerDistanceAttackLoadWithPowerUp2);
             rickLoadDistanceAttack.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             
             rickWalkFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerWalkFootsteps);
