@@ -58,7 +58,7 @@ namespace Enemy.EnemyData.EnemyMovement
                     this);
             }
 
-            sightRange = maynardData.sightRange;
+			sightRange = maynardData.sightRange;
             remoteAttackRange = maynardData.remoteAttackRange;
             closeAttackRange = maynardData.closeAttackRange;
             gameObject.name = $"{maynardData.enemyName}_Instance_{GetInstanceID()}";
@@ -67,6 +67,7 @@ namespace Enemy.EnemyData.EnemyMovement
         void SearchWalkPoint()
         {
             //Calculate random point in range
+            walkPointRange = 10;
             float randomZ = Random.Range(-walkPointRange, walkPointRange);
             float randomX = Random.Range(-walkPointRange, walkPointRange);
 
@@ -100,9 +101,9 @@ namespace Enemy.EnemyData.EnemyMovement
         {
             if (agent == null || !agent.isOnNavMesh) return;
 
-            if (roomManager.IsNavMeshBaked)
-            {
-                agent.SetDestination(playerTransform.position);
+			if (roomManager.IsNavMeshBaked)
+			{
+			    agent.SetDestination(playerTransform.position);
             }
         }
 
@@ -139,9 +140,9 @@ namespace Enemy.EnemyData.EnemyMovement
         void CloseAttackPlayer()
         {
             if (agent == null || !agent.isOnNavMesh) return;
-            
-            //Make sure enemy doesn't move
-            agent.SetDestination(transform.position);
+
+			//Make sure enemy doesn't move
+			agent.SetDestination(transform.position);
 
             transform.LookAt(playerTransform);
 
