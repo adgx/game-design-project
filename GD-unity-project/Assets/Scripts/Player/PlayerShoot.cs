@@ -400,7 +400,7 @@ public class PlayerShoot : MonoBehaviour
 		CheckForEnemies();
 		
 		// Audio management
-		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp))
+		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp))
 		{
 			if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 1)
 			{
