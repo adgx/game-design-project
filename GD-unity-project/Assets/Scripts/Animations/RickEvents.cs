@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Audio;
 using FMOD.Studio;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Animations
@@ -251,12 +252,12 @@ namespace Animations
             rickIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             
             // TODO: debug code used to test the power up mechanism related to loaded attacks 
-            powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.DefensePowerUp);
-            powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.DefensePowerUp);
-            powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp);
-            powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp);
-            powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp);
-            powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp);
+            // powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.DefensePowerUp);
+            // powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.DefensePowerUp);
+            // powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp);
+            // powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp);
+            // powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp);
+            // powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp);
         }
     
         // FixedUpdate is called once per frame
@@ -276,80 +277,86 @@ namespace Animations
             rickRunFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             rickIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             
-            // Start loadCloseAttack event if Rick is loading the close attack 
-            if (isLoadingCloseAttack) // TODO: check Rick's state (something like <<RickState != LoadingCloseAttack>>)
+            if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp))
             {
-                // Get the playback state for the loadCloseAttack event
-                PLAYBACK_STATE loadCloseAttackPlaybackState;
+                // Start loadCloseAttack event if Rick is loading the close attack 
+                if (isLoadingCloseAttack) // TODO: check Rick's state (something like <<RickState != LoadingCloseAttack>>)
+                {
+                    // Get the playback state for the loadCloseAttack event
+                    PLAYBACK_STATE loadCloseAttackPlaybackState;
 
-                if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 1)
-                {
-                    rickLoadCloseAttackWithPowerUp1.getPlaybackState(out loadCloseAttackPlaybackState);
-                    if (loadCloseAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
+                    if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 1)
                     {
-                        rickLoadCloseAttackWithPowerUp1.start();
-                        _ = StopLoadingSoundAfterDelay(rickLoadCloseAttackWithPowerUp1, 1500);
+                        rickLoadCloseAttackWithPowerUp1.getPlaybackState(out loadCloseAttackPlaybackState);
+                        if (loadCloseAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
+                        {
+                            rickLoadCloseAttackWithPowerUp1.start();
+                            _ = StopLoadingSoundAfterDelay(rickLoadCloseAttackWithPowerUp1, 1500);
+                        }
+                    }
+                    else if(powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 2)
+                    {
+                        rickLoadCloseAttackWithPowerUp2.getPlaybackState(out loadCloseAttackPlaybackState);
+                        if (loadCloseAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
+                        {
+                            rickLoadCloseAttackWithPowerUp2.start();
+                            _ = StopLoadingSoundAfterDelay(rickLoadCloseAttackWithPowerUp2, 2500);
+                        }
                     }
                 }
-                else if(powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 2)
+                // Otherwise, stop the loadCloseAttack event
+                else
                 {
-                    rickLoadCloseAttackWithPowerUp2.getPlaybackState(out loadCloseAttackPlaybackState);
-                    if (loadCloseAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
+                    if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 1)
                     {
-                        rickLoadCloseAttackWithPowerUp2.start();
-                        _ = StopLoadingSoundAfterDelay(rickLoadCloseAttackWithPowerUp2, 2500);
+                        rickLoadCloseAttackWithPowerUp1.stop(STOP_MODE.ALLOWFADEOUT);   
                     }
-                }
+                    else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 2)
+                    {
+                        rickLoadCloseAttackWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);   
+                    }
+                }   
             }
-            // Otherwise, stop the loadCloseAttack event
-            else
-            {
-                if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 1)
+
+            if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp))
+            {   
+                // Start loadDistanceAttack event if Rick is loading the distance attack 
+                if (isLoadingDistanceAttack) // TODO: check Rick's state (something like <<RickState != LoadingDistanceAttack>>)
                 {
-                    rickLoadCloseAttackWithPowerUp1.stop(STOP_MODE.ALLOWFADEOUT);   
-                }
-                else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 2)
-                {
-                    rickLoadCloseAttackWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);   
-                }
-            }
-            
-            // Start loadDistanceAttack event if Rick is loading the distance attack 
-            if (isLoadingDistanceAttack) // TODO: check Rick's state (something like <<RickState != LoadingDistanceAttack>>)
-            {
-                // Get the playback state for the loadDistanceAttack event
-                PLAYBACK_STATE loadDistanceAttackPlaybackState;
-               
-                if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 1)
-                {
-                    rickLoadDistanceAttackWithPowerUp1.getPlaybackState(out loadDistanceAttackPlaybackState);
-                    if (loadDistanceAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
+                    // Get the playback state for the loadDistanceAttack event
+                    PLAYBACK_STATE loadDistanceAttackPlaybackState;
+                   
+                    if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 1)
                     {
-                        rickLoadDistanceAttackWithPowerUp1.start();
-                        _ = StopLoadingSoundAfterDelay(rickLoadDistanceAttackWithPowerUp1, 1500);
+                        rickLoadDistanceAttackWithPowerUp1.getPlaybackState(out loadDistanceAttackPlaybackState);
+                        if (loadDistanceAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
+                        {
+                            rickLoadDistanceAttackWithPowerUp1.start();
+                            _ = StopLoadingSoundAfterDelay(rickLoadDistanceAttackWithPowerUp1, 1500);
+                        }
+                    }
+                    else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 2)
+                    {
+                        rickLoadDistanceAttackWithPowerUp2.getPlaybackState(out loadDistanceAttackPlaybackState);
+                        if (loadDistanceAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
+                        {
+                            rickLoadDistanceAttackWithPowerUp2.start();
+                            _ = StopLoadingSoundAfterDelay(rickLoadDistanceAttackWithPowerUp2, 2500);
+                        }
                     }
                 }
-                else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 2)
+                // Otherwise, stop the loadDistanceAttack event
+                else
                 {
-                    rickLoadDistanceAttackWithPowerUp2.getPlaybackState(out loadDistanceAttackPlaybackState);
-                    if (loadDistanceAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
+                    if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 1)
                     {
-                        rickLoadDistanceAttackWithPowerUp2.start();
-                        _ = StopLoadingSoundAfterDelay(rickLoadDistanceAttackWithPowerUp2, 2500);
+                        rickLoadDistanceAttackWithPowerUp1.stop(STOP_MODE.ALLOWFADEOUT);
                     }
-                }
-            }
-            // Otherwise, stop the loadDistanceAttack event
-            else
-            {
-                if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 1)
-                {
-                    rickLoadDistanceAttackWithPowerUp1.stop(STOP_MODE.ALLOWFADEOUT);
-                }
-                else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 2)
-                {
-                    rickLoadDistanceAttackWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);   
-                }
+                    else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 2)
+                    {
+                        rickLoadDistanceAttackWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);   
+                    }
+                }   
             }
             
             // Start walkFootsteps event if Rick is moving
