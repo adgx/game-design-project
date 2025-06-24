@@ -116,7 +116,7 @@ namespace Enemy.EnemyData.EnemyMovement
             //Make sure enemy doesn't move
             agent.SetDestination(transform.position);
 
-            transform.LookAt(playerTransform);
+            transform.LookAt(new Vector3(playerTransform.position.x, transform.position.y, playerTransform.position.z));
 
             if (!alreadyAttacked)
             {

@@ -119,9 +119,9 @@ namespace Enemy.EnemyData.EnemyMovement
 			//Make sure enemy doesn't move
 			agent.SetDestination(transform.position);
 
-            transform.LookAt(playerTransform);
+			transform.LookAt(new Vector3(playerTransform.position.x, transform.position.y, playerTransform.position.z));
 
-            if (!alreadyAttacked)
+			if (!alreadyAttacked)
             {
                 //Attack code here
                 GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
@@ -144,9 +144,9 @@ namespace Enemy.EnemyData.EnemyMovement
 			//Make sure enemy doesn't move
 			agent.SetDestination(transform.position);
 
-            transform.LookAt(playerTransform);
+			transform.LookAt(new Vector3(playerTransform.position.x, transform.position.y, playerTransform.position.z));
 
-            if (!alreadyAttacked)
+			if (!alreadyAttacked)
             {
                 //Attack code here
                 GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);

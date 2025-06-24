@@ -63,6 +63,8 @@ public class LookAtEnemy : MonoBehaviour
             if (closestEnemy != null) {
                 Vector3 direction = closestEnemy.transform.position - transform.position;
 
+                direction.y = 0;
+
                 Quaternion targetRotation = Quaternion.LookRotation(direction);
                 Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, Time.fixedDeltaTime * maxRotationSpeed);
                 transform.rotation = rotation;

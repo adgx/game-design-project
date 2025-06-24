@@ -203,7 +203,7 @@ public class PlayerShoot : MonoBehaviour
 	async void LoadDistanceAttack() {
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
-		rotateSphere.positionSphere(new Vector3(0, 0.5f, 0.7f), RotateSphere.Animation.RotateAround);
+		rotateSphere.positionSphere(new Vector3(0, 1f, 0.7f), RotateSphere.Animation.RotateAround);
 		
 		// Audio management
 		bool playDistanceAttackSound = false;
@@ -293,7 +293,7 @@ public class PlayerShoot : MonoBehaviour
 	async void LoadCloseAttack() {
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
-		rotateSphere.positionSphere(new Vector3(0, 1.3f, 0), RotateSphere.Animation.Linear);
+		rotateSphere.positionSphere(new Vector3(0, 1.8f, 0), RotateSphere.Animation.Linear);
 		
 		// Audio management
 		bool playCloseAttackSound = false;
@@ -375,7 +375,7 @@ public class PlayerShoot : MonoBehaviour
 		Destroy(attackArea);
 		player.isFrozen = false;
 
-		rotateSphere.positionSphere(new Vector3(0.7f, 0.5f, 0), RotateSphere.Animation.Linear);
+		rotateSphere.positionSphere(new Vector3(0.7f, 1f, 0), RotateSphere.Animation.Linear);
 		await Task.Delay(300);
 		rotateSphere.isRotating = true;
 
