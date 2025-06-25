@@ -6,9 +6,11 @@ namespace Audio
     public class FMODEvents : MonoBehaviour
     {
         [field: Header("Player SFX")]
-        [field: SerializeField] public EventReference PlayerCloseAttackLoad { get; private set; }
+        [field: SerializeField] public EventReference PlayerCloseAttackLoadWithPowerUp1 { get; private set; }
+        [field: SerializeField] public EventReference PlayerCloseAttackLoadWithPowerUp2 { get; private set; }
         [field: SerializeField] public EventReference PlayerCloseAttackShoot { get; private set; }
-        [field: SerializeField] public EventReference PlayerDistanceAttackLoad { get; private set; }
+        [field: SerializeField] public EventReference PlayerDistanceAttackLoadWithPowerUp1 { get; private set; }
+        [field: SerializeField] public EventReference PlayerDistanceAttackLoadWithPowerUp2 { get; private set; }
         [field: SerializeField] public EventReference PlayerDistanceAttackShoot { get; private set; }
         [field: SerializeField] public EventReference PlayerShieldActivation { get; private set; }
         [field: SerializeField] public EventReference PlayerShieldDeactivation { get; private set; }
