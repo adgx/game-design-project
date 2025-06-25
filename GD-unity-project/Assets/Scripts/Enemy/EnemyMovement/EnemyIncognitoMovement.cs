@@ -11,7 +11,10 @@ namespace Enemy.EnemyData.EnemyMovement
         [SerializeField] private LayerMask whatIsGround, whatIsPlayer;
         
         // This variable increases (> 1) or reduces (< 1) the damage taken by this enemy type when attacked
-        [SerializeField] private float damageMultiplier = 1.2f;
+        private float distanceAttackDamageMultiplier;
+        private float closeAttackDamageMultiplier;
+
+        private float distanceAttackDamage;
         
         private Transform player;
 
@@ -60,6 +63,11 @@ namespace Enemy.EnemyData.EnemyMovement
 
             sightRange = incognitoData.sightRange;
             attackRange = incognitoData.attackRange;
+            
+            distanceAttackDamageMultiplier = incognitoData.distanceAttackDamageMultiplier;
+            closeAttackDamageMultiplier = incognitoData.closeAttackDamageMultiplier;
+
+            distanceAttackDamage = incognitoData.distanceAttackDamage;
         }
 
         void SearchWalkPoint()
@@ -123,6 +131,7 @@ namespace Enemy.EnemyData.EnemyMovement
                 //Attack code here
                 GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
                 bullet.tag = "EnemyProjectile";
+                bullet.GetComponent<GetCollisions>().enemyBulletDamage = distanceAttackDamage;
 
                 Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
                 rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
@@ -134,9 +143,9 @@ namespace Enemy.EnemyData.EnemyMovement
             }
         }
 
-        public void TakeDamage(int damage)
+        public void TakeDamage(float damage, string attackType)
         {
-            health -= damage * damageMultiplier;
+            health -= damage * (attackType == "c" ? closeAttackDamageMultiplier : distanceAttackDamageMultiplier);
 
             StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
 

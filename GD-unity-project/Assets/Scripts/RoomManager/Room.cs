@@ -113,7 +113,7 @@ namespace RoomManager
         /// <summary>
         /// Gets the maximum allowed cost for enemy spawning in this room.
         /// </summary>
-        public int MaxSpawnCost { get; private set; } = 10;
+        public int MaxSpawnCost { get; set; } = 10;
 
         /// <summary>
         /// Gets or sets the room’s position within the dungeon grid.

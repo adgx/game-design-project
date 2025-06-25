@@ -11,11 +11,11 @@ using UnityEngine;
 // NOTE: this script is attached to each terminal individually
 public class TerminalTrigger : MonoBehaviour
 {
-    [SerializeField] private PlayerShoot playerShoot;
-    [SerializeField] private PowerUp powerUps;
+	private PlayerShoot playerShoot;
+    private PowerUp powerUps;
     
-    [SerializeField] private TextMeshProUGUI helpText;
-	[SerializeField] private GameObject helpTextContainer;
+    private TextMeshProUGUI helpText;
+	private GameObject helpTextContainer;
 
     // You first hack the machine and then you press the button again to receive the snack.
     private bool healthVendingMachineHacked = false;
@@ -35,7 +35,7 @@ public class TerminalTrigger : MonoBehaviour
     
     // Audio management
     private GameObject player;
-    [SerializeField] private RotateSphere rotateSphere;
+    private RotateSphere rotateSphere;
 
     static System.Random rnd = new System.Random();
 
@@ -43,6 +43,11 @@ public class TerminalTrigger : MonoBehaviour
 
 	private void Start() {
 		playerInput = Player.Instance.GetComponent<PlayerInput>();
+		playerShoot = Player.Instance.GetComponent<PlayerShoot>();
+		powerUps = Player.Instance.GetComponent<PowerUp>();
+		helpTextContainer = GameObject.Find("CanvasGroup/HUD/HelpTextContainer");
+		helpText = helpTextContainer.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+		rotateSphere = GameObject.Find("Player/rotatingSphere").GetComponent<RotateSphere>();
 	}
 
 	private void OnTriggerEnter(Collider other) {
@@ -58,12 +63,18 @@ public class TerminalTrigger : MonoBehaviour
 	    else {
 		    if (transform.CompareTag(TriggerType.PowerUpSnackDistributor.ToString())) {
 			    triggerType = TriggerType.PowerUpSnackDistributor;
-			    helpText.text = "Press E to interact with the snack distributor";
+			    if(!powerUpVendingMachineHacked)
+					helpText.text = "Press E to interact with the snack distributor";
+			    else
+				    helpText.text = "Press E again to take a snack from the machine";
 		    }
 		    else {
 			    if (transform.CompareTag(TriggerType.HealthSnackDistributor.ToString())) {
 				    triggerType = TriggerType.HealthSnackDistributor;
-				    helpText.text = "Press E to interact with the snack distributor";
+				    if (!healthVendingMachineHacked)
+						helpText.text = "Press E to interact with the snack distributor";
+				    else
+					    helpText.text = "Press E again to take a snack from the machine";
 			    }
 		    }
 	    }
@@ -92,7 +103,7 @@ public class TerminalTrigger : MonoBehaviour
 					// Give a random power up for the Sphere
 					if(powerUps.spherePowerUps.Count > 0) {
 						// Audio management
-						rotateSphere.positionSphere(new Vector3(0.7f, 0.5f, 0), RotateSphere.Animation.Linear);
+						rotateSphere.positionSphere(new Vector3(0.7f, 1f, 0), RotateSphere.Animation.Linear);
 						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerTerminalInteraction, this.transform.position);
 
 						busy = true;
@@ -176,7 +187,7 @@ public class TerminalTrigger : MonoBehaviour
 							Debug.Log("Getting power up: machine activation");
 							// Audio management
 							GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineActivation, this.transform.position);
-							rotateSphere.positionSphere(new Vector3(0.7f, 0.5f, 0), RotateSphere.Animation.Linear);
+							rotateSphere.positionSphere(new Vector3(0.7f, 1f, 0), RotateSphere.Animation.Linear);
 							
 							busy = true;
 							await Task.Delay(700);
@@ -219,7 +230,7 @@ public class TerminalTrigger : MonoBehaviour
 						Debug.Log("Recovering health: machine activation");
 						// Audio management
 						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineActivation, this.transform.position);
-						rotateSphere.positionSphere(new Vector3(0.7f, 0.5f, 0), RotateSphere.Animation.Linear);
+						rotateSphere.positionSphere(new Vector3(0.7f, 1f, 0), RotateSphere.Animation.Linear);
 
 						busy = true;
 						await Task.Delay(700);

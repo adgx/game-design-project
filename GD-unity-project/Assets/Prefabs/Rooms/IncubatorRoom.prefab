@@ -3517,10 +3517,14 @@ MonoBehaviour:
     _spawnPoint: {fileID: 5135860356583173842}
     IsConnected: 0
   _centralSpawnPoint: {fileID: 1974158435936280979}
-  _enemySpawnPoints: []
-  _vendingMachinePrefab: {fileID: 0}
+  _enemySpawnPoints:
+  - {fileID: 7258352243878611628}
+  - {fileID: 7952247453025531809}
+  - {fileID: 3570666117647556101}
+  - {fileID: 7759496199865350184}
+  _vendingMachinePrefab: {fileID: 3668037048787151047}
   _vendingMachineSpawnChance: 0.5
-  _canVendingMachineSpawn: 0
+  _canVendingMachineSpawn: 1
   _upgradeTerminalPrefab: {fileID: 0}
   _upgradeTerminalSpawnChance: 0.5
   _canUpgradeTerminalSpawn: 0
@@ -24290,11 +24294,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChocolateMachine
       objectReference: {fileID: 0}
+    - target: {fileID: 6428338041527518159, guid: 7a3e6352a3ead44099ea2bf54e2be7e6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a3e6352a3ead44099ea2bf54e2be7e6, type: 3}
+--- !u!1 &3668037048787151047 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6428338041527518159, guid: 7a3e6352a3ead44099ea2bf54e2be7e6, type: 3}
+  m_PrefabInstance: {fileID: 7769121815113165576}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4155886701226390141 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5944148766642706805, guid: 7a3e6352a3ead44099ea2bf54e2be7e6, type: 3}

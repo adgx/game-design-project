@@ -21540,9 +21540,9 @@ MonoBehaviour:
   - {fileID: 362456367002567606}
   - {fileID: 7001447854533772762}
   - {fileID: 1722847613102115124}
-  _vendingMachinePrefab: {fileID: 0}
+  _vendingMachinePrefab: {fileID: 3163356902163462675}
   _vendingMachineSpawnChance: 0.5
-  _canVendingMachineSpawn: 0
+  _canVendingMachineSpawn: 1
   _upgradeTerminalPrefab: {fileID: 0}
   _upgradeTerminalSpawnChance: 0.5
   _canUpgradeTerminalSpawn: 0
@@ -29754,7 +29754,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5944148766642706805, guid: 7a3e6352a3ead44099ea2bf54e2be7e6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 12.172001
+      value: 13.28
       objectReference: {fileID: 0}
     - target: {fileID: 5944148766642706805, guid: 7a3e6352a3ead44099ea2bf54e2be7e6, type: 3}
       propertyPath: m_LocalPosition.y
@@ -29762,23 +29762,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5944148766642706805, guid: 7a3e6352a3ead44099ea2bf54e2be7e6, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -6
+      value: -8.21
       objectReference: {fileID: 0}
     - target: {fileID: 5944148766642706805, guid: 7a3e6352a3ead44099ea2bf54e2be7e6, type: 3}
       propertyPath: m_LocalRotation.w
-      value: -3.7493994e-33
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 5944148766642706805, guid: 7a3e6352a3ead44099ea2bf54e2be7e6, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -6.123234e-17
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5944148766642706805, guid: 7a3e6352a3ead44099ea2bf54e2be7e6, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 5944148766642706805, guid: 7a3e6352a3ead44099ea2bf54e2be7e6, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 6.123234e-17
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5944148766642706805, guid: 7a3e6352a3ead44099ea2bf54e2be7e6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -29786,7 +29786,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5944148766642706805, guid: 7a3e6352a3ead44099ea2bf54e2be7e6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 5944148766642706805, guid: 7a3e6352a3ead44099ea2bf54e2be7e6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -29796,6 +29796,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChocolateMachine
       objectReference: {fileID: 0}
+    - target: {fileID: 6428338041527518159, guid: 7a3e6352a3ead44099ea2bf54e2be7e6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -29804,6 +29808,11 @@ PrefabInstance:
 --- !u!4 &2354627220117119145 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5944148766642706805, guid: 7a3e6352a3ead44099ea2bf54e2be7e6, type: 3}
+  m_PrefabInstance: {fileID: 8273265572919867868}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3163356902163462675 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6428338041527518159, guid: 7a3e6352a3ead44099ea2bf54e2be7e6, type: 3}
   m_PrefabInstance: {fileID: 8273265572919867868}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8483494909548240846

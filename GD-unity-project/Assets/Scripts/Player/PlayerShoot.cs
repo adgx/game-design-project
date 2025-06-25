@@ -392,7 +392,7 @@ public class PlayerShoot : MonoBehaviour
 		foreach(Collider c in colliders) {
 			// Checks if the collider is an enemy
 			if(c.transform.tag.Contains("Enemy")) {
-				c.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(closeAttackDamage);
+				c.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(closeAttackDamage, "c");
 			}
 		}
 	}
@@ -476,7 +476,7 @@ public class PlayerShoot : MonoBehaviour
 		isShieldCoroutineRunning = false;
 	}
 
-	public void TakeDamage(int damage) {
+	public void TakeDamage(float damage) {
      		health -= damage * damageReduction;
      		healthBar.SetHealth(health);
      
