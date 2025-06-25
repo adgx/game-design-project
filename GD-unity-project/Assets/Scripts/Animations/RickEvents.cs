@@ -27,8 +27,6 @@ namespace Animations
     
         public void Idle()
         {
-            Debug.Log("Idle");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             isIdle = true; // TODO: to be removed once we have Rick's FSM
@@ -36,8 +34,6 @@ namespace Animations
         
         public void Walk()
         {
-            Debug.Log("Walk");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             isWalking = true; // TODO: to be removed once we have Rick's FSM
@@ -45,8 +41,6 @@ namespace Animations
         
         public void Run()
         {
-            Debug.Log("Run");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             isRunning = true; // TODO: to be removed once we have Rick's FSM
@@ -54,8 +48,6 @@ namespace Animations
         
         public void CloseAttackLoad()
         {
-            Debug.Log("CloseAttackLoad");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             isLoadingCloseAttack = true;
@@ -63,8 +55,6 @@ namespace Animations
         
         public void CloseAttackShoot()
         {
-            Debug.Log("CloseAttackShoot");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerCloseAttackShoot, transform.position);
@@ -72,8 +62,6 @@ namespace Animations
         
         public void DistanceAttackLoad()
         {
-            Debug.Log("DistanceAttackLoad");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             isLoadingDistanceAttack = true;
@@ -81,8 +69,6 @@ namespace Animations
 
         public void DistanceAttackShoot()
         {
-            Debug.Log("DistanceAttackShoot");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDistanceAttackShoot, transform.position);
@@ -90,8 +76,6 @@ namespace Animations
         
         public void ShieldActivation()
         {
-            Debug.Log("ShieldActivation");
-            
             // AnimationManager.Instance.DefenseVFX(transform.position);
         
             // Audio management
@@ -114,8 +98,6 @@ namespace Animations
         
         public void DeathForwardGrunt()
         {
-            Debug.Log("DeathForwardGrunt");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardGrunt, transform.position);
@@ -123,8 +105,6 @@ namespace Animations
         
         public void DeathForwardThud1()
         {
-            Debug.Log("DeathForwardThud1");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardThud1, transform.position);
@@ -132,8 +112,6 @@ namespace Animations
         
         public void DeathForwardThud2()
         {
-            Debug.Log("DeathForwardThud2");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardThud2, transform.position);
@@ -141,8 +119,6 @@ namespace Animations
         
         public void DeathBackwardGrunt()
         {
-            Debug.Log("DeathBackwardGrunt");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieBackwardGrunt, transform.position);
@@ -150,8 +126,6 @@ namespace Animations
         
         public void DeathBackwardThud()
         {
-            Debug.Log("DeathBackwardThud");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieBackwardThud, transform.position);
@@ -159,8 +133,6 @@ namespace Animations
         
         public void Drink()
         {
-            Debug.Log("Drink");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDrink, transform.position);
@@ -168,8 +140,6 @@ namespace Animations
         
         public void EatChips()
         {
-            Debug.Log("EatChips");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChips, transform.position);
@@ -177,8 +147,6 @@ namespace Animations
     
         public void EatChocolate()
         {
-            Debug.Log("EatChocolate");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChocolate, transform.position);
@@ -186,8 +154,6 @@ namespace Animations
         
         public void Hit()
         {
-            Debug.Log("Hit");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, transform.position);
@@ -195,8 +161,6 @@ namespace Animations
         
         public void HitBySpit()
         {
-            Debug.Log("HitBySpit");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHitBySpit, transform.position);
@@ -205,8 +169,6 @@ namespace Animations
         
         public void HitByBite()
         {
-            Debug.Log("HitByBite");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHitByBite, transform.position);
@@ -214,8 +176,6 @@ namespace Animations
         
         public void VendingMachineItemPickup()
         {
-            Debug.Log("VendingMachineItemPickup");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineItemPickUp, transform.position);
@@ -223,8 +183,6 @@ namespace Animations
         
         public void WakeUp()
         {
-            Debug.Log("WakeUp");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerWakeUp, transform.position);

@@ -11,7 +11,10 @@ namespace Enemy.EnemyData.EnemyMovement
         [SerializeField] private LayerMask whatIsGround, whatIsPlayer;
         
         // This variable increases (> 1) or reduces (< 1) the damage taken by this enemy type when attacked
-        [SerializeField] private float damageMultiplier = 0.8f;
+        private float distanceAttackDamageMultiplier;
+        private float closeAttackDamageMultiplier;
+
+        private float closeAttackDamage;
         
         private Transform playerTransform;
 
@@ -60,6 +63,11 @@ namespace Enemy.EnemyData.EnemyMovement
 
             sightRange = drakeData.sightRange;
             attackRange = drakeData.attackRange;
+
+            distanceAttackDamageMultiplier = drakeData.distanceAttackDamageMultiplier;
+            closeAttackDamageMultiplier = drakeData.closeAttackDamageMultiplier;
+
+            closeAttackDamage = drakeData.closeAttackDamage;
         }
 
         void SearchWalkPoint()
@@ -109,20 +117,21 @@ namespace Enemy.EnemyData.EnemyMovement
             alreadyAttacked = false;
         }
 
-        void AttackPlayer()
+        void CloseAttackPlayer()
         {
             if (agent == null || !agent.isOnNavMesh) return;
             
             //Make sure enemy doesn't move
             agent.SetDestination(transform.position);
 
-            transform.LookAt(playerTransform);
+            transform.LookAt(new Vector3(playerTransform.position.x, transform.position.y, playerTransform.position.z));
 
             if (!alreadyAttacked)
             {
                 //Attack code here
                 GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
                 bullet.tag = "EnemyProjectile";
+                bullet.GetComponent<GetCollisions>().enemyBulletDamage = closeAttackDamage;
 
                 Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
                 rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
@@ -134,9 +143,9 @@ namespace Enemy.EnemyData.EnemyMovement
             }
         }
 
-        public void TakeDamage(int damage)
+        public void TakeDamage(float damage, string attackType)
         {
-            health -= damage * damageMultiplier;
+            health -= damage * (attackType == "c" ? closeAttackDamageMultiplier : distanceAttackDamageMultiplier);
 
             StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
 
@@ -188,7 +197,7 @@ namespace Enemy.EnemyData.EnemyMovement
             if (playerInSightRange && !playerInAttackRange)
                 ChasePlayer();
             if (playerInAttackRange && playerInSightRange)
-                AttackPlayer();
+                CloseAttackPlayer();
         }
     }
 }

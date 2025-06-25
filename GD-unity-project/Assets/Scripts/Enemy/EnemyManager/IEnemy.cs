@@ -4,6 +4,6 @@ namespace Enemy.EnemyManager
     {
         void Initialize(EnemyData.EnemyData enemyData, RoomManager.RoomManager roomManager);
 
-        void TakeDamage(int amount);
+        void TakeDamage(float amount, string attackType);
     }
 }

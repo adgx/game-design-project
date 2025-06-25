@@ -16,5 +16,8 @@ namespace Enemy.EnemyData
 
         public float maxHealth = 100f;
         public float baseMoveSpeed = 0f;
+        
+        public float distanceAttackDamage = 10f;
+        public float closeAttackDamage = 10f;
     }
 }
