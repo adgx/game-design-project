@@ -304,11 +304,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c95e080be36249ad9c5585fdf4428d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerShoot: {fileID: 972097727}
-  powerUps: {fileID: 972097725}
-  helpText: {fileID: 423648117}
-  helpTextContainer: {fileID: 423648118}
-  rotateSphere: {fileID: 1016344254}
 --- !u!114 &307148567
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -653,6 +648,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 379990347}
+    - target: {fileID: 1753458665747210168, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2347022518688673454, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -801,6 +800,10 @@ PrefabInstance:
       propertyPath: m_Delegates.Array.data[3].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 379990348}
+    - target: {fileID: 3485552226981936514, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3718890128462602489, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -1155,11 +1158,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
---- !u!225 &361144710 stripped
-CanvasGroup:
-  m_CorrespondingSourceObject: {fileID: 4398049158021365803, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
-  m_PrefabInstance: {fileID: 361144709}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &361144711 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5631795588879491913, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
@@ -1825,11 +1823,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c95e080be36249ad9c5585fdf4428d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerShoot: {fileID: 972097727}
-  powerUps: {fileID: 972097725}
-  helpText: {fileID: 423648117}
-  helpTextContainer: {fileID: 423648118}
-  rotateSphere: {fileID: 1016344254}
 --- !u!114 &964185348
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2142,11 +2135,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b1c825cd9d668e14faf5c7546c5d0a02, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.70000076
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b1c825cd9d668e14faf5c7546c5d0a02, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b1c825cd9d668e14faf5c7546c5d0a02, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2359,7 +2352,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53db7d78c57b4776a257e48d45d47bca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _paperID: 0
 --- !u!1 &1418048827
 GameObject:
   m_ObjectHideFlags: 0
@@ -2700,11 +2692,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c95e080be36249ad9c5585fdf4428d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerShoot: {fileID: 972097727}
-  powerUps: {fileID: 972097725}
-  helpText: {fileID: 423648117}
-  helpTextContainer: {fileID: 423648118}
-  rotateSphere: {fileID: 1016344254}
 --- !u!114 &1684111145
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2953,7 +2940,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1027fffed39994e7ba05e1f494acf175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeCanvasGroup: {fileID: 361144710}
+  fadeCanvasGroup: {fileID: 235949649}
   fadeDuration: 0.5
 --- !u!114 &1738691467
 MonoBehaviour:

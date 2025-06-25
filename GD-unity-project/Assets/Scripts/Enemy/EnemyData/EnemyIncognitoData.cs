@@ -10,5 +10,7 @@ namespace Enemy.EnemyData
         public GameObject bulletPrefab;
         public float sightRange = 18f;
         public float attackRange = 16f;
+        public float distanceAttackDamageMultiplier = 1f;
+        public float closeAttackDamageMultiplier = 1f;
     }
 }

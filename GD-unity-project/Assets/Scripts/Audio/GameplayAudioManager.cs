@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using Audio;
 using UnityEngine;
@@ -43,11 +42,7 @@ public class GamePlayAudioManager : MonoBehaviour
         musicBus = RuntimeManager.GetBus("bus:/Music");
         ambienceBus = RuntimeManager.GetBus("bus:/Ambience");
         sfxBus = RuntimeManager.GetBus("bus:/SFX");
-    }
-    
-    private void Start()
-    {
-        InitializeMusic(FMODEvents.Instance.GameplayMusic);
+        InitializeMusic(FMODEvents.Instance.GameplayMusic); 
     }
     
     private void Update()
@@ -60,13 +55,26 @@ public class GamePlayAudioManager : MonoBehaviour
     
     private void InitializeMusic(EventReference musicEventReference)
     {
+        // Aggiungi un controllo di sicurezza per evitare di creare la musica due volte
+        if (musicEventInstance.isValid())
+        {
+            return;
+        }
         musicEventInstance = CreateInstance(musicEventReference);
         musicEventInstance.start();
     }
-    
+
     public void SetMusicLoopIteration(MusicLoopIteration iteration)
     {
-        musicEventInstance.setParameterByName("loopIteration", (float) iteration);
+        // Aggiungi un controllo di sicurezza qui per prevenire errori futuri.
+        if (musicEventInstance.isValid())
+        {
+            musicEventInstance.setParameterByName("loopIteration", (float)iteration);
+        }
+        else
+        {
+            Debug.LogWarning("SetMusicLoopIteration called, but music instance is not valid yet.");
+        }
     }
     
     public void PlayOneShot(EventReference sound, Vector3 worldPos)
@@ -116,7 +124,8 @@ public class GamePlayAudioManager : MonoBehaviour
         // Stop all of the event emitters, because if we don't they may hang around in other scenes
         foreach (StudioEventEmitter emitter in eventEmitters)
         {
-            emitter.Stop();
+            if(emitter.IsActive)
+                emitter.Stop();
         }
     }
 

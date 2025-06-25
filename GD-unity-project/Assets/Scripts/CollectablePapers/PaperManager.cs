@@ -83,14 +83,14 @@ namespace CollectablePapers
         /// </summary>
         /// <param name="paperID">ID of the paper to display.</param>
         /// <param name="paperPosition">World position of the paper (used for sound).</param>
-        public void ShowPaper(int paperID, Vector3 paperPosition)
+        public void ShowPaper(Vector3 paperPosition)
         {
             if (_isPaperUiOpen) return;
 
-            if (_paperMessages.TryGetValue(paperID, out string messageContent))
+            if (_paperMessages.TryGetValue(_collectedPapers.Count, out string messageContent))
             {
                 _isPaperUiOpen = true;
-                _collectedPapers.Add(paperID);
+                _collectedPapers.Add(_collectedPapers.Count);
 
                 _player.isFrozen = true;
                 _paperText.SetText(messageContent + "\n\n<color=yellow>[Press E to Close]</color>");
@@ -100,7 +100,7 @@ namespace CollectablePapers
             }
             else
             {
-                Debug.LogWarning($"PaperManager: Tried to show paper with invalid ID: {paperID}");
+                Debug.LogWarning($"PaperManager: Tried to show paper with invalid ID: {_collectedPapers.Count}");
             }
         }
 
