@@ -26,6 +26,9 @@ namespace Enemy.EnemyManager
 
         private RoomManager.RoomManager _roomManager;
 
+		// List with all the indexes of the rooms where enemies have already spawned
+		private List<Vector3Int> roomsEnemiesSpawnedIndexes = new List<Vector3Int>();
+
         private void Awake()
         {
             if (Instance == null)
@@ -75,7 +78,7 @@ namespace Enemy.EnemyManager
 
             Room currentRoom = _roomManager.GetRoomByGridIndex(newRoomIndex);
 
-            if (currentRoom == null || currentRoom.HasEnemiesSpawned || currentRoom.EnemySpawnPoints.Count == 0) return;
+            if (currentRoom == null || currentRoom.HasEnemiesSpawned || roomsEnemiesSpawnedIndexes.Contains(newRoomIndex) || currentRoom.EnemySpawnPoints.Count == 0) return;
 
             int remainingBudget = currentRoom.MaxSpawnCost;
             int enemiesSpawnedCount = 0;
@@ -123,6 +126,10 @@ namespace Enemy.EnemyManager
             }
 
             currentRoom.HasEnemiesSpawned = true;
-        }
+
+			if(!roomsEnemiesSpawnedIndexes.Contains(newRoomIndex)) {
+				roomsEnemiesSpawnedIndexes.Add(newRoomIndex);
+			}
+		}
     }
 }

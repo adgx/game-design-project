@@ -49,12 +49,14 @@ public class InventoryMenu : MonoBehaviour {
 		if(status) {
 			// Setting timeScale to 0 pauses the game
 			Time.timeScale = 0f;
+			Cursor.lockState = CursorLockMode.None;
 		}
 		else {
 			// Resume the game
 			Time.timeScale = 1f;
 			await Task.Delay(100);
 			EventSystem.current.SetSelectedGameObject(null);
+			Cursor.lockState = CursorLockMode.Locked;
 		}
 
 		GameStatus.gamePaused = status;

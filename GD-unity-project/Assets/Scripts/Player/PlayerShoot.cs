@@ -153,7 +153,7 @@ public class PlayerShoot : MonoBehaviour
 	public async Task RecoverStamina() {
 		increasingStamina = true;
 		while(sphereStamina < maxSphereStamina && increaseStamina && !loadingAttack) {
-			await Task.Delay(700);
+			await Task.Delay(500);
 			if(increaseStamina && !loadingAttack) {
 				sphereStamina += 1;
 				
@@ -441,7 +441,7 @@ public class PlayerShoot : MonoBehaviour
 		Collider[] colliders = Physics.OverlapSphere(transform.position, damageRadius);
 		foreach(Collider c in colliders) {
 			// Checks if the collider is an enemy
-			if(c.transform.tag.Contains("Enemy")) {
+			if(c.transform.tag.Contains("Enemy") && !c.transform.CompareTag("EnemyProjectile")) {
 				c.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(closeAttackDamage, "c");
 			}
 		}
