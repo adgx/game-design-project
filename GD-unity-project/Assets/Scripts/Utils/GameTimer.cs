@@ -7,11 +7,15 @@ using UnityEngine;
 // Audio management
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Enemy.EnemyData;
+using System.Collections.Generic;
+using Enemy.EnemyManager;
+using RoomManager.RoomData;
 
 namespace Utils {
 	public class GameTimer : MonoBehaviour {
 		// TODO: the timer is set to 2 minutes for debugging. It should be of 10 minutes.
-		private const float TimeLimit = 2 * 60f;
+		private const float TimeLimit = 2 * 5f;
 		private float currentTime;
 
 		public TMP_Text timerText;
@@ -22,6 +26,7 @@ namespace Utils {
 		private bool isRunning;
 
 		public RoomManager.RoomManager roomManager;
+		[SerializeField] private EnemyManager enemyManager;
 
 		private GameObject player;
 
@@ -144,6 +149,10 @@ namespace Utils {
 
 			FadeManager.Instance.FadeOutIn(() => {
 				roomManager.RegenerateRooms();
+
+				roomManager.SetRoomsDifficulty();
+				enemyManager.SetEnemyDifficulty();
+				enemyManager.DestroyAllEnemies();
 
 				currentTime = TimeLimit;
 				timerOutlineImage.sprite = timerOutlineSpriteNormal;
