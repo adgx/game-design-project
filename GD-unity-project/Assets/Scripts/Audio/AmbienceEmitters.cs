@@ -87,15 +87,16 @@ namespace Audio
 		}
 
 		public void StopAmbientEmitters() {
-			FMOD.Studio.Bus ambientBus = RuntimeManager.GetBus("bus:/Ambience");
-			if(ambientBus.isValid()) {
-				// Stop all events routed on this bus and its sub-buses
-				ambientBus.stopAllEvents(FMOD.Studio.STOP_MODE.IMMEDIATE);
+			// Stop all of the event emitters, because if we don't they may hang around in other scenes
+			foreach (var element in ambienceSounds.Values)
+			{
+				foreach (var emitter in element.Emitters)
+				{
+					if (emitter.IsActive)
+						emitter.Stop();
+				}
 			}
-			else {
-				Debug.LogWarning("FMOD Bus 'bus:/Ambience' not find!");
-			}
-
+			
 			// Resets the Boolean flags as well, since all sounds have been stopped
 			foreach (var sound in ambienceSounds.Values)
 			{
