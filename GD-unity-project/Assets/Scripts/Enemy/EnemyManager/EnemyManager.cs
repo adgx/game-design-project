@@ -96,7 +96,9 @@ namespace Enemy.EnemyManager
                     .OrderBy(enemyData => enemyData.spawnCost)
                     .ToList();
 
-                if (affordableEnemies.Count == 0) break;
+                affordableEnemies.ForEach(enemyData => enemyData.setDifficulty());
+
+				if (affordableEnemies.Count == 0) break;
 
                 EnemyData.EnemyData enemyToSpawnData = (enemiesSpawnedCount < _minEnemiesPerRoom)
                     ? affordableEnemies.FirstOrDefault()

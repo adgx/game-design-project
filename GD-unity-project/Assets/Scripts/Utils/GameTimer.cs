@@ -23,9 +23,6 @@ namespace Utils {
 
 		public RoomManager.RoomManager roomManager;
 
-		// Audio management
-		private MusicLoopIteration iteration = MusicLoopIteration.FIRST_ITERATION;
-
 		private GameObject player;
 
 		[SerializeField] private string respawnSceneName = "RespawnScene";
@@ -71,7 +68,7 @@ namespace Utils {
 				currentTime = 0f;
 				isRunning = false;
 
-				if(iteration == MusicLoopIteration.THIRD_ITERATION) {
+				if(GameStatus.loopIteration == GameStatus.LoopIteration.THIRD_ITERATION) {
 					GameStatus.gameEnded = true;
 					StartCoroutine(LoadRespawnSceneAsync());
 				}
@@ -79,21 +76,21 @@ namespace Utils {
 					// Audio management
 					AmbienceEmitters.Instance.StopAmbientEmitters();
 
-					switch(iteration) {
-						case MusicLoopIteration.FIRST_ITERATION:
-							iteration = MusicLoopIteration.SECOND_ITERATION;
+					switch(GameStatus.loopIteration) {
+						case GameStatus.LoopIteration.FIRST_ITERATION:
+							GameStatus.loopIteration = GameStatus.LoopIteration.SECOND_ITERATION;
 							break;
-						case MusicLoopIteration.SECOND_ITERATION:
-							iteration = MusicLoopIteration.THIRD_ITERATION;
+						case GameStatus.LoopIteration.SECOND_ITERATION:
+							GameStatus.loopIteration = GameStatus.LoopIteration.THIRD_ITERATION;
 							break;
-						case MusicLoopIteration.THIRD_ITERATION:
-							iteration = MusicLoopIteration.FIRST_ITERATION;
+						case GameStatus.LoopIteration.THIRD_ITERATION:
+							GameStatus.loopIteration = GameStatus.LoopIteration.FIRST_ITERATION;
 							break;
 						default:
 							break;
 					}
 
-					GamePlayAudioManager.instance.SetMusicLoopIteration(iteration);
+					GamePlayAudioManager.instance.SetMusicLoopIteration();
 					StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
 
 					ResetRun();
@@ -115,7 +112,7 @@ namespace Utils {
 
 			// Audio management
 			AmbienceEmitters.Instance.InitializeAmbientEmitters();
-			GamePlayAudioManager.instance.SetMusicLoopIteration(iteration);
+			GamePlayAudioManager.instance.SetMusicLoopIteration();
 		}
 		
 		private void UpdateTimerUI() {
@@ -147,6 +144,7 @@ namespace Utils {
 
 			FadeManager.Instance.FadeOutIn(() => {
 				roomManager.RegenerateRooms();
+
 				currentTime = TimeLimit;
 				timerOutlineImage.sprite = timerOutlineSpriteNormal;
 				StopCoroutine(Pulse());

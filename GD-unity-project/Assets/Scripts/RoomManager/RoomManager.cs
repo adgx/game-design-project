@@ -181,7 +181,8 @@ namespace RoomManager
         private void GenerateLayout()
         {
             _roomGridData = new RoomData.RoomData[_gridSizeX, GridSizeY, _gridSizeZ];
-            _roomsToProcessQueue.Clear();
+            _roomGridData[_gridSizeX, GridSizeY, _gridSizeZ].setDifficulty();
+			_roomsToProcessQueue.Clear();
             UnloadCurrentRoom();
             _roomCount = 0;
             _isLayoutGenerated = false;
