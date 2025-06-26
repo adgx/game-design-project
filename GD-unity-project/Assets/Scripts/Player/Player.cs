@@ -58,6 +58,8 @@ using UnityEngine.Assertions;
 			
 			input = GetComponent<PlayerInput>();
 			player.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+
+			Cursor.lockState = CursorLockMode.Locked;
 		}
 
 		private void Move()

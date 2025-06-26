@@ -257,7 +257,7 @@ namespace RoomManager
                 this.transform);
             Room newRoomScript = roomGameObject.GetComponent<Room>();
 
-            newRoomScript.Initialize(roomDataToLoad, this);
+			newRoomScript.Initialize(roomDataToLoad, this);
             newRoomScript.RoomIndex = gridIndex;
             newRoomScript.PostInitializeConnections();
 

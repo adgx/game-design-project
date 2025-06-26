@@ -304,8 +304,6 @@ namespace RoomManager
             bool spawned = Random.value < _paperSpawnChance;
             _paperPrefab.SetActive(spawned);
 
-            print(spawned);
-
             if (!spawned)
             {
                 _paperSpawnChance *= 1.3f;
