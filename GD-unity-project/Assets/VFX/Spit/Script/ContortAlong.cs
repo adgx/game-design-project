@@ -26,6 +26,7 @@ namespace SplineMesh {
         [Range(0, 1)]
         [SerializeField] float lerp;
 
+        /*
         private void OnEnable() {
             rate = 0;
             Init();
@@ -39,6 +40,26 @@ namespace SplineMesh {
             EditorApplication.update -= EditorUpdate;
 #endif
         }
+        */
+
+        public bool initialized;
+
+        private void Update()
+        {
+            if (!initialized)
+            {
+                Init();
+                initialized = true;
+            }
+            
+            if (generated != null && lerp < 1)
+            {
+                meshBender.Source = meshBender.Source.Scale(scale.x, scale.y, scale.z);
+                meshBender.SetInterval(spline, spline.Length * lerp);
+                meshBender.ComputeIfNeeded();
+            }
+        }
+
 
         private void OnValidate() {
             Init();
