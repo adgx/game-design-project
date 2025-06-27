@@ -66,7 +66,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ce7de97cffffd4c93ad7eadd263d3a33, type: 3}
       propertyPath: m_TagString
-      value: Server
+      value: Untagged
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -75,9 +75,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ce7de97cffffd4c93ad7eadd263d3a33, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3196697426720378838}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: ce7de97cffffd4c93ad7eadd263d3a33, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 723457140571665376}
   m_SourcePrefab: {fileID: 100100000, guid: ce7de97cffffd4c93ad7eadd263d3a33, type: 3}
 --- !u!1 &7373080128016810342 stripped
 GameObject:
@@ -105,34 +102,3 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.351003, y: 2.218332, z: 2.544238}
   m_Center: {x: -0.48422882, y: 1.0631133, z: 0.017765343}
---- !u!114 &723457140571665376
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7373080128016810342}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CollisionTag: 
-  EventReference:
-    Guid:
-      Data1: -2014649865
-      Data2: 1292488745
-      Data3: 1648386715
-      Data4: -700621535
-    Path: event:/Ambience/Server room/ServerNoise
-  Event: 
-  EventPlayTrigger: 0
-  EventStopTrigger: 0
-  AllowFadeout: 1
-  TriggerOnce: 0
-  Preload: 0
-  NonRigidbodyVelocity: 0
-  Params: []
-  OverrideAttenuation: 1
-  OverrideMinDistance: 1
-  OverrideMaxDistance: 10

@@ -13,5 +13,7 @@ namespace Enemy.EnemyData
         public float closeAttackRange = 5f;
         public float bulletForce = 16f;
         public float bulletUpwardForce = 2f;
+        public float distanceAttackDamageMultiplier = 1f;
+        public float closeAttackDamageMultiplier = 1f;
     }
 }

@@ -2,6 +2,7 @@ using Audio;
 using UnityEngine;
 using FMODUnity;
 using FMOD.Studio;
+
 public class MainMenuAudioManager : MonoBehaviour
 {
     private EventInstance musicEventInstance;
@@ -24,7 +25,7 @@ public class MainMenuAudioManager : MonoBehaviour
     
     private void StopMusic()
     {
-        musicEventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        musicEventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         musicEventInstance.release();
     }
 }

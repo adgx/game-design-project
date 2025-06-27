@@ -12,16 +12,13 @@ namespace PlayerInteraction
         /// <summary>
         /// The prompt displayed to the player when they can collect the paper.
         /// </summary>
-        public string InteractionPrompt => $"Press E collect paper";
+        public string InteractionPrompt => "Press E to collect paper";
 
         /// <summary>
         /// Indicates whether this paper is currently interactable (not yet collected).
         /// </summary>
         public bool IsInteractable =>
-            PaperManager.Instance != null && !PaperManager.Instance.IsPaperCollected(_paperID);
-
-        [Tooltip("Unique identifier for this paper, used to track collection status.")] [SerializeField]
-        private int _paperID;
+            PaperManager.Instance != null;
 
         /// <summary>
         /// Called when the player interacts with the paper. Triggers paper collection.
@@ -30,8 +27,9 @@ namespace PlayerInteraction
         /// <returns>True if the interaction was successful.</returns>
         public bool Interact(GameObject interactor)
         {
-            PaperManager.Instance.ShowPaper(_paperID, this.transform.position);
-            return true;
+            PaperManager.Instance.ShowPaper(this.transform.position);
+			Destroy(gameObject);
+			return true;
         }
     }
 }
