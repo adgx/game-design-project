@@ -61,6 +61,10 @@ namespace Utils {
 			player = GameObject.FindWithTag("Player");
 
 			GameStatus.gameEnded = false;
+			GameStatus.loopIteration = GameStatus.LoopIteration.FIRST_ITERATION;
+
+			roomManager.SetRoomsDifficulty();
+			enemyManager.SetEnemyDifficulty();
 		}
 
 		private void Update() {

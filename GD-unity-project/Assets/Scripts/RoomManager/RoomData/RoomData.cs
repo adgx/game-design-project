@@ -12,6 +12,7 @@ namespace RoomManager.RoomData
         public string roomName;
 
 		public int roomSpawnBudget;
+		public int roomSpawnBudgetLoop1;
 
 		public RoomType roomType;
 
@@ -20,7 +21,7 @@ namespace RoomManager.RoomData
 
 		// This function sets the parameters of the Room according to the current loop iteration
 		public void setDifficulty() {
-			roomSpawnBudget += (int)Math.Round(roomSpawnBudget * difficultyMultiplier * (int)GameStatus.loopIteration);
+			roomSpawnBudget = roomSpawnBudgetLoop1 + (int)Math.Round(roomSpawnBudget * difficultyMultiplier * (int)GameStatus.loopIteration);
         }
     }
 }

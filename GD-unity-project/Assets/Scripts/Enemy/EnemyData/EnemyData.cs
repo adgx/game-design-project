@@ -18,18 +18,23 @@ namespace Enemy.EnemyData
 
 
 		public float maxHealth = 100f;
-		public float baseMoveSpeed = 0f;
+		public float maxHealthLoop1 = 100f;
+
+		public float baseMoveSpeed = 5f;
 
 		public float distanceAttackDamage = 10f;
-		public float closeAttackDamage = 10f;
+		public float distanceAttackDamageLoop1 = 10f;
 
-        // Determines the difficulty increase between different interactions
-        [SerializeField] private float difficultyMultiplier = 0.2f;
+		public float closeAttackDamage = 10f;
+		public float closeAttackDamageLoop1 = 10f;
+
+		// Determines the difficulty increase between different interactions
+		[SerializeField] private float difficultyMultiplier = 0.2f;
 
 		public void setDifficulty() {
-            maxHealth += (float)Math.Round(maxHealth * difficultyMultiplier);
-            distanceAttackDamage += (float)Math.Round(distanceAttackDamage * difficultyMultiplier);
-			closeAttackDamage += (float)Math.Round(closeAttackDamage * difficultyMultiplier);
+			maxHealth = maxHealthLoop1 + (float)Math.Round(maxHealthLoop1 * difficultyMultiplier * (int)GameStatus.loopIteration);
+			distanceAttackDamage = distanceAttackDamageLoop1 + (float)Math.Round(distanceAttackDamageLoop1 * difficultyMultiplier) * (int)GameStatus.loopIteration;
+			closeAttackDamage = closeAttackDamageLoop1 + (float)Math.Round(closeAttackDamageLoop1 * difficultyMultiplier * (int)GameStatus.loopIteration);
 
             // TODO: we need to evaluate if we need to change the damage taken by the enemies as well, and not only the maximum health
 		}
