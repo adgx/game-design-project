@@ -52,7 +52,7 @@ namespace RoomManager
         /// <summary>
         /// Gets or sets the spawn point linked to this connector.
         /// </summary>
-        public Transform SpawnPoint { get; set; }
+        public Transform SpawnPoint => _spawnPoint;
 
         /// <summary>
         /// Indicates whether this connector has been linked to another room.
@@ -169,10 +169,10 @@ namespace RoomManager
 
                 connector.IsConnected = false;
                 
-                if (connector.SpawnPoint == null)
+                /*if (connector.SpawnPoint == null)
                 {
                     connector.SpawnPoint = CreateSpawnPointForConnector(connector);
-                }
+                }*/
             }
         }
 
