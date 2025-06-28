@@ -79,7 +79,9 @@ namespace Utils {
 
 				if(GameStatus.loopIteration == GameStatus.LoopIteration.THIRD_ITERATION) {
 					GameStatus.gameEnded = true;
-					StartCoroutine(LoadRespawnSceneAsync());
+					FadeManager.Instance.FadeOutIn(() => {
+						StartCoroutine(LoadRespawnSceneAsync());
+					});
 				}
 				else {
 					// Audio management

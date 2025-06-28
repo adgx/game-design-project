@@ -5,7 +5,7 @@ public class FadeManagerLoadingScreen : MonoBehaviour
     [SerializeField] private CanvasGroup LoadingScreenCanvas;
     [SerializeField] private GameObject LoadingScreen;
     
-    private bool fadeIn = false, fadeOut = false;
+    public bool fadeIn = false, fadeOut = false;
 
     public void Show()
     {
