@@ -5,6 +5,7 @@ using Enemy.EnemyManager;
 using UnityEngine;
 using UnityEngine.AI;
 using RoomManager;
+using System.Collections.Generic;
 
 public class Drake : MonoBehaviour, IEnemy
 {
@@ -31,6 +32,9 @@ public class Drake : MonoBehaviour, IEnemy
 
 
     private float _sightRange, _attackRange;
+
+    //Materials
+    private Material[] _materials; 
 
     /*likely States
     private bool playerInSightRange, playerInAttackRange;
@@ -79,10 +83,25 @@ public class Drake : MonoBehaviour, IEnemy
     {
         _playerTransform = GameObject.Find("Player").transform;
         _agent = GetComponent<NavMeshAgent>();
+        //we suppose that all enemy have an one SkinnedMeshRenderer 
+        SkinnedMeshRenderer smr = GetComponentInChildren<SkinnedMeshRenderer>();
+
+        if (smr == null)
+        {
+            Debug.LogError(this.ToString() + ": No SkinnedMeshRenderer is found");
+        }
+
+        _materials = smr.materials;
+
+        if (_materials == null)
+        {
+            Debug.LogError(this.ToString() + ": No materials are found");
+        }
     }
 
     void Start()
     {
+        _stateMachine = new FiniteStateMachine<Drake>(this);
 
     }
 
@@ -94,35 +113,91 @@ public class Drake : MonoBehaviour, IEnemy
     {
         _health -= damage * (attackType == "c" ? _closeAttackDamageMultiplier : _distanceAttackDamageMultiplier);
 
-        StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
+        StartCoroutine(ChangeColor( Color.red, 0.8f, 0));
 
         if (_health <= 0)
             Invoke(nameof(DestroyEnemy), 0.05f);
     }
 
     // Change enemy color when hit and change it back to normal after "duration" seconds
-        IEnumerator ChangeColor(Renderer renderer, Color dmgColor, float duration, float delay)
+    IEnumerator ChangeColor(Color dmgColor, float duration, float delay)
+    {
+        // Save the original color of the enemy
+        Color originColor = Color.white;
+
+        foreach (Material mat in _materials)
+            mat.color = dmgColor;
+
+        yield return new WaitForSeconds(delay);
+
+        float t = 0f;
+
+        while (t < 1.0f)
         {
-            // Save the original color of the enemy
-            Color originColor = renderer.material.color;
+            t += Time.deltaTime / duration;
+            foreach (Material mat in _materials)
+                // Lerp animation with given duration in seconds
+                mat.color = Color.Lerp(dmgColor, originColor, t);
+            yield return null;
+        }
+        
+        foreach (Material mat in _materials)
+            mat.color = originColor;
+    }
 
-            renderer.material.color = dmgColor;
+    void SearchWalkPoint()
+    {
+        //Calculate random point in range
+        float randomZ = Random.Range(-_walkPointRange, _walkPointRange);
+        float randomX = Random.Range(-_walkPointRange, _walkPointRange);
+        //destination
+        _walkPoint = new Vector3(transform.position.x + randomX, transform.position.y,
+            transform.position.z + randomZ);
 
-            yield return new WaitForSeconds(delay);
+        if (Physics.Raycast(_walkPoint, -transform.up, 2f, whatIsGround))
+        {
+            _walkPointSet = true;
+        }
+    }
 
-            // Lerp animation with given duration in seconds
-            for (float t = 0; t < 1.0f; t += Time.deltaTime / duration)
-            {
-                renderer.material.color = Color.Lerp(dmgColor, originColor, t);
-
-                yield return null;
-            }
-
-            renderer.material.color = originColor;
+    void Patroling()
+    {
+        if (_agent == null || !_agent.isOnNavMesh)
+        {
+            Debug.LogError($"{this} Error with _agent: {_agent}");
+            return;
         }
 
+        //maybe this could be a condition for a state
+        if (!_walkPointSet)
+            SearchWalkPoint();
 
-        private void DestroyEnemy()
+        if (_walkPointSet)
+            _agent.SetDestination(_walkPoint);
+
+        Vector3 distanceToWalkPoint = transform.position - _walkPoint;
+
+        //Walkpoint reached
+        if (distanceToWalkPoint.magnitude < 1f)
+            _walkPointSet = false;
+    }
+
+    void ChasePlayer()
+    {
+        if (_agent == null || !_agent.isOnNavMesh)
+        {
+            Debug.LogError($"{this} Error with _agent: {_agent}");
+            return;
+        }
+
+        if (_roomManager.IsNavMeshBaked)
+        {
+            _agent.SetDestination(_playerTransform.position);
+        }
+    }
+
+
+    private void DestroyEnemy()
     {
         Destroy(gameObject);
     }
