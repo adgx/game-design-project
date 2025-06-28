@@ -11,16 +11,56 @@ public class DrakePatrolState : State
 
     public override void Enter()
     {
-        throw new System.NotImplementedException();
     }
 
     public override void Tik()
     {
-        throw new System.NotImplementedException();
+        _drake.Patroling();
     }
 
     public override void Exit()
     {
-        throw new System.NotImplementedException();
+    }
+}
+
+public class DrakeChaseState : State
+{
+    private Drake _drake;
+    public DrakeChaseState(string name, Drake drake) : base(name)
+    {
+        _drake = drake;
+    }
+    public override void Enter()
+    {
+    }
+
+    public override void Exit()
+    {
+    }
+
+    public override void Tik()
+    {
+        _drake.ChasePlayer();
+    }
+}
+
+public class DrakeAttackState : State
+{
+    private Drake _drake;
+    public DrakeAttackState(string name, Drake drake) : base(name)
+    {
+        _drake = drake;
+    }
+    public override void Enter()
+    {
+    }
+
+    public override void Exit()
+    {
+    }
+
+    public override void Tik()
+    {
+        _drake.CloseAttackPlayer();
     }
 }

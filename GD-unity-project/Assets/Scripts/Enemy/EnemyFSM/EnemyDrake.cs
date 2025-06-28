@@ -29,17 +29,13 @@ public class Drake : MonoBehaviour, IEnemy
     private float _timeBetweenAttacks;
     private bool _alreadyAttacked;
     private GameObject _bulletPrefab;
-
-
     private float _sightRange, _attackRange;
 
     //Materials
     private Material[] _materials; 
-
-    /*likely States
-    private bool playerInSightRange, playerInAttackRange;
-    */
-
+    //checkers
+    private bool _playerInSightRange, _playerInAttackRange;
+    //Room stuff
     private RoomManager.RoomManager _roomManager;
 
     public void Initialize(EnemyData enemyData, RoomManager.RoomManager roomManager)
@@ -101,12 +97,30 @@ public class Drake : MonoBehaviour, IEnemy
 
     void Start()
     {
+        //FMS base
         _stateMachine = new FiniteStateMachine<Drake>(this);
 
+        //Define states
+        State patrolS = new DrakePatrolState("Patrol", this);
+        State chaseS = new DrakeChaseState("Chase", this);
+        State attackS = new DrakeAttackState("Attack", this);
+
+        //Transition
+        _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
+        _stateMachine.AddTransition(chaseS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
+        _stateMachine.AddTransition(chaseS, attackS, () => _playerInSightRange && _playerInAttackRange);
+        _stateMachine.AddTransition(attackS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
+        _stateMachine.AddTransition(attackS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
+
+        //Set Initial state
+        _stateMachine.SetState(patrolS);
     }
 
     void Update()
     {
+        //Check for sight and attack range
+        _playerInSightRange = Physics.CheckSphere(transform.position, _sightRange, whatIsPlayer);
+        _playerInAttackRange = Physics.CheckSphere(transform.position, _attackRange, whatIsPlayer);
         _stateMachine.Tik();
     }
     public void TakeDamage(float damage, string attackType)
@@ -160,7 +174,7 @@ public class Drake : MonoBehaviour, IEnemy
         }
     }
 
-    void Patroling()
+    public void Patroling()
     {
         if (_agent == null || !_agent.isOnNavMesh)
         {
@@ -182,7 +196,7 @@ public class Drake : MonoBehaviour, IEnemy
             _walkPointSet = false;
     }
 
-    void ChasePlayer()
+    public void ChasePlayer()
     {
         if (_agent == null || !_agent.isOnNavMesh)
         {
@@ -193,6 +207,41 @@ public class Drake : MonoBehaviour, IEnemy
         if (_roomManager.IsNavMeshBaked)
         {
             _agent.SetDestination(_playerTransform.position);
+        }
+    }
+
+    public void CloseAttackPlayer()
+    {
+        if (_agent == null || !_agent.isOnNavMesh)
+        {
+            Debug.LogError($"{this} Error with _agent: {_agent}");
+            return;
+        }
+
+        //Make sure enemy doesn't move(Maybe is better set the isStopped property)
+        _agent.SetDestination(transform.position);
+
+        transform.LookAt(new Vector3(_playerTransform.position.x, transform.position.y, _playerTransform.position.z));
+
+        if (!_alreadyAttacked)
+        {
+            //Attack code here
+            GameObject bullet = Instantiate(_bulletPrefab, transform.position, Quaternion.identity);
+            bullet.tag = "EnemyProjectile";
+            bullet.GetComponent<GetCollisions>().enemyBulletDamage = _closeAttackDamage;
+
+            Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
+            rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
+            rbBullet.AddForce(transform.up * 2f, ForceMode.Impulse);
+            //End of attack code
+
+            _alreadyAttacked = true;
+            Invoke(nameof(ResetAttack), _timeBetweenAttacks);
+        }
+        
+        void ResetAttack()
+        {
+            _alreadyAttacked = false;
         }
     }
 
