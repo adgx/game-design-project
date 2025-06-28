@@ -179,10 +179,12 @@ namespace Enemy.EnemyData.EnemyMovement
         {
             health -= damage * (attackType == "c" ? closeAttackDamageMultiplier : distanceAttackDamageMultiplier);
 
-            StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
+            if((attackType == "c" && closeAttackDamageMultiplier != 0) || (attackType == "d" && distanceAttackDamageMultiplier != 0)) {
+                StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
 
-            if (health <= 0)
-                Invoke(nameof(DestroyEnemy), 0.05f);
+                if(health <= 0)
+                    Invoke(nameof(DestroyEnemy), 0.05f);
+            }
         }
 
         // Change enemy color when hit and change it back to normal after "duration" seconds

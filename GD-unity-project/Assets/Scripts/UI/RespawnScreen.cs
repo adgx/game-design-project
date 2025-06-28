@@ -34,6 +34,8 @@ public class RespawnScreen : MonoBehaviour
 			title.text = "You died!";
 			subtitle.text = "";
 		}
+
+		Cursor.lockState = CursorLockMode.None;
 	}
 
 	void Update() {
@@ -67,6 +69,8 @@ public class RespawnScreen : MonoBehaviour
 
 		// Activate the scene
 		asyncLoad.allowSceneActivation = true;
+
+		Cursor.lockState = CursorLockMode.Locked;
 	}
 
 	void BackToPause() {
