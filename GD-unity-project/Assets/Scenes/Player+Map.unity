@@ -2026,6 +2026,7 @@ MonoBehaviour:
   rotateSphere: {fileID: 1016344254}
   rotatingSphere: {fileID: 1016344253}
   respawnSceneName: RespawnScene
+  fadeManagerLoadingScreen: {fileID: 347109501}
 --- !u!114 &972097728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2991,13 +2992,8 @@ MonoBehaviour:
   timerOutlineSpriteRed: {fileID: 21300000, guid: 930c7c786fbcea84cb52fd77ec535b88, type: 3}
   timerOutlineSpriteNormal: {fileID: 21300000, guid: 696019546c7a8e7428d0f8454c944a56, type: 3}
   roomManager: {fileID: 1738691463}
-  respawnSceneName: RespawnScene
   enemyManager: {fileID: 1738691472}
-  enemiesData:
-  - {fileID: 11400000, guid: d628d10d2db4548ec94973aa4b57d7ef, type: 2}
-  - {fileID: 11400000, guid: b39eedc323f9a44b789682e1655c6221, type: 2}
-  - {fileID: 11400000, guid: 8158b0295563c43c7aa696777996f264, type: 2}
-  roomsData: []
+  respawnSceneName: RespawnScene
 --- !u!114 &1738691471
 MonoBehaviour:
   m_ObjectHideFlags: 0

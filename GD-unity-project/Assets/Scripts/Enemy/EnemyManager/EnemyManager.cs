@@ -104,8 +104,6 @@ namespace Enemy.EnemyManager
                     ? affordableEnemies.FirstOrDefault()
                     : affordableEnemies[Random.Range(0, affordableEnemies.Count)];
 
-                print(enemyToSpawnData.maxHealth);
-
                 if (enemyToSpawnData == null) continue;
 
                 Transform spawnPoint = shuffledSpawnPoints[0];

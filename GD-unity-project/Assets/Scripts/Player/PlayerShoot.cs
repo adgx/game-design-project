@@ -3,11 +3,10 @@ using System.Collections;
 using System.Threading.Tasks;
 using Audio;
 using FMOD.Studio;
-using TMPro;
 using UnityEngine;
-using ORF;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Helper;
 
 public class PlayerShoot : MonoBehaviour
 {
@@ -537,9 +536,11 @@ public class PlayerShoot : MonoBehaviour
      			// Audio management
      			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardGrunt, player.transform.position);
      			
-     			Invoke(nameof(DestroyPlayer), 0.05f);
+     			Invoke(nameof(DestroyPlayer), 1f);
 
-				StartCoroutine(LoadRespawnSceneAsync());
+				FadeManager.Instance.FadeOutIn(() => {
+					StartCoroutine(LoadRespawnSceneAsync());
+				});
      		}
      			
      		else
