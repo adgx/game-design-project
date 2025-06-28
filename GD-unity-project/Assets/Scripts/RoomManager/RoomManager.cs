@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Enemy.EnemyData;
 using RoomManager.RoomData;
 using Unity.AI.Navigation;
 using Unity.VisualScripting;
@@ -181,7 +182,7 @@ namespace RoomManager
         private void GenerateLayout()
         {
             _roomGridData = new RoomData.RoomData[_gridSizeX, GridSizeY, _gridSizeZ];
-            _roomsToProcessQueue.Clear();
+			_roomsToProcessQueue.Clear();
             UnloadCurrentRoom();
             _roomCount = 0;
             _isLayoutGenerated = false;
@@ -493,5 +494,11 @@ namespace RoomManager
             CurrentRoomIndex = newRoomIndex;
             PlayerEnteredNewRoom?.Invoke(newRoomIndex);
         }
+
+        public void SetRoomsDifficulty() {
+			foreach(RoomData.RoomData roomData in _availableRooms) {
+				roomData.setDifficulty();
+			}
+		}
     }
 }

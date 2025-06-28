@@ -7,6 +7,10 @@ using UnityEngine;
 // Audio management
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Enemy.EnemyData;
+using System.Collections.Generic;
+using Enemy.EnemyManager;
+using RoomManager.RoomData;
 
 namespace Utils {
 	public class GameTimer : MonoBehaviour {
@@ -22,9 +26,7 @@ namespace Utils {
 		private bool isRunning;
 
 		public RoomManager.RoomManager roomManager;
-
-		// Audio management
-		private MusicLoopIteration iteration = MusicLoopIteration.FIRST_ITERATION;
+		[SerializeField] private EnemyManager enemyManager;
 
 		private GameObject player;
 
@@ -59,6 +61,10 @@ namespace Utils {
 			player = GameObject.FindWithTag("Player");
 
 			GameStatus.gameEnded = false;
+			GameStatus.loopIteration = GameStatus.LoopIteration.FIRST_ITERATION;
+
+			roomManager.SetRoomsDifficulty();
+			enemyManager.SetEnemyDifficulty();
 		}
 
 		private void Update() {
@@ -71,7 +77,7 @@ namespace Utils {
 				currentTime = 0f;
 				isRunning = false;
 
-				if(iteration == MusicLoopIteration.THIRD_ITERATION) {
+				if(GameStatus.loopIteration == GameStatus.LoopIteration.THIRD_ITERATION) {
 					GameStatus.gameEnded = true;
 					StartCoroutine(LoadRespawnSceneAsync());
 				}
@@ -79,21 +85,21 @@ namespace Utils {
 					// Audio management
 					AmbienceEmitters.Instance.StopAmbientEmitters();
 
-					switch(iteration) {
-						case MusicLoopIteration.FIRST_ITERATION:
-							iteration = MusicLoopIteration.SECOND_ITERATION;
+					switch(GameStatus.loopIteration) {
+						case GameStatus.LoopIteration.FIRST_ITERATION:
+							GameStatus.loopIteration = GameStatus.LoopIteration.SECOND_ITERATION;
 							break;
-						case MusicLoopIteration.SECOND_ITERATION:
-							iteration = MusicLoopIteration.THIRD_ITERATION;
+						case GameStatus.LoopIteration.SECOND_ITERATION:
+							GameStatus.loopIteration = GameStatus.LoopIteration.THIRD_ITERATION;
 							break;
-						case MusicLoopIteration.THIRD_ITERATION:
-							iteration = MusicLoopIteration.FIRST_ITERATION;
+						case GameStatus.LoopIteration.THIRD_ITERATION:
+							GameStatus.loopIteration = GameStatus.LoopIteration.FIRST_ITERATION;
 							break;
 						default:
 							break;
 					}
 
-					GamePlayAudioManager.instance.SetMusicLoopIteration(iteration);
+					GamePlayAudioManager.instance.SetMusicLoopIteration();
 					StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
 
 					ResetRun();
@@ -115,7 +121,7 @@ namespace Utils {
 
 			// Audio management
 			AmbienceEmitters.Instance.InitializeAmbientEmitters();
-			GamePlayAudioManager.instance.SetMusicLoopIteration(iteration);
+			GamePlayAudioManager.instance.SetMusicLoopIteration();
 		}
 		
 		private void UpdateTimerUI() {
@@ -147,6 +153,11 @@ namespace Utils {
 
 			FadeManager.Instance.FadeOutIn(() => {
 				roomManager.RegenerateRooms();
+
+				roomManager.SetRoomsDifficulty();
+				enemyManager.SetEnemyDifficulty();
+				enemyManager.DestroyAllEnemies();
+
 				currentTime = TimeLimit;
 				timerOutlineImage.sprite = timerOutlineSpriteNormal;
 				StopCoroutine(Pulse());
