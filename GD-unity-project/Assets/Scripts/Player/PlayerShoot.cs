@@ -31,6 +31,8 @@ public class PlayerShoot : MonoBehaviour
 	private float defaultDamageRadius = 2.5f;
 	private float damageRadius = 2.5f;
 
+	private bool cannotAttack = false;
+
 	// The player has 2 attacks he can choose. He can change them by using the mouse scroll wheel or the back buttons on the controller
 	private int attackNumber = 1;
 	[SerializeField] private KeyCode increaseAttackController, decreaseAttackController;
@@ -130,6 +132,11 @@ public class PlayerShoot : MonoBehaviour
 			default:
 				break;
 		}
+	}
+
+	public void DisableAttacks(bool value)
+	{
+		cannotAttack = value;
 	}
 
 	private bool CheckStamina(int value) {
@@ -598,83 +605,88 @@ public class PlayerShoot : MonoBehaviour
 	void Update() {
 		if (!GameStatus.gamePaused)
 		{
-			// The attack is shot only on "Fire1" up
-			if (Input.GetButtonDown("Fire1"))
+			if (!cannotAttack)
 			{
-				if (!magneticShield && CheckStamina(1) && !attacking)
+				// The attack is shot only on "Fire1" up
+				if (Input.GetButtonDown("Fire1"))
 				{
-					// Audio management
-					loadingAttack = true;
-					attacking = true;
-
-					switch (attackNumber)
+					if (!magneticShield && CheckStamina(1) && !attacking)
 					{
-						case 1:
-							LoadDistanceAttack();
-							break;
-						case 2:
-							LoadCloseAttack();
-							break;
-						default:
-							break;
+						// Audio management
+						loadingAttack = true;
+						attacking = true;
+
+						switch (attackNumber)
+						{
+							case 1:
+								LoadDistanceAttack();
+								break;
+							case 2:
+								LoadCloseAttack();
+								break;
+							default:
+								break;
+						}
 					}
 				}
-			}
 
-			// Audio management
-			UpdateSound();
+				// Audio management
+				UpdateSound();
 
-			if (Input.GetButtonUp("Fire1"))
-			{
-				if (!magneticShield && CheckStamina(1) && loadingAttack)
+				if (Input.GetButtonUp("Fire1"))
 				{
-					switch (attackNumber)
+					if (!magneticShield && CheckStamina(1) && loadingAttack)
 					{
-						case 1:
-							FireDistanceAttack();
-							break;
-						case 2:
-							FireCloseAttack();
-							break;
-						default:
-							break;
+						switch (attackNumber)
+						{
+							case 1:
+								FireDistanceAttack();
+								break;
+							case 2:
+								FireCloseAttack();
+								break;
+							default:
+								break;
+						}
 					}
 				}
-			}
 
-			if (Input.GetButtonDown("Fire2") && !loadingAttack)
-			{
-				SpawnMagneticShield();
-			}
-
-			// Selecting a different attack
-			if ((Input.GetAxis("Mouse ScrollWheel") > 0 || Input.GetKeyDown(increaseAttackController)) && !loadingAttack)
-			{
-				ChangeAttack(1);
-			}
-			else if ((Input.GetAxis("Mouse ScrollWheel") < 0 || Input.GetKeyDown(decreaseAttackController)) && !loadingAttack)
-			{
-				ChangeAttack(-1);
-			}
-
-			if (Input.GetKeyDown(KeyCode.Alpha1) && !loadingAttack)
-			{
-				SetAttack(1);
-			}
-
-			if (Input.GetKeyDown(KeyCode.Alpha2) && !loadingAttack)
-			{
-				SetAttack(2);
-			}
-
-			// I check the stamina every frame since it is possible that it is = 0 when I am not attacking (thanks asynchronous processes)
-			// Not that good, but I don't have better ways to manage it
-			if (sphereStamina <= 0)
-			{
-				if (!increasingStamina)
+				if (Input.GetButtonDown("Fire2") && !loadingAttack)
 				{
-					increaseStamina = true;
-					_ = RecoverStamina();
+					SpawnMagneticShield();
+				}
+
+				// Selecting a different attack
+				if ((Input.GetAxis("Mouse ScrollWheel") > 0 || Input.GetKeyDown(increaseAttackController)) &&
+				    !loadingAttack)
+				{
+					ChangeAttack(1);
+				}
+				else if ((Input.GetAxis("Mouse ScrollWheel") < 0 || Input.GetKeyDown(decreaseAttackController)) &&
+				         !loadingAttack)
+				{
+					ChangeAttack(-1);
+				}
+
+				if (Input.GetKeyDown(KeyCode.Alpha1) && !loadingAttack)
+				{
+					SetAttack(1);
+				}
+
+				if (Input.GetKeyDown(KeyCode.Alpha2) && !loadingAttack)
+				{
+					SetAttack(2);
+				}
+
+				// I check the stamina every frame since it is possible that it is = 0 when I am not attacking (thanks asynchronous processes)
+				// Not that good, but I don't have better ways to manage it
+				if (sphereStamina <= 0)
+				{
+					if (!increasingStamina)
+					{
+						increaseStamina = true;
+						_ = RecoverStamina();
+					}
 				}
 			}
 		}

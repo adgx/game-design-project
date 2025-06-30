@@ -7,7 +7,8 @@ public enum RickStates
     None,
     Idle,
     Run, 
-    DefenseStart
+    DefenseStart,
+    StandUp
 }
 
 //used to handle the character animations across of the scripts 
@@ -21,6 +22,7 @@ public class AnimationManager : MonoBehaviour
     private int idleIndexHash;
     private int velocityHash;
     private int defenseHash;
+    private int standUpHash;
     //rick current state
     public RickStates rickState;
     //for switch from animation to another for the idle
@@ -56,6 +58,7 @@ public class AnimationManager : MonoBehaviour
         velocityHash = Animator.StringToHash("Velocity");
         idleIndexHash = Animator.StringToHash("IdleIndex");
         defenseHash = Animator.StringToHash("Defense");
+        standUpHash = Animator.StringToHash("StandUp");
         //set the initial state for the rick character
         rickState = RickStates.Idle;
 
@@ -112,5 +115,11 @@ public class AnimationManager : MonoBehaviour
     public void DefenseVFX(Vector3 pos)
     {
         Instantiate(prefabSheildVFX, pos, Quaternion.identity); 
+    }
+
+    public void StandUp()
+    {
+        rickAC.SetTrigger(standUpHash);
+        rickState = RickStates.StandUp;
     }
 }

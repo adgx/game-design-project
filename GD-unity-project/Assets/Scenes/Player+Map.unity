@@ -398,6 +398,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LoadingScreenCanvas: {fileID: 235949649}
   LoadingScreen: {fileID: 205731131}
+  fadeIn: 0
+  fadeOut: 0
 --- !u!114 &347109502
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -650,7 +652,7 @@ PrefabInstance:
       objectReference: {fileID: 379990347}
     - target: {fileID: 1753458665747210168, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_Alpha
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2347022518688673454, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -2026,7 +2028,6 @@ MonoBehaviour:
   rotateSphere: {fileID: 1016344254}
   rotatingSphere: {fileID: 1016344253}
   respawnSceneName: RespawnScene
-  fadeManagerLoadingScreen: {fileID: 347109501}
 --- !u!114 &972097728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2770,7 +2771,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4096354255052067719, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
       propertyPath: m_ApplyRootMotion
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7310133868445848391, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
       propertyPath: m_Name

@@ -7,10 +7,7 @@ using UnityEngine;
 // Audio management
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using Enemy.EnemyData;
-using System.Collections.Generic;
 using Enemy.EnemyManager;
-using RoomManager.RoomData;
 
 namespace Utils {
 	public class GameTimer : MonoBehaviour {
@@ -30,12 +27,25 @@ namespace Utils {
 
 		private GameObject player;
 
+		private Player playerScript;
+		private PlayerShoot playerShoot;
+
 		[SerializeField] private string respawnSceneName = "RespawnScene";
 		private bool sceneIsLoading = false;
 
 		private IEnumerator PlayWakeUpAfterDelay(float delay) {
+			print("PlayWakeUpAfterDelay");
+			playerScript.FreezeMovement(true);
+			playerShoot.DisableAttacks(true);
+			
+			AnimationManager.Instance.StandUp();
+			
 			yield return new WaitForSeconds(delay);
 			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerWakeUp, player.transform.position);
+			
+			yield return new WaitForSeconds(6);
+			playerScript.FreezeMovement(false);
+			playerShoot.DisableAttacks(false);
 		}
 
 		private void OnDestroy() {
@@ -59,6 +69,10 @@ namespace Utils {
 		private void Start() {
 			// Audio management
 			player = GameObject.FindWithTag("Player");
+			playerScript = player.GetComponent<Player>();
+			playerShoot = player.GetComponent<PlayerShoot>();
+			
+			StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
 
 			GameStatus.gameEnded = false;
 			GameStatus.loopIteration = GameStatus.LoopIteration.FIRST_ITERATION;
@@ -102,7 +116,6 @@ namespace Utils {
 					}
 
 					GamePlayAudioManager.instance.SetMusicLoopIteration();
-					StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
 
 					ResetRun();
 				}
@@ -163,6 +176,8 @@ namespace Utils {
 				currentTime = TimeLimit;
 				timerOutlineImage.sprite = timerOutlineSpriteNormal;
 				StopCoroutine(Pulse());
+				
+				StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
 				isRunning = true;
 			});
 		}

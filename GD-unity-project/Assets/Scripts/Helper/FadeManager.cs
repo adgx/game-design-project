@@ -38,7 +38,6 @@ namespace Helper {
 			yield return new WaitForEndOfFrame();
 			yield return new WaitForSeconds(0.5f);
 
-			player.FreezeMovement(false);
 			yield return StartCoroutine(FadeTo(0));
 		}
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Enemy.EnemyData;
 using RoomManager.RoomData;
 using Unity.AI.Navigation;
@@ -179,7 +180,7 @@ namespace RoomManager
         /// <summary>
         /// Generates the layout of the dungeon procedurally.
         /// </summary>
-        private void GenerateLayout()
+        async private void GenerateLayout()
         {
             _roomGridData = new RoomData.RoomData[_gridSizeX, GridSizeY, _gridSizeZ];
 			_roomsToProcessQueue.Clear();
@@ -225,7 +226,10 @@ namespace RoomManager
             CurrentRoomIndex = startGridIndex;
             Room initialRoom = LoadRoomAt(CurrentRoomIndex);
             SpawnPlayerInRoom(initialRoom);
+            
             IsPlayerSpawned = true;
+
+            await Task.Delay(100);
             fadeManagerLoadingScreen.Hide();
 
             OnRunReady?.Invoke();
