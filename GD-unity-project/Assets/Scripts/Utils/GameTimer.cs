@@ -75,6 +75,7 @@ namespace Utils {
 			//StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
 
 			GameStatus.gameEnded = false;
+			GameStatus.gamePaused = false;
 			GameStatus.loopIteration = GameStatus.LoopIteration.FIRST_ITERATION;
 
 			roomManager.SetRoomsDifficulty();

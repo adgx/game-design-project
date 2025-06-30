@@ -336,6 +336,7 @@ public class PlayerShoot : MonoBehaviour
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
 		rotateSphere.positionSphere(new Vector3(0, 1.8f, 0), RotateSphere.Animation.Linear);
+		AnimationManager.Instance.AreaAttack();
 		
 		// Audio management
 		bool playCloseAttackSound = false;
@@ -399,8 +400,16 @@ public class PlayerShoot : MonoBehaviour
 		}
 	}
 	
-	void FireCloseAttack() {
+	async void FireCloseAttack() {
 		loadingAttack = false;
+		AnimationManager.Instance.EndAreaAttack();
+		
+		if (attackStamina == 0)
+			await Task.Delay(900);
+		else
+			await Task.Delay(500);
+		
+		
 		DecreaseStamina(attackStamina);
 		
 		// Audio management
@@ -409,8 +418,6 @@ public class PlayerShoot : MonoBehaviour
 		closeAttackLoadingBar.fillAmount = 0;
 
 		SpawnAttackArea();
-
-		CheckForEnemies();
 		
 		// Audio management
 		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp))
@@ -432,6 +439,8 @@ public class PlayerShoot : MonoBehaviour
 		attackArea.transform.parent = transform;
 		attackArea.transform.localScale = new Vector3(2 * damageRadius, 0, 2 * damageRadius);
 		player.isFrozen = true;
+		
+		CheckForEnemies();
 
 		await Task.Delay(500);
 
