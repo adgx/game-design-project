@@ -6,7 +6,9 @@ public enum RickStates
 {
     None,
     Idle,
-    Run, 
+    Run,
+    Attack,
+    EndAttack,
     DefenseStart,
     StandUp
 }
@@ -21,6 +23,8 @@ public class AnimationManager : MonoBehaviour
     private int runTriggerHash;
     private int idleIndexHash;
     private int velocityHash;
+    private int attack;
+    private int endAttack;
     private int defenseHash;
     private int standUpHash;
     //rick current state
@@ -57,6 +61,8 @@ public class AnimationManager : MonoBehaviour
         runTriggerHash = Animator.StringToHash("Run");
         velocityHash = Animator.StringToHash("Velocity");
         idleIndexHash = Animator.StringToHash("IdleIndex");
+        attack = Animator.StringToHash("Attack");
+        endAttack = Animator.StringToHash("EndAttack");
         defenseHash = Animator.StringToHash("Defense");
         standUpHash = Animator.StringToHash("StandUp");
         //set the initial state for the rick character
@@ -110,6 +116,18 @@ public class AnimationManager : MonoBehaviour
         activeRandomIdle = true;
         rickAC.SetTrigger(idleTriggerHash);
         rickState = RickStates.Idle;
+    }
+
+    public void Attack()
+    {
+        rickAC.SetTrigger(attack);
+        rickState = RickStates.Attack;
+    }
+    
+    public void EndAttack()
+    {
+        rickAC.SetTrigger(endAttack);
+        rickState = RickStates.EndAttack;
     }
 
     public void DefenseVFX(Vector3 pos)

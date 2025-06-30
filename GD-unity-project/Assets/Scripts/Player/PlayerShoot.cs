@@ -218,6 +218,7 @@ public class PlayerShoot : MonoBehaviour
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
 		rotateSphere.positionSphere(new Vector3(0, 1f, 0.7f), RotateSphere.Animation.RotateAround);
+		AnimationManager.Instance.Attack();
 		
 		// Audio management
 		bool playDistanceAttackSound = false;
@@ -283,9 +284,16 @@ public class PlayerShoot : MonoBehaviour
 	
 	async void FireDistanceAttack() {
 		loadingAttack = false;
+		AnimationManager.Instance.EndAttack();
+		
+		if (attackStamina == 0)
+			await Task.Delay(700);
+		else
+			await Task.Delay(500);
+		
 		GameObject bullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity);
 		bullet.tag = "PlayerProjectile";
-
+		
 		Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
 		rbBullet.AddForce(bulletSpawnTransform.forward * bulletSpeed, ForceMode.Impulse);
 		rbBullet.AddForce(bulletSpawnTransform.up * 2f, ForceMode.Impulse);
@@ -304,10 +312,9 @@ public class PlayerShoot : MonoBehaviour
 
 		distanceAttackLoadingBar.fillAmount = 0;
 
-		await Task.Delay(100);
+		await Task.Delay(500);
 		attacking = false;
 		
-		await Task.Delay(200);
 		rotateSphere.isRotating = true;
 		player.isFrozen = false;
 		

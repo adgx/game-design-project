@@ -71,7 +71,7 @@ namespace Animations
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDistanceAttackShoot, transform.position);
+            //GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDistanceAttackShoot, transform.position);
         }
         
         public void ShieldActivation()

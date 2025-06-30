@@ -11,9 +11,6 @@ using UnityEngine.Assertions;
         [Header("Player Attributes")]
         [Tooltip("Max speed")]
         [SerializeField] private float maxMovementSpeed = 7f;
-
-        [Tooltip("Max rotation speed")]
-        [SerializeField] private float maxRotationSpeed = 15f;
         
 		[Tooltip("Acceleration and deceleration")]
 		[SerializeField] private float speedChangeRate = 10.0f;
