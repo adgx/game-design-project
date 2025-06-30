@@ -33,7 +33,7 @@ public class GetCollisions : MonoBehaviour
                         }
                         else
                         {
-                            AnimationManager.Instance.Hit();
+                            AnimationManager.Instance.DirHitX();
                         }
                     }
                 }

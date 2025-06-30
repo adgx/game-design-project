@@ -12,7 +12,7 @@ public enum RickStates
     AreaAttack,
     EndAreaAttack,
     DefenseStart,
-    Hit,
+    DirHitX,
     HitSpit,
     StandUp
 }
@@ -32,7 +32,7 @@ public class AnimationManager : MonoBehaviour
     private int areaAttackHash;
     private int endAreaAttackHash;
     private int defenseHash;
-    private int hitHash;
+    private int dirHitXHash;
     private int hitSpitHash;
     private int standUpHash;
     //rick current state
@@ -74,7 +74,7 @@ public class AnimationManager : MonoBehaviour
         areaAttackHash = Animator.StringToHash("AreaAttack");
         endAreaAttackHash = Animator.StringToHash("EndAreaAttack");
         defenseHash = Animator.StringToHash("Defense");
-        hitHash = Animator.StringToHash("Hit");
+        dirHitXHash = Animator.StringToHash("DirHitX");
         hitSpitHash = Animator.StringToHash("HitSpit");
         standUpHash = Animator.StringToHash("StandUp");
         //set the initial state for the rick character
@@ -159,10 +159,10 @@ public class AnimationManager : MonoBehaviour
         Instantiate(prefabSheildVFX, pos, Quaternion.identity); 
     }
     
-    public void Hit()
+    public void DirHitX()
     {
-        rickAC.SetTrigger(hitHash);
-        rickState = RickStates.Hit;
+        rickAC.SetTrigger(dirHitXHash);
+        rickState = RickStates.DirHitX;
     }
     
     public void HitSpit()
