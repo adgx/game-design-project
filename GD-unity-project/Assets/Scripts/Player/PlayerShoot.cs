@@ -218,6 +218,7 @@ public class PlayerShoot : MonoBehaviour
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
 		rotateSphere.positionSphere(new Vector3(0, 1f, 0.7f), RotateSphere.Animation.RotateAround);
+		AnimationManager.Instance.Idle();
 		AnimationManager.Instance.Attack();
 		
 		// Audio management
@@ -336,6 +337,7 @@ public class PlayerShoot : MonoBehaviour
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
 		rotateSphere.positionSphere(new Vector3(0, 1.8f, 0), RotateSphere.Animation.Linear);
+		AnimationManager.Instance.Idle();
 		AnimationManager.Instance.AreaAttack();
 		
 		// Audio management
@@ -402,6 +404,7 @@ public class PlayerShoot : MonoBehaviour
 	
 	async void FireCloseAttack() {
 		loadingAttack = false;
+		player.isFrozen = true;
 		AnimationManager.Instance.EndAreaAttack();
 		
 		if (attackStamina == 0)
@@ -438,7 +441,6 @@ public class PlayerShoot : MonoBehaviour
 		GameObject attackArea = Instantiate(attackAreaPrefab, transform.position, Quaternion.identity);
 		attackArea.transform.parent = transform;
 		attackArea.transform.localScale = new Vector3(2 * damageRadius, 0, 2 * damageRadius);
-		player.isFrozen = true;
 		
 		CheckForEnemies();
 
