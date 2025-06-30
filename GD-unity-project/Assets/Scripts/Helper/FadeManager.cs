@@ -29,8 +29,6 @@ namespace Helper {
 		}
 
 		private IEnumerator FadeOutInRoutine(Action onFadeMidpoint) {
-			player.FreezeMovement(true);
-
 			yield return StartCoroutine(FadeTo(1));
 
 			onFadeMidpoint?.Invoke();
