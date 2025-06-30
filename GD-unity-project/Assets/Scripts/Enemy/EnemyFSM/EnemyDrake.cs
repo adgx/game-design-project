@@ -11,6 +11,7 @@ public class Drake : MonoBehaviour, IEnemy
 {
     [SerializeField] private NavMeshAgent _agent;
     [SerializeField] private LayerMask whatIsGround, whatIsPlayer;
+    //FSM
     private FiniteStateMachine<Drake> _stateMachine;
 
     // This variable increases (> 1) or reduces (< 1) the damage taken by this enemy type when attacked

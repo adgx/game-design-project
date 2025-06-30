@@ -123,25 +123,25 @@ namespace Enemy.EnemyData.EnemyMovement
             
             //Make sure enemy doesn't move
             agent.SetDestination(transform.position);
-
+    
             transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));
-
+    
             if (!alreadyAttacked)
             {
                 //Attack code here
                 GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
                 bullet.tag = "EnemyProjectile";
                 bullet.GetComponent<GetCollisions>().enemyBulletDamage = distanceAttackDamage;
-
+    
                 Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
                 rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
                 rbBullet.AddForce(transform.up * 2f, ForceMode.Impulse);
                 //End of attack code
-
+    
                 alreadyAttacked = true;
                 Invoke(nameof(ResetAttack), timeBetweenAttacks);
             }
-        }
+        }   
 
         public void TakeDamage(float damage, string attackType)
         {
