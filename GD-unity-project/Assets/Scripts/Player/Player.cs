@@ -95,14 +95,12 @@ using UnityEngine.Assertions;
 			float runBlendVal = ORF.Utils.Math.NormalizeValueByRage(0f, maxMovementSpeed, speed);
 			AnimationManager.Instance.SetRunBledingAnim(runBlendVal);
 
-
 			if (runBlendVal == 0f && !AnimationManager.Instance.rickState.Equals(RickStates.Idle))
 			{
 				AnimationManager.Instance.Idle();
 			}
-			else if (runBlendVal != 0f && AnimationManager.Instance.rickState.Equals(RickStates.Idle))
+			else if (runBlendVal != 0f && !AnimationManager.Instance.rickState.Equals(RickStates.Run))
 			{
-
 				AnimationManager.Instance.Run();
 			}
 

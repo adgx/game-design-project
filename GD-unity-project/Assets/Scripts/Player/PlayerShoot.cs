@@ -560,6 +560,7 @@ public class PlayerShoot : MonoBehaviour
      		{
      			// Audio management
      			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardGrunt, player.transform.position);
+		        AnimationManager.Instance.Death();
      			
      			Invoke(nameof(DestroyPlayer), 1f);
 

@@ -14,6 +14,7 @@ public enum RickStates
     DefenseStart,
     DirHitX,
     HitSpit,
+    Death,
     StandUp
 }
 
@@ -34,6 +35,7 @@ public class AnimationManager : MonoBehaviour
     private int defenseHash;
     private int dirHitXHash;
     private int hitSpitHash;
+    private int deathHash;
     private int standUpHash;
     //rick current state
     public RickStates rickState;
@@ -76,6 +78,7 @@ public class AnimationManager : MonoBehaviour
         defenseHash = Animator.StringToHash("Defense");
         dirHitXHash = Animator.StringToHash("DirHitX");
         hitSpitHash = Animator.StringToHash("HitSpit");
+        deathHash = Animator.StringToHash("Death");
         standUpHash = Animator.StringToHash("StandUp");
         //set the initial state for the rick character
         rickState = RickStates.Idle;
@@ -169,6 +172,12 @@ public class AnimationManager : MonoBehaviour
     {
         rickAC.SetTrigger(hitSpitHash);
         rickState = RickStates.HitSpit;
+    }
+    
+    public void Death()
+    {
+        rickAC.SetTrigger(deathHash);
+        rickState = RickStates.Death;
     }
 
     public void StandUp()
