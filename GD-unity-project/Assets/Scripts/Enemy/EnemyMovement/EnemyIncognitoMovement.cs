@@ -130,7 +130,7 @@ namespace Enemy.EnemyData.EnemyMovement
             {
                 //Attack code here
                 GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-                bullet.tag = "EnemyProjectile";
+                bullet.tag = "SpitEnemyAttack";
                 bullet.GetComponent<GetCollisions>().enemyBulletDamage = distanceAttackDamage;
 
                 Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();

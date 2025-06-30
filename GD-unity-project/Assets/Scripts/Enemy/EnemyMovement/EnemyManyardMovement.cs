@@ -135,7 +135,7 @@ namespace Enemy.EnemyData.EnemyMovement
             {
                 //Attack code here
                 GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-                bullet.tag = "EnemyProjectile";
+                bullet.tag = "EnemyAttack";
                 bullet.GetComponent<GetCollisions>().enemyBulletDamage = distanceAttackDamage;
 
                 Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
@@ -162,7 +162,7 @@ namespace Enemy.EnemyData.EnemyMovement
                 //Attack code here
                 GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
                 bullet.transform.GetComponent<Renderer>().material.color = Color.red;
-                bullet.tag = "EnemyProjectile";
+                bullet.tag = "EnemyAttack";
                 bullet.GetComponent<GetCollisions>().enemyBulletDamage = closeAttackDamage;
                     
                 Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();

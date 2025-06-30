@@ -465,7 +465,7 @@ public class PlayerShoot : MonoBehaviour
 		Collider[] colliders = Physics.OverlapSphere(transform.position, damageRadius);
 		foreach(Collider c in colliders) {
 			// Checks if the collider is an enemy
-			if(c.transform.tag.Contains("Enemy") && !c.transform.CompareTag("EnemyProjectile")) {
+			if(c.transform.tag.Contains("Enemy") && !c.transform.tag.Contains("EnemyAttack")) {
 				c.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(closeAttackDamage, "c");
 			}
 		}

@@ -12,6 +12,8 @@ public enum RickStates
     AreaAttack,
     EndAreaAttack,
     DefenseStart,
+    Hit,
+    HitSpit,
     StandUp
 }
 
@@ -25,11 +27,13 @@ public class AnimationManager : MonoBehaviour
     private int runTriggerHash;
     private int idleIndexHash;
     private int velocityHash;
-    private int attack;
-    private int endAttack;
-    private int areaAttack;
-    private int endAreaAttack;
+    private int attackHash;
+    private int endAttackHash;
+    private int areaAttackHash;
+    private int endAreaAttackHash;
     private int defenseHash;
+    private int hitHash;
+    private int hitSpitHash;
     private int standUpHash;
     //rick current state
     public RickStates rickState;
@@ -65,11 +69,13 @@ public class AnimationManager : MonoBehaviour
         runTriggerHash = Animator.StringToHash("Run");
         velocityHash = Animator.StringToHash("Velocity");
         idleIndexHash = Animator.StringToHash("IdleIndex");
-        attack = Animator.StringToHash("Attack");
-        endAttack = Animator.StringToHash("EndAttack");
-        areaAttack = Animator.StringToHash("AreaAttack");
-        endAreaAttack = Animator.StringToHash("EndAreaAttack");
+        attackHash = Animator.StringToHash("Attack");
+        endAttackHash = Animator.StringToHash("EndAttack");
+        areaAttackHash = Animator.StringToHash("AreaAttack");
+        endAreaAttackHash = Animator.StringToHash("EndAreaAttack");
         defenseHash = Animator.StringToHash("Defense");
+        hitHash = Animator.StringToHash("Hit");
+        hitSpitHash = Animator.StringToHash("HitSpit");
         standUpHash = Animator.StringToHash("StandUp");
         //set the initial state for the rick character
         rickState = RickStates.Idle;
@@ -126,31 +132,43 @@ public class AnimationManager : MonoBehaviour
 
     public void Attack()
     {
-        rickAC.SetTrigger(attack);
+        rickAC.SetTrigger(attackHash);
         rickState = RickStates.Attack;
     }
     
     public void EndAttack()
     {
-        rickAC.SetTrigger(endAttack);
+        rickAC.SetTrigger(endAttackHash);
         rickState = RickStates.EndAttack;
     }
     
     public void AreaAttack()
     {
-        rickAC.SetTrigger(areaAttack);
+        rickAC.SetTrigger(areaAttackHash);
         rickState = RickStates.AreaAttack;
     }
     
     public void EndAreaAttack()
     {
-        rickAC.SetTrigger(endAreaAttack);
+        rickAC.SetTrigger(endAreaAttackHash);
         rickState = RickStates.EndAreaAttack;
     }
 
     public void DefenseVFX(Vector3 pos)
     {
         Instantiate(prefabSheildVFX, pos, Quaternion.identity); 
+    }
+    
+    public void Hit()
+    {
+        rickAC.SetTrigger(hitHash);
+        rickState = RickStates.Hit;
+    }
+    
+    public void HitSpit()
+    {
+        rickAC.SetTrigger(hitSpitHash);
+        rickState = RickStates.HitSpit;
     }
 
     public void StandUp()
