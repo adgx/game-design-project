@@ -174,15 +174,21 @@ public class AnimationManager : MonoBehaviour
         Instantiate(prefabSheildVFX, pos, Quaternion.identity); 
     }
     
-    public void Hit()
+    public void Hit(float x, float z)
     {
-        rickAC.SetTrigger(hitHash);
+        rickAC.SetFloat("DirHitX", x);
+		rickAC.SetFloat("DirHitZ", z);
+
+		rickAC.SetTrigger(hitHash);
         rickState = RickStates.Hit;
     }
     
-    public void HitSpit()
+    public void HitSpit(float x, float z)
     {
-        rickAC.SetTrigger(hitSpitHash);
+		rickAC.SetFloat("DirHitX", x);
+		rickAC.SetFloat("DirHitZ", z);
+
+		rickAC.SetTrigger(hitSpitHash);
         rickState = RickStates.HitSpit;
     }
 
@@ -206,9 +212,12 @@ public class AnimationManager : MonoBehaviour
 		rickState = RickStates.EatChips;
 	}
 
-	public void Death()
+	public void Death(float x, float z)
     {
-        rickAC.SetTrigger(deathHash);
+		rickAC.SetFloat("DirHitX", x);
+		rickAC.SetFloat("DirHitZ", z);
+
+		rickAC.SetTrigger(deathHash);
         rickState = RickStates.Death;
     }
 

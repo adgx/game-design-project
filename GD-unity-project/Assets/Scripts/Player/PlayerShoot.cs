@@ -557,31 +557,34 @@ public class PlayerShoot : MonoBehaviour
 		isShieldCoroutineRunning = false;
 	}
 
-	public void TakeDamage(float damage, DamageTypes damageType) {
+	public async void TakeDamage(float damage, DamageTypes damageType, float x, float z) {
      	health -= damage * damageReduction;
      	healthBar.SetHealth(health);
      
      	StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
 
-		HitAnimation(damageType);
-     
-     	if (health <= 0)
+		if(health > 0) {
+			HitAnimation(damageType, x, z);
+
+			// Audio management
+			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, player.transform.position);
+		}
+		else
      	{
      		// Audio management
      		GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardGrunt, player.transform.position);
-		    AnimationManager.Instance.Death();
-     			
+
+			player.FreezeMovement(true);
+			DisableAttacks(true);
+			gameObject.layer = 0;
+		    AnimationManager.Instance.Death(x, z);
+			await Task.Delay(2500);
+
      		Invoke(nameof(DestroyPlayer), 1f);
 
 			FadeManager.Instance.FadeOutIn(() => {
 				StartCoroutine(LoadRespawnSceneAsync());
 			});
-     	}
-     			
-     	else
-     	{
-     		// Audio management
-     		GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, player.transform.position);
      	}
 	}
 	
@@ -603,13 +606,13 @@ public class PlayerShoot : MonoBehaviour
 
 		renderer.material.color = originColor;
 	}
-	private async void HitAnimation(DamageTypes damageType) {
+	private async void HitAnimation(DamageTypes damageType, float x, float z) {
 		if(!cannotAttack && !player.isFrozen) {
 			switch(damageType) {
 				case DamageTypes.Spit:
 					DisableAttacks(true);
 					player.FreezeMovement(true);
-					AnimationManager.Instance.HitSpit();
+					AnimationManager.Instance.HitSpit(x, z);
 					await Task.Delay(2000);
 
 					DisableAttacks(false);
@@ -618,7 +621,7 @@ public class PlayerShoot : MonoBehaviour
 				case DamageTypes.MaynardDistanceAttack:
 					DisableAttacks(true);
 					player.FreezeMovement(true);
-					AnimationManager.Instance.Hit();
+					AnimationManager.Instance.Hit(x, z);
 					await Task.Delay(1000);
 
 					DisableAttacks(false);
@@ -627,7 +630,7 @@ public class PlayerShoot : MonoBehaviour
 				case DamageTypes.MaynardCloseAttack:
 					DisableAttacks(true);
 					player.FreezeMovement(true);
-					AnimationManager.Instance.Hit();
+					AnimationManager.Instance.Hit(x, z);
 					await Task.Delay(1000);
 
 					DisableAttacks(false);

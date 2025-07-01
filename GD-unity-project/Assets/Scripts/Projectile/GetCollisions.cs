@@ -29,11 +29,11 @@ public class GetCollisions : MonoBehaviour
 
                         if (contact.thisCollider.tag.Contains("Spit"))
                         {
-							playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.Spit);
+							playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.Spit, contact.point.x, contact.point.z);
 						}
                         else
                         {
-							playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.MaynardDistanceAttack);
+							playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.MaynardDistanceAttack, contact.point.x, contact.point.z);
 						}
                     }
                 }
