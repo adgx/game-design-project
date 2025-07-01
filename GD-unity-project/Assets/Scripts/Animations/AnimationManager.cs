@@ -12,8 +12,12 @@ public enum RickStates
     AreaAttack,
     EndAreaAttack,
     DefenseStart,
-    DirHitX,
+	Hit,
     HitSpit,
+    Bite,
+    EatSnack,
+    Drink,
+    EatChips,
     Death,
     StandUp
 }
@@ -33,8 +37,12 @@ public class AnimationManager : MonoBehaviour
     private int areaAttackHash;
     private int endAreaAttackHash;
     private int defenseHash;
-    private int dirHitXHash;
+    private int hitHash;
     private int hitSpitHash;
+    private int biteHash;
+    private int eatSnackHash;
+    private int eatChipsHash;
+    private int drinkHash;
     private int deathHash;
     private int standUpHash;
     //rick current state
@@ -76,8 +84,12 @@ public class AnimationManager : MonoBehaviour
         areaAttackHash = Animator.StringToHash("AreaAttack");
         endAreaAttackHash = Animator.StringToHash("EndAreaAttack");
         defenseHash = Animator.StringToHash("Defense");
-        dirHitXHash = Animator.StringToHash("DirHitX");
+		hitHash = Animator.StringToHash("Hit");
         hitSpitHash = Animator.StringToHash("HitSpit");
+        biteHash = Animator.StringToHash("Bite");
+        eatSnackHash = Animator.StringToHash("EatSnack");
+        drinkHash = Animator.StringToHash("Drink");
+        eatChipsHash = Animator.StringToHash("EatChips");
         deathHash = Animator.StringToHash("Death");
         standUpHash = Animator.StringToHash("StandUp");
         //set the initial state for the rick character
@@ -162,10 +174,10 @@ public class AnimationManager : MonoBehaviour
         Instantiate(prefabSheildVFX, pos, Quaternion.identity); 
     }
     
-    public void DirHitX()
+    public void Hit()
     {
-        rickAC.SetTrigger(dirHitXHash);
-        rickState = RickStates.DirHitX;
+        rickAC.SetTrigger(hitHash);
+        rickState = RickStates.Hit;
     }
     
     public void HitSpit()
@@ -173,8 +185,28 @@ public class AnimationManager : MonoBehaviour
         rickAC.SetTrigger(hitSpitHash);
         rickState = RickStates.HitSpit;
     }
-    
-    public void Death()
+
+	public void Bite() {
+		rickAC.SetTrigger(biteHash);
+		rickState = RickStates.Bite;
+	}
+
+	public void EatSnack() {
+		rickAC.SetTrigger(eatSnackHash);
+		rickState = RickStates.EatSnack;
+	}
+
+	public void Drink() {
+		rickAC.SetTrigger(drinkHash);
+		rickState = RickStates.Drink;
+	}
+
+	public void EatChips() {
+		rickAC.SetTrigger(eatChipsHash);
+		rickState = RickStates.EatChips;
+	}
+
+	public void Death()
     {
         rickAC.SetTrigger(deathHash);
         rickState = RickStates.Death;

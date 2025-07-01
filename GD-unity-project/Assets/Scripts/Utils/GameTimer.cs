@@ -34,7 +34,6 @@ namespace Utils {
 		private bool sceneIsLoading = false;
 
 		private IEnumerator PlayWakeUpAfterDelay(float delay) {
-			print("PlayWakeUpAfterDelay");
 			playerScript.FreezeMovement(true);
 			playerShoot.DisableAttacks(true);
 			

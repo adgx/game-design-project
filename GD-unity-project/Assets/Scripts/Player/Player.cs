@@ -99,7 +99,7 @@ using UnityEngine.Assertions;
 			{
 				AnimationManager.Instance.Idle();
 			}
-			else if (runBlendVal != 0f && !AnimationManager.Instance.rickState.Equals(RickStates.Run))
+			else if (runBlendVal != 0f && AnimationManager.Instance.rickState.Equals(RickStates.Idle))
 			{
 				AnimationManager.Instance.Run();
 			}
