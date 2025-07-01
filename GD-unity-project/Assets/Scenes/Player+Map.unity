@@ -1920,10 +1920,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.9
+  m_Radius: 0.85
   m_Height: 1
   m_Direction: 1
-  m_Center: {x: 0, y: 0.8, z: 0}
+  m_Center: {x: 0, y: 0.85, z: 0}
 --- !u!114 &972097723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2903,12 +2903,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4db81237abb1948529dd419e41cbb730, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _availableRooms:
-  - {fileID: 11400000, guid: 31ef2464399d944218fa84404292c004, type: 2}
-  - {fileID: 11400000, guid: c73775d08b746476da8663f3ab5c1bd0, type: 2}
-  - {fileID: 11400000, guid: 7812fa5919ace45669b148a1c0556990, type: 2}
-  - {fileID: 11400000, guid: 649cc90d5260341558b2b3e1c6e993e6, type: 2}
-  _initialRoomData: {fileID: 11400000, guid: 6eb0b70f4a33646a5a0c387fa73d7366, type: 2}
+  _roomsPerLoop:
+  - _availableRooms:
+    - {fileID: 11400000, guid: 649cc90d5260341558b2b3e1c6e993e6, type: 2}
+    - {fileID: 11400000, guid: 464d34e7e589a4cdd9530fff6c464281, type: 2}
+    - {fileID: 11400000, guid: c73775d08b746476da8663f3ab5c1bd0, type: 2}
+    - {fileID: 11400000, guid: 31ef2464399d944218fa84404292c004, type: 2}
+    - {fileID: 11400000, guid: 7812fa5919ace45669b148a1c0556990, type: 2}
+  - _availableRooms:
+    - {fileID: 11400000, guid: 649cc90d5260341558b2b3e1c6e993e6, type: 2}
+    - {fileID: 11400000, guid: 464d34e7e589a4cdd9530fff6c464281, type: 2}
+    - {fileID: 11400000, guid: c73775d08b746476da8663f3ab5c1bd0, type: 2}
+    - {fileID: 11400000, guid: 31ef2464399d944218fa84404292c004, type: 2}
+    - {fileID: 11400000, guid: 7812fa5919ace45669b148a1c0556990, type: 2}
+  - _availableRooms:
+    - {fileID: 11400000, guid: 649cc90d5260341558b2b3e1c6e993e6, type: 2}
+    - {fileID: 11400000, guid: 464d34e7e589a4cdd9530fff6c464281, type: 2}
+    - {fileID: 11400000, guid: c73775d08b746476da8663f3ab5c1bd0, type: 2}
+    - {fileID: 11400000, guid: 31ef2464399d944218fa84404292c004, type: 2}
+    - {fileID: 11400000, guid: 7812fa5919ace45669b148a1c0556990, type: 2}
+  _initialRoomData:
+  - {fileID: 11400000, guid: 6eb0b70f4a33646a5a0c387fa73d7366, type: 2}
+  - {fileID: 11400000, guid: 6eb0b70f4a33646a5a0c387fa73d7366, type: 2}
+  - {fileID: 11400000, guid: 6eb0b70f4a33646a5a0c387fa73d7366, type: 2}
   _maxRooms: 15
   _minRooms: 10
   _skipConnectionChance: 0.35
