@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class DrakeAnimation : MonoBehaviour
+public class DrakeAnimation
 {
     private Animator _drakeAC;
 
@@ -14,13 +14,10 @@ public class DrakeAnimation : MonoBehaviour
     private int _dirZVarHash;
     private int _hitTriggerHash;
     private int _idleTriggerHash;
+    
     public DrakeAnimation(Animator drakeAC)
     {
         _drakeAC = drakeAC;
-    }
-
-    void Awake()
-    {
         _deathTriggerHash = Animator.StringToHash("Death");
         _runTriggerHash = Animator.StringToHash("Run");
         _swipingTriggerHash = Animator.StringToHash("Swiping");
@@ -30,6 +27,14 @@ public class DrakeAnimation : MonoBehaviour
         _dirZVarHash = Animator.StringToHash("DirZ");
         _hitTriggerHash = Animator.StringToHash("Hit");
         _idleTriggerHash = Animator.StringToHash("Idle");
+    }
+
+    public void lunchIdleAnim()
+    { 
+        if (this != null && _drakeAC != null && _drakeAC.gameObject != null && _drakeAC.isActiveAndEnabled)
+        {
+            _drakeAC.SetTrigger(_idleTriggerHash);
+        }
     }
 
     public void lunchSwipingAnim()

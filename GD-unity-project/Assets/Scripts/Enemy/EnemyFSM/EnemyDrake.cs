@@ -14,6 +14,11 @@ public class Drake : MonoBehaviour, IEnemy
     //FSM
     private FiniteStateMachine<Drake> _stateMachine;
 
+    //animation stuff
+    //AnimationManager for Drake
+    [HideInInspector]
+    public DrakeAnimation anim;
+
     // This variable increases (> 1) or reduces (< 1) the damage taken by this enemy type when attacked
     private float _distanceAttackDamageMultiplier;
     private float _closeAttackDamageMultiplier;
@@ -38,6 +43,9 @@ public class Drake : MonoBehaviour, IEnemy
     private bool _playerInSightRange, _playerInAttackRange;
     //Room stuff
     private RoomManager.RoomManager _roomManager;
+
+    //states
+    private State _deathS;
 
     public void Initialize(EnemyData enemyData, RoomManager.RoomManager roomManager)
     {
@@ -78,6 +86,14 @@ public class Drake : MonoBehaviour, IEnemy
 
     void Awake()
     {
+        Animator drakeAC = GetComponent<Animator>();
+
+        if (drakeAC == null)
+        {
+            Debug.LogError($"{ToString()}: Animator controller not found");
+        }
+
+        anim = new DrakeAnimation(drakeAC);
         _playerTransform = GameObject.Find("Player").transform;
         _agent = GetComponent<NavMeshAgent>();
         //we suppose that all enemy have an one SkinnedMeshRenderer 
@@ -98,21 +114,25 @@ public class Drake : MonoBehaviour, IEnemy
 
     void Start()
     {
+        _walkPointRange = 10;
         //FMS base
         _stateMachine = new FiniteStateMachine<Drake>(this);
 
         //Define states
         State patrolS = new DrakePatrolState("Patrol", this);
         State chaseS = new DrakeChaseState("Chase", this);
-        State attackS = new DrakeAttackState("Attack", this);
+        State wonderS = new DrakeSwipingAttackState("Swiping", this);
+        State swipingS = new DrakeSwipingAttackState("Attack", this);
+        _deathS = new DrakeChaseState("Death", this);
 
         //Transition
         _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(chaseS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
-        _stateMachine.AddTransition(chaseS, attackS, () => _playerInSightRange && _playerInAttackRange);
-        _stateMachine.AddTransition(attackS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
-        _stateMachine.AddTransition(attackS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
-
+        _stateMachine.AddTransition(chaseS, wonderS, () => _playerInSightRange && _playerInAttackRange);
+        _stateMachine.AddTransition(wonderS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
+        _stateMachine.AddTransition(wonderS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
+        _stateMachine.AddTransition(swipingS, wonderS, () => _alreadyAttacked);
+        _stateMachine.AddTransition(wonderS, swipingS, () => !_alreadyAttacked);
         //Set Initial state
         _stateMachine.SetState(patrolS);
     }
@@ -131,7 +151,11 @@ public class Drake : MonoBehaviour, IEnemy
         StartCoroutine(ChangeColor( Color.red, 0.8f, 0));
 
         if (_health <= 0)
-            Invoke(nameof(DestroyEnemy), 0.05f);
+        {
+            //Invoke(nameof(DestroyEnemy), 0.05f);
+            _stateMachine.SetState(_deathS);
+        }
+            
     }
 
     // Change enemy color when hit and change it back to normal after "duration" seconds
@@ -162,13 +186,14 @@ public class Drake : MonoBehaviour, IEnemy
 
     void SearchWalkPoint()
     {
+        
         //Calculate random point in range
         float randomZ = Random.Range(-_walkPointRange, _walkPointRange);
         float randomX = Random.Range(-_walkPointRange, _walkPointRange);
         //destination
         _walkPoint = new Vector3(transform.position.x + randomX, transform.position.y,
             transform.position.z + randomZ);
-
+        Debug.Log($"{_walkPoint}");
         if (Physics.Raycast(_walkPoint, -transform.up, 2f, whatIsGround))
         {
             _walkPointSet = true;
@@ -211,6 +236,7 @@ public class Drake : MonoBehaviour, IEnemy
         }
     }
 
+/*
     public void CloseAttackPlayer()
     {
         if (_agent == null || !_agent.isOnNavMesh)
@@ -239,15 +265,53 @@ public class Drake : MonoBehaviour, IEnemy
             _alreadyAttacked = true;
             Invoke(nameof(ResetAttack), _timeBetweenAttacks);
         }
-        
+
         void ResetAttack()
         {
             _alreadyAttacked = false;
         }
     }
+*/
 
+    public void WonderCloseAttackPlayer()
+    {
+        if (_agent == null || !_agent.isOnNavMesh)
+        {
+            Debug.LogError($"{this} Error with _agent: {_agent}");
+            return;
+        }
 
-    private void DestroyEnemy()
+        //Make sure enemy doesn't move(Maybe is better set the isStopped property)
+        _agent.SetDestination(transform.position);
+
+        transform.LookAt(new Vector3(_playerTransform.position.x, transform.position.y, _playerTransform.position.z));
+    }
+
+    public void SwipingAttackPlayer()
+    { 
+        if (!_alreadyAttacked)
+        {
+            //Attack code here
+            //GameObject bullet = Instantiate(_bulletPrefab, transform.position, Quaternion.identity);
+            //bullet.tag = "EnemyProjectile";
+            //bullet.GetComponent<GetCollisions>().enemyBulletDamage = _closeAttackDamage;
+
+            //Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
+            //rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
+            //rbBullet.AddForce(transform.up * 2f, ForceMode.Impulse);
+            //End of attack code
+
+            _alreadyAttacked = true;
+            Invoke(nameof(ResetAttack), _timeBetweenAttacks);
+        }
+        
+        void ResetAttack()
+        {
+            _alreadyAttacked = false;
+        }
+    } 
+
+    public void DestroyEnemy()
     {
         Destroy(gameObject);
     }

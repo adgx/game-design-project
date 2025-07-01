@@ -9,6 +9,7 @@ public class DrakePatrolState : State
 
     public override void Enter()
     {
+        _drake.anim.lunchRunAnim();
     }
 
     public override void Tik()
@@ -42,23 +43,70 @@ public class DrakeChaseState : State
     }
 }
 
-public class DrakeAttackState : State
+public class DrakeSwipingAttackState : State
 {
     private Drake _drake;
-    public DrakeAttackState(string name, Drake drake) : base(name)
+    public DrakeSwipingAttackState(string name, Drake drake) : base(name)
     {
         _drake = drake;
     }
     public override void Enter()
     {
+        _drake.anim.lunchSwipingAnim();
+    }
+
+    public override void Tik()
+    {
+        _drake.SwipingAttackPlayer();
     }
 
     public override void Exit()
     {
     }
 
+
+}
+
+public class DrakeWonderState : State
+{
+    private Drake _drake;
+    public DrakeWonderState(string name, Drake drake) : base(name)
+    {
+        _drake = drake;
+    }
+    public override void Enter()
+    {
+        _drake.anim.lunchIdleAnim();
+    }
+
     public override void Tik()
     {
-        _drake.CloseAttackPlayer();
+        _drake.WonderCloseAttackPlayer();
+    }
+
+    public override void Exit()
+    {
+
+    }
+}
+
+public class DrakeDeathState : State
+{
+    private Drake _drake;
+    public DrakeDeathState(string name, Drake drake) : base(name)
+    {
+        _drake = drake;
+    }
+    public override void Enter()
+    {
+        _drake.anim.lunchDeathAnim();
+    }
+
+    public override void Tik()
+    {
+    }
+
+    public override void Exit()
+    {
     }
 }

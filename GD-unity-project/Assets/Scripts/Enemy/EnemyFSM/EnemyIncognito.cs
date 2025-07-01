@@ -57,6 +57,7 @@ public class Incognito : MonoBehaviour, IEnemy
 
     void Start()
     {
+        _walkPointRange = 10;
         //FMS base
         _stateMachine = new FiniteStateMachine<Incognito>(this);
 
