@@ -64,7 +64,7 @@ public class PlayerShoot : MonoBehaviour
 	// PowerUps
 	public PowerUp powerUp;
 
-	// DistantAttackDamage
+	// Needed to set DistantAttackDamage
 	public GetCollisions getCollisions;
 
 	private Player player;
@@ -72,6 +72,13 @@ public class PlayerShoot : MonoBehaviour
 	[SerializeField] private GameObject rotatingSphere;
 
 	[SerializeField] private string respawnSceneName = "RespawnScene";
+
+	public enum DamageTypes {
+		Spit,
+		MaynardDistanceAttack,
+		MaynardCloseAttack,
+		DrakeCloseAttack
+	}
 
 	private void Start() {
 		healthBar.SetMaxHealth(health);
@@ -550,30 +557,32 @@ public class PlayerShoot : MonoBehaviour
 		isShieldCoroutineRunning = false;
 	}
 
-	public void TakeDamage(float damage) {
-     		health -= damage * damageReduction;
-     		healthBar.SetHealth(health);
+	public void TakeDamage(float damage, DamageTypes damageType) {
+     	health -= damage * damageReduction;
+     	healthBar.SetHealth(health);
      
-     		StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
-     
-     		if (health <= 0)
-     		{
-     			// Audio management
-     			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardGrunt, player.transform.position);
-		        AnimationManager.Instance.Death();
-     			
-     			Invoke(nameof(DestroyPlayer), 1f);
+     	StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
 
-				FadeManager.Instance.FadeOutIn(() => {
-					StartCoroutine(LoadRespawnSceneAsync());
-				});
-     		}
+		HitAnimation(damageType);
+     
+     	if (health <= 0)
+     	{
+     		// Audio management
+     		GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardGrunt, player.transform.position);
+		    AnimationManager.Instance.Death();
      			
-     		else
-     		{
-     			// Audio management
-     			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, player.transform.position);
-     		}
+     		Invoke(nameof(DestroyPlayer), 1f);
+
+			FadeManager.Instance.FadeOutIn(() => {
+				StartCoroutine(LoadRespawnSceneAsync());
+			});
+     	}
+     			
+     	else
+     	{
+     		// Audio management
+     		GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, player.transform.position);
+     	}
 	}
 	
 	// Change player color when hit and change it back to normal after "duration" seconds
@@ -593,6 +602,48 @@ public class PlayerShoot : MonoBehaviour
 		}
 
 		renderer.material.color = originColor;
+	}
+	private async void HitAnimation(DamageTypes damageType) {
+		if(!cannotAttack && !player.isFrozen) {
+			switch(damageType) {
+				case DamageTypes.Spit:
+					DisableAttacks(true);
+					player.FreezeMovement(true);
+					AnimationManager.Instance.HitSpit();
+					await Task.Delay(2000);
+
+					DisableAttacks(false);
+					player.FreezeMovement(false);
+					break;
+				case DamageTypes.MaynardDistanceAttack:
+					DisableAttacks(true);
+					player.FreezeMovement(true);
+					AnimationManager.Instance.Hit();
+					await Task.Delay(1000);
+
+					DisableAttacks(false);
+					player.FreezeMovement(false);
+					break;
+				case DamageTypes.MaynardCloseAttack:
+					DisableAttacks(true);
+					player.FreezeMovement(true);
+					AnimationManager.Instance.Hit();
+					await Task.Delay(1000);
+
+					DisableAttacks(false);
+					player.FreezeMovement(false);
+					break;
+				case DamageTypes.DrakeCloseAttack:
+					DisableAttacks(true);
+					player.FreezeMovement(true);
+					AnimationManager.Instance.Bite();
+					await Task.Delay(1000);
+
+					DisableAttacks(false);
+					player.FreezeMovement(false);
+					break;
+			}
+		}
 	}
 	private void DestroyPlayer() {
 		Destroy(gameObject);

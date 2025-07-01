@@ -25,16 +25,16 @@ public class GetCollisions : MonoBehaviour
                 else {
                     if(contact.thisCollider.tag.Contains("EnemyAttack") && contact.otherCollider.CompareTag("Player")) {
                         PlayerShoot playerShoot = contact.otherCollider.GetComponent<PlayerShoot>();
-                        playerShoot.TakeDamage(enemyBulletDamage);
+
 
                         if (contact.thisCollider.tag.Contains("Spit"))
                         {
-                            AnimationManager.Instance.HitSpit();
-                        }
+							playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.Spit);
+						}
                         else
                         {
-                            AnimationManager.Instance.Hit();
-                        }
+							playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.MaynardDistanceAttack);
+						}
                     }
                 }
             }
