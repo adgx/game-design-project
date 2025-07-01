@@ -31,6 +31,8 @@ public class PlayerShoot : MonoBehaviour
 	private float defaultDamageRadius = 2.5f;
 	private float damageRadius = 2.5f;
 
+	private bool cannotAttack = false;
+
 	// The player has 2 attacks he can choose. He can change them by using the mouse scroll wheel or the back buttons on the controller
 	private int attackNumber = 1;
 	[SerializeField] private KeyCode increaseAttackController, decreaseAttackController;
@@ -62,7 +64,7 @@ public class PlayerShoot : MonoBehaviour
 	// PowerUps
 	public PowerUp powerUp;
 
-	// DistantAttackDamage
+	// Needed to set DistantAttackDamage
 	public GetCollisions getCollisions;
 
 	private Player player;
@@ -70,6 +72,13 @@ public class PlayerShoot : MonoBehaviour
 	[SerializeField] private GameObject rotatingSphere;
 
 	[SerializeField] private string respawnSceneName = "RespawnScene";
+
+	public enum DamageTypes {
+		Spit,
+		MaynardDistanceAttack,
+		MaynardCloseAttack,
+		DrakeCloseAttack
+	}
 
 	private void Start() {
 		healthBar.SetMaxHealth(health);
@@ -130,6 +139,11 @@ public class PlayerShoot : MonoBehaviour
 			default:
 				break;
 		}
+	}
+
+	public void DisableAttacks(bool value)
+	{
+		cannotAttack = value;
 	}
 
 	private bool CheckStamina(int value) {
@@ -211,6 +225,8 @@ public class PlayerShoot : MonoBehaviour
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
 		rotateSphere.positionSphere(new Vector3(0, 1f, 0.7f), RotateSphere.Animation.RotateAround);
+		AnimationManager.Instance.Idle();
+		AnimationManager.Instance.Attack();
 		
 		// Audio management
 		bool playDistanceAttackSound = false;
@@ -276,9 +292,16 @@ public class PlayerShoot : MonoBehaviour
 	
 	async void FireDistanceAttack() {
 		loadingAttack = false;
+		AnimationManager.Instance.EndAttack();
+		
+		if (attackStamina == 0)
+			await Task.Delay(700);
+		else
+			await Task.Delay(500);
+		
 		GameObject bullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity);
 		bullet.tag = "PlayerProjectile";
-
+		
 		Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
 		rbBullet.AddForce(bulletSpawnTransform.forward * bulletSpeed, ForceMode.Impulse);
 		rbBullet.AddForce(bulletSpawnTransform.up * 2f, ForceMode.Impulse);
@@ -297,10 +320,9 @@ public class PlayerShoot : MonoBehaviour
 
 		distanceAttackLoadingBar.fillAmount = 0;
 
-		await Task.Delay(100);
+		await Task.Delay(500);
 		attacking = false;
 		
-		await Task.Delay(200);
 		rotateSphere.isRotating = true;
 		player.isFrozen = false;
 		
@@ -322,6 +344,8 @@ public class PlayerShoot : MonoBehaviour
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
 		rotateSphere.positionSphere(new Vector3(0, 1.8f, 0), RotateSphere.Animation.Linear);
+		AnimationManager.Instance.Idle();
+		AnimationManager.Instance.AreaAttack();
 		
 		// Audio management
 		bool playCloseAttackSound = false;
@@ -385,8 +409,17 @@ public class PlayerShoot : MonoBehaviour
 		}
 	}
 	
-	void FireCloseAttack() {
+	async void FireCloseAttack() {
 		loadingAttack = false;
+		player.isFrozen = true;
+		AnimationManager.Instance.EndAreaAttack();
+		
+		if (attackStamina == 0)
+			await Task.Delay(900);
+		else
+			await Task.Delay(500);
+		
+		
 		DecreaseStamina(attackStamina);
 		
 		// Audio management
@@ -395,8 +428,6 @@ public class PlayerShoot : MonoBehaviour
 		closeAttackLoadingBar.fillAmount = 0;
 
 		SpawnAttackArea();
-
-		CheckForEnemies();
 		
 		// Audio management
 		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp))
@@ -417,7 +448,8 @@ public class PlayerShoot : MonoBehaviour
 		GameObject attackArea = Instantiate(attackAreaPrefab, transform.position, Quaternion.identity);
 		attackArea.transform.parent = transform;
 		attackArea.transform.localScale = new Vector3(2 * damageRadius, 0, 2 * damageRadius);
-		player.isFrozen = true;
+		
+		CheckForEnemies();
 
 		await Task.Delay(500);
 
@@ -440,7 +472,7 @@ public class PlayerShoot : MonoBehaviour
 		Collider[] colliders = Physics.OverlapSphere(transform.position, damageRadius);
 		foreach(Collider c in colliders) {
 			// Checks if the collider is an enemy
-			if(c.transform.tag.Contains("Enemy") && !c.transform.CompareTag("EnemyProjectile")) {
+			if(c.transform.tag.Contains("Enemy") && !c.transform.tag.Contains("EnemyAttack")) {
 				c.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(closeAttackDamage, "c");
 			}
 		}
@@ -525,29 +557,35 @@ public class PlayerShoot : MonoBehaviour
 		isShieldCoroutineRunning = false;
 	}
 
-	public void TakeDamage(float damage) {
-     		health -= damage * damageReduction;
-     		healthBar.SetHealth(health);
+	public async void TakeDamage(float damage, DamageTypes damageType, float x, float z) {
+     	health -= damage * damageReduction;
+     	healthBar.SetHealth(health);
      
-     		StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
-     
-     		if (health <= 0)
-     		{
-     			// Audio management
-     			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardGrunt, player.transform.position);
-     			
-     			Invoke(nameof(DestroyPlayer), 1f);
+     	StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
 
-				FadeManager.Instance.FadeOutIn(() => {
-					StartCoroutine(LoadRespawnSceneAsync());
-				});
-     		}
-     			
-     		else
-     		{
-     			// Audio management
-     			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, player.transform.position);
-     		}
+		if(health > 0) {
+			HitAnimation(damageType, x, z);
+
+			// Audio management
+			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, player.transform.position);
+		}
+		else
+     	{
+     		// Audio management
+     		GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardGrunt, player.transform.position);
+
+			player.FreezeMovement(true);
+			DisableAttacks(true);
+			gameObject.layer = 0;
+		    AnimationManager.Instance.Death(x, z);
+			await Task.Delay(2500);
+
+     		Invoke(nameof(DestroyPlayer), 1f);
+
+			FadeManager.Instance.FadeOutIn(() => {
+				StartCoroutine(LoadRespawnSceneAsync());
+			});
+     	}
 	}
 	
 	// Change player color when hit and change it back to normal after "duration" seconds
@@ -567,6 +605,48 @@ public class PlayerShoot : MonoBehaviour
 		}
 
 		renderer.material.color = originColor;
+	}
+	private async void HitAnimation(DamageTypes damageType, float x, float z) {
+		if(!cannotAttack && !player.isFrozen) {
+			switch(damageType) {
+				case DamageTypes.Spit:
+					DisableAttacks(true);
+					player.FreezeMovement(true);
+					AnimationManager.Instance.HitSpit(x, z);
+					await Task.Delay(2000);
+
+					DisableAttacks(false);
+					player.FreezeMovement(false);
+					break;
+				case DamageTypes.MaynardDistanceAttack:
+					DisableAttacks(true);
+					player.FreezeMovement(true);
+					AnimationManager.Instance.Hit(x, z);
+					await Task.Delay(1000);
+
+					DisableAttacks(false);
+					player.FreezeMovement(false);
+					break;
+				case DamageTypes.MaynardCloseAttack:
+					DisableAttacks(true);
+					player.FreezeMovement(true);
+					AnimationManager.Instance.Hit(x, z);
+					await Task.Delay(1000);
+
+					DisableAttacks(false);
+					player.FreezeMovement(false);
+					break;
+				case DamageTypes.DrakeCloseAttack:
+					DisableAttacks(true);
+					player.FreezeMovement(true);
+					AnimationManager.Instance.Bite();
+					await Task.Delay(1000);
+
+					DisableAttacks(false);
+					player.FreezeMovement(false);
+					break;
+			}
+		}
 	}
 	private void DestroyPlayer() {
 		Destroy(gameObject);
@@ -598,83 +678,88 @@ public class PlayerShoot : MonoBehaviour
 	void Update() {
 		if (!GameStatus.gamePaused)
 		{
-			// The attack is shot only on "Fire1" up
-			if (Input.GetButtonDown("Fire1"))
+			if (!cannotAttack)
 			{
-				if (!magneticShield && CheckStamina(1) && !attacking)
+				// The attack is shot only on "Fire1" up
+				if (Input.GetButtonDown("Fire1"))
 				{
-					// Audio management
-					loadingAttack = true;
-					attacking = true;
-
-					switch (attackNumber)
+					if (!magneticShield && CheckStamina(1) && !attacking)
 					{
-						case 1:
-							LoadDistanceAttack();
-							break;
-						case 2:
-							LoadCloseAttack();
-							break;
-						default:
-							break;
+						// Audio management
+						loadingAttack = true;
+						attacking = true;
+
+						switch (attackNumber)
+						{
+							case 1:
+								LoadDistanceAttack();
+								break;
+							case 2:
+								LoadCloseAttack();
+								break;
+							default:
+								break;
+						}
 					}
 				}
-			}
 
-			// Audio management
-			UpdateSound();
+				// Audio management
+				UpdateSound();
 
-			if (Input.GetButtonUp("Fire1"))
-			{
-				if (!magneticShield && CheckStamina(1) && loadingAttack)
+				if (Input.GetButtonUp("Fire1"))
 				{
-					switch (attackNumber)
+					if (!magneticShield && CheckStamina(1) && loadingAttack)
 					{
-						case 1:
-							FireDistanceAttack();
-							break;
-						case 2:
-							FireCloseAttack();
-							break;
-						default:
-							break;
+						switch (attackNumber)
+						{
+							case 1:
+								FireDistanceAttack();
+								break;
+							case 2:
+								FireCloseAttack();
+								break;
+							default:
+								break;
+						}
 					}
 				}
-			}
 
-			if (Input.GetButtonDown("Fire2") && !loadingAttack)
-			{
-				SpawnMagneticShield();
-			}
-
-			// Selecting a different attack
-			if ((Input.GetAxis("Mouse ScrollWheel") > 0 || Input.GetKeyDown(increaseAttackController)) && !loadingAttack)
-			{
-				ChangeAttack(1);
-			}
-			else if ((Input.GetAxis("Mouse ScrollWheel") < 0 || Input.GetKeyDown(decreaseAttackController)) && !loadingAttack)
-			{
-				ChangeAttack(-1);
-			}
-
-			if (Input.GetKeyDown(KeyCode.Alpha1) && !loadingAttack)
-			{
-				SetAttack(1);
-			}
-
-			if (Input.GetKeyDown(KeyCode.Alpha2) && !loadingAttack)
-			{
-				SetAttack(2);
-			}
-
-			// I check the stamina every frame since it is possible that it is = 0 when I am not attacking (thanks asynchronous processes)
-			// Not that good, but I don't have better ways to manage it
-			if (sphereStamina <= 0)
-			{
-				if (!increasingStamina)
+				if (Input.GetButtonDown("Fire2") && !loadingAttack)
 				{
-					increaseStamina = true;
-					_ = RecoverStamina();
+					SpawnMagneticShield();
+				}
+
+				// Selecting a different attack
+				if ((Input.GetAxis("Mouse ScrollWheel") > 0 || Input.GetKeyDown(increaseAttackController)) &&
+				    !loadingAttack)
+				{
+					ChangeAttack(1);
+				}
+				else if ((Input.GetAxis("Mouse ScrollWheel") < 0 || Input.GetKeyDown(decreaseAttackController)) &&
+				         !loadingAttack)
+				{
+					ChangeAttack(-1);
+				}
+
+				if (Input.GetKeyDown(KeyCode.Alpha1) && !loadingAttack)
+				{
+					SetAttack(1);
+				}
+
+				if (Input.GetKeyDown(KeyCode.Alpha2) && !loadingAttack)
+				{
+					SetAttack(2);
+				}
+
+				// I check the stamina every frame since it is possible that it is = 0 when I am not attacking (thanks asynchronous processes)
+				// Not that good, but I don't have better ways to manage it
+				if (sphereStamina <= 0)
+				{
+					if (!increasingStamina)
+					{
+						increaseStamina = true;
+						_ = RecoverStamina();
+					}
 				}
 			}
 		}
