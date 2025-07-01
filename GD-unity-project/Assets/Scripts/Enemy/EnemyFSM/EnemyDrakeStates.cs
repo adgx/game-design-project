@@ -81,7 +81,7 @@ public class DrakeWonderState : State
 
     public override void Tik()
     {
-        _drake.WonderCloseAttackPlayer();
+        _drake.WonderAttackPlayer();
     }
 
     public override void Exit()

@@ -9,7 +9,7 @@ namespace Animations
         // Audio management
         private EventInstance maynardFootsteps;
         private EventInstance maynardIdle;
-    
+        private Maynard _maynard;
         private bool isRunning = false; // TODO: to be removed once we have Maynard's FSM
         private bool isIdle = false; // TODO: to be removed once we have Maynard's FSM
     
@@ -166,13 +166,17 @@ namespace Animations
             ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardDieThud, transform.position);
         }
+        public void DeathMaynard()
+        {
+            _maynard.DestroyEnemy();
+        }
     
         // Audio management
         private void Start()
         {
             maynardFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.MaynardFootsteps);
             maynardFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-        
+
             maynardIdle = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.MaynardIdle);
             maynardIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
         }

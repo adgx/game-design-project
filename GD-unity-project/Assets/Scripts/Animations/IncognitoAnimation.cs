@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class IncognitoAnimation : MonoBehaviour
+public class IncognitoAnimation
 {
     private Animator _incognitoAC;
 
@@ -16,10 +16,6 @@ public class IncognitoAnimation : MonoBehaviour
     public IncognitoAnimation(Animator incognitoAC)
     {
         _incognitoAC = incognitoAC;
-    }
-
-    void Awake()
-    {
         _deathTriggerHash = Animator.StringToHash("Death");
         _runTriggerHash = Animator.StringToHash("Run");
         _shortSpitTriggerHash = Animator.StringToHash("ShortSpit");
@@ -28,6 +24,14 @@ public class IncognitoAnimation : MonoBehaviour
         _dirZVarHash = Animator.StringToHash("DirZ");
         _hitTriggerHash = Animator.StringToHash("Hit");
         _idleTriggerHash = Animator.StringToHash("Idle");
+    }
+
+    public void lunchIdleAnim()
+    { 
+        if (this != null && _incognitoAC != null && _incognitoAC.gameObject != null && _incognitoAC.isActiveAndEnabled)
+        {
+            _incognitoAC.SetTrigger(_idleTriggerHash);
+        }
     }
 
     public void lunchRunAnim()
@@ -87,12 +91,28 @@ public class IncognitoAnimation : MonoBehaviour
     }
 
     public void lunchFallAnim()
-    { 
+    {
         if (this != null && _incognitoAC != null && _incognitoAC.gameObject != null && _incognitoAC.isActiveAndEnabled)
         {
             _incognitoAC.SetInteger(_dirXVarHash, 0);
             _incognitoAC.SetInteger(_dirZVarHash, 0);
             _incognitoAC.SetTrigger(_hitTriggerHash);
+        }
+    }
+
+    public void lunchShortSpitAnim()
+    {
+        if (this != null && _incognitoAC != null && _incognitoAC.gameObject != null && _incognitoAC.isActiveAndEnabled)
+        {
+            _incognitoAC.SetTrigger(_shortSpitTriggerHash);
+        }
+    }
+    
+    public void lunchLongSpitAnim()
+    { 
+        if (this != null && _incognitoAC != null && _incognitoAC.gameObject != null && _incognitoAC.isActiveAndEnabled)
+        {
+            _incognitoAC.SetTrigger(_longSpitTriggerHash);
         }
     }
 }

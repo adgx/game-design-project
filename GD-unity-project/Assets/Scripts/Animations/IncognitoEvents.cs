@@ -9,7 +9,7 @@ namespace Animations
         // Audio management
         private EventInstance incognitoFootsteps;
         private EventInstance incognitoIdle;
-
+        private Incognito _incognito; 
         private bool isRunning = false; // TODO: to be removed once we have Incognito's FSM
         private bool isIdle = false; // TODO: to be removed once we have Incognito's FSM
 
@@ -173,6 +173,11 @@ namespace Animations
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoDieThud2, transform.position);
+        }
+
+        public void DeathIncognito()
+        {
+            _incognito.DestroyEnemy();
         }
 
         // Audio management

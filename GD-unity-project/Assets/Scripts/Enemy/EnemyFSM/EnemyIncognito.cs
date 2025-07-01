@@ -6,6 +6,7 @@ using UnityEngine.AI;
 
 public class Incognito : MonoBehaviour, IEnemy
 {
+    public bool forceInit = true;
     [SerializeField] private NavMeshAgent _agent;
     [SerializeField] private LayerMask _whatIsGround, _whatIsPlayer;
 
@@ -19,6 +20,12 @@ public class Incognito : MonoBehaviour, IEnemy
     private Material[] _materials;
     //FSM
     private FiniteStateMachine<Incognito> _stateMachine;
+
+    //animation stuff
+    //AnimationManager for Drake
+    [HideInInspector]
+    public IncognitoAnimation anim;
+
     //Patrolling
     private Vector3 _walkPoint;
     private bool _walkPointSet;
@@ -35,8 +42,19 @@ public class Incognito : MonoBehaviour, IEnemy
 
     private RoomManager.RoomManager _roomManager;
 
+    //states
+    private State _deathS;
+
     void Awake()
     {
+        Animator incognitoAC = GetComponent<Animator>();
+
+        if (incognitoAC == null)
+        {
+            Debug.LogError($"{ToString()}: Animator controller not found");
+        }
+
+        anim = new IncognitoAnimation(incognitoAC);
         _playerTransform = GameObject.Find("Player").transform;
         _agent = GetComponent<NavMeshAgent>();
         //we suppose that all enemy have an one SkinnedMeshRenderer 
@@ -57,22 +75,34 @@ public class Incognito : MonoBehaviour, IEnemy
 
     void Start()
     {
-        _walkPointRange = 10;
+        if (forceInit)
+        {
+            _agent.speed = 8f;
+            _health = 100f;
+            _walkPointRange = 12f;
+            _timeBetweenAttacks = 2.5f;
+            _sightRange = 12f;
+            _attackRange = 8f;
+            _distanceAttackDamageMultiplier = 1.2f;
+            _closeAttackDamageMultiplier = 1.2f;
+        } 
         //FMS base
         _stateMachine = new FiniteStateMachine<Incognito>(this);
 
         //Define states
         State patrolS = new IncognitoPatrolState("Patrol", this);
         State chaseS = new IncognitoChaseState("Chase", this);
-        State attackS = new IncognitoAttackState("Attack", this);
-
+        State wonderS = new IncognitoWonderState("Wonder", this);
+        State shortSpitAttackS = new IncognitoShortSpitAttackState("ShortSpitAttack", this);
+        _deathS = new IncognitoDeathState("Death", this);
         //Transition
         _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(chaseS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
-        _stateMachine.AddTransition(chaseS, attackS, () => _playerInSightRange && _playerInAttackRange);
-        _stateMachine.AddTransition(attackS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
-        _stateMachine.AddTransition(attackS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
-
+        _stateMachine.AddTransition(chaseS, wonderS, () => _playerInSightRange && _playerInAttackRange);
+        _stateMachine.AddTransition(wonderS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
+        _stateMachine.AddTransition(wonderS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
+        _stateMachine.AddTransition(shortSpitAttackS, wonderS, () => _alreadyAttacked);
+        _stateMachine.AddTransition(wonderS, shortSpitAttackS, () => !_alreadyAttacked);
         //Set Initial state
         _stateMachine.SetState(patrolS);
     }
@@ -125,7 +155,12 @@ public class Incognito : MonoBehaviour, IEnemy
         StartCoroutine(ChangeColor(Color.red, 0.8f, 0));
 
         if (_health <= 0)
-            Invoke(nameof(DestroyEnemy), 0.05f);
+        {
+            //Invoke(nameof(DestroyEnemy), 0.05f);
+            _stateMachine.SetState(_deathS);
+        }
+
+        
     }
 
     void SearchWalkPoint()
@@ -164,16 +199,17 @@ public class Incognito : MonoBehaviour, IEnemy
     {
         if (_agent == null || !_agent.isOnNavMesh) return;
 
-        if (_roomManager.IsNavMeshBaked)
+        if (forceInit || _roomManager.IsNavMeshBaked)
         {
             _agent.SetDestination(_playerTransform.position);
         }
     }
 
+/*
     public void AttackPlayer()
     {
         if (_agent == null || !_agent.isOnNavMesh) return;
-        
+
         //Make sure enemy doesn't move
         _agent.SetDestination(transform.position);
 
@@ -194,6 +230,32 @@ public class Incognito : MonoBehaviour, IEnemy
             _alreadyAttacked = true;
             Invoke(nameof(ResetAttack), _timeBetweenAttacks);
         }
+    }
+*/
+    public void WonderAttackPlayer()
+    {
+        if (_agent == null || !_agent.isOnNavMesh) return;
+        
+        //Make sure enemy doesn't move
+        _agent.SetDestination(transform.position);
+
+        transform.LookAt(new Vector3(_playerTransform.position.x, transform.position.y, _playerTransform.position.z));
+    }
+
+    public void ShortSpitAttackPlayer()
+    {
+        //Attack code here
+        //GameObject bullet = Instantiate(_bulletPrefab, transform.position, Quaternion.identity);
+        //bullet.tag = "EnemyProjectile";
+        //bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
+        
+        //Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
+        //rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
+        //rbBullet.AddForce(transform.up * 2f, ForceMode.Impulse);
+        //End of attack code
+
+        _alreadyAttacked = true;
+        Invoke(nameof(ResetAttack), _timeBetweenAttacks);
     }
 
     void ResetAttack()
@@ -226,7 +288,7 @@ public class Incognito : MonoBehaviour, IEnemy
             mat.color = originColor;
     }
     
-    private void DestroyEnemy()
+    public void DestroyEnemy()
     {
         Destroy(gameObject);
     }

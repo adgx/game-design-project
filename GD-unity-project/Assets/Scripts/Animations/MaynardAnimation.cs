@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class MaynardAnimation : MonoBehaviour
+public class MaynardAnimation
 {
     private Animator _maynardAC;
 
@@ -18,10 +18,6 @@ public class MaynardAnimation : MonoBehaviour
     public MaynardAnimation(Animator maynardAC)
     {
         _maynardAC = maynardAC;
-    }
-
-    void Awake()
-    {
         _deathTriggerHash = Animator.StringToHash("Death");
         _runTriggerHash = Animator.StringToHash("Run");
         _attackTriggerHash = Animator.StringToHash("Attack");
@@ -31,6 +27,14 @@ public class MaynardAnimation : MonoBehaviour
         _dirZVarHash = Animator.StringToHash("DirZ");
         _hitTriggerHash = Animator.StringToHash("Hit");
         _idleTriggerHash = Animator.StringToHash("Idle");
+    }
+
+    public void lunchIdleAnim()
+    { 
+        if (this != null && _maynardAC != null && _maynardAC.gameObject != null && _maynardAC.isActiveAndEnabled)
+        {
+            _maynardAC.SetTrigger(_idleTriggerHash);
+        }
     }
 
     public void lunchRunAnim()

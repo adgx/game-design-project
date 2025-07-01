@@ -7,6 +7,7 @@ namespace Enemy.EnemyData.EnemyMovement
 {
     public class EnemyDrakeMovement : MonoBehaviour, IEnemy
     {
+        
         [SerializeField] private NavMeshAgent agent;
         [SerializeField] private LayerMask whatIsGround, whatIsPlayer;
         

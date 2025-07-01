@@ -6,12 +6,19 @@ using UnityEngine.AI;
 
 public class Maynard : MonoBehaviour, IEnemy
 {
+    public bool forceInit = true;
     [SerializeField] private NavMeshAgent _agent;
     [SerializeField] private LayerMask _whatIsGround, _whatIsPlayer;
 
     //FSM
     private FiniteStateMachine<Maynard> _stateMachine;
     // This variable increases (> 1) or reduces (< 1) the damage taken by this enemy type when attacked
+
+    //animation stuff
+    //AnimationManager for Drake
+    [HideInInspector]
+    public MaynardAnimation anim;
+
     private float _distanceAttackDamageMultiplier;
     private float _closeAttackDamageMultiplier;
 
@@ -34,14 +41,24 @@ public class Maynard : MonoBehaviour, IEnemy
     private bool _alreadyAttacked;
     private GameObject _bulletPrefab;
 
-    //States
+    //checks
     private float _sightRange, _remoteAttackRange, _closeAttackRange;
     private bool _playerInSightRange, _playerInRemoteAttackRange, _playerInCloseAttackRange;
+    //states
+    private State _deathS;
 
     private RoomManager.RoomManager _roomManager;
 
     void Awake()
     {
+        Animator maynardAC = GetComponent<Animator>();
+
+        if (maynardAC == null)
+        {
+            Debug.LogError($"{ToString()}: Animator controller not found");
+        }
+
+        anim = new MaynardAnimation(maynardAC);
         _playerTransform = GameObject.Find("Player").transform;
         _agent = GetComponent<NavMeshAgent>();
         //we suppose that all enemy have an one SkinnedMeshRenderer 
@@ -62,21 +79,42 @@ public class Maynard : MonoBehaviour, IEnemy
 
     void Start()
     {
+        if (forceInit)
+        {
+            _agent.speed = 8f;
+            _health = 100f;
+            _walkPointRange = 12f;
+            _timeBetweenAttacks = 2f;
+            _sightRange = 12f;
+            _distanceAttackDamageMultiplier = 1f;
+            _closeAttackDamageMultiplier = 1f;
+            _remoteAttackRange = 7f;
+            _closeAttackRange = 1;
+            _closeAttackDamage = 10f;
+            _distanceAttackDamage = 10f;
+        } 
+
         //FMS base
         _stateMachine = new FiniteStateMachine<Maynard>(this);
 
         //Define states
         State patrolS = new MaynardPatrolState("Patrol", this);
         State chaseS = new MaynardChaseState("Chase", this);
-        State attackS = new MaynardAttackState("Attack", this);
+        State wonderS = new MaynardWonderState("Wonder", this);
+        State screamAttackS = new MaynardScreamAttackState("ScreamAttack", this);
+        State closeAttackS = new MaynardCloseAttackState("CloseAttack", this);
+        _deathS = new MaynardDeathState("Death", this);
 
         //Transition
         _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && !_playerInCloseAttackRange);
         _stateMachine.AddTransition(chaseS, patrolS, () => !_playerInSightRange && !_playerInCloseAttackRange);
-        _stateMachine.AddTransition(chaseS, attackS, () =>  _playerInCloseAttackRange && _playerInSightRange);
-        _stateMachine.AddTransition(attackS, chaseS, () => _playerInSightRange && !_playerInCloseAttackRange);
-        _stateMachine.AddTransition(attackS, patrolS, () => !_playerInSightRange && !_playerInCloseAttackRange);
-
+        _stateMachine.AddTransition(chaseS, wonderS, () =>  (_playerInCloseAttackRange && _playerInSightRange) || (_playerInRemoteAttackRange && _playerInSightRange));
+        _stateMachine.AddTransition(wonderS, chaseS, () => _playerInSightRange && !_playerInCloseAttackRange);
+        _stateMachine.AddTransition(wonderS, patrolS, () => !_playerInSightRange && !_playerInCloseAttackRange);
+        _stateMachine.AddTransition(wonderS, closeAttackS, () => _playerInCloseAttackRange && _playerInSightRange && !_alreadyAttacked);
+        _stateMachine.AddTransition(closeAttackS, wonderS, () => _alreadyAttacked);
+        _stateMachine.AddTransition(wonderS, screamAttackS, () => _playerInRemoteAttackRange && _playerInSightRange && !_alreadyAttacked);
+        _stateMachine.AddTransition(screamAttackS, wonderS, () => _alreadyAttacked);
         //Set Initial state
         _stateMachine.SetState(patrolS);
     }
@@ -146,7 +184,10 @@ public class Maynard : MonoBehaviour, IEnemy
         StartCoroutine(ChangeColor(Color.red, 0.8f, 0));
 
         if (_health <= 0)
-            Invoke(nameof(DestroyEnemy), 0.05f);
+        {
+            //Invoke(nameof(DestroyEnemy), 0.05f);
+            _stateMachine.SetState(_deathS);
+        }
     }
 
     private IEnumerator ChangeColor(Color dmgColor, float duration, float delay)
@@ -174,7 +215,7 @@ public class Maynard : MonoBehaviour, IEnemy
             mat.color = originColor;
     }
 
-    private void DestroyEnemy()
+    public void DestroyEnemy()
     {
         Destroy(gameObject);
     }
@@ -182,7 +223,6 @@ public class Maynard : MonoBehaviour, IEnemy
     private void SearchWalkPoint()
     {
         //Calculate random point in range
-        _walkPointRange = 10;
         float randomZ = Random.Range(-_walkPointRange, _walkPointRange);
         float randomX = Random.Range(-_walkPointRange, _walkPointRange);
 
@@ -216,7 +256,7 @@ public class Maynard : MonoBehaviour, IEnemy
     {
         if (_agent == null || !_agent.isOnNavMesh) return;
 
-        if (_roomManager.IsNavMeshBaked)
+        if (forceInit || _roomManager.IsNavMeshBaked)
         {
             _agent.SetDestination(_playerTransform.position);
         }
@@ -227,57 +267,49 @@ public class Maynard : MonoBehaviour, IEnemy
         _alreadyAttacked = false;
     }
 
-    public void RemoteAttackPlayer()
+    public void WonderAttackPlayer()
     {
-        if (_agent == null || !_agent.isOnNavMesh) return;
+        if (_agent == null || !_agent.isOnNavMesh)
+        {
+            Debug.LogError($"{this} Error with _agent: {_agent}");
+            return;
+        }
 
-        //Make sure enemy doesn't move
+        //Make sure enemy doesn't move(Maybe is better set the isStopped property)
         _agent.SetDestination(transform.position);
 
         transform.LookAt(new Vector3(_playerTransform.position.x, transform.position.y, _playerTransform.position.z));
+    }
 
-        if (!_alreadyAttacked)
-        {
-            //Attack code here
-            GameObject bullet = Instantiate(_bulletPrefab, transform.position, Quaternion.identity);
-            bullet.tag = "EnemyProjectile";
-            bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
+    public void ScreamAttackPlayer()
+    {     
+        //Attack code here
+        //GameObject bullet = Instantiate(_bulletPrefab, transform.position, Quaternion.identity);
+        //bullet.tag = "EnemyProjectile";
+        //bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
+        //Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
+        //rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
+        //rbBullet.AddForce(transform.up * 2f, ForceMode.Impulse);
+        //End of attack code
 
-            Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
-            rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
-            rbBullet.AddForce(transform.up * 2f, ForceMode.Impulse);
-            //End of attack code
-
-            _alreadyAttacked = true;
-            Invoke(nameof(ResetAttack), _timeBetweenAttacks);
-        }
+        _alreadyAttacked = true;
+        Invoke(nameof(ResetAttack), _timeBetweenAttacks);
     }
     
     public void CloseAttackPlayer()
     {
-        if (_agent == null || !_agent.isOnNavMesh) return;
+        //Attack code here
+        //GameObject bullet = Instantiate(_bulletPrefab, transform.position, Quaternion.identity);
+        //bullet.transform.GetComponent<Renderer>().material.color = Color.red;
+        //bullet.tag = "EnemyProjectile";
+        //bullet.GetComponent<GetCollisions>().enemyBulletDamage = _closeAttackDamage;    
+        //Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
+        //rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
+        //rbBullet.AddForce(transform.up * 2f, ForceMode.Impulse);
+        //End of attack code
 
-        //Make sure enemy doesn't move
-        _agent.SetDestination(transform.position);
-
-        transform.LookAt(new Vector3(_playerTransform.position.x, transform.position.y, _playerTransform.position.z));
-
-        if (!_alreadyAttacked)
-        {
-            //Attack code here
-            GameObject bullet = Instantiate(_bulletPrefab, transform.position, Quaternion.identity);
-            bullet.transform.GetComponent<Renderer>().material.color = Color.red;
-            bullet.tag = "EnemyProjectile";
-            bullet.GetComponent<GetCollisions>().enemyBulletDamage = _closeAttackDamage;
-                
-            Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
-            rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
-            rbBullet.AddForce(transform.up * 2f, ForceMode.Impulse);
-            //End of attack code
-
-            _alreadyAttacked = true;
-            Invoke(nameof(ResetAttack), _timeBetweenAttacks);
-        }
+        _alreadyAttacked = true;
+        Invoke(nameof(ResetAttack), _timeBetweenAttacks);
     }
 
 }

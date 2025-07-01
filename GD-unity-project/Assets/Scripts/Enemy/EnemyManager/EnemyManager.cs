@@ -50,6 +50,8 @@ namespace Enemy.EnemyManager
 
         private void Start()
         {
+
+
             _roomManager = RoomManager.RoomManager.Instance;
 
             if (_roomManager != null)

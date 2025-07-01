@@ -9,6 +9,7 @@ using System.Collections.Generic;
 
 public class Drake : MonoBehaviour, IEnemy
 {
+    public bool forceInit = true;
     [SerializeField] private NavMeshAgent _agent;
     [SerializeField] private LayerMask whatIsGround, whatIsPlayer;
     //FSM
@@ -95,6 +96,7 @@ public class Drake : MonoBehaviour, IEnemy
 
         anim = new DrakeAnimation(drakeAC);
         _playerTransform = GameObject.Find("Player").transform;
+        Debug.Log($"{_playerTransform.position}");
         _agent = GetComponent<NavMeshAgent>();
         //we suppose that all enemy have an one SkinnedMeshRenderer 
         SkinnedMeshRenderer smr = GetComponentInChildren<SkinnedMeshRenderer>();
@@ -114,16 +116,28 @@ public class Drake : MonoBehaviour, IEnemy
 
     void Start()
     {
-        _walkPointRange = 10;
+        if (forceInit)
+        {
+            _agent.speed = 8f;
+            _health = 100f;
+            _walkPointRange = 12f;
+            _timeBetweenAttacks = 2.5f;
+            _sightRange = 12f;
+            _attackRange = 1f;
+            _distanceAttackDamageMultiplier = 0f;
+            _closeAttackDamageMultiplier = 0.8f;
+            _closeAttackDamage = 10;
+        } 
+        
         //FMS base
         _stateMachine = new FiniteStateMachine<Drake>(this);
 
         //Define states
         State patrolS = new DrakePatrolState("Patrol", this);
         State chaseS = new DrakeChaseState("Chase", this);
-        State wonderS = new DrakeSwipingAttackState("Swiping", this);
-        State swipingS = new DrakeSwipingAttackState("Attack", this);
-        _deathS = new DrakeChaseState("Death", this);
+        State wonderS = new DrakeWonderState("Wonder", this);
+        State swipingS = new DrakeSwipingAttackState("Swiping", this);
+        _deathS = new DrakeDeathState("Death", this);
 
         //Transition
         _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
@@ -193,7 +207,7 @@ public class Drake : MonoBehaviour, IEnemy
         //destination
         _walkPoint = new Vector3(transform.position.x + randomX, transform.position.y,
             transform.position.z + randomZ);
-        Debug.Log($"{_walkPoint}");
+        
         if (Physics.Raycast(_walkPoint, -transform.up, 2f, whatIsGround))
         {
             _walkPointSet = true;
@@ -230,7 +244,7 @@ public class Drake : MonoBehaviour, IEnemy
             return;
         }
 
-        if (_roomManager.IsNavMeshBaked)
+        if (forceInit || _roomManager.IsNavMeshBaked)
         {
             _agent.SetDestination(_playerTransform.position);
         }
@@ -273,7 +287,7 @@ public class Drake : MonoBehaviour, IEnemy
     }
 */
 
-    public void WonderCloseAttackPlayer()
+    public void WonderAttackPlayer()
     {
         if (_agent == null || !_agent.isOnNavMesh)
         {
@@ -305,10 +319,12 @@ public class Drake : MonoBehaviour, IEnemy
             Invoke(nameof(ResetAttack), _timeBetweenAttacks);
         }
         
-        void ResetAttack()
-        {
-            _alreadyAttacked = false;
-        }
+        
+    }
+
+    void ResetAttack()
+    {
+        _alreadyAttacked = false;
     } 
 
     public void DestroyEnemy()

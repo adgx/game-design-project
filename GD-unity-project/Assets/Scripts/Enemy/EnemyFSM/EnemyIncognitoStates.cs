@@ -1,4 +1,4 @@
-using Unity.VisualScripting;
+
 
 public class IncognitoPatrolState : State
 {
@@ -11,6 +11,7 @@ public class IncognitoPatrolState : State
 
     public override void Enter()
     {
+        _incognito.anim.lunchRunAnim();
     }
 
     public override void Tik()
@@ -34,33 +35,80 @@ public class IncognitoChaseState : State
     {
     }
 
-    public override void Exit()
-    {
-    }
-
     public override void Tik()
     {
         _incognito.ChasePlayer();
     }
+
+    public override void Exit()
+    {
+    }
 }
 
-public class IncognitoAttackState : State
+public class IncognitoWonderState : State
 {
     private Incognito _incognito;
-    public IncognitoAttackState(string name, Incognito incognito) : base(name)
+    public IncognitoWonderState(string name, Incognito incognito) : base(name)
     {
         _incognito = incognito;
     }
     public override void Enter()
     {
+        _incognito.anim.lunchIdleAnim();
+    }
+
+    public override void Tik()
+    {
+        _incognito.WonderAttackPlayer();
+    }
+
+    public override void Exit()
+    {
+
+    }
+}
+
+public class IncognitoShortSpitAttackState : State
+{
+    private Incognito _incognito;
+    public IncognitoShortSpitAttackState(string name, Incognito incognito) : base(name)
+    {
+        _incognito = incognito;
+    }
+    public override void Enter()
+    {
+        _incognito.anim.lunchShortSpitAnim();
+    }
+
+    public override void Tik()
+    {
+        _incognito.ShortSpitAttackPlayer();
     }
 
     public override void Exit()
     {
     }
 
+
+}
+
+public class IncognitoDeathState : State
+{
+    private Incognito _incognito;
+    public IncognitoDeathState(string name, Incognito incognito) : base(name)
+    {
+        _incognito = incognito;
+    }
+    public override void Enter()
+    {
+        _incognito.anim.lunchDeathAnim();
+    }
+
     public override void Tik()
     {
-        _incognito.AttackPlayer();
+    }
+
+    public override void Exit()
+    {
     }
 }
