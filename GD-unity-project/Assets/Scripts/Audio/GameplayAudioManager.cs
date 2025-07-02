@@ -64,12 +64,12 @@ public class GamePlayAudioManager : MonoBehaviour
         musicEventInstance.start();
     }
 
-    public void SetMusicLoopIteration()
+    public void SetMusicLoopIteration(MusicLoopIteration iteration)
     {
         // Aggiungi un controllo di sicurezza qui per prevenire errori futuri.
         if (musicEventInstance.isValid())
         {
-            musicEventInstance.setParameterByName("loopIteration", (float)GameStatus.loopIteration);
+            musicEventInstance.setParameterByName("loopIteration", (float)iteration);
         }
         else
         {

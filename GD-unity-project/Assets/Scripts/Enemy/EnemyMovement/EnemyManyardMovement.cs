@@ -135,7 +135,7 @@ namespace Enemy.EnemyData.EnemyMovement
             {
                 //Attack code here
                 GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-                bullet.tag = "EnemyAttack";
+                bullet.tag = "EnemyProjectile";
                 bullet.GetComponent<GetCollisions>().enemyBulletDamage = distanceAttackDamage;
 
                 Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
@@ -162,7 +162,7 @@ namespace Enemy.EnemyData.EnemyMovement
                 //Attack code here
                 GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
                 bullet.transform.GetComponent<Renderer>().material.color = Color.red;
-                bullet.tag = "EnemyAttack";
+                bullet.tag = "EnemyProjectile";
                 bullet.GetComponent<GetCollisions>().enemyBulletDamage = closeAttackDamage;
                     
                 Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
@@ -179,12 +179,10 @@ namespace Enemy.EnemyData.EnemyMovement
         {
             health -= damage * (attackType == "c" ? closeAttackDamageMultiplier : distanceAttackDamageMultiplier);
 
-            if((attackType == "c" && closeAttackDamageMultiplier != 0) || (attackType == "d" && distanceAttackDamageMultiplier != 0)) {
-                StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
+            StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
 
-                if(health <= 0)
-                    Invoke(nameof(DestroyEnemy), 0.05f);
-            }
+            if (health <= 0)
+                Invoke(nameof(DestroyEnemy), 0.05f);
         }
 
         // Change enemy color when hit and change it back to normal after "duration" seconds

@@ -7,7 +7,6 @@ using UnityEngine;
 // Audio management
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using Enemy.EnemyManager;
 
 namespace Utils {
 	public class GameTimer : MonoBehaviour {
@@ -23,28 +22,18 @@ namespace Utils {
 		private bool isRunning;
 
 		public RoomManager.RoomManager roomManager;
-		[SerializeField] private EnemyManager enemyManager;
+
+		// Audio management
+		private MusicLoopIteration iteration = MusicLoopIteration.FIRST_ITERATION;
 
 		private GameObject player;
-
-		private Player playerScript;
-		private PlayerShoot playerShoot;
 
 		[SerializeField] private string respawnSceneName = "RespawnScene";
 		private bool sceneIsLoading = false;
 
 		private IEnumerator PlayWakeUpAfterDelay(float delay) {
-			playerScript.FreezeMovement(true);
-			playerShoot.DisableAttacks(true);
-			
-			AnimationManager.Instance.StandUp();
-			
 			yield return new WaitForSeconds(delay);
 			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerWakeUp, player.transform.position);
-			
-			yield return new WaitForSeconds(6);
-			playerScript.FreezeMovement(false);
-			playerShoot.DisableAttacks(false);
 		}
 
 		private void OnDestroy() {
@@ -68,17 +57,8 @@ namespace Utils {
 		private void Start() {
 			// Audio management
 			player = GameObject.FindWithTag("Player");
-			playerScript = player.GetComponent<Player>();
-			playerShoot = player.GetComponent<PlayerShoot>();
-			
-			StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
 
 			GameStatus.gameEnded = false;
-			GameStatus.gamePaused = false;
-			GameStatus.loopIteration = GameStatus.LoopIteration.FIRST_ITERATION;
-
-			roomManager.SetRoomsDifficulty();
-			enemyManager.SetEnemyDifficulty();
 		}
 
 		private void Update() {
@@ -91,31 +71,30 @@ namespace Utils {
 				currentTime = 0f;
 				isRunning = false;
 
-				if(GameStatus.loopIteration == GameStatus.LoopIteration.THIRD_ITERATION) {
+				if(iteration == MusicLoopIteration.THIRD_ITERATION) {
 					GameStatus.gameEnded = true;
-					FadeManager.Instance.FadeOutIn(() => {
-						StartCoroutine(LoadRespawnSceneAsync());
-					});
+					StartCoroutine(LoadRespawnSceneAsync());
 				}
 				else {
 					// Audio management
 					AmbienceEmitters.Instance.StopAmbientEmitters();
 
-					switch(GameStatus.loopIteration) {
-						case GameStatus.LoopIteration.FIRST_ITERATION:
-							GameStatus.loopIteration = GameStatus.LoopIteration.SECOND_ITERATION;
+					switch(iteration) {
+						case MusicLoopIteration.FIRST_ITERATION:
+							iteration = MusicLoopIteration.SECOND_ITERATION;
 							break;
-						case GameStatus.LoopIteration.SECOND_ITERATION:
-							GameStatus.loopIteration = GameStatus.LoopIteration.THIRD_ITERATION;
+						case MusicLoopIteration.SECOND_ITERATION:
+							iteration = MusicLoopIteration.THIRD_ITERATION;
 							break;
-						case GameStatus.LoopIteration.THIRD_ITERATION:
-							GameStatus.loopIteration = GameStatus.LoopIteration.FIRST_ITERATION;
+						case MusicLoopIteration.THIRD_ITERATION:
+							iteration = MusicLoopIteration.FIRST_ITERATION;
 							break;
 						default:
 							break;
 					}
 
-					GamePlayAudioManager.instance.SetMusicLoopIteration();
+					GamePlayAudioManager.instance.SetMusicLoopIteration(iteration);
+					StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
 
 					ResetRun();
 				}
@@ -136,7 +115,7 @@ namespace Utils {
 
 			// Audio management
 			AmbienceEmitters.Instance.InitializeAmbientEmitters();
-			GamePlayAudioManager.instance.SetMusicLoopIteration();
+			GamePlayAudioManager.instance.SetMusicLoopIteration(iteration);
 		}
 		
 		private void UpdateTimerUI() {
@@ -168,16 +147,9 @@ namespace Utils {
 
 			FadeManager.Instance.FadeOutIn(() => {
 				roomManager.RegenerateRooms();
-
-				roomManager.SetRoomsDifficulty();
-				enemyManager.SetEnemyDifficulty();
-				enemyManager.DestroyAllEnemies();
-
 				currentTime = TimeLimit;
 				timerOutlineImage.sprite = timerOutlineSpriteNormal;
 				StopCoroutine(Pulse());
-				
-				StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
 				isRunning = true;
 			});
 		}
