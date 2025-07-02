@@ -398,8 +398,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LoadingScreenCanvas: {fileID: 235949649}
   LoadingScreen: {fileID: 205731131}
-  fadeIn: 0
-  fadeOut: 0
 --- !u!114 &347109502
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -949,10 +947,6 @@ PrefabInstance:
     - target: {fileID: 5803455960034491839, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.GameObject, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 6144051657355011044, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -0.24716187
       objectReference: {fileID: 0}
     - target: {fileID: 6296776572730288273, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
@@ -1534,8 +1528,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 678183996}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.154981, y: -0.17148444, z: 0.027327338, w: 0.9725365}
-  m_LocalPosition: {x: 3.1307416, y: 3.7170258, z: -1.4856755}
+  m_LocalRotation: {x: 0.15498191, y: -0.1714842, z: 0.02732746, w: 0.9725364}
+  m_LocalPosition: {x: 0.5407417, y: 1.5170258, z: -1.4856755}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2032,6 +2026,7 @@ MonoBehaviour:
   rotateSphere: {fileID: 1016344254}
   rotatingSphere: {fileID: 1016344253}
   respawnSceneName: RespawnScene
+  fadeManagerLoadingScreen: {fileID: 347109501}
 --- !u!114 &972097728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2787,11 +2782,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7942380145102555645, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.59
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7942380145102555645, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7942380145102555645, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3656,8 +3651,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2143297035}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.15498103, y: -0.17148446, z: 0.027327338, w: 0.9725365}
-  m_LocalPosition: {x: 3.1307416, y: 3.7170258, z: -1.4856755}
+  m_LocalRotation: {x: 0.15498191, y: -0.1714842, z: 0.027327463, w: 0.9725364}
+  m_LocalPosition: {x: 0.5407417, y: 1.5170258, z: -1.4856755}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
