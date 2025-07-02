@@ -43,15 +43,15 @@ namespace CollectablePapers
             }
 
             LoadPaperData();
-		}
+        }
 
         private void Start()
         {
             if (_paperTextContainer != null)
                 _paperTextContainer.SetActive(false);
 
-			playerInput = Player.Instance.GetComponent<PlayerInput>();
-		}
+            playerInput = Player.Instance.GetComponent<PlayerInput>();
+        }
 
         /// <summary>
         /// Loads paper message data from a JSON file in the Resources folder.
@@ -81,7 +81,6 @@ namespace CollectablePapers
         /// <summary>
         /// Displays a paper's content on screen and freezes the player.
         /// </summary>
-        /// <param name="paperID">ID of the paper to display.</param>
         /// <param name="paperPosition">World position of the paper (used for sound).</param>
         public void ShowPaper(Vector3 paperPosition)
         {

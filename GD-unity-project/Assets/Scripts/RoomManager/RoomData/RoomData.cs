@@ -1,27 +1,111 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace RoomManager.RoomData
 {
+    /// <summary>
+    /// Holds configuration data for an individual room.
+    /// Used to control spawning, types, and special object chances.
+    /// </summary>
     [CreateAssetMenu(fileName = "RoomData", menuName = "Scriptable Objects/RoomData")]
     public class RoomData : ScriptableObject
     {
+        /// <summary>
+        /// Prefab associated with this room.
+        /// </summary>
+        [Tooltip("Prefab used to instantiate this room.")]
         public GameObject roomPrefab;
 
+        /// <summary>
+        /// Display name of the room.
+        /// </summary>
+        [Tooltip("Name of the room used for identification.")]
         public string roomName;
 
-		public int roomSpawnBudget;
-		public int roomSpawnBudgetLoop1;
+        /// <summary>
+        /// Base spawn budget used for enemy or item placement.
+        /// </summary>
+        [Tooltip("Base budget used to determine what spawns in the room.")]
+        public int roomSpawnBudget;
 
-		public RoomType roomType;
+        /// <summary>
+        /// Spawn budget for loop iteration 1 (used as a base for scaling).
+        /// </summary>
+        [Tooltip("Base spawn budget used during loop 1. Used for scaling difficulty.")]
+        public int roomSpawnBudgetLoop1;
 
-		// Determines the difficulty increase between different interactions
-		[SerializeField] private float difficultyMultiplier = 0.33f;
+        /// <summary>
+        /// Chance (0–1) to spawn a vending machine.
+        /// </summary>
+        [Range(0f, 1f)]
+        [Tooltip("Chance to spawn a vending machine in this room.")]
+        public float vendingMachineSpawnChance;
 
-		// This function sets the parameters of the Room according to the current loop iteration
-		public void setDifficulty() {
-			roomSpawnBudget = roomSpawnBudgetLoop1 + (int)Math.Round(roomSpawnBudget * difficultyMultiplier * (int)GameStatus.loopIteration);
+        /// <summary>
+        /// Internal flag for spawning a vending machine (set at runtime).
+        /// </summary>
+        [HideInInspector]
+        public bool spawnVendingMachine;
+
+        /// <summary>
+        /// Chance (0–1) to spawn an upgrade terminal.
+        /// </summary>
+        [Range(0f, 1f)]
+        [Tooltip("Chance to spawn an upgrade terminal in this room.")]
+        public float upgradeTerminalSpawnChance;
+
+        /// <summary>
+        /// Internal flag for spawning an upgrade terminal (set at runtime).
+        /// </summary>
+        [HideInInspector]
+        public bool spawnUpgradeTerminal;
+
+        /// <summary>
+        /// Chance (0–1) to spawn a collectible paper item.
+        /// </summary>
+        [Range(0f, 1f)]
+        [Tooltip("Chance to spawn a paper item in this room.")]
+        public float paperSpawnChance;
+
+        /// <summary>
+        /// Internal flag for spawning a paper item (set at runtime).
+        /// </summary>
+        [HideInInspector]
+        public bool spawnPaper;
+
+        /// <summary>
+        /// Type/category of the room (e.g. Combat, Treasure, etc).
+        /// </summary>
+        [Tooltip("Classification of the room type.")]
+        public RoomType roomType;
+
+        /// <summary>
+        /// Scales the room's spawn budget based on difficulty and current loop iteration.
+        /// </summary>
+        /// <param name="difficultyMultiplier">Multiplier to scale difficulty (e.g., 1.2 for 20% harder).</param>
+        public void SetDifficulty(float difficultyMultiplier)
+        {
+            roomSpawnBudget = roomSpawnBudgetLoop1 +
+                              (int)Math.Round(roomSpawnBudget * difficultyMultiplier * (int)GameStatus.loopIteration);
+        }
+        
+        public RoomData Clone()
+        {
+            var clone = CreateInstance<RoomData>();
+            
+            clone.roomPrefab = roomPrefab;
+            clone.roomName = roomName;
+            clone.roomSpawnBudget = roomSpawnBudget;
+            clone.roomSpawnBudgetLoop1 = roomSpawnBudgetLoop1;
+            clone.vendingMachineSpawnChance = vendingMachineSpawnChance;
+            clone.spawnVendingMachine = spawnVendingMachine;
+            clone.upgradeTerminalSpawnChance = upgradeTerminalSpawnChance;
+            clone.spawnUpgradeTerminal = spawnUpgradeTerminal;
+            clone.paperSpawnChance = paperSpawnChance;
+            clone.spawnPaper = spawnPaper;
+            clone.roomType = roomType;
+
+            return clone;
         }
     }
 }
