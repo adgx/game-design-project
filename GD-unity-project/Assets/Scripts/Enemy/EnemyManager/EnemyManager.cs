@@ -29,6 +29,8 @@ namespace Enemy.EnemyManager
 		// List with all the indexes of the rooms where enemies have already spawned
 		private List<Vector3Int> roomsEnemiesSpawnedIndexes = new List<Vector3Int>();
 
+        private List<GameObject> spawnedEnemies = new List<GameObject>();
+
         private void Awake()
         {
             if (Instance == null)
@@ -98,7 +100,7 @@ namespace Enemy.EnemyManager
                     .OrderBy(enemyData => enemyData.spawnCost)
                     .ToList();
 
-                if (affordableEnemies.Count == 0) break;
+				if (affordableEnemies.Count == 0) break;
 
                 EnemyData.EnemyData enemyToSpawnData = (enemiesSpawnedCount < _minEnemiesPerRoom)
                     ? affordableEnemies.FirstOrDefault()
@@ -115,6 +117,7 @@ namespace Enemy.EnemyManager
                 if (enemyInstance.GetComponent<IEnemy>() is { } enemyScript)
                 {
                     enemyScript.Initialize(enemyToSpawnData, _roomManager);
+                    spawnedEnemies.Add(enemyInstance);
                 }
                 else
                 {
@@ -132,6 +135,21 @@ namespace Enemy.EnemyManager
 			if(!roomsEnemiesSpawnedIndexes.Contains(newRoomIndex)) {
 				roomsEnemiesSpawnedIndexes.Add(newRoomIndex);
 			}
+		}
+
+        public void SetEnemyDifficulty() {
+			foreach(EnemyData.EnemyData enemyData in _availableEnemyData) {
+				enemyData.setDifficulty();
+			}
+		}
+
+        public void DestroyAllEnemies() {
+            foreach(GameObject enemy in spawnedEnemies) {
+                Destroy(enemy);
+            }
+
+            spawnedEnemies.Clear();
+			roomsEnemiesSpawnedIndexes = new List<Vector3Int>();
 		}
     }
 }

@@ -11,9 +11,6 @@ using UnityEngine.Assertions;
         [Header("Player Attributes")]
         [Tooltip("Max speed")]
         [SerializeField] private float maxMovementSpeed = 7f;
-
-        [Tooltip("Max rotation speed")]
-        [SerializeField] private float maxRotationSpeed = 15f;
         
 		[Tooltip("Acceleration and deceleration")]
 		[SerializeField] private float speedChangeRate = 10.0f;
@@ -98,14 +95,12 @@ using UnityEngine.Assertions;
 			float runBlendVal = ORF.Utils.Math.NormalizeValueByRage(0f, maxMovementSpeed, speed);
 			AnimationManager.Instance.SetRunBledingAnim(runBlendVal);
 
-
 			if (runBlendVal == 0f && !AnimationManager.Instance.rickState.Equals(RickStates.Idle))
 			{
 				AnimationManager.Instance.Idle();
 			}
 			else if (runBlendVal != 0f && AnimationManager.Instance.rickState.Equals(RickStates.Idle))
 			{
-
 				AnimationManager.Instance.Run();
 			}
 
@@ -125,39 +120,6 @@ using UnityEngine.Assertions;
 			player.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 		}
 
-		private void RotatePlayer()
-		{
-			currentVerticalSpeed = maxMovementSpeed * input.Vertical * Time.fixedDeltaTime;
-			currentHorizontalSpeed = maxMovementSpeed * input.Horizontal * Time.fixedDeltaTime;
-
-			if (currentVerticalSpeed != 0 || currentHorizontalSpeed != 0)
-			{
-				Quaternion targetRotation;
-				if (currentVerticalSpeed != 0 && currentHorizontalSpeed != 0)
-				{
-					// Managing the player's diagonal movement
-					Vector3 forward = new Vector3(mainCamera.transform.forward.x, 0f, mainCamera.transform.forward.z).normalized;
-					Vector3 right = new Vector3(mainCamera.transform.right.x, 0f, mainCamera.transform.right.z).normalized;
-
-					targetRotation = Quaternion.LookRotation(forward * currentVerticalSpeed + right * currentHorizontalSpeed);
-				}
-				else
-				{
-					if (currentVerticalSpeed != 0)
-					{
-						targetRotation = Quaternion.LookRotation(new Vector3(mainCamera.transform.forward.x * input.Vertical, 0f, mainCamera.transform.forward.z * input.Vertical));
-					}
-					else
-					{
-						targetRotation = Quaternion.LookRotation(new Vector3(mainCamera.transform.right.x * input.Horizontal, 0f, mainCamera.transform.right.z * input.Horizontal));
-					}
-				}
-				Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, maxRotationSpeed * Time.fixedDeltaTime);
-
-				player.MoveRotation(Quaternion.Slerp(player.rotation, targetRotation, Time.deltaTime * maxRotationSpeed));
-			}
-		}
-
 		// Audio management
 		private void Start()
 		{
@@ -174,7 +136,6 @@ using UnityEngine.Assertions;
 			if (!isFrozen)
 			{
 				Move();
-				//RotatePlayer();
 			}
 
 			// Audio management

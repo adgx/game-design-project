@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Enemy.EnemyData;
 using RoomManager.RoomData;
 using Unity.AI.Navigation;
 using Unity.VisualScripting;
@@ -10,6 +12,11 @@ using Random = UnityEngine.Random;
 
 namespace RoomManager
 {
+    [Serializable]
+    public class RoomListWrapper<T> {
+        public List<T> _availableRooms;
+    }
+
     /// <summary>
     /// Manages the procedural generation, layout, and state of all rooms in a dungeon level.
     /// </summary>
@@ -33,10 +40,10 @@ namespace RoomManager
         [Header("Room Generation Settings")]
         [Tooltip("A list of all possible RoomData assets that can be used for random generation.")]
         [SerializeField]
-        private List<RoomData.RoomData> _availableRooms;
+        private RoomListWrapper<RoomData.RoomData>[] _roomsPerLoop;
 
-        [Tooltip("The specific RoomData asset to be used for the very first room.")] [SerializeField]
-        private RoomData.RoomData _initialRoomData;
+        [Tooltip("The specific RoomData asset to be used for the very first room.")] [SerializeReference]
+        private RoomData.RoomData[] _initialRoomData;
 
         [Tooltip("The maximum number of rooms to generate in the dungeon.")] [SerializeField]
         private int _maxRooms = 15;
@@ -147,14 +154,14 @@ namespace RoomManager
                 _roomDataByType.Add(rt, new List<RoomData.RoomData>());
             }
 
-            if (_availableRooms == null || _availableRooms.Count == 0)
+            if(_roomsPerLoop[(int)GameStatus.loopIteration] == null || _roomsPerLoop[(int)GameStatus.loopIteration]._availableRooms.Count == 0)
             {
                 Debug.LogError("RoomManager: 'Available Rooms' list is empty!", this);
                 enabled = false;
                 return;
             }
 
-            foreach (RoomData.RoomData roomData in _availableRooms)
+            foreach (RoomData.RoomData roomData in _roomsPerLoop[(int)GameStatus.loopIteration]._availableRooms)
             {
                 if (!roomData || !roomData.roomPrefab)
                 {
@@ -178,10 +185,10 @@ namespace RoomManager
         /// <summary>
         /// Generates the layout of the dungeon procedurally.
         /// </summary>
-        private void GenerateLayout()
+        async private void GenerateLayout()
         {
             _roomGridData = new RoomData.RoomData[_gridSizeX, GridSizeY, _gridSizeZ];
-            _roomsToProcessQueue.Clear();
+			_roomsToProcessQueue.Clear();
             UnloadCurrentRoom();
             _roomCount = 0;
             _isLayoutGenerated = false;
@@ -197,14 +204,14 @@ namespace RoomManager
                 CacheRoomDataByType();
             }
 
-            if (!_initialRoomData)
+            if (!_initialRoomData[(int)GameStatus.loopIteration])
             {
                 Debug.LogError("Cannot start: Initial Room Data is not assigned in the Inspector!", this);
                 return;
             }
 
             Vector3Int startGridIndex = new Vector3Int(_gridSizeX / 2, 0, _gridSizeZ / 2);
-            _roomGridData[startGridIndex.x, startGridIndex.y, startGridIndex.z] = _initialRoomData;
+            _roomGridData[startGridIndex.x, startGridIndex.y, startGridIndex.z] = _initialRoomData[(int)GameStatus.loopIteration];
             _roomCount++;
             _roomsToProcessQueue.Enqueue(startGridIndex);
 
@@ -224,7 +231,10 @@ namespace RoomManager
             CurrentRoomIndex = startGridIndex;
             Room initialRoom = LoadRoomAt(CurrentRoomIndex);
             SpawnPlayerInRoom(initialRoom);
+            
             IsPlayerSpawned = true;
+
+            await Task.Delay(100);
             fadeManagerLoadingScreen.Hide();
 
             OnRunReady?.Invoke();
@@ -493,5 +503,11 @@ namespace RoomManager
             CurrentRoomIndex = newRoomIndex;
             PlayerEnteredNewRoom?.Invoke(newRoomIndex);
         }
+
+        public void SetRoomsDifficulty() {
+			foreach(RoomData.RoomData roomData in _roomsPerLoop[(int)GameStatus.loopIteration]._availableRooms) {
+				roomData.setDifficulty();
+			}
+		}
     }
 }
