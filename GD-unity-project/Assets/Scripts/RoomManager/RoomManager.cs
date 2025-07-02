@@ -156,7 +156,7 @@ namespace RoomManager
 
             foreach (RoomData.RoomData roomData in _availableRooms)
             {
-                if (!roomData || !roomData.roomPrefab)
+                if (!roomData || !roomData.roomPrefab[(int)GameStatus.loopIteration])
                 {
                     Debug.LogWarning(
                         "Found a null entry or a RoomData with a missing prefab in 'Available Rooms'. Skipping.", this);
@@ -253,7 +253,7 @@ namespace RoomManager
             }
 
             Vector3 worldPosition = GetWorldPositionFromGridIndex(gridIndex);
-            GameObject roomGameObject = Instantiate(roomDataToLoad.roomPrefab, worldPosition, Quaternion.identity,
+            GameObject roomGameObject = Instantiate(roomDataToLoad.roomPrefab[(int)GameStatus.loopIteration], worldPosition, Quaternion.identity,
                 this.transform);
             Room newRoomScript = roomGameObject.GetComponent<Room>();
 
@@ -312,7 +312,7 @@ namespace RoomManager
         {
             RoomData.RoomData currentRoomData =
                 _roomGridData[currentRoomGridIndex.x, currentRoomGridIndex.y, currentRoomGridIndex.z];
-            Room currentRoomPrefabScript = currentRoomData.roomPrefab.GetComponent<Room>();
+            Room currentRoomPrefabScript = currentRoomData.roomPrefab[(int)GameStatus.loopIteration].GetComponent<Room>();
 
             if (!currentRoomPrefabScript) return;
 
@@ -354,9 +354,9 @@ namespace RoomManager
             {
                 foreach (var roomData in roomDataList)
                 {
-                    if (!roomData || !roomData.roomPrefab) continue;
+                    if (!roomData || !roomData.roomPrefab[(int)GameStatus.loopIteration]) continue;
 
-                    Room roomComponent = roomData.roomPrefab.GetComponent<Room>();
+                    Room roomComponent = roomData.roomPrefab[(int)GameStatus.loopIteration].GetComponent<Room>();
                     if (!roomComponent) continue;
 
                     if (roomComponent.GetConnector(requiredConnector) != null)
@@ -493,5 +493,11 @@ namespace RoomManager
             CurrentRoomIndex = newRoomIndex;
             PlayerEnteredNewRoom?.Invoke(newRoomIndex);
         }
+
+        public void SetRoomsDifficulty() {
+			    foreach(RoomData.RoomData roomData in _availableRooms) {
+				  roomData.setDifficulty();
+			  }
+		  }
     }
 }
