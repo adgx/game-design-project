@@ -2,8 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Enemy.EnemyData;
 using RoomManager.RoomData;
 using Unity.AI.Navigation;
 using Unity.VisualScripting;
@@ -37,7 +35,7 @@ namespace RoomManager
         [SerializeField]
         private List<RoomData.RoomData> _availableRooms;
 
-        [Tooltip("The specific RoomData asset to be used for the very first room.")] [SerializeReference]
+        [Tooltip("The specific RoomData asset to be used for the very first room.")] [SerializeField]
         private RoomData.RoomData _initialRoomData;
 
         [Tooltip("The maximum number of rooms to generate in the dungeon.")] [SerializeField]
@@ -149,7 +147,7 @@ namespace RoomManager
                 _roomDataByType.Add(rt, new List<RoomData.RoomData>());
             }
 
-            if(_availableRooms == null || _availableRooms.Count == 0)
+            if (_availableRooms == null || _availableRooms.Count == 0)
             {
                 Debug.LogError("RoomManager: 'Available Rooms' list is empty!", this);
                 enabled = false;
@@ -180,10 +178,10 @@ namespace RoomManager
         /// <summary>
         /// Generates the layout of the dungeon procedurally.
         /// </summary>
-        async private void GenerateLayout()
+        private void GenerateLayout()
         {
             _roomGridData = new RoomData.RoomData[_gridSizeX, GridSizeY, _gridSizeZ];
-			_roomsToProcessQueue.Clear();
+            _roomsToProcessQueue.Clear();
             UnloadCurrentRoom();
             _roomCount = 0;
             _isLayoutGenerated = false;
@@ -226,10 +224,7 @@ namespace RoomManager
             CurrentRoomIndex = startGridIndex;
             Room initialRoom = LoadRoomAt(CurrentRoomIndex);
             SpawnPlayerInRoom(initialRoom);
-            
             IsPlayerSpawned = true;
-
-            await Task.Delay(100);
             fadeManagerLoadingScreen.Hide();
 
             OnRunReady?.Invoke();
@@ -500,9 +495,9 @@ namespace RoomManager
         }
 
         public void SetRoomsDifficulty() {
-			foreach(RoomData.RoomData roomData in _availableRooms) {
-				roomData.setDifficulty();
-			}
-		}
+			    foreach(RoomData.RoomData roomData in _availableRooms) {
+				  roomData.setDifficulty();
+			  }
+		  }
     }
 }

@@ -12,7 +12,6 @@ using UnityEngine;
 public class TerminalTrigger : MonoBehaviour
 {
 	private PlayerShoot playerShoot;
-	private Player playerScript;
     private PowerUp powerUps;
     
     private TextMeshProUGUI helpText;
@@ -45,9 +44,7 @@ public class TerminalTrigger : MonoBehaviour
 	private void Start() {
 		playerInput = Player.Instance.GetComponent<PlayerInput>();
 		playerShoot = Player.Instance.GetComponent<PlayerShoot>();
-		playerScript = Player.Instance.GetComponent<Player>();
 		powerUps = Player.Instance.GetComponent<PowerUp>();
-
 		helpTextContainer = GameObject.Find("CanvasGroup/HUD/HelpTextContainer");
 		helpText = helpTextContainer.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
 		rotateSphere = GameObject.Find("Player/rotatingSphere").GetComponent<RotateSphere>();
@@ -145,14 +142,16 @@ public class TerminalTrigger : MonoBehaviour
 							GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineItemPickUp, this.transform.position);
 							powerUpVendingMachineHacked = false;
 
-
-							playerShoot.DisableAttacks(true);
-							playerScript.FreezeMovement(true);
 							busy = true;
+							await Task.Delay(2000);
 
 							// Generate a random power up
 							int powerUpIndexPlayer = rnd.Next(powerUps.playerPowerUps.Count);
 							Debug.Log(powerUps.playerPowerUps.Count);
+							
+							// Show a message to the player
+							helpText.text = "You obtained a " + powerUps.playerPowerUps[powerUpIndexPlayer] + "!";
+							helpTextContainer.SetActive(true);
 
 							// Audio management
 							var obtainedPowerUp = powerUps.playerPowerUps[powerUpIndexPlayer];
@@ -160,11 +159,8 @@ public class TerminalTrigger : MonoBehaviour
 							if (obtainedPowerUp == PowerUp.PlayerPowerUpTypes.HealthBoost)
 							{
 								Debug.Log("Using power up: health boost (chips");
-								AnimationManager.Instance.EatChips();
-								//GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChips, player.transform.position);
-
-								await Task.Delay(6000);
-
+								GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChips, player.transform.position);
+								
 								playerShoot.maxHealth += 20;
 								playerShoot.health += 20;
 							}
@@ -172,18 +168,11 @@ public class TerminalTrigger : MonoBehaviour
 							if (obtainedPowerUp == PowerUp.PlayerPowerUpTypes.DamageReduction)
 							{
 								Debug.Log("Using power up: damage reduction (energy drink");
-								AnimationManager.Instance.Drink();
-								//GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDrink, player.transform.position);
-
-								await Task.Delay(6000);
-
+								GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDrink, player.transform.position);
+								
 								playerShoot.damageReduction -= 0.2f;
 							}
-
-							// Show a message to the player
-							helpText.text = "You obtained a " + powerUps.playerPowerUps[powerUpIndexPlayer] + "!";
-							helpTextContainer.SetActive(true);
-
+							
 							// Insert the power up in the dictionary of the obtained ones
 							powerUps.ObtainPowerUp(powerUps.playerPowerUps[powerUpIndexPlayer]);
 
@@ -191,8 +180,6 @@ public class TerminalTrigger : MonoBehaviour
 							powerUps.playerPowerUps.RemoveAt(powerUpIndexPlayer);
 							
 							busy = false;
-							playerShoot.DisableAttacks(false);
-							playerScript.FreezeMovement(false);
 						}
 
 						else
@@ -203,21 +190,16 @@ public class TerminalTrigger : MonoBehaviour
 							rotateSphere.positionSphere(new Vector3(0.7f, 1f, 0), RotateSphere.Animation.Linear);
 							
 							busy = true;
-							playerShoot.DisableAttacks(true);
-							playerScript.FreezeMovement(true);
-
-							// Audio manangement
-							await Task.Delay(4200);
-							playerShoot.DecreaseStamina(1);
-							rotateSphere.isRotating = true;
-
+							await Task.Delay(700);
+							busy = false;
 							powerUpVendingMachineHacked = true;
 							helpText.text = "Press E again to take a snack from the machine";
 							helpTextContainer.SetActive(true);
 
-							busy = false;
-							playerShoot.DisableAttacks(false);
-							playerScript.FreezeMovement(false);
+							// Audio manangement
+							await Task.Delay(3500);
+							playerShoot.DecreaseStamina(1);
+							rotateSphere.isRotating = true;
 						}
 
 					}
@@ -227,31 +209,22 @@ public class TerminalTrigger : MonoBehaviour
 					if(healthVendingMachineHacked) {
 						// Recover health, lose 1 stamina for the Sphere
 						Debug.Log("Recovering health: taking snack from the machine");
-						
-						busy = true;
-						playerShoot.DisableAttacks(true);
-						playerScript.FreezeMovement(true);
-
 						// Audio management
 						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineItemPickUp, this.transform.position);
-
 						healthVendingMachineHacked = false;
 
-						AnimationManager.Instance.EatSnack();
-
-						await Task.Delay(6000);
+						busy = true;
+						await Task.Delay(2000);
 						
 						// Show a message to the player
 						helpText.text = "Your health was recovered!";
 						helpTextContainer.SetActive(true);
 
 						// Audio management
-						//GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChocolate, player.transform.position);
+						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChocolate, player.transform.position);
 						
 						playerShoot.RecoverHealth(playerShoot.maxHealth);
 						busy = false;
-						playerShoot.DisableAttacks(false);
-						playerScript.FreezeMovement(false);
 					}
 					else {
 						Debug.Log("Recovering health: machine activation");
@@ -260,21 +233,16 @@ public class TerminalTrigger : MonoBehaviour
 						rotateSphere.positionSphere(new Vector3(0.7f, 1f, 0), RotateSphere.Animation.Linear);
 
 						busy = true;
-						playerShoot.DisableAttacks(true);
-						playerScript.FreezeMovement(true);
-
-						// Audio manangement
-						await Task.Delay(4200);
-						playerShoot.DecreaseStamina(1);
-						rotateSphere.isRotating = true;
-
+						await Task.Delay(700);
+						busy = false;
 						healthVendingMachineHacked = true;
 						helpText.text = "Press E again to take a snack from the machine";
 						helpTextContainer.SetActive(true);
 
-						busy = false;
-						playerShoot.DisableAttacks(false);
-						playerScript.FreezeMovement(false);
+						// Audio manangement
+						await Task.Delay(3500);
+						playerShoot.DecreaseStamina(1);
+						rotateSphere.isRotating = true;
 					}
 
 					break;

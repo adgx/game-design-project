@@ -20,7 +20,6 @@ namespace PlayerInteraction
         public bool IsInteractable => !_isTraversing;
 
         private GameObject player;
-        private Player playerScript;
 
         [Header("Door Configuration")]
         [Tooltip(
@@ -42,8 +41,6 @@ namespace PlayerInteraction
         {
             _roomManager = RoomManager.RoomManager.Instance;
             _parentRoom = GetComponentInParent<Room>();
-            player = GameObject.Find("Player");
-            playerScript = player.GetComponent<Player>();
 
             if (_roomManager == null)
                 Debug.LogError("DoorInteraction: RoomManager.Instance not found!", this);
@@ -97,11 +94,9 @@ namespace PlayerInteraction
 
                 FadeManager.Instance.FadeOutIn(() =>
                 {
-                    playerScript.FreezeMovement(true);
                     _roomManager.TraverseRoom(nextRoomGridIndex, _leadsToWorldDirection);
                     GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDoorClose,
                         interactor.transform.position);
-                    playerScript.FreezeMovement(false);
                 });
             }
             else

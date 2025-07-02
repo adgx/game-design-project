@@ -7,6 +7,7 @@ namespace Enemy.EnemyData.EnemyMovement
 {
     public class EnemyDrakeMovement : MonoBehaviour, IEnemy
     {
+        
         [SerializeField] private NavMeshAgent agent;
         [SerializeField] private LayerMask whatIsGround, whatIsPlayer;
         
@@ -130,7 +131,7 @@ namespace Enemy.EnemyData.EnemyMovement
             {
                 //Attack code here
                 GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-                bullet.tag = "EnemyAttack";
+                bullet.tag = "EnemyProjectile";
                 bullet.GetComponent<GetCollisions>().enemyBulletDamage = closeAttackDamage;
 
                 Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
@@ -147,12 +148,10 @@ namespace Enemy.EnemyData.EnemyMovement
         {
             health -= damage * (attackType == "c" ? closeAttackDamageMultiplier : distanceAttackDamageMultiplier);
 
-            if((attackType == "c" && closeAttackDamageMultiplier != 0) || (attackType == "d" && distanceAttackDamageMultiplier != 0)) {
-                StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
+            StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
 
-                if(health <= 0)
-                    Invoke(nameof(DestroyEnemy), 0.05f);
-            }
+            if (health <= 0)
+                Invoke(nameof(DestroyEnemy), 0.05f);
         }
 
         // Change enemy color when hit and change it back to normal after "duration" seconds
@@ -193,11 +192,13 @@ namespace Enemy.EnemyData.EnemyMovement
             //Check for sight and attack range
             playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
             playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
-
+            //condition for a transition
             if (!playerInSightRange && !playerInAttackRange)
                 Patroling();
+            //condition for a transition
             if (playerInSightRange && !playerInAttackRange)
                 ChasePlayer();
+            //condition for a transition
             if (playerInAttackRange && playerInSightRange)
                 CloseAttackPlayer();
         }
