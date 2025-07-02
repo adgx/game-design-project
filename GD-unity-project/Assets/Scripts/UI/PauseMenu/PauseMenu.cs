@@ -159,7 +159,8 @@ public class PauseMenu : MonoBehaviour
 			StartCoroutine(LoadGameplaySceneAsync());
 		}
 		else {
-			// TODO: to be implemented
+			// This only works with the compiled game (.exe)
+			Application.Quit();
 		}
 	}
 

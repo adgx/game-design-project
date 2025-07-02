@@ -12,17 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99514756e321d41bda00e2ed01584df6, type: 3}
   m_Name: ServerRoomData
   m_EditorClassIdentifier: 
-  roomPrefab: {fileID: 7322676706815848639, guid: 749e0c624e2284a32a91ce8ea873aefe, type: 3}
+  roomPrefab:
+  - {fileID: 7322676706815848639, guid: 749e0c624e2284a32a91ce8ea873aefe, type: 3}
+  - {fileID: 7322676706815848639, guid: f2c5918e7887e4829b003cc5ec59da53, type: 3}
+  - {fileID: 7322676706815848639, guid: 306a2761fa8a74e2abdd86ba062c639a, type: 3}
   roomName: ServerRoom
   roomSpawnBudget: 3
   roomSpawnBudgetLoop1: 3
-  vendingMachineSpawnChance: 1
-  canVendingMachineSpawn: 1
-  spawnVendingMachine: 1
-  upgradeTerminalSpawnChance: 0
-  canUpgradeTerminalSpawn: 0
-  spawnUpgradeTerminal: 0
-  paperSpawnChance: 1
-  canPaperSpawn: 1
-  spawnPaper: 0
   roomType: 2
+  difficultyMultiplier: 0.2

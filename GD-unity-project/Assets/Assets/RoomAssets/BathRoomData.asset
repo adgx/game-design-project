@@ -12,14 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99514756e321d41bda00e2ed01584df6, type: 3}
   m_Name: BathRoomData
   m_EditorClassIdentifier: 
-  roomPrefab: {fileID: 2360249369967940935, guid: daa318099b1de994a92ef799a2b2d8a3, type: 3}
+  roomPrefab:
+  - {fileID: 2360249369967940935, guid: daa318099b1de994a92ef799a2b2d8a3, type: 3}
+  - {fileID: 2360249369967940935, guid: c3a653cd947764292a835a53ccbd8116, type: 3}
+  - {fileID: 2360249369967940935, guid: 2b1d4c2a21f804d2db1ecca1009468fd, type: 3}
   roomName: Bathroom
   roomSpawnBudget: 1
   roomSpawnBudgetLoop1: 1
-  vendingMachineSpawnChance: 0
-  spawnVendingMachine: 0
-  upgradeTerminalSpawnChance: 0
-  spawnUpgradeTerminal: 0
-  paperSpawnChance: 0
-  spawnPaper: 1
   roomType: 4
+  difficultyMultiplier: 0.2

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RoomManager.RoomData
@@ -13,8 +14,8 @@ namespace RoomManager.RoomData
         /// <summary>
         /// Prefab associated with this room.
         /// </summary>
-        [Tooltip("Prefab used to instantiate this room.")]
-        public GameObject roomPrefab;
+        [Tooltip("The list of prefabs used to instantiate this room.")]
+        public List<GameObject> roomPrefab;
 
         /// <summary>
         /// Display name of the room.
