@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ namespace RoomManager.RoomData
     [CreateAssetMenu(fileName = "RoomData", menuName = "Scriptable Objects/RoomData")]
     public class RoomData : ScriptableObject
     {
-        public GameObject roomPrefab;
+        public List<GameObject> roomPrefab;
 
         public string roomName;
 

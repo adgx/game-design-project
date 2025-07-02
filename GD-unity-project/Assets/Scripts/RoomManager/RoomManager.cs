@@ -12,11 +12,6 @@ using Random = UnityEngine.Random;
 
 namespace RoomManager
 {
-    [Serializable]
-    public class RoomListWrapper<T> {
-        public List<T> _availableRooms;
-    }
-
     /// <summary>
     /// Manages the procedural generation, layout, and state of all rooms in a dungeon level.
     /// </summary>
@@ -40,10 +35,10 @@ namespace RoomManager
         [Header("Room Generation Settings")]
         [Tooltip("A list of all possible RoomData assets that can be used for random generation.")]
         [SerializeField]
-        private RoomListWrapper<RoomData.RoomData>[] _roomsPerLoop;
+        private List<RoomData.RoomData> _availableRooms;
 
         [Tooltip("The specific RoomData asset to be used for the very first room.")] [SerializeReference]
-        private RoomData.RoomData[] _initialRoomData;
+        private RoomData.RoomData _initialRoomData;
 
         [Tooltip("The maximum number of rooms to generate in the dungeon.")] [SerializeField]
         private int _maxRooms = 15;
@@ -154,16 +149,16 @@ namespace RoomManager
                 _roomDataByType.Add(rt, new List<RoomData.RoomData>());
             }
 
-            if(_roomsPerLoop[(int)GameStatus.loopIteration] == null || _roomsPerLoop[(int)GameStatus.loopIteration]._availableRooms.Count == 0)
+            if(_availableRooms == null || _availableRooms.Count == 0)
             {
                 Debug.LogError("RoomManager: 'Available Rooms' list is empty!", this);
                 enabled = false;
                 return;
             }
 
-            foreach (RoomData.RoomData roomData in _roomsPerLoop[(int)GameStatus.loopIteration]._availableRooms)
+            foreach (RoomData.RoomData roomData in _availableRooms)
             {
-                if (!roomData || !roomData.roomPrefab)
+                if (!roomData || !roomData.roomPrefab[(int)GameStatus.loopIteration])
                 {
                     Debug.LogWarning(
                         "Found a null entry or a RoomData with a missing prefab in 'Available Rooms'. Skipping.", this);
@@ -204,14 +199,14 @@ namespace RoomManager
                 CacheRoomDataByType();
             }
 
-            if (!_initialRoomData[(int)GameStatus.loopIteration])
+            if (!_initialRoomData)
             {
                 Debug.LogError("Cannot start: Initial Room Data is not assigned in the Inspector!", this);
                 return;
             }
 
             Vector3Int startGridIndex = new Vector3Int(_gridSizeX / 2, 0, _gridSizeZ / 2);
-            _roomGridData[startGridIndex.x, startGridIndex.y, startGridIndex.z] = _initialRoomData[(int)GameStatus.loopIteration];
+            _roomGridData[startGridIndex.x, startGridIndex.y, startGridIndex.z] = _initialRoomData;
             _roomCount++;
             _roomsToProcessQueue.Enqueue(startGridIndex);
 
@@ -263,7 +258,7 @@ namespace RoomManager
             }
 
             Vector3 worldPosition = GetWorldPositionFromGridIndex(gridIndex);
-            GameObject roomGameObject = Instantiate(roomDataToLoad.roomPrefab, worldPosition, Quaternion.identity,
+            GameObject roomGameObject = Instantiate(roomDataToLoad.roomPrefab[(int)GameStatus.loopIteration], worldPosition, Quaternion.identity,
                 this.transform);
             Room newRoomScript = roomGameObject.GetComponent<Room>();
 
@@ -322,7 +317,7 @@ namespace RoomManager
         {
             RoomData.RoomData currentRoomData =
                 _roomGridData[currentRoomGridIndex.x, currentRoomGridIndex.y, currentRoomGridIndex.z];
-            Room currentRoomPrefabScript = currentRoomData.roomPrefab.GetComponent<Room>();
+            Room currentRoomPrefabScript = currentRoomData.roomPrefab[(int)GameStatus.loopIteration].GetComponent<Room>();
 
             if (!currentRoomPrefabScript) return;
 
@@ -364,9 +359,9 @@ namespace RoomManager
             {
                 foreach (var roomData in roomDataList)
                 {
-                    if (!roomData || !roomData.roomPrefab) continue;
+                    if (!roomData || !roomData.roomPrefab[(int)GameStatus.loopIteration]) continue;
 
-                    Room roomComponent = roomData.roomPrefab.GetComponent<Room>();
+                    Room roomComponent = roomData.roomPrefab[(int)GameStatus.loopIteration].GetComponent<Room>();
                     if (!roomComponent) continue;
 
                     if (roomComponent.GetConnector(requiredConnector) != null)
@@ -505,7 +500,7 @@ namespace RoomManager
         }
 
         public void SetRoomsDifficulty() {
-			foreach(RoomData.RoomData roomData in _roomsPerLoop[(int)GameStatus.loopIteration]._availableRooms) {
+			foreach(RoomData.RoomData roomData in _availableRooms) {
 				roomData.setDifficulty();
 			}
 		}
