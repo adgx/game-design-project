@@ -123,34 +123,36 @@ namespace Enemy.EnemyData.EnemyMovement
             
             //Make sure enemy doesn't move
             agent.SetDestination(transform.position);
-    
+
             transform.LookAt(new Vector3(player.position.x, transform.position.y, player.position.z));
-    
+
             if (!alreadyAttacked)
             {
                 //Attack code here
                 GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-                bullet.tag = "EnemyProjectile";
+                bullet.tag = "SpitEnemyAttack";
                 bullet.GetComponent<GetCollisions>().enemyBulletDamage = distanceAttackDamage;
-    
+
                 Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
                 rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
                 rbBullet.AddForce(transform.up * 2f, ForceMode.Impulse);
                 //End of attack code
-    
+
                 alreadyAttacked = true;
                 Invoke(nameof(ResetAttack), timeBetweenAttacks);
             }
-        }   
+        }
 
         public void TakeDamage(float damage, string attackType)
         {
             health -= damage * (attackType == "c" ? closeAttackDamageMultiplier : distanceAttackDamageMultiplier);
 
-            StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
+            if((attackType == "c" && closeAttackDamageMultiplier != 0) || (attackType == "d" && distanceAttackDamageMultiplier != 0)) {
+                StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
 
-            if (health <= 0)
-                Invoke(nameof(DestroyEnemy), 0.05f);
+                if(health <= 0)
+                    Invoke(nameof(DestroyEnemy), 0.05f);
+            }
         }
 
         // Change enemy color when hit and change it back to normal after "duration" seconds

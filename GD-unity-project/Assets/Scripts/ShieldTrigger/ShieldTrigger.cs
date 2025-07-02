@@ -9,7 +9,7 @@ public class ShieldTrigger : MonoBehaviour
     
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("EnemyProjectile")) {
+        if (other.tag.Contains("EnemyAttack")) {
             player = GameObject.Find("Player");
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldHit, player.transform.position);
             Destroy(other.gameObject);

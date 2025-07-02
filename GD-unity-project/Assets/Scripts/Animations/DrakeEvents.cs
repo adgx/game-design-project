@@ -9,26 +9,14 @@ namespace Animations
         // Audio management
         private EventInstance drakeFootsteps;
         private EventInstance drakeIdle;
-
-        private Drake _drake; 
     
         private bool isRunning = false; // TODO: to be removed once we have Drake's FSM
         private bool isIdle = false; // TODO: to be removed once we have Drake's FSM
-
-
-        public void Awake()
-        {
-            _drake = GetComponent<Drake>();
-
-            if (_drake == null)
-            {
-                Debug.LogError($"{ToString()}: Drake not found");
-            }        
-        }
+    
         public void Idle()
         {
             Debug.Log("Idle");
-
+        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             isIdle = true; // TODO: to be removed once we have Drake's FSM
@@ -132,16 +120,11 @@ namespace Animations
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeDieFoostep2, transform.position);
         }
-
-        public void DeathDrake()
-        {
-            _drake.DestroyEnemy();
-        }
         
         public void DeathThud()
         {
             Debug.Log("DeathThud");
-
+        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeDieThud, transform.position);
