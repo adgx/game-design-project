@@ -109,7 +109,6 @@ public class Maynard : MonoBehaviour, IEnemy
         _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && !_playerInCloseAttackRange);
         _stateMachine.AddTransition(chaseS, patrolS, () => !_playerInSightRange && !_playerInCloseAttackRange);
         _stateMachine.AddTransition(chaseS, wonderS, () =>  (_playerInCloseAttackRange && _playerInSightRange) || (_playerInRemoteAttackRange && _playerInSightRange));
-        _stateMachine.AddTransition(wonderS, chaseS, () => _playerInSightRange && !_playerInCloseAttackRange);
         _stateMachine.AddTransition(wonderS, patrolS, () => !_playerInSightRange && !_playerInCloseAttackRange);
         _stateMachine.AddTransition(wonderS, closeAttackS, () => _playerInCloseAttackRange && _playerInSightRange && !_alreadyAttacked);
         _stateMachine.AddTransition(closeAttackS, wonderS, () => _alreadyAttacked);

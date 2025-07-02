@@ -48,43 +48,6 @@ public class Drake : MonoBehaviour, IEnemy
     //states
     private State _deathS;
 
-    public void Initialize(EnemyData enemyData, RoomManager.RoomManager roomManager)
-    {
-        _roomManager = roomManager;
-
-        if (!_agent) _agent = GetComponent<NavMeshAgent>();
-
-        if (enemyData == null || enemyData is not EnemyDrakeData drakeData) return;
-
-        _agent.speed = enemyData.baseMoveSpeed;
-
-        _health = drakeData.maxHealth;
-        _walkPointRange = drakeData.walkPointRange;
-        _timeBetweenAttacks = drakeData.timeBetweenAttacks;
-
-        if (drakeData.bulletPrefab)
-        {
-            _bulletPrefab = drakeData.bulletPrefab;
-        }
-        else if (!_bulletPrefab)
-        {
-            Debug.LogError(
-                $"Drake '{name}' ({enemyData.enemyName}): EnemyDrakeData has no bulletPrefab, and prefab has no default bulletPrefab assigned!",
-                this);
-        }
-
-        //todo: rework 
-
-        _sightRange = drakeData.sightRange;
-        _attackRange = drakeData.attackRange;
-
-        _distanceAttackDamageMultiplier = drakeData.distanceAttackDamageMultiplier;
-        _closeAttackDamageMultiplier = drakeData.closeAttackDamageMultiplier;
-
-        _closeAttackDamage = drakeData.closeAttackDamage;
-
-    }
-
     void Awake()
     {
         Animator drakeAC = GetComponent<Animator>();
@@ -143,7 +106,6 @@ public class Drake : MonoBehaviour, IEnemy
         _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(chaseS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(chaseS, wonderS, () => _playerInSightRange && _playerInAttackRange);
-        _stateMachine.AddTransition(wonderS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(wonderS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(swipingS, wonderS, () => _alreadyAttacked);
         _stateMachine.AddTransition(wonderS, swipingS, () => !_alreadyAttacked);
@@ -158,18 +120,56 @@ public class Drake : MonoBehaviour, IEnemy
         _playerInAttackRange = Physics.CheckSphere(transform.position, _attackRange, whatIsPlayer);
         _stateMachine.Tik();
     }
+    
+    public void Initialize(EnemyData enemyData, RoomManager.RoomManager roomManager)
+    {
+        _roomManager = roomManager;
+
+        if (!_agent) _agent = GetComponent<NavMeshAgent>();
+
+        if (enemyData == null || enemyData is not EnemyDrakeData drakeData) return;
+
+        _agent.speed = enemyData.baseMoveSpeed;
+
+        _health = drakeData.maxHealth;
+        _walkPointRange = drakeData.walkPointRange;
+        _timeBetweenAttacks = drakeData.timeBetweenAttacks;
+
+        if (drakeData.bulletPrefab)
+        {
+            _bulletPrefab = drakeData.bulletPrefab;
+        }
+        else if (!_bulletPrefab)
+        {
+            Debug.LogError(
+                $"Drake '{name}' ({enemyData.enemyName}): EnemyDrakeData has no bulletPrefab, and prefab has no default bulletPrefab assigned!",
+                this);
+        }
+
+        //todo: rework 
+
+        _sightRange = drakeData.sightRange;
+        _attackRange = drakeData.attackRange;
+
+        _distanceAttackDamageMultiplier = drakeData.distanceAttackDamageMultiplier;
+        _closeAttackDamageMultiplier = drakeData.closeAttackDamageMultiplier;
+
+        _closeAttackDamage = drakeData.closeAttackDamage;
+
+    }
+
     public void TakeDamage(float damage, string attackType)
     {
         _health -= damage * (attackType == "c" ? _closeAttackDamageMultiplier : _distanceAttackDamageMultiplier);
 
-        StartCoroutine(ChangeColor( Color.red, 0.8f, 0));
+        StartCoroutine(ChangeColor(Color.red, 0.8f, 0));
 
         if (_health <= 0)
         {
             //Invoke(nameof(DestroyEnemy), 0.05f);
             _stateMachine.SetState(_deathS);
         }
-            
+
     }
 
     // Change enemy color when hit and change it back to normal after "duration" seconds

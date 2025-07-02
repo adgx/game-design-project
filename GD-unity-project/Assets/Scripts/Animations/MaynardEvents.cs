@@ -24,8 +24,6 @@ namespace Animations
         
         public void Run()
         {
-            Debug.Log("Run");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
             isRunning = true; // TODO: to be removed once we have Maynard's FSM

@@ -99,7 +99,6 @@ public class Incognito : MonoBehaviour, IEnemy
         _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(chaseS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(chaseS, wonderS, () => _playerInSightRange && _playerInAttackRange);
-        _stateMachine.AddTransition(wonderS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(wonderS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(shortSpitAttackS, wonderS, () => _alreadyAttacked);
         _stateMachine.AddTransition(wonderS, shortSpitAttackS, () => !_alreadyAttacked);
