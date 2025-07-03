@@ -652,7 +652,7 @@ PrefabInstance:
       objectReference: {fileID: 379990347}
     - target: {fileID: 1753458665747210168, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_Alpha
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2347022518688673454, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -804,7 +804,7 @@ PrefabInstance:
       objectReference: {fileID: 379990348}
     - target: {fileID: 3485552226981936514, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3718890128462602489, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -1920,10 +1920,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.9
+  m_Radius: 0.85
   m_Height: 1
   m_Direction: 1
-  m_Center: {x: 0, y: 0.8, z: 0}
+  m_Center: {x: 0, y: 0.85, z: 0}
 --- !u!114 &972097723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2805,13 +2805,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _availableRooms:
-  - {fileID: 11400000, guid: 31ef2464399d944218fa84404292c004, type: 2}
-  - {fileID: 11400000, guid: c73775d08b746476da8663f3ab5c1bd0, type: 2}
-  - {fileID: 11400000, guid: 7812fa5919ace45669b148a1c0556990, type: 2}
   - {fileID: 11400000, guid: 649cc90d5260341558b2b3e1c6e993e6, type: 2}
+  - {fileID: 11400000, guid: 464d34e7e589a4cdd9530fff6c464281, type: 2}
+  - {fileID: 11400000, guid: c73775d08b746476da8663f3ab5c1bd0, type: 2}
+  - {fileID: 11400000, guid: 31ef2464399d944218fa84404292c004, type: 2}
+  - {fileID: 11400000, guid: 7812fa5919ace45669b148a1c0556990, type: 2}
   _initialRoomData: {fileID: 11400000, guid: 6eb0b70f4a33646a5a0c387fa73d7366, type: 2}
-  _maxRooms: 15
-  _minRooms: 10
+  _maxRooms: 20
+  _minRooms: 15
   _skipConnectionChance: 0.35
   _maxVendingMachines: 4
   _maxUpgradeTerminal: 4
@@ -2937,7 +2938,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1738691462}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c9c20bcbff9b45d4bcaf572ee643233, type: 3}
   m_Name: 

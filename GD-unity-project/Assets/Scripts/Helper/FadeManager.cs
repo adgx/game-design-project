@@ -10,8 +10,6 @@ namespace Helper {
 		[SerializeField] private CanvasGroup fadeCanvasGroup;
 		[SerializeField] private float fadeDuration = 0.5f;
 
-		private Player player;
-
 		private void Awake() {
 			if(Instance == null)
 				Instance = this;
@@ -20,8 +18,6 @@ namespace Helper {
 
 			transform.SetParent(null); // Detach from "Managers" to avoid warnings
 			DontDestroyOnLoad(gameObject);
-
-			player = GameObject.FindWithTag("Player").GetComponent<Player>();
 		}
 
 		public void FadeOutIn(Action onFadeMidpoint) {

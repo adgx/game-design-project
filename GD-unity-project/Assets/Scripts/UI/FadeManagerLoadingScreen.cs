@@ -9,7 +9,6 @@ public class FadeManagerLoadingScreen : MonoBehaviour
 
     public void Show()
     {
-        LoadingScreen.SetActive(true);
         fadeIn = true;
         fadeOut = false;
     }
@@ -44,7 +43,6 @@ public class FadeManagerLoadingScreen : MonoBehaviour
                 if (LoadingScreenCanvas.alpha <= 0)
                 {
                     LoadingScreenCanvas.alpha = 0;
-                    LoadingScreen.SetActive(false);
                     fadeOut = false;
                 }
             }

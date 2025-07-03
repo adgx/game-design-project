@@ -94,7 +94,7 @@ public class RespawnScreen : MonoBehaviour
 	}
 
 	public void YesClicked() {
-		// TODO: to be implemented
+		Application.Quit();
 	}
 
 	public void NoClicked() {
