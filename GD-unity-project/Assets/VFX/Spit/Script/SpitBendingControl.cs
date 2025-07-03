@@ -5,6 +5,8 @@ public class SpitBenderControl : MonoBehaviour
     [SerializeField] private bool update;
     [SerializeField] SpitBendingObject spitPrefab;
 
+    [SerializeField] private Transform _playerTrasform;
+
     // Update is called once per frame
     void Update()
     {
@@ -15,12 +17,7 @@ public class SpitBenderControl : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit)) 
-            {
-                Attack(hit.point);
-            }
+                Attack(_playerTrasform.position);
         }
 
         
