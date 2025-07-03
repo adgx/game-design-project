@@ -57,7 +57,7 @@ namespace Utils {
 		}
 
 		private void Awake() {
-			GameStatus.loopIteration = GameStatus.LoopIteration.THIRD_ITERATION;
+			GameStatus.loopIteration = GameStatus.LoopIteration.FIRST_ITERATION;
 			if(roomManager) {
 				roomManager.OnRunReady += HandleRunReady;
 
@@ -72,7 +72,7 @@ namespace Utils {
 			playerScript = player.GetComponent<Player>();
 			playerShoot = player.GetComponent<PlayerShoot>();
 			
-			//StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
+			StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
 
 			GameStatus.gameEnded = false;
 			GameStatus.gamePaused = false;
