@@ -43,8 +43,9 @@ public class Incognito : MonoBehaviour, IEnemy
 
     private RoomManager.RoomManager _roomManager;
 
-    //states
-    private State _deathS;
+	//states
+	private State _reactFromFrontS;
+	private State _deathS;
 
     void Awake()
     {
@@ -84,7 +85,9 @@ public class Incognito : MonoBehaviour, IEnemy
         State chaseS = new IncognitoChaseState("Chase", this);
         State wonderS = new IncognitoWonderState("Wonder", this);
         State shortSpitAttackS = new IncognitoShortSpitAttackState("ShortSpitAttack", this);
-        _deathS = new IncognitoDeathState("Death", this);
+		_reactFromFrontS = new IncognitoReactFromFrontState("Hit", this);
+		_deathS = new IncognitoDeathState("Death", this);
+
         //Transition
         _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(chaseS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
@@ -92,9 +95,13 @@ public class Incognito : MonoBehaviour, IEnemy
         _stateMachine.AddTransition(wonderS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(shortSpitAttackS, wonderS, () => _alreadyAttacked);
         _stateMachine.AddTransition(wonderS, shortSpitAttackS, () => !_alreadyAttacked);
-        
-        //Set Initial state
-        _stateMachine.SetState(patrolS);
+
+		_stateMachine.AddTransition(_reactFromFrontS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
+		_stateMachine.AddTransition(_reactFromFrontS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
+		_stateMachine.AddTransition(_reactFromFrontS, wonderS, () => _playerInSightRange && _playerInAttackRange);
+
+		//Set Initial state
+		_stateMachine.SetState(patrolS);
     }
 
     void Update()
@@ -144,12 +151,14 @@ public class Incognito : MonoBehaviour, IEnemy
 
         StartCoroutine(ChangeColor(Color.red, 0.8f, 0));
 
-        if (_health <= 0)
-        {
+        if(_health <= 0) {
             gameObject.layer = 0;
             gameObject.tag = "Untagged";
-            
+
             _stateMachine.SetState(_deathS);
+        }
+        else {
+            _stateMachine.SetState(_reactFromFrontS);
         }
 
         

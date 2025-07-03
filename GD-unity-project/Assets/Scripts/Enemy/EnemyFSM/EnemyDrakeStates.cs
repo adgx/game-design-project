@@ -112,6 +112,39 @@ public class DrakeWonderState : State
     }
 }
 
+public class DrakeReactFromFrontState : State {
+	private Drake _drake;
+	public DrakeReactFromFrontState(string name, Drake drake) : base(name) {
+		_drake = drake;
+	}
+	public override void Enter() {
+		_drake.anim.lunchReactFromFrontAnim();
+	}
+
+	public override void Tik() {
+	}
+
+	public override void Exit() {
+
+	}
+}
+
+public class DrakeDefenseState : State {
+	private Drake _drake;
+	public DrakeDefenseState(string name, Drake drake) : base(name) {
+		_drake = drake;
+	}
+	public override void Enter() {
+		_drake.anim.lunchDefenseAnim();
+	}
+
+	public override void Tik() {
+	}
+
+	public override void Exit() {
+	}
+}
+
 public class DrakeDeathState : State
 {
     private Drake _drake;

@@ -44,8 +44,9 @@ public class Maynard : MonoBehaviour, IEnemy
     //checks
     private float _sightRange, _remoteAttackRange, _closeAttackRange;
     private bool _playerInSightRange, _playerInRemoteAttackRange, _playerInCloseAttackRange;
-    //states
-    private State _deathS;
+	//states
+	private State _reactFromFrontS;
+	private State _deathS;
 
     private RoomManager.RoomManager _roomManager;
     
@@ -92,7 +93,8 @@ public class Maynard : MonoBehaviour, IEnemy
         State wonderS = new MaynardWonderState("Wonder", this);
         State screamAttackS = new MaynardScreamAttackState("ScreamAttack", this);
         State closeAttackS = new MaynardCloseAttackState("CloseAttack", this);
-        _deathS = new MaynardDeathState("Death", this);
+		_reactFromFrontS = new MaynardReactFromFrontState("Hit", this);
+		_deathS = new MaynardDeathState("Death", this);
 
         //Transition
         _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && !_playerInCloseAttackRange);
@@ -103,8 +105,13 @@ public class Maynard : MonoBehaviour, IEnemy
         _stateMachine.AddTransition(closeAttackS, wonderS, () => _alreadyAttacked);
         _stateMachine.AddTransition(wonderS, screamAttackS, () => !_alreadyAttacked);
         _stateMachine.AddTransition(screamAttackS, wonderS, () => _alreadyAttacked);
+
+		_stateMachine.AddTransition(_reactFromFrontS, patrolS, () => !_playerInSightRange && !_playerInCloseAttackRange);
+		_stateMachine.AddTransition(_reactFromFrontS, chaseS, () => _playerInSightRange && !_playerInCloseAttackRange);
+		_stateMachine.AddTransition(_reactFromFrontS, wonderS, () => (_playerInCloseAttackRange && _playerInSightRange) || (_playerInRemoteAttackRange && _playerInSightRange));
+		
         //Set Initial state
-        _stateMachine.SetState(patrolS);
+		_stateMachine.SetState(patrolS);
     }
 
     void Update()
@@ -178,7 +185,10 @@ public class Maynard : MonoBehaviour, IEnemy
             
             _stateMachine.SetState(_deathS);
         }
-    }
+		else {
+			_stateMachine.SetState(_reactFromFrontS);
+		}
+	}
 
     private IEnumerator ChangeColor(Color dmgColor, float duration, float delay)
     {

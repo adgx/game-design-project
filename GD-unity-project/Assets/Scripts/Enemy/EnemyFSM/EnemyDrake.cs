@@ -47,7 +47,9 @@ public class Drake : MonoBehaviour, IEnemy
     private PlayerShoot playerShoot;
 
     //states
-    private State _deathS;
+    private State _reactFromFrontS;
+	private State _defenseS;
+	private State _deathS;
 
     void Awake()
     {
@@ -90,6 +92,8 @@ public class Drake : MonoBehaviour, IEnemy
         State wonderS = new DrakeWonderState("Wonder", this);
         State swipingS = new DrakeSwipingAttackState("Swiping", this);
         State biteS = new DrakeBiteAttackState("Bite", this);
+		_reactFromFrontS = new DrakeReactFromFrontState("Hit", this);
+        _defenseS = new DrakeDefenseState("Defense", this);
         _deathS = new DrakeDeathState("Death", this);
 
         //Transition
@@ -102,9 +106,17 @@ public class Drake : MonoBehaviour, IEnemy
         _stateMachine.AddTransition(wonderS, swipingS, () => !_alreadyAttacked && _playerInSightRange && _playerInAttackRange && playerShoot.health > _closeAttackDamage * playerShoot.damageReduction);
         _stateMachine.AddTransition(biteS, wonderS, () => _alreadyAttacked);
         _stateMachine.AddTransition(wonderS, biteS, () => !_alreadyAttacked && _playerInSightRange && _playerInAttackRange && playerShoot.health <= _closeAttackDamage * playerShoot.damageReduction);
-        
-        //Set Initial state
-        _stateMachine.SetState(patrolS);
+
+		_stateMachine.AddTransition(_reactFromFrontS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
+		_stateMachine.AddTransition(_reactFromFrontS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
+		_stateMachine.AddTransition(_reactFromFrontS, wonderS, () => _playerInSightRange && _playerInAttackRange);
+
+		_stateMachine.AddTransition(_defenseS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
+		_stateMachine.AddTransition(_defenseS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
+		_stateMachine.AddTransition(_defenseS, wonderS, () => _playerInSightRange && _playerInAttackRange);
+
+		//Set Initial state
+		_stateMachine.SetState(patrolS);
     }
 
     void Update()
@@ -156,14 +168,21 @@ public class Drake : MonoBehaviour, IEnemy
     {
         _health -= damage * (attackType == "c" ? _closeAttackDamageMultiplier : _distanceAttackDamageMultiplier);
 
-        StartCoroutine(ChangeColor(Color.red, 0.8f, 0));
+        if(attackType == "c") {
+            StartCoroutine(ChangeColor(Color.red, 0.8f, 0));
+        }
+        else {
+            _stateMachine.SetState(_defenseS);
+        }
 
-        if (_health <= 0)
-        {
+        if(_health <= 0) {
             gameObject.layer = 0;
             gameObject.tag = "Untagged";
-            
+
             _stateMachine.SetState(_deathS);
+        }
+        else {
+            _stateMachine.SetState(_reactFromFrontS);
         }
 
     }

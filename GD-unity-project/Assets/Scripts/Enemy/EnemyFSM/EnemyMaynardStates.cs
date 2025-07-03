@@ -110,6 +110,22 @@ public class MaynardCloseAttackState : State
     }
 }
 
+public class MaynardReactFromFrontState : State {
+	private Maynard _maynard;
+	public MaynardReactFromFrontState(string name, Maynard maynard) : base(name) {
+		_maynard = maynard;
+	}
+	public override void Enter() {
+		_maynard.anim.lunchReactFromFront();
+	}
+
+	public override void Tik() {
+	}
+
+	public override void Exit() {
+	}
+}
+
 public class MaynardDeathState : State
 {
     private Maynard _maynard;
