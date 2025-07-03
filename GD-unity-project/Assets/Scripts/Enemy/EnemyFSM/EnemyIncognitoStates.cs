@@ -92,6 +92,22 @@ public class IncognitoShortSpitAttackState : State
 
 }
 
+public class IncognitoReactFromFrontState : State {
+	private Incognito _incognito;
+	public IncognitoReactFromFrontState(string name, Incognito incognito) : base(name) {
+		_incognito = incognito;
+	}
+	public override void Enter() {
+		_incognito.anim.lunchReactFromFrontAnim();
+	}
+
+	public override void Tik() {
+	}
+
+	public override void Exit() {
+	}
+}
+
 public class IncognitoDeathState : State
 {
     private Incognito _incognito;
