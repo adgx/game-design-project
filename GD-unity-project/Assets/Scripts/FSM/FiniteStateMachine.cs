@@ -37,7 +37,6 @@ public class FiniteStateMachine<T>
             return;
         //lunch the behavior defined when you leave the state
         _currentState?.Exit();
-        Debug.Log($"Changing State FROM:{_currentState?.Name} --> TO:{state.Name}");
         //set the new state
         _currentState = state;
         //get the new transition set
@@ -61,14 +60,19 @@ public class FiniteStateMachine<T>
 
     private State GetNextState()
     {
-        if (_currentTransitions == null)
-            Debug.LogError($"Current State {_currentState.Name} has NO transitions");
-
-        //Verify if there is a soisfied condition so change the current state
-        foreach (Transition transition in _currentTransitions)
+        if (_currentState.Name != "Death")
         {
-            if (transition.Condition())
-                return transition.NextState;
+            if (_currentTransitions == null)
+                Debug.LogError($"Current State {_currentState.Name} has NO transitions");
+            else
+            {
+                //Verify if there is a soisfied condition so change the current state
+                foreach (Transition transition in _currentTransitions)
+                {
+                    if (transition.Condition())
+                        return transition.NextState;
+                }
+            }
         }
 
         return null;

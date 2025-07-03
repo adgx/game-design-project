@@ -3,12 +3,14 @@ using Enemy.EnemyData;
 using Enemy.EnemyManager;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 
 public class Incognito : MonoBehaviour, IEnemy
 {
     public bool forceInit = true;
     [SerializeField] private NavMeshAgent _agent;
     [SerializeField] private LayerMask _whatIsGround, _whatIsPlayer;
+    [SerializeField] private GameObject attackSpawn;
 
     private float _distanceAttackDamageMultiplier;
     private float _closeAttackDamageMultiplier;
@@ -102,6 +104,7 @@ public class Incognito : MonoBehaviour, IEnemy
         _stateMachine.AddTransition(wonderS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(shortSpitAttackS, wonderS, () => _alreadyAttacked);
         _stateMachine.AddTransition(wonderS, shortSpitAttackS, () => !_alreadyAttacked);
+        
         //Set Initial state
         _stateMachine.SetState(patrolS);
     }
@@ -155,7 +158,9 @@ public class Incognito : MonoBehaviour, IEnemy
 
         if (_health <= 0)
         {
-            //Invoke(nameof(DestroyEnemy), 0.05f);
+            gameObject.layer = 0;
+            gameObject.tag = "Untagged";
+            
             _stateMachine.SetState(_deathS);
         }
 
@@ -244,13 +249,13 @@ public class Incognito : MonoBehaviour, IEnemy
     public void ShortSpitAttackPlayer()
     {
         //Attack code here
-        //GameObject bullet = Instantiate(_bulletPrefab, transform.position, Quaternion.identity);
-        //bullet.tag = "EnemyProjectile";
-        //bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
+        GameObject bullet = Instantiate(_bulletPrefab, attackSpawn.transform.position, Quaternion.identity);
+        bullet.tag = "SpitEnemyAttack";
+        bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
         
-        //Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
-        //rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
-        //rbBullet.AddForce(transform.up * 2f, ForceMode.Impulse);
+        Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
+        rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
+        rbBullet.AddForce(transform.up * 1f, ForceMode.Impulse);
         //End of attack code
 
         _alreadyAttacked = true;
