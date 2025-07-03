@@ -9,6 +9,7 @@ public class Maynard : MonoBehaviour, IEnemy
     public bool forceInit = true;
     [SerializeField] private NavMeshAgent _agent;
     [SerializeField] private LayerMask _whatIsGround, _whatIsPlayer;
+    [SerializeField] private GameObject attackSpawn;
 
     //FSM
     private FiniteStateMachine<Maynard> _stateMachine;
@@ -184,7 +185,9 @@ public class Maynard : MonoBehaviour, IEnemy
 
         if (_health <= 0)
         {
-            //Invoke(nameof(DestroyEnemy), 0.05f);
+            gameObject.layer = 0;
+            gameObject.tag = "Untagged";
+            
             _stateMachine.SetState(_deathS);
         }
     }
@@ -283,12 +286,13 @@ public class Maynard : MonoBehaviour, IEnemy
     public void ScreamAttackPlayer()
     {     
         //Attack code here
-        //GameObject bullet = Instantiate(_bulletPrefab, transform.position, Quaternion.identity);
-        //bullet.tag = "EnemyProjectile";
-        //bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
-        //Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
-        //rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
-        //rbBullet.AddForce(transform.up * 2f, ForceMode.Impulse);
+        GameObject bullet = Instantiate(_bulletPrefab, attackSpawn.transform.position, Quaternion.identity);
+        bullet.tag = "SpitEnemyAttack";
+        bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
+        
+        Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
+        rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
+        rbBullet.AddForce(transform.up * 1f, ForceMode.Impulse);
         //End of attack code
 
         _alreadyAttacked = true;

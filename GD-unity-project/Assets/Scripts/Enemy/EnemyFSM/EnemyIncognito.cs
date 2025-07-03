@@ -3,13 +3,14 @@ using Enemy.EnemyData;
 using Enemy.EnemyManager;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 
 public class Incognito : MonoBehaviour, IEnemy
 {
     public bool forceInit = true;
     [SerializeField] private NavMeshAgent _agent;
     [SerializeField] private LayerMask _whatIsGround, _whatIsPlayer;
-    [SerializeField] private GameObject AttackSpawn;
+    [SerializeField] private GameObject attackSpawn;
 
     private float _distanceAttackDamageMultiplier;
     private float _closeAttackDamageMultiplier;
@@ -104,10 +105,6 @@ public class Incognito : MonoBehaviour, IEnemy
         _stateMachine.AddTransition(shortSpitAttackS, wonderS, () => _alreadyAttacked);
         _stateMachine.AddTransition(wonderS, shortSpitAttackS, () => !_alreadyAttacked);
         
-        _stateMachine.AddTransition(patrolS, _deathS, () => _health<=0);
-        _stateMachine.AddTransition(chaseS, _deathS, () => _health<=0);
-        _stateMachine.AddTransition(wonderS, _deathS, () => _health<=0);
-        _stateMachine.AddTransition(shortSpitAttackS, _deathS, () => _health<=0);
         //Set Initial state
         _stateMachine.SetState(patrolS);
     }
@@ -164,7 +161,6 @@ public class Incognito : MonoBehaviour, IEnemy
             gameObject.layer = 0;
             gameObject.tag = "Untagged";
             
-            //Invoke(nameof(DestroyEnemy), 3f);
             _stateMachine.SetState(_deathS);
         }
 
@@ -253,7 +249,7 @@ public class Incognito : MonoBehaviour, IEnemy
     public void ShortSpitAttackPlayer()
     {
         //Attack code here
-        GameObject bullet = Instantiate(_bulletPrefab, AttackSpawn.transform.position, Quaternion.identity);
+        GameObject bullet = Instantiate(_bulletPrefab, attackSpawn.transform.position, Quaternion.identity);
         bullet.tag = "SpitEnemyAttack";
         bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
         
