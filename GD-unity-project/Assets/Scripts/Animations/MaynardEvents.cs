@@ -48,6 +48,11 @@ namespace Animations
             ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardCloseAttack, transform.position);
         }
+
+        public void CloseAttackHit()
+        {
+            maynard.CheckCloseAttackDamage();
+        }
     
         public void FallScream()
         {

@@ -49,6 +49,8 @@ public class Maynard : MonoBehaviour, IEnemy
     private State _deathS;
 
     private RoomManager.RoomManager _roomManager;
+    
+    private PlayerShoot playerShoot;
 
     void Awake()
     {
@@ -62,6 +64,8 @@ public class Maynard : MonoBehaviour, IEnemy
         anim = new MaynardAnimation(maynardAC);
         _playerTransform = GameObject.Find("Player").transform;
         _agent = GetComponent<NavMeshAgent>();
+        playerShoot = Player.Instance.GetComponent<PlayerShoot>();
+        
         //we suppose that all enemy have an one SkinnedMeshRenderer 
         SkinnedMeshRenderer smr = GetComponentInChildren<SkinnedMeshRenderer>();
 
@@ -284,10 +288,10 @@ public class Maynard : MonoBehaviour, IEnemy
     }
 
     public void ScreamAttackPlayer()
-    {     
+    { 
         //Attack code here
         GameObject bullet = Instantiate(_bulletPrefab, attackSpawn.transform.position, Quaternion.identity);
-        bullet.tag = "SpitEnemyAttack";
+        bullet.tag = "EnemyAttack";
         bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
         
         Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
@@ -301,18 +305,15 @@ public class Maynard : MonoBehaviour, IEnemy
     
     public void CloseAttackPlayer()
     {
-        //Attack code here
-        //GameObject bullet = Instantiate(_bulletPrefab, transform.position, Quaternion.identity);
-        //bullet.transform.GetComponent<Renderer>().material.color = Color.red;
-        //bullet.tag = "EnemyProjectile";
-        //bullet.GetComponent<GetCollisions>().enemyBulletDamage = _closeAttackDamage;    
-        //Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
-        //rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
-        //rbBullet.AddForce(transform.up * 2f, ForceMode.Impulse);
-        //End of attack code
-
         _alreadyAttacked = true;
         Invoke(nameof(ResetAttack), _timeBetweenAttacks);
     }
 
+    public void CheckCloseAttackDamage()
+    {
+        if (Physics.CheckSphere(transform.position, 2f, _whatIsPlayer))
+        {
+            playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, 5, 5);
+        }
+    }
 }

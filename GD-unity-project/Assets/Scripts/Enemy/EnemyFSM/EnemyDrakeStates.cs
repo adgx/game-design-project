@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class DrakePatrolState : State
 {
     private Drake _drake;
@@ -43,6 +45,28 @@ public class DrakeChaseState : State
     }
 }
 
+public class DrakeBiteAttackState : State
+{
+    private Drake _drake;
+    public DrakeBiteAttackState(string name, Drake drake) : base(name)
+    {
+        _drake = drake;
+    }
+    public override void Enter()
+    {
+        _drake.anim.lunchBiteAnim();
+    }
+
+    public override void Tik()
+    {
+        _drake.AttackPlayer();
+    }
+
+    public override void Exit()
+    {
+    }
+}
+
 public class DrakeSwipingAttackState : State
 {
     private Drake _drake;
@@ -57,14 +81,12 @@ public class DrakeSwipingAttackState : State
 
     public override void Tik()
     {
-        _drake.SwipingAttackPlayer();
+        _drake.AttackPlayer();
     }
 
     public override void Exit()
     {
     }
-
-
 }
 
 public class DrakeWonderState : State
