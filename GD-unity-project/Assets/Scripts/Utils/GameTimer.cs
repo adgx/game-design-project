@@ -72,7 +72,7 @@ namespace Utils {
 			playerScript = player.GetComponent<Player>();
 			playerShoot = player.GetComponent<PlayerShoot>();
 			
-			StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
+			//StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
 
 			GameStatus.gameEnded = false;
 			GameStatus.gamePaused = false;

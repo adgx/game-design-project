@@ -2453,6 +2453,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b359c5325223b4d46af9ec7411c23a21, type: 3}
+--- !u!225 &1599404027 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 4398049158021365803, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+  m_PrefabInstance: {fileID: 361144709}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1643695748 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1525368830516734701, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
@@ -2847,7 +2852,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1027fffed39994e7ba05e1f494acf175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeCanvasGroup: {fileID: 235949649}
+  fadeCanvasGroup: {fileID: 1599404027}
   fadeDuration: 0.5
 --- !u!114 &1738691467
 MonoBehaviour:
@@ -2938,7 +2943,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1738691462}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8c9c20bcbff9b45d4bcaf572ee643233, type: 3}
   m_Name: 
