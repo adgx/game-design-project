@@ -9,7 +9,6 @@ using System.Collections.Generic;
 
 public class Drake : MonoBehaviour, IEnemy
 {
-    public bool forceInit = true;
     [SerializeField] private NavMeshAgent _agent;
     [SerializeField] private LayerMask whatIsGround, whatIsPlayer;
     //FSM
@@ -81,20 +80,7 @@ public class Drake : MonoBehaviour, IEnemy
     }
 
     void Start()
-    {
-        if (forceInit)
-        {
-            _agent.speed = 8f;
-            _health = 100f;
-            _walkPointRange = 12f;
-            _timeBetweenAttacks = 2.5f;
-            _sightRange = 12f;
-            _attackRange = 1f;
-            _distanceAttackDamageMultiplier = 0f;
-            _closeAttackDamageMultiplier = 0.8f;
-            _closeAttackDamage = 50;
-        } 
-        
+    {   
         //FMS base
         _stateMachine = new FiniteStateMachine<Drake>(this);
 
@@ -254,7 +240,7 @@ public class Drake : MonoBehaviour, IEnemy
             return;
         }
 
-        if (forceInit || _roomManager.IsNavMeshBaked)
+        if (_roomManager.IsNavMeshBaked)
         {
             _agent.SetDestination(_playerTransform.position);
         }

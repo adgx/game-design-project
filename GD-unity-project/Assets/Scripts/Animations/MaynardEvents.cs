@@ -33,9 +33,11 @@ namespace Animations
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Maynard's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MaynardDistanceAttack1, transform.position);
-        }
-    
-        public void MutantRoaring()
+
+			maynard.EmitScream();
+		}
+
+		public void MutantRoaring()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Maynard's FSM

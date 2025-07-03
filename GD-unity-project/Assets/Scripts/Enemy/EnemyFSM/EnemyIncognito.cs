@@ -7,7 +7,6 @@ using UnityEngine.Serialization;
 
 public class Incognito : MonoBehaviour, IEnemy
 {
-    public bool forceInit = true;
     [SerializeField] private NavMeshAgent _agent;
     [SerializeField] private LayerMask _whatIsGround, _whatIsPlayer;
     [SerializeField] private GameObject attackSpawn;
@@ -77,17 +76,6 @@ public class Incognito : MonoBehaviour, IEnemy
 
     void Start()
     {
-        if (forceInit)
-        {
-            _agent.speed = 8f;
-            _health = 100f;
-            _walkPointRange = 12f;
-            _timeBetweenAttacks = 2.5f;
-            _sightRange = 12f;
-            _attackRange = 8f;
-            _distanceAttackDamageMultiplier = 1.2f;
-            _closeAttackDamageMultiplier = 1.2f;
-        } 
         //FMS base
         _stateMachine = new FiniteStateMachine<Incognito>(this);
 
@@ -203,39 +191,12 @@ public class Incognito : MonoBehaviour, IEnemy
     {
         if (_agent == null || !_agent.isOnNavMesh) return;
 
-        if (forceInit || _roomManager.IsNavMeshBaked)
+        if (_roomManager.IsNavMeshBaked)
         {
             _agent.SetDestination(_playerTransform.position);
         }
     }
 
-/*
-    public void AttackPlayer()
-    {
-        if (_agent == null || !_agent.isOnNavMesh) return;
-
-        //Make sure enemy doesn't move
-        _agent.SetDestination(transform.position);
-
-        transform.LookAt(new Vector3(_playerTransform.position.x, transform.position.y, _playerTransform.position.z));
-
-        if (!_alreadyAttacked)
-        {
-            //Attack code here
-            GameObject bullet = Instantiate(_bulletPrefab, transform.position, Quaternion.identity);
-            bullet.tag = "EnemyProjectile";
-            bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
-
-            Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
-            rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
-            rbBullet.AddForce(transform.up * 2f, ForceMode.Impulse);
-            //End of attack code
-
-            _alreadyAttacked = true;
-            Invoke(nameof(ResetAttack), _timeBetweenAttacks);
-        }
-    }
-*/
     public void WonderAttackPlayer()
     {
         if (_agent == null || !_agent.isOnNavMesh) return;
@@ -248,21 +209,23 @@ public class Incognito : MonoBehaviour, IEnemy
 
     public void ShortSpitAttackPlayer()
     {
-        //Attack code here
-        GameObject bullet = Instantiate(_bulletPrefab, attackSpawn.transform.position, Quaternion.identity);
-        bullet.tag = "SpitEnemyAttack";
-        bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
-        
-        Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
-        rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
-        rbBullet.AddForce(transform.up * 1f, ForceMode.Impulse);
-        //End of attack code
-
         _alreadyAttacked = true;
         Invoke(nameof(ResetAttack), _timeBetweenAttacks);
     }
 
-    void ResetAttack()
+    public void EmitSpit() {
+		//Attack code here
+		GameObject bullet = Instantiate(_bulletPrefab, attackSpawn.transform.position, Quaternion.identity);
+		bullet.tag = "SpitEnemyAttack";
+		bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
+
+		Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
+		rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
+		rbBullet.AddForce(transform.up * 1f, ForceMode.Impulse);
+		//End of attack code
+	}
+
+	void ResetAttack()
     {
         _alreadyAttacked = false;
     }

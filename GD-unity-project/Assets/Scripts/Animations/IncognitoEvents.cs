@@ -34,6 +34,11 @@ namespace Animations
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoDistanceAttack1, transform.position);
         }
 
+        // This function is called when Incognito should emit its spit
+        public void Spitting() {
+			incognito.EmitSpit();
+		}
+
         public void LongDistanceSpitLoad()
         {
             // Audio management
