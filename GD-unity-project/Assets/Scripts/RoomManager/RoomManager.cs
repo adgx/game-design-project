@@ -139,7 +139,6 @@ namespace RoomManager
             }
 
             _nPaper = Random.Range(_minPaper, _maxPaper + 1);
-            print(_nPaper);
             CacheRoomDataByType();
 
             if (_currentPlayer == null)
