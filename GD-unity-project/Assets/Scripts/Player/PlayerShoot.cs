@@ -76,8 +76,8 @@ public class PlayerShoot : MonoBehaviour
 	public enum DamageTypes {
 		Spit,
 		MaynardDistanceAttack,
-		MaynardCloseAttack,
-		DrakeCloseAttack
+		CloseAttack,
+		DrakeBiteAttack
 	}
 
 	private void Start() {
@@ -571,11 +571,20 @@ public class PlayerShoot : MonoBehaviour
 		}
 		else
      	{
+	        DisableAttacks(true);
+	        player.FreezeMovement(true);
+	        if (damageType == DamageTypes.DrakeBiteAttack)
+	        {
+		        // Audio management
+		        GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, player.transform.position);
+		        
+		        AnimationManager.Instance.Bite();
+		        await Task.Delay(2000);
+	        }
+	        
      		// Audio management
      		GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardGrunt, player.transform.position);
 
-			player.FreezeMovement(true);
-			DisableAttacks(true);
 			gameObject.layer = 0;
 		    AnimationManager.Instance.Death(x, z);
 			await Task.Delay(2500);
@@ -627,7 +636,7 @@ public class PlayerShoot : MonoBehaviour
 					DisableAttacks(false);
 					player.FreezeMovement(false);
 					break;
-				case DamageTypes.MaynardCloseAttack:
+				case DamageTypes.CloseAttack:
 					DisableAttacks(true);
 					player.FreezeMovement(true);
 					AnimationManager.Instance.Hit(x, z);
@@ -636,7 +645,7 @@ public class PlayerShoot : MonoBehaviour
 					DisableAttacks(false);
 					player.FreezeMovement(false);
 					break;
-				case DamageTypes.DrakeCloseAttack:
+				case DamageTypes.DrakeBiteAttack:
 					DisableAttacks(true);
 					player.FreezeMovement(true);
 					AnimationManager.Instance.Bite();

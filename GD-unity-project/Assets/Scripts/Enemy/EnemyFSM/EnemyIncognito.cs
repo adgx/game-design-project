@@ -3,12 +3,13 @@ using Enemy.EnemyData;
 using Enemy.EnemyManager;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 
 public class Incognito : MonoBehaviour, IEnemy
 {
-    public bool forceInit = true;
     [SerializeField] private NavMeshAgent _agent;
     [SerializeField] private LayerMask _whatIsGround, _whatIsPlayer;
+    [SerializeField] private GameObject attackSpawn;
 
     private float _distanceAttackDamageMultiplier;
     private float _closeAttackDamageMultiplier;
@@ -42,8 +43,9 @@ public class Incognito : MonoBehaviour, IEnemy
 
     private RoomManager.RoomManager _roomManager;
 
-    //states
-    private State _deathS;
+	//states
+	private State _reactFromFrontS;
+	private State _deathS;
 
     void Awake()
     {
@@ -75,17 +77,6 @@ public class Incognito : MonoBehaviour, IEnemy
 
     void Start()
     {
-        if (forceInit)
-        {
-            _agent.speed = 8f;
-            _health = 100f;
-            _walkPointRange = 12f;
-            _timeBetweenAttacks = 2.5f;
-            _sightRange = 12f;
-            _attackRange = 8f;
-            _distanceAttackDamageMultiplier = 1.2f;
-            _closeAttackDamageMultiplier = 1.2f;
-        } 
         //FMS base
         _stateMachine = new FiniteStateMachine<Incognito>(this);
 
@@ -94,7 +85,9 @@ public class Incognito : MonoBehaviour, IEnemy
         State chaseS = new IncognitoChaseState("Chase", this);
         State wonderS = new IncognitoWonderState("Wonder", this);
         State shortSpitAttackS = new IncognitoShortSpitAttackState("ShortSpitAttack", this);
-        _deathS = new IncognitoDeathState("Death", this);
+		_reactFromFrontS = new IncognitoReactFromFrontState("Hit", this);
+		_deathS = new IncognitoDeathState("Death", this);
+
         //Transition
         _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(chaseS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
@@ -102,8 +95,13 @@ public class Incognito : MonoBehaviour, IEnemy
         _stateMachine.AddTransition(wonderS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(shortSpitAttackS, wonderS, () => _alreadyAttacked);
         _stateMachine.AddTransition(wonderS, shortSpitAttackS, () => !_alreadyAttacked);
-        //Set Initial state
-        _stateMachine.SetState(patrolS);
+
+		_stateMachine.AddTransition(_reactFromFrontS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
+		_stateMachine.AddTransition(_reactFromFrontS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
+		_stateMachine.AddTransition(_reactFromFrontS, wonderS, () => _playerInSightRange && _playerInAttackRange);
+
+		//Set Initial state
+		_stateMachine.SetState(patrolS);
     }
 
     void Update()
@@ -153,10 +151,14 @@ public class Incognito : MonoBehaviour, IEnemy
 
         StartCoroutine(ChangeColor(Color.red, 0.8f, 0));
 
-        if (_health <= 0)
-        {
-            //Invoke(nameof(DestroyEnemy), 0.05f);
+        if(_health <= 0) {
+            gameObject.layer = 0;
+            gameObject.tag = "Untagged";
+
             _stateMachine.SetState(_deathS);
+        }
+        else {
+            _stateMachine.SetState(_reactFromFrontS);
         }
 
         
@@ -198,39 +200,12 @@ public class Incognito : MonoBehaviour, IEnemy
     {
         if (_agent == null || !_agent.isOnNavMesh) return;
 
-        if (forceInit || _roomManager.IsNavMeshBaked)
+        if (_roomManager.IsNavMeshBaked)
         {
             _agent.SetDestination(_playerTransform.position);
         }
     }
 
-/*
-    public void AttackPlayer()
-    {
-        if (_agent == null || !_agent.isOnNavMesh) return;
-
-        //Make sure enemy doesn't move
-        _agent.SetDestination(transform.position);
-
-        transform.LookAt(new Vector3(_playerTransform.position.x, transform.position.y, _playerTransform.position.z));
-
-        if (!_alreadyAttacked)
-        {
-            //Attack code here
-            GameObject bullet = Instantiate(_bulletPrefab, transform.position, Quaternion.identity);
-            bullet.tag = "EnemyProjectile";
-            bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
-
-            Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
-            rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
-            rbBullet.AddForce(transform.up * 2f, ForceMode.Impulse);
-            //End of attack code
-
-            _alreadyAttacked = true;
-            Invoke(nameof(ResetAttack), _timeBetweenAttacks);
-        }
-    }
-*/
     public void WonderAttackPlayer()
     {
         if (_agent == null || !_agent.isOnNavMesh) return;
@@ -243,21 +218,23 @@ public class Incognito : MonoBehaviour, IEnemy
 
     public void ShortSpitAttackPlayer()
     {
-        //Attack code here
-        //GameObject bullet = Instantiate(_bulletPrefab, transform.position, Quaternion.identity);
-        //bullet.tag = "EnemyProjectile";
-        //bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
-        
-        //Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
-        //rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
-        //rbBullet.AddForce(transform.up * 2f, ForceMode.Impulse);
-        //End of attack code
-
         _alreadyAttacked = true;
         Invoke(nameof(ResetAttack), _timeBetweenAttacks);
     }
 
-    void ResetAttack()
+    public void EmitSpit() {
+		//Attack code here
+		GameObject bullet = Instantiate(_bulletPrefab, attackSpawn.transform.position, Quaternion.identity);
+		bullet.tag = "SpitEnemyAttack";
+		bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
+
+		Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
+		rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
+		rbBullet.AddForce(transform.up * 1f, ForceMode.Impulse);
+		//End of attack code
+	}
+
+	void ResetAttack()
     {
         _alreadyAttacked = false;
     }

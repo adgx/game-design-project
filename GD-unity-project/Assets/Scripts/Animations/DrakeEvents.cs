@@ -10,7 +10,7 @@ namespace Animations
         private EventInstance drakeFootsteps;
         private EventInstance drakeIdle;
 
-        private Drake _drake; 
+        private Drake drake; 
     
         private bool isRunning = false; // TODO: to be removed once we have Drake's FSM
         private bool isIdle = false; // TODO: to be removed once we have Drake's FSM
@@ -18,17 +18,15 @@ namespace Animations
 
         public void Awake()
         {
-            _drake = GetComponent<Drake>();
+            drake = GetComponent<Drake>();
 
-            if (_drake == null)
+            if (drake == null)
             {
                 Debug.LogError($"{ToString()}: Drake not found");
             }        
         }
         public void Idle()
         {
-            Debug.Log("Idle");
-
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             isIdle = true; // TODO: to be removed once we have Drake's FSM
@@ -36,8 +34,6 @@ namespace Animations
         
         public void Run()
         {
-            Debug.Log("Run");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             isRunning = true; // TODO: to be removed once we have Drake's FSM
@@ -45,26 +41,27 @@ namespace Animations
         
         public void Bite()
         {
-            Debug.Log("Bite");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeCloseAttack1, transform.position);
+
+            drake.CheckBiteAttackDamage();
         }
     
         public void Swiping()
         {
-            Debug.Log("Swiping");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeCloseAttack2, transform.position);
         }
+
+        public void SwipingAttackHit()
+        {
+            drake.CheckSwipingAttackDamage();
+        }
     
         public void Defense()
         {
-            Debug.Log("Defense");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeDefense, transform.position);
@@ -72,8 +69,6 @@ namespace Animations
     
         public void ReactLargeFromRight()
         {
-            Debug.Log("ReactLargeFromRight");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeHitFromLeftOrRight, transform.position);
@@ -81,8 +76,6 @@ namespace Animations
     
         public void ReactLargeFromLeft()
         {
-            Debug.Log("ReactLargeFromLeft");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeHitFromLeftOrRight, transform.position);
@@ -90,8 +83,6 @@ namespace Animations
     
         public void ReactLargeFromFront()
         {
-            Debug.Log("ReactLargeFromFront");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeHitFromFrontOrBack, transform.position);
@@ -99,8 +90,6 @@ namespace Animations
     
         public void ReactLargeFromBack()
         {
-            Debug.Log("ReactLargeFromBack");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeHitFromFrontOrBack, transform.position);
@@ -108,8 +97,6 @@ namespace Animations
 
         public void DeathHit()
         {
-            Debug.Log("DeathHit");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeDieHit, transform.position);
@@ -117,8 +104,6 @@ namespace Animations
         
         public void DeathFootstep1()
         {
-            Debug.Log("DeathFootstep1");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeDieFoostep1, transform.position);
@@ -126,8 +111,6 @@ namespace Animations
         
         public void DeathFootstep2()
         {
-            Debug.Log("DeathFootstep2");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeDieFoostep2, transform.position);
@@ -135,13 +118,11 @@ namespace Animations
 
         public void DeathDrake()
         {
-            _drake.DestroyEnemy();
+            drake.DestroyEnemy();
         }
         
         public void DeathThud()
         {
-            Debug.Log("DeathThud");
-
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeDieThud, transform.position);

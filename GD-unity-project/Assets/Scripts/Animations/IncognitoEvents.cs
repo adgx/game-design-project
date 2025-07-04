@@ -9,14 +9,12 @@ namespace Animations
         // Audio management
         private EventInstance incognitoFootsteps;
         private EventInstance incognitoIdle;
-        private Incognito _incognito; 
+        private Incognito incognito; 
         private bool isRunning = false; // TODO: to be removed once we have Incognito's FSM
         private bool isIdle = false; // TODO: to be removed once we have Incognito's FSM
 
         public void Idle()
         {
-            Debug.Log("Idle");
-
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             isIdle = true; // TODO: to be removed once we have Incognito's FSM
@@ -24,8 +22,6 @@ namespace Animations
 
         public void Run()
         {
-            Debug.Log("Run");
-
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             isRunning = true; // TODO: to be removed once we have Incognito's FSM
@@ -33,17 +29,18 @@ namespace Animations
 
         public void ShortDistanceSpit()
         {
-            Debug.Log("ShortDistanceSpit");
-
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoDistanceAttack1, transform.position);
         }
 
+        // This function is called when Incognito should emit its spit
+        public void Spitting() {
+			incognito.EmitSpit();
+		}
+
         public void LongDistanceSpitLoad()
         {
-            Debug.Log("LongDistanceSpitLoad");
-
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoDistanceAttack2Load, transform.position);
@@ -51,8 +48,6 @@ namespace Animations
         
         public void LongDistanceSpitShoot()
         {
-            Debug.Log("LongDistanceSpitShoot");
-
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoDistanceAttack2Spit, transform.position);
@@ -60,8 +55,6 @@ namespace Animations
         
         public void FallScream()
         {
-            Debug.Log("FallScream");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoHitFallScream, transform.position);
@@ -69,8 +62,6 @@ namespace Animations
         
         public void FallFootstep1()
         {
-            Debug.Log("FallFootstep1");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoHitFallFootstep1, transform.position);
@@ -78,8 +69,6 @@ namespace Animations
         
         public void FallFootstep2()
         {
-            Debug.Log("FallFootstep2");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoHitFallFootstep2, transform.position);
@@ -87,8 +76,6 @@ namespace Animations
         
         public void FallThud()
         {
-            Debug.Log("FallThud");
-        
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoHitFallThud, transform.position);
@@ -96,8 +83,6 @@ namespace Animations
     
         public void StandUpFootstep1()
         {
-            Debug.Log("StandUpFootstep1");
-        
             // Audio management;
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoStandUpFootstep1, transform.position);
@@ -105,8 +90,6 @@ namespace Animations
     
         public void StandUpFootstep2()
         {
-            Debug.Log("StandUpFootstep2");
-        
             // Audio management;
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoStandUpFootstep2, transform.position);
@@ -114,8 +97,6 @@ namespace Animations
 
         public void ReactLargeFromRight()
         {
-            Debug.Log("ReactLargeFromRight");
-
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoHitFromLeftOrRight, transform.position);
@@ -123,8 +104,6 @@ namespace Animations
 
         public void ReactLargeFromLeft()
         {
-            Debug.Log("ReactLargeFromLeft");
-
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoHitFromLeftOrRight, transform.position);
@@ -132,8 +111,6 @@ namespace Animations
 
         public void ReactLargeGut()
         {
-            Debug.Log("ReactLargeFromFront");
-
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoHitFromFront2, transform.position);
@@ -141,8 +118,6 @@ namespace Animations
 
         public void ReactLargeFromFront()
         {
-            Debug.Log("ReactLargeFromBack");
-
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoHitFromFront1, transform.position);
@@ -150,8 +125,6 @@ namespace Animations
 
         public void DeathGrunt()
         {
-            Debug.Log("DeathGrunt");
-
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoDieGrunt, transform.position);
@@ -159,8 +132,6 @@ namespace Animations
 
         public void DeathThud1()
         {
-            Debug.Log("DeathThud1");
-
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoDieThud1, transform.position);
@@ -168,8 +139,6 @@ namespace Animations
 
         public void DeathThud2()
         {
-            Debug.Log("DeathThud2");
-
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoDieThud2, transform.position);
@@ -177,12 +146,14 @@ namespace Animations
 
         public void DeathIncognito()
         {
-            _incognito.DestroyEnemy();
+            incognito.DestroyEnemy();
         }
 
         // Audio management
         private void Start()
         {
+            incognito = GetComponent<Incognito>();
+            
             incognitoFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.IncognitoFootsteps);
             incognitoFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
 
