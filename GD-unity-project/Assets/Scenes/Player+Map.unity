@@ -1692,7 +1692,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _paperText: {fileID: 235949650}
   _paperTextContainer: {fileID: 2055002796}
-  _player: {fileID: 0}
+  _player: {fileID: 972097723}
 --- !u!4 &947324215 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7942380145102555645, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
@@ -2831,8 +2831,11 @@ MonoBehaviour:
   _maxRooms: 20
   _minRooms: 15
   _skipConnectionChance: 0.35
-  _maxVendingMachines: 4
+  _maxHealthVendingMachines: 10
+  _maxPowerUpVendingMachines: 4
   _maxUpgradeTerminal: 4
+  _maxPaper: 3
+  _difficultyMultiplier: 0.33
   _currentPlayer: {fileID: 972097719}
   fadeManagerLoadingScreen: {fileID: 347109501}
   _gridSizeX: 14

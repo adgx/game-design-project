@@ -31,7 +31,7 @@ public class PlayerShoot : MonoBehaviour
 	private float defaultDamageRadius = 2.5f;
 	private float damageRadius = 2.5f;
 
-	private bool cannotAttack = false;
+	public bool cannotAttack = false;
 
 	// The player has 2 attacks he can choose. He can change them by using the mouse scroll wheel or the back buttons on the controller
 	private int attackNumber = 1;

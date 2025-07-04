@@ -35,18 +35,31 @@ namespace RoomManager.RoomData
         [Tooltip("Base spawn budget used during loop 1. Used for scaling difficulty.")]
         public int roomSpawnBudgetLoop1;
 
-        /// <summary>
-        /// Chance (0–1) to spawn a vending machine.
-        /// </summary>
-        [Range(0f, 1f)]
-        [Tooltip("Chance to spawn a vending machine in this room.")]
-        public float vendingMachineSpawnChance;
+		/// <summary>
+		/// Chance (0–1) to spawn a health vending machine.
+		/// </summary>
+		[Range(0f, 1f)]
+		[Tooltip("Chance to spawn a health vending machine in this room.")]
+		public float healthVendingMachineSpawnChance;
 
-        /// <summary>
-        /// Internal flag for spawning a vending machine (set at runtime).
-        /// </summary>
-        [HideInInspector]
-        public bool spawnVendingMachine;
+		/// <summary>
+		/// Internal flag for spawning a health vending machine (set at runtime).
+		/// </summary>
+		[HideInInspector]
+		public bool spawnHealthVendingMachine;
+
+		/// <summary>
+		/// Chance (0–1) to spawn a power up vending machine.
+		/// </summary>
+		[Range(0f, 1f)]
+        [Tooltip("Chance to spawn a vending machine in this room.")]
+        public float powerUpVendingMachineSpawnChance;
+
+		/// <summary>
+		/// Internal flag for spawning a power up vending machine (set at runtime).
+		/// </summary>
+		[HideInInspector]
+        public bool spawnPowerUpVendingMachine;
 
         /// <summary>
         /// Chance (0–1) to spawn an upgrade terminal.
@@ -98,8 +111,10 @@ namespace RoomManager.RoomData
             clone.roomName = roomName;
             clone.roomSpawnBudget = roomSpawnBudget;
             clone.roomSpawnBudgetLoop1 = roomSpawnBudgetLoop1;
-            clone.vendingMachineSpawnChance = vendingMachineSpawnChance;
-            clone.spawnVendingMachine = spawnVendingMachine;
+			clone.healthVendingMachineSpawnChance = healthVendingMachineSpawnChance;
+			clone.spawnHealthVendingMachine = spawnHealthVendingMachine;
+			clone.powerUpVendingMachineSpawnChance = powerUpVendingMachineSpawnChance;
+            clone.spawnPowerUpVendingMachine = spawnPowerUpVendingMachine;
             clone.upgradeTerminalSpawnChance = upgradeTerminalSpawnChance;
             clone.spawnUpgradeTerminal = spawnUpgradeTerminal;
             clone.paperSpawnChance = paperSpawnChance;

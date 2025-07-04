@@ -76,11 +76,17 @@ namespace RoomManager
         [Tooltip("Points in the room where enemies can spawn.")] [SerializeField]
         private List<Transform> _enemySpawnPoints;
 
-        [Tooltip("Prefab for a vending machine that may spawn in the room.")] [SerializeField]
-        private GameObject _vendingMachinePrefab;
+		[Tooltip("Prefab for a health vending machine that may spawn in the room.")] [SerializeField]
+		private GameObject _healthVendingMachinePrefab;
+
+		private float _healthVendingMachineSpawnChance;
+		private bool _spawnHealthVendingMachine;
+
+		[Tooltip("Prefab for a power up vending machine that may spawn in the room.")] [SerializeField]
+        private GameObject _powerUpVendingMachinePrefab;
         
-        private float _vendingMachineSpawnChance;
-        private bool _spawnVendingMachine;
+        private float _powerUpVendingMachineSpawnChance;
+        private bool _spawnPowerUpVendingMachine;
 
         [Tooltip("Prefab for an upgrade terminal that may spawn in the room.")] [SerializeField]
         private GameObject _upgradeTerminalPrefab;
@@ -139,9 +145,12 @@ namespace RoomManager
 
             MaxSpawnCost = roomData.roomSpawnBudget;
             RoomType = roomData.roomType;
-            
-            _vendingMachineSpawnChance = roomData.vendingMachineSpawnChance;
-            _spawnVendingMachine = roomData.spawnVendingMachine;
+
+			_healthVendingMachineSpawnChance = roomData.healthVendingMachineSpawnChance;
+			_spawnHealthVendingMachine = roomData.spawnHealthVendingMachine;
+
+			_powerUpVendingMachineSpawnChance = roomData.powerUpVendingMachineSpawnChance;
+            _spawnPowerUpVendingMachine = roomData.spawnPowerUpVendingMachine;
             
             _upgradeTerminalSpawnChance = roomData.upgradeTerminalSpawnChance;
             _spawnUpgradeTerminal = roomData.spawnUpgradeTerminal;
@@ -229,15 +238,26 @@ namespace RoomManager
             }
         }
 
-        /// <summary>
-        /// Attempts to spawn the vending machine based on chance and eligibility.
-        /// </summary>
-        public bool PostInitializeVendingMachine()
-        {
-            if (_vendingMachineSpawnChance == 0) return false;
+		/// <summary>
+		/// Attempts to spawn the health vending machine based on chance and eligibility.
+		/// </summary>
+		public bool PostInitializeHealthVendingMachine() {
+			if(_healthVendingMachineSpawnChance == 0)
+				return false;
 
-            _vendingMachinePrefab.SetActive(_spawnVendingMachine);
-            return _spawnVendingMachine;
+			_healthVendingMachinePrefab.SetActive(_spawnHealthVendingMachine);
+			return _spawnHealthVendingMachine;
+		}
+
+		/// <summary>
+		/// Attempts to spawn the power up vending machine based on chance and eligibility.
+		/// </summary>
+		public bool PostInitializePowerUpVendingMachine()
+        {
+            if (_powerUpVendingMachineSpawnChance == 0) return false;
+
+            _powerUpVendingMachinePrefab.SetActive(_spawnPowerUpVendingMachine);
+            return _spawnPowerUpVendingMachine;
         }
 
         /// <summary>

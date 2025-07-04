@@ -98,6 +98,8 @@ public class TerminalTrigger : MonoBehaviour
 		if(!busy) {
 			// Audio management
 			player = GameObject.Find("Player");
+			player.transform.rotation = transform.rotation;
+			AnimationManager.Instance.Idle();
 			helpText.text = "";
 			helpTextContainer.SetActive(false);
 
