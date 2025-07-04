@@ -1,38 +1,38 @@
 using System.Collections;
-using UnityEngine;
 using Audio;
+using UnityEngine;
 
 namespace PlayerInteraction
 {
-    public class PowerUpVendingMachineInteraction : MonoBehaviour, IInteractable
+    public class HealthVendingMachineInteraction : MonoBehaviour, IInteractable
     {
-        public string InteractionPrompt => _powerUpObtained
-            ? "You obtained a " + _obtainedPowerUp + "!"
-            : _isPowerUpVendingMachineHacked
+        public string InteractionPrompt => _healthObtained
+            ? "Your health was recovered!"
+            : _isHealthVendingMachineHacked
                 ? "Press E again to take a snack from the machine"
                 : "Press E to interact with the snack distributor";
 
         public bool IsInteractable => !_isBusy;
-
+        
         [Header("Timings")] [SerializeField] private float _hackingTime = 4.2f;
         [SerializeField] private float _itemUseAnimationTime = 6.0f;
 
-        static System.Random _random = new System.Random();
+        [Header("UI Feedback")]
+        [Tooltip("How long the 'Health Recovered' message should display before resetting.")]
+        [SerializeField]
+        private float _feedbackMessageDuration = 3.0f;
 
-        private PowerUp.PlayerPowerUpTypes _obtainedPowerUp;
-        private bool _isPowerUpVendingMachineHacked = false;
-        private bool _powerUpObtained = false;
+        private bool _isHealthVendingMachineHacked = false;
+        private bool _healthObtained = false;
         private bool _isBusy = false;
         private PlayerShoot _playerShoot;
         private Player _player;
-        private PowerUp _powerUp;
         private RotateSphere _rotateSphere;
 
         private void Start()
         {
             _playerShoot = PlayerShoot.Instance;
             _player = Player.Instance;
-            _powerUp = PowerUp.Instance;
             _rotateSphere = RotateSphere.Instance;
         }
 
@@ -43,13 +43,7 @@ namespace PlayerInteraction
                 return false;
             }
 
-            if (_powerUp.playerPowerUps.Count <= 0)
-            {
-                Debug.Log("Vending machine is empty.");
-                return false;
-            }
-
-            if (_isPowerUpVendingMachineHacked)
+            if (_isHealthVendingMachineHacked)
             {
                 StartCoroutine(GetItemSequence());
             }
@@ -82,7 +76,7 @@ namespace PlayerInteraction
             _playerShoot.DecreaseStamina(1);
             _rotateSphere.isRotating = true;
 
-            _isPowerUpVendingMachineHacked = true;
+            _isHealthVendingMachineHacked = true;
 
             _player.FreezeMovement(false);
             _playerShoot.DisableAttacks(false);
@@ -98,45 +92,39 @@ namespace PlayerInteraction
             _player.FreezeMovement(true);
             _playerShoot.DisableAttacks(true);
 
-            Debug.Log("Getting power up: taking power up from the machine");
+            Debug.Log("Recovering health: taking snack from the machine");
 
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineItemPickUp,
                 this.transform.position);
-            _isPowerUpVendingMachineHacked = false;
+            _isHealthVendingMachineHacked = false;
 
-            int powerUpIndexPlayer = _random.Next(_powerUp.playerPowerUps.Count);
-            _obtainedPowerUp = _powerUp.playerPowerUps[powerUpIndexPlayer];
+            AnimationManager.Instance.EatSnack();
 
-            if (_obtainedPowerUp == PowerUp.PlayerPowerUpTypes.HealthBoost)
-            {
-                Debug.Log("Using power up: health boost (chips)");
-                AnimationManager.Instance.EatChips();
-            }
-            else if (_obtainedPowerUp == PowerUp.PlayerPowerUpTypes.DamageReduction)
-            {
-                Debug.Log("Using power up: damage reduction (energy drink)");
-                AnimationManager.Instance.Drink();
-            }
+            Debug.Log("Your health was recovered!");
 
             yield return new WaitForSeconds(_itemUseAnimationTime);
 
-            if (_obtainedPowerUp == PowerUp.PlayerPowerUpTypes.HealthBoost)
-            {
-                _playerShoot.maxHealth += 20;
-                _playerShoot.health += 20;
-            }
-            else if (_obtainedPowerUp == PowerUp.PlayerPowerUpTypes.DamageReduction)
-            {
-                _playerShoot.damageReduction -= 0.2f;
-            }
-
-            _powerUp.ObtainPowerUp(_obtainedPowerUp);
-            _powerUp.playerPowerUps.RemoveAt(powerUpIndexPlayer);
-            _powerUpObtained = true;
+            _playerShoot.RecoverHealth(_playerShoot.maxHealth);
+            
+            StartCoroutine(ShowFeedbackMessage());
 
             _player.FreezeMovement(false);
             _playerShoot.DisableAttacks(false);
             _isBusy = false;
+        }
+
+        /// <summary>
+        /// A small coroutine dedicated to showing the feedback message for a few seconds.
+        /// </summary>
+        private IEnumerator ShowFeedbackMessage()
+        {
+            _healthObtained = true;
+            Debug.Log("UI: Showing 'Health Recovered' message.");
+            
+            yield return new WaitForSeconds(_feedbackMessageDuration);
+            
+            _healthObtained = false;
+            Debug.Log("UI: Hiding feedback message. Machine is ready to be hacked again.");
         }
     }
 }
