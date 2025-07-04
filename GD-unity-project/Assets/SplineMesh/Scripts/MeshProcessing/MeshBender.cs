@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Splines;
 using UnityEditor;
 using System;
 using System.Collections.Generic;
