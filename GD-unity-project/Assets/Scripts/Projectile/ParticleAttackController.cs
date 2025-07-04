@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
 
-public class EnergySphereController : MonoBehaviour
+public class ParticleAttackController : MonoBehaviour
 {
-    [SerializeField] private ParticleSystem _energyPS;
+    [SerializeField] private ParticleSystem _attackPS;
     //acceleration
     private float _a = 10f;
     //velocity max
@@ -22,7 +22,7 @@ public class EnergySphereController : MonoBehaviour
         _destPos = _targetPos.position;
         transform.LookAt((_destPos- transform.position).normalized);
         gameObject.SetActive(true);
-        _energyPS.Play();
+        _attackPS.Play();
 
     }
     void Update()
