@@ -19,36 +19,12 @@ public class LookAtEnemy : MonoBehaviour
         playerShoot = GetComponent<PlayerShoot>();
     }
 
-    public void Start()
-    {
-        //useless
-        /* Calculate the offset between the player’s pivot and its "foot"
-        Renderer renderer = GetComponent<Renderer>();
-
-        if (renderer == null)
-        {
-            playerPivotOffset = 0;
-        }
-
-        else
-        {
-            playerPivotOffset = transform.position.y - renderer.bounds.min.y;   
-        }
-        
-        // Find the floor in the scene
-        GameObject floor = GameObject.FindGameObjectWithTag("Floor");
-        heightY = floor.transform.position.y - transform.position.y;
-
-        transform.position = new Vector3(transform.position.x, transform.position.y + heightY - playerPivotOffset, transform.position.z);
-        */
-    }
-
 	// Update is called once per frame
 	void FixedUpdate()
     {
 		Collider[] enemiesInRange = Physics.OverlapSphere(transform.position, sightRange, whatIsEnemy);
 
-		if(input.Vertical == 0 && input.Horizontal == 0 && enemiesInRange.Length > 0) {
+		if(input.Vertical == 0 && input.Horizontal == 0 && enemiesInRange.Length > 0 && !playerShoot.cannotAttack) {
             Transform closestEnemy = null;
             float minDistance = float.MaxValue;
 

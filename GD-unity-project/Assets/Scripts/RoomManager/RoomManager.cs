@@ -42,24 +42,33 @@ namespace RoomManager
         private RoomData.RoomData _initialRoomData;
 
         [Tooltip("The maximum number of rooms to generate in the dungeon.")] [SerializeField]
-        private int _maxRooms = 15;
+        private int _maxRooms = 20;
 
         [Tooltip("The minimum number of rooms required. The dungeon will regenerate if it has fewer.")] [SerializeField]
-        private int _minRooms = 10;
+        private int _minRooms = 15;
 
         [Tooltip("The chance (0 to 1) to skip creating a connection, leading to more dead ends.")]
         [Range(0f, 1f)]
         [SerializeField]
         private float _skipConnectionChance = 0.35f;
 
-        [Tooltip("The maximum number of vending machines that could spawn in the dungeon.")] [SerializeField]
-        private int _maxVendingMachines = 4;
+		[Tooltip("The maximum number of health vending machines that could spawn in the dungeon.")]
+		[SerializeField]
+		private int _maxHealthVendingMachines = 10;
+
+		[Tooltip("The maximum number of power up vending machines that could spawn in the dungeon.")] [SerializeField]
+        private int _maxPowerUpVendingMachines = 4;
 
         [Tooltip("The maximum number of upgrade terminal that could spawn in the dungeon.")] [SerializeField]
         private int _maxUpgradeTerminal = 4;
 
-        [Tooltip("The maximum number of paper that could spawn in the dungeon.")] [SerializeField]
+		[Tooltip("The minimum number of paper that could spawn in the dungeon.")] [SerializeField]
+		private int _minPaper = 1;
+
+		[Tooltip("The maximum number of paper that could spawn in the dungeon.")] [SerializeField]
         private int _maxPaper = 3;
+
+        private int _nPaper;
 
         [Tooltip("")] [SerializeField] private float _difficultyMultiplier = 0.33f;
 
@@ -112,8 +121,9 @@ namespace RoomManager
         private int[,,] _roomGrid;
         private int _roomCount;
 
-        private int _vendingMachineSpawned = 0;
-        private int _upgradeTerminalSpawned = 0;
+        private int _healthVendingMachineSpawned = 0;
+		private int _powerUpVendingMachineSpawned = 0;
+		private int _upgradeTerminalSpawned = 0;
         private bool _paperAlreadySpawned = false;
 
         private void Awake()
@@ -128,6 +138,8 @@ namespace RoomManager
                 return;
             }
 
+            _nPaper = Random.Range(_minPaper, _maxPaper + 1);
+            print(_nPaper);
             CacheRoomDataByType();
 
             if (_currentPlayer == null)
@@ -197,7 +209,8 @@ namespace RoomManager
             _isLayoutGenerated = false;
             IsPlayerSpawned = false;
             _upgradeTerminalSpawned = 0;
-            _vendingMachineSpawned = 0;
+            _healthVendingMachineSpawned = 0;
+            _powerUpVendingMachineSpawned = 0;
 
             if (GameStatus.gameStarted)
                 fadeManagerLoadingScreen.Show();
@@ -250,14 +263,15 @@ namespace RoomManager
             var paperRoomIndexCandidates = _gridIndexList
                 .Where(index => _roomGridData[index.x, index.y, index.z].paperSpawnChance > Random.value)
                 .OrderBy(_ => Random.value)
-                .Take(_maxPaper)
+                .Take(_nPaper)
                 .ToList();
 
             foreach (var index in paperRoomIndexCandidates)
             {
                 _roomGridData[index.x, index.y, index.z].spawnPaper = true;
-                _roomGridData[index.x, index.y, index.z].spawnVendingMachine = false;
-                _roomGridData[index.x, index.y, index.z].spawnUpgradeTerminal = false;
+                _roomGridData[index.x, index.y, index.z].spawnHealthVendingMachine = false;
+				_roomGridData[index.x, index.y, index.z].spawnPowerUpVendingMachine = false;
+				_roomGridData[index.x, index.y, index.z].spawnUpgradeTerminal = false;
             }
 
             var upgradeTerminalRoomIndexCandidates = _gridIndexList
@@ -272,22 +286,33 @@ namespace RoomManager
             {
                 _roomGridData[index.x, index.y, index.z].spawnUpgradeTerminal = true;
                 _roomGridData[index.x, index.y, index.z].spawnPaper = false;
-                _roomGridData[index.x, index.y, index.z].spawnVendingMachine = false;
-            }
+                _roomGridData[index.x, index.y, index.z].spawnHealthVendingMachine = false;
+				_roomGridData[index.x, index.y, index.z].spawnPowerUpVendingMachine = false;
+			}
 
-            var vendingMachineRoomIndexCandidates = _gridIndexList
+			var healthVendingMachineRoomIndexCandidates = _gridIndexList
+				.Where(index =>
+					_roomGridData[index.x, index.y, index.z].healthVendingMachineSpawnChance > Random.value)
+				.OrderBy(_ => Random.value)
+				.Take(_maxHealthVendingMachines)
+				.ToList();
+
+			foreach(var index in healthVendingMachineRoomIndexCandidates) {
+				_roomGridData[index.x, index.y, index.z].spawnHealthVendingMachine = true;
+			}
+
+			var powerUpVendingMachineRoomIndexCandidates = _gridIndexList
                 .Where(index =>
                     !paperRoomIndexCandidates.Contains(index) &&
                     !upgradeTerminalRoomIndexCandidates.Contains(index) &&
-                    _roomGridData[index.x, index.y, index.z].vendingMachineSpawnChance > Random.value)
+                    _roomGridData[index.x, index.y, index.z].powerUpVendingMachineSpawnChance > Random.value)
                 .OrderBy(_ => Random.value)
-                .Take(_maxVendingMachines)
+                .Take(_maxPowerUpVendingMachines)
                 .ToList();
 
-            foreach (var index in vendingMachineRoomIndexCandidates)
-            {
-                _roomGridData[index.x, index.y, index.z].spawnVendingMachine = true;
-                _roomGridData[index.x, index.y, index.z].spawnPaper = false;
+            foreach (var index in powerUpVendingMachineRoomIndexCandidates) {
+				_roomGridData[index.x, index.y, index.z].spawnPowerUpVendingMachine = true;
+				_roomGridData[index.x, index.y, index.z].spawnPaper = false;
                 _roomGridData[index.x, index.y, index.z].spawnUpgradeTerminal = false;
             }
         }
@@ -323,8 +348,9 @@ namespace RoomManager
             newRoomScript.RoomIndex = gridIndex;
             newRoomScript.PostInitializeConnections();
             newRoomScript.PostInitializeUpgradeTerminal();
-            newRoomScript.PostInitializeVendingMachine();
-            newRoomScript.PostInitializePaper();
+            newRoomScript.PostInitializeHealthVendingMachine();
+			newRoomScript.PostInitializePowerUpVendingMachine();
+			newRoomScript.PostInitializePaper();
 
             _currentRoomInstance = newRoomScript;
 

@@ -98,6 +98,8 @@ public class TerminalTrigger : MonoBehaviour
 		if(!busy) {
 			// Audio management
 			player = GameObject.Find("Player");
+			player.transform.rotation = transform.rotation;
+			AnimationManager.Instance.Idle();
 			helpText.text = "";
 			helpTextContainer.SetActive(false);
 
@@ -106,7 +108,7 @@ public class TerminalTrigger : MonoBehaviour
 					// Give a random power up for the Sphere
 					if(powerUps.spherePowerUps.Count > 0) {
 						// Audio management
-						rotateSphere.positionSphere(new Vector3(0.7f, 1f, 0), RotateSphere.Animation.Linear);
+						rotateSphere.positionSphere(new Vector3(rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
 						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerTerminalInteraction, this.transform.position);
 
 						busy = true;
@@ -200,7 +202,7 @@ public class TerminalTrigger : MonoBehaviour
 							Debug.Log("Getting power up: machine activation");
 							// Audio management
 							GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineActivation, this.transform.position);
-							rotateSphere.positionSphere(new Vector3(0.7f, 1f, 0), RotateSphere.Animation.Linear);
+							rotateSphere.positionSphere(new Vector3(rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
 							
 							busy = true;
 							playerShoot.DisableAttacks(true);
@@ -257,7 +259,7 @@ public class TerminalTrigger : MonoBehaviour
 						Debug.Log("Recovering health: machine activation");
 						// Audio management
 						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineActivation, this.transform.position);
-						rotateSphere.positionSphere(new Vector3(0.7f, 1f, 0), RotateSphere.Animation.Linear);
+						rotateSphere.positionSphere(new Vector3(rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
 
 						busy = true;
 						playerShoot.DisableAttacks(true);

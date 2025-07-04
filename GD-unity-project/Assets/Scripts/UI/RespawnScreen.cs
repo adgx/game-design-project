@@ -14,8 +14,8 @@ public class RespawnScreen : MonoBehaviour
 	[SerializeField] private GameObject deathMessageContainer;
 	[SerializeField] private GameObject confirmMenu;
 
-	[SerializeField] private TextMeshProUGUI title;
-	[SerializeField] private TextMeshProUGUI subtitle;
+	[SerializeField] private GameObject GameEndMessageContainer;
+	[SerializeField] private GameObject DiedMessageContainer;
 
 	[SerializeField] private GameObject firstSelected;
 	[SerializeField] private GameObject noButton;
@@ -27,12 +27,12 @@ public class RespawnScreen : MonoBehaviour
 		EventSystem.current.SetSelectedGameObject(firstSelected);
 
 		if(GameStatus.gameEnded) {
-			title.text = "Thanks for playing!";
-			subtitle.text = "This demo ends here. If you want, you can play again";
+			GameEndMessageContainer.SetActive(true);
+			DiedMessageContainer.SetActive(false);
 		}
 		else {
-			title.text = "You died!";
-			subtitle.text = "";
+			GameEndMessageContainer.SetActive(false);
+			DiedMessageContainer.SetActive(true);
 		}
 
 		Cursor.lockState = CursorLockMode.None;

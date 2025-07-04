@@ -6,6 +6,7 @@ using ORF;
 public class RotateSphere : MonoBehaviour
 {
     [SerializeField] private GameObject player;
+    public float DistanceFromPlayer = 0.6f;
     [SerializeField] private float rotationSpeed = 100f;
     [SerializeField] private float transitionSpeed = 10f;
     
@@ -24,7 +25,7 @@ public class RotateSphere : MonoBehaviour
     private new Animation animation;
 
     void Start() {
-        transform.localPosition = player.transform.forward * 0.7f;
+        transform.localPosition = player.transform.forward * DistanceFromPlayer;
     }
 
     // This function positions the Sphere in the specified position around the Player, moving it with the specified animation

@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7150538561049276754}
   serializedVersion: 2
-  m_LocalRotation: {x: 6.123234e-17, y: -1, z: -6.123234e-17, w: -3.7493994e-33}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.5, y: 0, z: -1.415}
   m_LocalScale: {x: 1, y: 0.30252, z: 1}
   m_ConstrainProportionsScale: 0
@@ -67,11 +67,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c95e080be36249ad9c5585fdf4428d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerShoot: {fileID: 0}
-  powerUps: {fileID: 0}
-  helpText: {fileID: 0}
-  helpTextContainer: {fileID: 0}
-  rotateSphere: {fileID: 0}
 --- !u!114 &551634403691498597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,7 +166,7 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 058251f06555f413a8a908ffaabf6c1d, type: 3}
-      insertIndex: 0
+      insertIndex: -1
       addedObject: {fileID: 1417108131564093735}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2219141687384191602, guid: 058251f06555f413a8a908ffaabf6c1d, type: 3}
