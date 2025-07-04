@@ -224,7 +224,7 @@ public class PlayerShoot : MonoBehaviour
 	async void LoadDistanceAttack() {
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
-		rotateSphere.positionSphere(new Vector3(0, 1f, 0.7f), RotateSphere.Animation.RotateAround);
+		rotateSphere.positionSphere(new Vector3(0, 0.8f, rotateSphere.DistanceFromPlayer), RotateSphere.Animation.RotateAround);
 		AnimationManager.Instance.Idle();
 		AnimationManager.Instance.Attack();
 		
@@ -456,7 +456,7 @@ public class PlayerShoot : MonoBehaviour
 		Destroy(attackArea);
 		player.isFrozen = false;
 
-		rotateSphere.positionSphere(new Vector3(0.7f, 1f, 0), RotateSphere.Animation.Linear);
+		rotateSphere.positionSphere(new Vector3(rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
 		await Task.Delay(300);
 		rotateSphere.isRotating = true;
 
