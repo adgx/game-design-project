@@ -68,7 +68,7 @@ namespace PlayerInteraction
         {
             Ray ray = new Ray(_mainCamera.transform.position, _mainCamera.transform.forward);
 
-            if (Physics.SphereCast(ray, 0.5f, out RaycastHit hit, _interactionDistance, _interactionLayer) &&
+            if (Physics.SphereCast(ray, 1.5f, out RaycastHit hit, _interactionDistance, _interactionLayer) &&
                 hit.collider.TryGetComponent(out IInteractable interactable))
             {
                 if (interactable.IsInteractable)
