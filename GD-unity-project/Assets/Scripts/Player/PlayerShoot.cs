@@ -622,40 +622,28 @@ public class PlayerShoot : MonoBehaviour
 					DisableAttacks(true);
 					player.FreezeMovement(true);
 					AnimationManager.Instance.HitSpit(x, z);
-					await Task.Delay(2000);
-
-					DisableAttacks(false);
-					player.FreezeMovement(false);
 					break;
 				case DamageTypes.MaynardDistanceAttack:
 					DisableAttacks(true);
 					player.FreezeMovement(true);
 					AnimationManager.Instance.Hit(x, z);
-					await Task.Delay(1000);
-
-					DisableAttacks(false);
-					player.FreezeMovement(false);
 					break;
 				case DamageTypes.CloseAttack:
 					DisableAttacks(true);
 					player.FreezeMovement(true);
 					AnimationManager.Instance.Hit(x, z);
-					await Task.Delay(1000);
-
-					DisableAttacks(false);
-					player.FreezeMovement(false);
 					break;
 				case DamageTypes.DrakeBiteAttack:
 					DisableAttacks(true);
 					player.FreezeMovement(true);
 					AnimationManager.Instance.Bite();
-					await Task.Delay(1000);
-
-					DisableAttacks(false);
-					player.FreezeMovement(false);
 					break;
 			}
 		}
+	}
+	public void FreePlayer() {
+		DisableAttacks(false);
+		player.FreezeMovement(false);
 	}
 	private void DestroyPlayer() {
 		Destroy(gameObject);

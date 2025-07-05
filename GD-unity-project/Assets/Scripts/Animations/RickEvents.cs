@@ -24,6 +24,7 @@ namespace Animations
         private bool isIdle = false; // TODO: to be removed once we have Rick's FSM
         
         public PowerUp powerUp;
+        public PlayerShoot playerShoot;
     
         public void Idle()
         {
@@ -151,8 +152,12 @@ namespace Animations
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChocolate, transform.position);
         }
-        
-        public void Hit()
+
+		public void FreePlayerAfterAnimation() {
+			playerShoot.FreePlayer();
+		}
+
+		public void Hit()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
@@ -173,7 +178,7 @@ namespace Animations
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHitByBite, transform.position);
         }
-        
+
         public void VendingMachineItemPickup()
         {
             // Audio management
