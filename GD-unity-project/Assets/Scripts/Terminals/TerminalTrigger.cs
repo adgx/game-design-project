@@ -42,11 +42,28 @@ public class TerminalTrigger : MonoBehaviour
 
 	private PlayerInput playerInput;
 
+	// For PowerUps
+	[SerializeField] private GameObject EnergyDrinkMesh;
+	[SerializeField] private GameObject SnackMesh;
+	// For Health
+	[SerializeField] private GameObject SpecialSnackMesh;
+
+	private GameObject energyDrink;
+	private GameObject snack;
+	private GameObject specialSnack;
+
+	private GameObject LeftHand;
+	private GameObject RightHand;
+
 	private void Start() {
-		playerInput = Player.Instance.GetComponent<PlayerInput>();
-		playerShoot = Player.Instance.GetComponent<PlayerShoot>();
-		playerScript = Player.Instance.GetComponent<Player>();
-		powerUps = Player.Instance.GetComponent<PowerUp>();
+		player = Player.Instance.gameObject;
+		playerInput = player.GetComponent<PlayerInput>();
+		playerShoot = player.GetComponent<PlayerShoot>();
+		playerScript = player.GetComponent<Player>();
+		powerUps = player.GetComponent<PowerUp>();
+
+		LeftHand = GameObject.Find("Player/Armature/mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand");
+		RightHand = GameObject.Find("Player/Armature/mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand");
 
 		helpTextContainer = GameObject.Find("CanvasGroup/HUD/HelpTextContainer");
 		helpText = helpTextContainer.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
@@ -96,10 +113,9 @@ public class TerminalTrigger : MonoBehaviour
 
     async private void ManageVendingMachine() {
 		if(!busy) {
-			// Audio management
-			player = GameObject.Find("Player");
-			player.transform.rotation = transform.rotation;
+			StartCoroutine(RotatePlayerTowards(transform, 0.2f));
 			AnimationManager.Instance.Idle();
+
 			helpText.text = "";
 			helpTextContainer.SetActive(false);
 
@@ -165,10 +181,14 @@ public class TerminalTrigger : MonoBehaviour
 								AnimationManager.Instance.EatChips();
 								//GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChips, player.transform.position);
 
-								await Task.Delay(6000);
+								await Task.Delay(1000);
+								PlaceSnackInHand();
+
+								await Task.Delay(5000);
 
 								playerShoot.maxHealth += 20;
 								playerShoot.health += 20;
+								Destroy(snack);
 							}
 							
 							if (obtainedPowerUp == PowerUp.PlayerPowerUpTypes.DamageReduction)
@@ -177,9 +197,14 @@ public class TerminalTrigger : MonoBehaviour
 								AnimationManager.Instance.Drink();
 								//GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDrink, player.transform.position);
 
-								await Task.Delay(6000);
+								//NOTE: this await is needed and I can not use the events provided by the animation, since I would not have a way to know which is the right TerminalTrigger that I need to reference
+								await Task.Delay(1000);
+								PlaceDrinkInHand();
+
+								await Task.Delay(5000);
 
 								playerShoot.damageReduction -= 0.2f;
+								Destroy(energyDrink);
 							}
 
 							// Show a message to the player
@@ -240,12 +265,15 @@ public class TerminalTrigger : MonoBehaviour
 						healthVendingMachineHacked = false;
 
 						AnimationManager.Instance.EatSnack();
+						await Task.Delay(1000);
+						PlaceSpecialSnackInHand();
 
-						await Task.Delay(6000);
+						await Task.Delay(5000);
 						
 						// Show a message to the player
 						helpText.text = "Your health was recovered!";
 						helpTextContainer.SetActive(true);
+						Destroy(specialSnack);
 
 						// Audio management
 						//GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChocolate, player.transform.position);
@@ -286,10 +314,44 @@ public class TerminalTrigger : MonoBehaviour
 		}
 	}
 
+	private IEnumerator RotatePlayerTowards(Transform target, float duration) {
+		Quaternion startRotation = player.transform.rotation;
+		Quaternion endRotation = Quaternion.LookRotation(target.forward, Vector3.up);
+		float elapsed = 0f;
+
+		while(elapsed < duration) {
+			player.transform.rotation = Quaternion.Slerp(startRotation, endRotation, elapsed / duration);
+			elapsed += Time.deltaTime;
+			yield return null;
+		}
+
+		player.transform.rotation = endRotation; // Ensure final alignment
+	}
 
 	private void Update() {
         if (triggerType != TriggerType.None && playerInput.InteractionPressed()) {
             ManageVendingMachine();
         }
     }
+
+	public void PlaceDrinkInHand() {
+		energyDrink = Instantiate(EnergyDrinkMesh);
+		energyDrink.transform.SetParent(LeftHand.transform);
+		energyDrink.transform.SetLocalPositionAndRotation(new Vector3(-7.91e-06f, 7.33e-06f, 3.93e-06f), new Quaternion(-3.593f, 99.3f, 0, 99.3f));
+		energyDrink.transform.localScale = new Vector3(0.0002f, 0.0002f, 0.0002f);
+	}
+
+	public void PlaceSnackInHand() {
+		snack = Instantiate(SnackMesh);
+		snack.transform.SetParent(RightHand.transform);
+		snack.transform.SetLocalPositionAndRotation(new Vector3(3.59e-06f, 7.72e-06f, 1.022e-05f), new Quaternion(-85.337f, 90, 0, 90));
+		snack.transform.localScale = new Vector3(1.6e-05f, 1.6e-05f, 1.6e-05f);
+	}
+
+	public void PlaceSpecialSnackInHand() {
+		specialSnack = Instantiate(SpecialSnackMesh);
+		specialSnack.transform.SetParent(LeftHand.transform);
+		specialSnack.transform.SetLocalPositionAndRotation(new Vector3(-5.51e-06f, 1.01e-05f, 3.32e-06f), Quaternion.Euler(-5.322f, 77.962f, -32.059f));
+		specialSnack.transform.localScale = new Vector3(0.00015f, 0.00015f, 0.00015f);
+	}
 }

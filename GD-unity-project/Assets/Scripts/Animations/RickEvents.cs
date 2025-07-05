@@ -211,14 +211,6 @@ namespace Animations
         
             rickIdle = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerIdle);
             rickIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-            
-            // TODO: debug code used to test the power up mechanism related to loaded attacks 
-            // powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.DefensePowerUp);
-            // powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.DefensePowerUp);
-            // powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp);
-            // powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp);
-            // powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp);
-            // powerUp.ObtainPowerUp(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp);
         }
     
         // FixedUpdate is called once per frame
