@@ -4,14 +4,15 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine.UIElements;
+using UnityEngine.Splines;
+using UESpline = UnityEngine.Splines.Spline;
+using Unity.Mathematics;
 
-
-public class SpitBendingObject : MonoBehaviour
+public class SpitBendingObjectV2 : MonoBehaviour
 {
     [SerializeField] private Vector3 scale;
-
-    [SerializeField] private Spline spline;
-    [SerializeField] private ExampleContortAlong contortAlong;
+    [SerializeField] private SpitContortAlong contortAlong;
+    [SerializeField] private UESpline spline;
 
     [SerializeField] private float speedDelta;
     [SerializeField] private float animSpeed;
@@ -19,8 +20,27 @@ public class SpitBendingObject : MonoBehaviour
     [SerializeField] private ParticleSystem splashParticle;
     [SerializeField] float splashActivationOffset;
 
+    //bezier points
+    private BezierKnot _start;
+    private BezierKnot _middle;
+    private BezierKnot _target;
+
     //end point 
     private Vector3 target;
+
+    public void Awake()
+    {
+        spline = GetComponent<SplineContainer>().Spline;
+        //init point for the spline
+
+        
+    }
+
+    public void Start()
+    {   
+        
+        //SpitBend(Vector3.zero);   
+    }
 
     public void SpitBend(Vector3 target)
     {
@@ -32,8 +52,6 @@ public class SpitBendingObject : MonoBehaviour
     //control the animation
     IEnumerator Coroutine_SpitBend()
     { 
-        //disable spline, and the splash particle
-        spline.gameObject.SetActive(false);
         splashParticle.gameObject.SetActive(false);
 
         //config spline: set and create nodes on spline 
@@ -42,20 +60,20 @@ public class SpitBendingObject : MonoBehaviour
         contortAlong.Init();
 
         //animate contortion
-        spline.gameObject.SetActive(true);
 
         //todo: test the real length
         //mesh length 
         float meshLength = contortAlong.meshBender.Source.Length;
         meshLength = meshLength == 0 ? 1 : meshLength;
+        Debug.Log($"Mesh lengh: {meshLength}");
         //mesh + spline
-        float totalLength = meshLength + spline.Length;
-
+        float totalLength = meshLength + spline.GetLength();
+        Debug.Log($"Total lengh: {totalLength}");
         float speedCurveLerp = 0;//acceleration factor
         //actual length 
         float length = 0;
 
-        Vector3 startScale = scale;
+        Vector3 startScale = Vector3.zero;
         startScale.x = 0;
         Vector3 targetScale = scale;
 
@@ -69,7 +87,7 @@ public class SpitBendingObject : MonoBehaviour
             }
             else //Animate movement
             {
-                contortAlong.Contort((length - meshLength) / spline.Length);
+                contortAlong.Contort((length - meshLength) / spline.GetLength());
                 if (length + meshLength > totalLength + splashActivationOffset)
                 {
                     if (!splashParticle.isPlaying)
@@ -95,38 +113,26 @@ public class SpitBendingObject : MonoBehaviour
 
     private void ConfigureSpline()
     {
-
-        if (spline.nodes.Count > 2)
-        {
-            Debug.Log($"nodes: {spline.nodes.Count}");
-        }
-
-
-        //define the direction
-        Vector3 targetDirection = target - transform.position;
-        transform.forward = new Vector3(targetDirection.x, 0, targetDirection.z).normalized;
-        //define the parlabolic path
-
-        float maxHeight = 0.2f;
-        //spline.AddNode(new SplineNode(Vector3.zero, Vector3.forward));
-        //start node 
-        //spline.AddNode(new SplineNode(Vector3.zero, Vector3.forward));
-        //from world coordinates to local coordinates
-        Vector3 mPos = new Vector3(transform.position.x + targetDirection.x / 2, transform.position.y + maxHeight, transform.position.z + targetDirection.z / 2);
-        spline.nodes[0].Position = transform.InverseTransformPoint(transform.position);
-        spline.nodes[0].Direction = transform.InverseTransformDirection(Vector3.zero);
+        Vector3 middlePos = new Vector3((target.x - transform.position.x) / 2, (target.y - transform.position.y) / 2, (target.z - transform.position.z) / 2);
+        float deltaHight = 0.1f;
+        middlePos.y += deltaHight;
+        //start node
+        _start.Position = Vector3.zero;
+        _start.TangentOut = transform.InverseTransformDirection(middlePos - Vector3.zero).normalized;
         //middle node
-
-        //Vector3 mPos = new Vector3(targetDirection.x / 2, maxHeight, targetDirection.z / 2);
-        //spline.InsertNode(1, new SplineNode(transform.InverseTransformPoint(mPos),
-        //                                    transform.InverseTransformDirection((target-mPos).normalized)));
-        //spline.nodes[1].Position = transform.InverseTransformPoint(mPos);
-        //spline.nodes[1].Direction = transform.InverseTransformDirection((target - mPos).normalized)*0.1f;
+        _middle.Position = middlePos;
+        Vector3 midDir = transform.InverseTransformDirection(target - transform.position).normalized;
+        _middle.TangentIn = -midDir;
+        _middle.TangentOut = midDir;
         //end node
-        //spline.AddNode(new SplineNode(transform.InverseTransformPoint(target), transform.InverseTransformDirection(target - mPos).normalized*0.1f));
-        spline.nodes[1].Position = transform.InverseTransformPoint(target);
-        spline.nodes[1].Direction = transform.InverseTransformDirection(Vector3.zero);
-        spline.RefreshCurves();
+        Vector3 endDir = transform.InverseTransformDirection(target - middlePos).normalized;
+        _target.Position = transform.InverseTransformPoint(target);
+        _target.TangentIn = -endDir;
+        _target.TangentOut = endDir;
+
+        spline.Add(_start);
+        spline.Add(_middle);
+        spline.Add(_target);
     }
 
 }
