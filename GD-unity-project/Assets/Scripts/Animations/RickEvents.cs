@@ -16,51 +16,65 @@ namespace Animations
         private EventInstance rickWalkFootsteps;
         private EventInstance rickRunFootsteps;
         private EventInstance rickIdle;
-        
+
         private bool isLoadingCloseAttack = false; // TODO: to be removed once we have Rick's FSM
         private bool isLoadingDistanceAttack = false; // TODO: to be removed once we have Rick's FSM
         private bool isWalking = false; // TODO: to be removed once we have Rick's FSM
         private bool isRunning = false; // TODO: to be removed once we have Rick's FSM
         private bool isIdle = false; // TODO: to be removed once we have Rick's FSM
-        
+
         public PowerUp powerUp;
         public PlayerShoot playerShoot;
+
+        public void SetHitState()
+        {
+            AnimationManager.Instance.rickState = RickStates.Hit;
+        }
+        public void SetIdleState()
+        {
+            AnimationManager.Instance.rickState = RickStates.Idle;
+        }
     
+        public void SetHitSpitState()
+        {
+            AnimationManager.Instance.rickState = RickStates.HitSpit;
+        }
+
         public void Idle()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             isIdle = true; // TODO: to be removed once we have Rick's FSM
         }
-        
+
         public void Walk()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             isWalking = true; // TODO: to be removed once we have Rick's FSM
         }
-        
+
         public void Run()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             isRunning = true; // TODO: to be removed once we have Rick's FSM
         }
-        
+
         public void CloseAttackLoad()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             isLoadingCloseAttack = true;
         }
-        
+
         public void CloseAttackShoot()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             //GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerCloseAttackShoot, transform.position);
         }
-        
+
         public void DistanceAttackLoad()
         {
             // Audio management
@@ -74,15 +88,15 @@ namespace Animations
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             //GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDistanceAttackShoot, transform.position);
         }
-        
+
         public void ShieldActivation()
         {
             // AnimationManager.Instance.DefenseVFX(transform.position);
-        
+
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldActivation, transform.position);
-            
+
             if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
             {
                 if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1)
@@ -93,59 +107,59 @@ namespace Animations
                 else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 2)
                 {
                     _ = ShieldDeactivationAfterDelay(10000);
-                }   
+                }
             }
         }
-        
+
         public void DeathForwardGrunt()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardGrunt, transform.position);
         }
-        
+
         public void DeathForwardThud1()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardThud1, transform.position);
         }
-        
+
         public void DeathForwardThud2()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardThud2, transform.position);
         }
-        
+
         public void DeathBackwardGrunt()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieBackwardGrunt, transform.position);
         }
-        
+
         public void DeathBackwardThud()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieBackwardThud, transform.position);
         }
-        
+
         public void Drink()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDrink, transform.position);
         }
-        
+
         public void EatChips()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChips, transform.position);
         }
-    
+
         public void EatChocolate()
         {
             // Audio management
@@ -163,7 +177,7 @@ namespace Animations
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, transform.position);
         }
-        
+
         public void HitBySpit()
         {
             // Audio management
@@ -171,7 +185,7 @@ namespace Animations
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHitBySpit, transform.position);
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, transform.position);
         }
-        
+
         public void HitByBite()
         {
             // Audio management
@@ -185,46 +199,46 @@ namespace Animations
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineItemPickUp, transform.position);
         }
-        
+
         public void WakeUp()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerWakeUp, transform.position);
         }
-        
+
         // Audio management
         private void Start()
         {
             rickLoadCloseAttackWithPowerUp1 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerCloseAttackLoadWithPowerUp1);
             rickLoadCloseAttackWithPowerUp1.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-        
+
             rickLoadDistanceAttackWithPowerUp1 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerDistanceAttackLoadWithPowerUp1);
             rickLoadDistanceAttackWithPowerUp1.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-            
+
             rickLoadCloseAttackWithPowerUp2 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerCloseAttackLoadWithPowerUp2);
             rickLoadCloseAttackWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-        
+
             rickLoadDistanceAttackWithPowerUp2 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerDistanceAttackLoadWithPowerUp2);
             rickLoadDistanceAttackWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-            
+
             rickWalkFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerWalkFootsteps);
             rickWalkFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-            
+
             rickRunFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerRunFootsteps);
             rickRunFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-        
+
             rickIdle = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerIdle);
             rickIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
         }
-    
+
         // FixedUpdate is called once per frame
         void FixedUpdate()
         {
             // Audio management
             UpdateSound();
         }
-    
+
         private void UpdateSound()
         {
             rickLoadCloseAttackWithPowerUp1.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
@@ -234,7 +248,7 @@ namespace Animations
             rickWalkFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             rickRunFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             rickIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-            
+
             if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp))
             {
                 // Start loadCloseAttack event if Rick is loading the close attack 
@@ -252,7 +266,7 @@ namespace Animations
                             _ = StopLoadingSoundAfterDelay(rickLoadCloseAttackWithPowerUp1, 1500);
                         }
                     }
-                    else if(powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 2)
+                    else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 2)
                     {
                         rickLoadCloseAttackWithPowerUp2.getPlaybackState(out loadCloseAttackPlaybackState);
                         if (loadCloseAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
@@ -267,23 +281,23 @@ namespace Animations
                 {
                     if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 1)
                     {
-                        rickLoadCloseAttackWithPowerUp1.stop(STOP_MODE.ALLOWFADEOUT);   
+                        rickLoadCloseAttackWithPowerUp1.stop(STOP_MODE.ALLOWFADEOUT);
                     }
                     else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 2)
                     {
-                        rickLoadCloseAttackWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);   
+                        rickLoadCloseAttackWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);
                     }
-                }   
+                }
             }
 
             if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp))
-            {   
+            {
                 // Start loadDistanceAttack event if Rick is loading the distance attack 
                 if (isLoadingDistanceAttack) // TODO: check Rick's state (something like <<RickState != LoadingDistanceAttack>>)
                 {
                     // Get the playback state for the loadDistanceAttack event
                     PLAYBACK_STATE loadDistanceAttackPlaybackState;
-                   
+
                     if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 1)
                     {
                         rickLoadDistanceAttackWithPowerUp1.getPlaybackState(out loadDistanceAttackPlaybackState);
@@ -312,11 +326,11 @@ namespace Animations
                     }
                     else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 2)
                     {
-                        rickLoadDistanceAttackWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);   
+                        rickLoadDistanceAttackWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);
                     }
-                }   
+                }
             }
-            
+
             // Start walkFootsteps event if Rick is moving
             if (isWalking) // TODO: check Rick's state (something like <<RickState != Walk>>)
             {
@@ -350,7 +364,7 @@ namespace Animations
             {
                 rickRunFootsteps.stop(STOP_MODE.ALLOWFADEOUT);
             }
-        
+
             // Start idle event if Rick is using the idle animation
             if (isIdle) // TODO: check Rick's state (something like <<RickState != Idle>>)
             {
@@ -368,7 +382,7 @@ namespace Animations
                 rickIdle.stop(STOP_MODE.ALLOWFADEOUT);
             }
         }
-    
+
         // TODO: to be removed once we have Rick's FSM
         private void ResetAudioState()
         {
@@ -378,7 +392,7 @@ namespace Animations
             isRunning = false;
             isIdle = false;
         }
-        
+
         // Audio management
         private async Task StopLoadingSoundAfterDelay(EventInstance instance, int delayMs)
         {
@@ -394,20 +408,23 @@ namespace Animations
 
             if (state != PLAYBACK_STATE.STOPPED)
                 instance.stop(STOP_MODE.ALLOWFADEOUT);
-            
+
             ResetAudioState();
         }
-        
+
         private async Task ShieldDeactivationAfterDelay(int delayMs)
         {
             await Task.Delay(delayMs);
-            
+
             Debug.Log("ShieldDeactivation");
-        
+
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldDeactivation, transform.position);
         }
     }
+    
+
+    
 }
 

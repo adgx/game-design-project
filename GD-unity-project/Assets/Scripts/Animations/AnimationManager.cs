@@ -62,7 +62,8 @@ public class AnimationManager : MonoBehaviour
         {
             Destroy(instance);
         }
-        else {
+        else
+        {
             instance = this;
         }
     }
@@ -84,7 +85,7 @@ public class AnimationManager : MonoBehaviour
         areaAttackHash = Animator.StringToHash("AreaAttack");
         endAreaAttackHash = Animator.StringToHash("EndAreaAttack");
         defenseHash = Animator.StringToHash("Defense");
-		hitHash = Animator.StringToHash("Hit");
+        hitHash = Animator.StringToHash("Hit");
         hitSpitHash = Animator.StringToHash("HitSpit");
         biteHash = Animator.StringToHash("Bite");
         eatSnackHash = Animator.StringToHash("EatSnack");
@@ -111,11 +112,11 @@ public class AnimationManager : MonoBehaviour
 
     async void RandomizeIdleAsync(int sec)
     {
-        await Task.Delay(sec*1000);
+        await Task.Delay(sec * 1000);
         int idleIndex = Random.Range(0, NUM_IDLE_ANIMATIONS);
         if (this != null && rickAC != null && rickAC.gameObject != null && rickAC.isActiveAndEnabled)
         {
-            rickAC.SetInteger("IdleIndex", idleIndex);   
+            rickAC.SetInteger("IdleIndex", idleIndex);
         }
         randomIdleIsDone = true;
     }
@@ -127,7 +128,7 @@ public class AnimationManager : MonoBehaviour
         rickState = RickStates.Run;
 
     }
-    public void Defense() 
+    public void Defense()
     {
         rickAC.SetTrigger(defenseHash);
         rickState = RickStates.DefenseStart;
@@ -150,19 +151,19 @@ public class AnimationManager : MonoBehaviour
         rickAC.SetTrigger(attackHash);
         rickState = RickStates.Attack;
     }
-    
+
     public void EndAttack()
     {
         rickAC.SetTrigger(endAttackHash);
         rickState = RickStates.EndAttack;
     }
-    
+
     public void AreaAttack()
     {
         rickAC.SetTrigger(areaAttackHash);
         rickState = RickStates.AreaAttack;
     }
-    
+
     public void EndAreaAttack()
     {
         rickAC.SetTrigger(endAreaAttackHash);
@@ -171,7 +172,7 @@ public class AnimationManager : MonoBehaviour
 
     public void DefenseVFX(Vector3 pos)
     {
-        Instantiate(prefabSheildVFX, pos, Quaternion.identity); 
+        Instantiate(prefabSheildVFX, pos, Quaternion.identity);
     }
     
     public void Hit(int x, int z)
@@ -179,7 +180,7 @@ public class AnimationManager : MonoBehaviour
         rickAC.SetInteger("DirHitX", x);
 		rickAC.SetInteger("DirHitZ", z);
 
-		rickAC.SetTrigger(hitHash);
+        rickAC.SetTrigger(hitHash);
         rickState = RickStates.Hit;
     }
     
@@ -188,36 +189,40 @@ public class AnimationManager : MonoBehaviour
 		rickAC.SetInteger("DirHitX", x);
 		rickAC.SetInteger("DirHitZ", z);
 
-		rickAC.SetTrigger(hitSpitHash);
+        rickAC.SetTrigger(hitSpitHash);
         rickState = RickStates.HitSpit;
     }
 
-	public void Bite() {
-		rickAC.SetTrigger(biteHash);
-		rickState = RickStates.Bite;
-	}
+    public void Bite()
+    {
+        rickAC.SetTrigger(biteHash);
+        rickState = RickStates.Bite;
+    }
 
-	public void EatSnack() {
-		rickAC.SetTrigger(eatSnackHash);
-		rickState = RickStates.EatSnack;
-	}
+    public void EatSnack()
+    {
+        rickAC.SetTrigger(eatSnackHash);
+        rickState = RickStates.EatSnack;
+    }
 
-	public void Drink() {
-		rickAC.SetTrigger(drinkHash);
-		rickState = RickStates.Drink;
-	}
+    public void Drink()
+    {
+        rickAC.SetTrigger(drinkHash);
+        rickState = RickStates.Drink;
+    }
 
-	public void EatChips() {
-		rickAC.SetTrigger(eatChipsHash);
-		rickState = RickStates.EatChips;
-	}
+    public void EatChips()
+    {
+        rickAC.SetTrigger(eatChipsHash);
+        rickState = RickStates.EatChips;
+    }
 
 	public void Death(int x, int z)
     {
 		rickAC.SetInteger("DirHitX", x);
 		rickAC.SetInteger("DirHitZ", z);
 
-		rickAC.SetTrigger(deathHash);
+        rickAC.SetTrigger(deathHash);
         rickState = RickStates.Death;
     }
 
@@ -226,4 +231,6 @@ public class AnimationManager : MonoBehaviour
         rickAC.SetTrigger(standUpHash);
         rickState = RickStates.StandUp;
     }
+
+    
 }

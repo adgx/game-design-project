@@ -10,6 +10,8 @@ using Helper;
 
 public class PlayerShoot : MonoBehaviour
 {
+	public static PlayerShoot Instance { get; private set; }
+
 	// Audio management 
 	public bool IsSphereRotating => rotateSphere.isRotating;
 	private EventInstance distanceAttackLoadingWithPowerUp1;
@@ -79,6 +81,19 @@ public class PlayerShoot : MonoBehaviour
 		CloseAttack,
 		DrakeBiteAttack
 	}
+
+private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
 
 	private void Start() {
 		healthBar.SetMaxHealth(health);
