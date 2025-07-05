@@ -557,7 +557,7 @@ public class PlayerShoot : MonoBehaviour
 		isShieldCoroutineRunning = false;
 	}
 
-	public async void TakeDamage(float damage, DamageTypes damageType, float x, float z) {
+	public async void TakeDamage(float damage, DamageTypes damageType, int x, int z) {
      	health -= damage * damageReduction;
      	healthBar.SetHealth(health);
      
@@ -615,7 +615,7 @@ public class PlayerShoot : MonoBehaviour
 
 		renderer.material.color = originColor;
 	}
-	private async void HitAnimation(DamageTypes damageType, float x, float z) {
+	private async void HitAnimation(DamageTypes damageType, int x, int z) {
 		if(!cannotAttack && !player.isFrozen) {
 			switch(damageType) {
 				case DamageTypes.Spit:
