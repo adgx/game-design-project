@@ -5,6 +5,8 @@ using ORF;
 
 public class RotateSphere : MonoBehaviour
 {
+    public static RotateSphere Instance { get; private set; }
+    
     [SerializeField] private GameObject player;
     public float DistanceFromPlayer = 0.6f;
     [SerializeField] private float rotationSpeed = 100f;
@@ -24,6 +26,19 @@ public class RotateSphere : MonoBehaviour
 
     private new Animation animation;
 
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
+    
     void Start() {
         transform.localPosition = player.transform.forward * DistanceFromPlayer;
     }
