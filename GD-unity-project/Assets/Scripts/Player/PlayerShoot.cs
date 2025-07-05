@@ -557,7 +557,7 @@ public class PlayerShoot : MonoBehaviour
 		isShieldCoroutineRunning = false;
 	}
 
-	public async void TakeDamage(float damage, DamageTypes damageType, float x, float z) {
+	public async void TakeDamage(float damage, DamageTypes damageType, int x, int z) {
      	health -= damage * damageReduction;
      	healthBar.SetHealth(health);
      
@@ -615,47 +615,35 @@ public class PlayerShoot : MonoBehaviour
 
 		renderer.material.color = originColor;
 	}
-	private async void HitAnimation(DamageTypes damageType, float x, float z) {
+	private async void HitAnimation(DamageTypes damageType, int x, int z) {
 		if(!cannotAttack && !player.isFrozen) {
 			switch(damageType) {
 				case DamageTypes.Spit:
 					DisableAttacks(true);
 					player.FreezeMovement(true);
 					AnimationManager.Instance.HitSpit(x, z);
-					await Task.Delay(2000);
-
-					DisableAttacks(false);
-					player.FreezeMovement(false);
 					break;
 				case DamageTypes.MaynardDistanceAttack:
 					DisableAttacks(true);
 					player.FreezeMovement(true);
 					AnimationManager.Instance.Hit(x, z);
-					await Task.Delay(1000);
-
-					DisableAttacks(false);
-					player.FreezeMovement(false);
 					break;
 				case DamageTypes.CloseAttack:
 					DisableAttacks(true);
 					player.FreezeMovement(true);
 					AnimationManager.Instance.Hit(x, z);
-					await Task.Delay(1000);
-
-					DisableAttacks(false);
-					player.FreezeMovement(false);
 					break;
 				case DamageTypes.DrakeBiteAttack:
 					DisableAttacks(true);
 					player.FreezeMovement(true);
 					AnimationManager.Instance.Bite();
-					await Task.Delay(1000);
-
-					DisableAttacks(false);
-					player.FreezeMovement(false);
 					break;
 			}
 		}
+	}
+	public void FreePlayer() {
+		DisableAttacks(false);
+		player.FreezeMovement(false);
 	}
 	private void DestroyPlayer() {
 		Destroy(gameObject);
