@@ -113,9 +113,9 @@ public class TerminalTrigger : MonoBehaviour
 
     async private void ManageVendingMachine() {
 		if(!busy) {
-			// Audio management
-			player.transform.rotation = transform.rotation;
+			StartCoroutine(RotatePlayerTowards(transform, 0.2f));
 			AnimationManager.Instance.Idle();
+
 			helpText.text = "";
 			helpTextContainer.SetActive(false);
 
@@ -314,6 +314,19 @@ public class TerminalTrigger : MonoBehaviour
 		}
 	}
 
+	private IEnumerator RotatePlayerTowards(Transform target, float duration) {
+		Quaternion startRotation = player.transform.rotation;
+		Quaternion endRotation = Quaternion.LookRotation(target.forward, Vector3.up);
+		float elapsed = 0f;
+
+		while(elapsed < duration) {
+			player.transform.rotation = Quaternion.Slerp(startRotation, endRotation, elapsed / duration);
+			elapsed += Time.deltaTime;
+			yield return null;
+		}
+
+		player.transform.rotation = endRotation; // Ensure final alignment
+	}
 
 	private void Update() {
         if (triggerType != TriggerType.None && playerInput.InteractionPressed()) {
@@ -331,14 +344,14 @@ public class TerminalTrigger : MonoBehaviour
 	public void PlaceSnackInHand() {
 		snack = Instantiate(SnackMesh);
 		snack.transform.SetParent(RightHand.transform);
-		snack.transform.SetLocalPositionAndRotation(new Vector3(6.54e-06f, 1.015e-05f, 8.69e-06f), new Quaternion(-85.337f, 90, 0, 90));
+		snack.transform.SetLocalPositionAndRotation(new Vector3(3.59e-06f, 7.72e-06f, 1.022e-05f), new Quaternion(-85.337f, 90, 0, 90));
 		snack.transform.localScale = new Vector3(1.6e-05f, 1.6e-05f, 1.6e-05f);
 	}
 
 	public void PlaceSpecialSnackInHand() {
 		specialSnack = Instantiate(SpecialSnackMesh);
 		specialSnack.transform.SetParent(LeftHand.transform);
-		specialSnack.transform.SetLocalPositionAndRotation(new Vector3(-5.51e-06f, 1.01e-05f, 3.32e-06f), new Quaternion(-1.4f, 67, -40.9f, 67));
+		specialSnack.transform.SetLocalPositionAndRotation(new Vector3(-5.51e-06f, 1.01e-05f, 3.32e-06f), Quaternion.Euler(-5.322f, 77.962f, -32.059f));
 		specialSnack.transform.localScale = new Vector3(0.00015f, 0.00015f, 0.00015f);
 	}
 }
