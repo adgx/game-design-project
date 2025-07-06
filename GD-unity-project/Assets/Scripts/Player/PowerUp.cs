@@ -69,7 +69,7 @@ public class PowerUp : MonoBehaviour
         playerPowerUps.Add(PlayerPowerUpTypes.DamageReduction);
         playerPowerUps.Add(PlayerPowerUpTypes.DamageReduction);
         playerPowerUps.Add(PlayerPowerUpTypes.DamageReduction);
-    }
+	}
 
     public void ObtainPowerUp(object powerUp)
     {
