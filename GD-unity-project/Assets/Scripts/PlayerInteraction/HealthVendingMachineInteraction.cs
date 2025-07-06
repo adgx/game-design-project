@@ -63,8 +63,6 @@ namespace PlayerInteraction
         private IEnumerator HackingSequence()
         {
             _isBusy = true;
-            _player.FreezeMovement(true);
-            _playerShoot.DisableAttacks(true);
 
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineActivation,
                 this.transform.position);
@@ -76,9 +74,7 @@ namespace PlayerInteraction
             _playerShoot.DecreaseStamina(1);
             _rotateSphere.isRotating = true;
             _isHealthVendingMachineHacked = true;
-
-            _player.FreezeMovement(false);
-            _playerShoot.DisableAttacks(false);
+            
             _isBusy = false;
         }
 
