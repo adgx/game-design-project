@@ -12,7 +12,7 @@ using Enemy.EnemyManager;
 namespace Utils {
 	public class GameTimer : MonoBehaviour {
 		// TODO: the timer is set to 2 minutes for debugging. It should be of 10 minutes.
-		private const float TimeLimit = 10 * 60f;
+		private const float TimeLimit = 10 * 1f;
 		private float currentTime;
 
 		public TMP_Text timerText;
@@ -53,7 +53,7 @@ namespace Utils {
 		}
 
 		private void Awake() {
-			GameStatus.loopIteration = GameStatus.LoopIteration.THIRD_ITERATION;
+			GameStatus.loopIteration = GameStatus.LoopIteration.FIRST_ITERATION;
 			if(roomManager) {
 				roomManager.OnRunReady += HandleRunReady;
 
@@ -168,6 +168,8 @@ namespace Utils {
 				roomManager.SetRoomsDifficulty();
 				enemyManager.SetEnemyDifficulty();
 				enemyManager.DestroyAllEnemies();
+
+				playerShoot.ResetAttack();
 
 				currentTime = TimeLimit;
 				timerOutlineImage.sprite = timerOutlineSpriteNormal;

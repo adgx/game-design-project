@@ -7,6 +7,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Helper;
+using Unity.Mathematics;
+using Unity.VisualScripting;
 
 public class PlayerShoot : MonoBehaviour
 {
@@ -342,9 +344,7 @@ public class PlayerShoot : MonoBehaviour
 		distanceAttackLoadingBar.fillAmount = 0;
 
 		await Task.Delay(500);
-		attacking = false;
-
-		rotateSphere.isRotating = true;
+		ResetAttack();
 		player.isFrozen = false;
 
 		// Audio management
@@ -467,13 +467,12 @@ public class PlayerShoot : MonoBehaviour
 
 		rotateSphere.positionSphere(new Vector3(rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
 		await Task.Delay(300);
-		rotateSphere.isRotating = true;
 
 		// Set values back to default
 		closeAttackDamage = defaultCloseAttackDamage;
 		damageRadius = defaultDamageRadius;
 		
-		attacking = false;
+		ResetAttack();
 	}
 
 	// Checks if there are enemies in the attack area and, if so, damages them
@@ -486,7 +485,13 @@ public class PlayerShoot : MonoBehaviour
 			}
 		}
 	}
-	
+
+	public void ResetAttack() {
+		loadingAttack = false;
+		attacking = false;
+		rotateSphere.isRotating = true;
+	}
+
 	async Task<bool> WaitUntilOrTimeout(Func<bool> condition, int timeoutMs, int checkIntervalMs = 25)
 	{
 		var stopwatch = System.Diagnostics.Stopwatch.StartNew();

@@ -25,6 +25,7 @@ namespace Animations
 
         public PowerUp powerUp;
         public PlayerShoot playerShoot;
+        [SerializeField] private FadeManagerLoadingScreen fadeManagerLoadingScreen;
 
         public void SetHitState()
         {
@@ -217,7 +218,9 @@ namespace Animations
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerWakeUp, transform.position);
-        }
+
+			fadeManagerLoadingScreen.Hide();
+		}
 
         // Audio management
         private void Start()
