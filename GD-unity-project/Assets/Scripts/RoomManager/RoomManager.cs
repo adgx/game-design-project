@@ -121,11 +121,6 @@ namespace RoomManager
         private int[,,] _roomGrid;
         private int _roomCount;
 
-        private int _healthVendingMachineSpawned = 0;
-		private int _powerUpVendingMachineSpawned = 0;
-		private int _upgradeTerminalSpawned = 0;
-        private bool _paperAlreadySpawned = false;
-
         private void Awake()
         {
             if (Instance == null)
@@ -207,9 +202,6 @@ namespace RoomManager
             _roomCount = 0;
             _isLayoutGenerated = false;
             IsPlayerSpawned = false;
-            _upgradeTerminalSpawned = 0;
-            _healthVendingMachineSpawned = 0;
-            _powerUpVendingMachineSpawned = 0;
 
             if (GameStatus.gameStarted)
                 fadeManagerLoadingScreen.Show();

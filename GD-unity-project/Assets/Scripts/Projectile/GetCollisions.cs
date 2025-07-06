@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class GetCollisions : MonoBehaviour
@@ -26,14 +27,15 @@ public class GetCollisions : MonoBehaviour
                     if(contact.thisCollider.tag.Contains("EnemyAttack") && contact.otherCollider.CompareTag("Player")) {
                         PlayerShoot playerShoot = contact.otherCollider.GetComponent<PlayerShoot>();
 
-
+                        int normalizedX = (int)Math.Round(contact.point.x - Math.Truncate(contact.point.x));
+						int normalizedZ = (int)Math.Round(contact.point.z - Math.Truncate(contact.point.z));
                         if (contact.thisCollider.tag.Contains("Spit"))
                         {
-							playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.Spit, contact.point.x, contact.point.z);
+							playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.Spit, normalizedX, normalizedZ);
 						}
                         else
                         {
-							playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.MaynardDistanceAttack, contact.point.x, contact.point.z);
+							playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.MaynardDistanceAttack, normalizedX, normalizedZ);
 						}
                     }
                 }

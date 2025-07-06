@@ -10,6 +10,8 @@ using Helper;
 
 public class PlayerShoot : MonoBehaviour
 {
+	public static PlayerShoot Instance { get; private set; }
+
 	// Audio management 
 	public bool IsSphereRotating => rotateSphere.isRotating;
 	private EventInstance distanceAttackLoadingWithPowerUp1;
@@ -79,6 +81,19 @@ public class PlayerShoot : MonoBehaviour
 		CloseAttack,
 		DrakeBiteAttack
 	}
+
+private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
 
 	private void Start() {
 		healthBar.SetMaxHealth(health);
@@ -290,52 +305,43 @@ public class PlayerShoot : MonoBehaviour
 		}
 	}
 	
-	async void FireDistanceAttack() {
+	private void DistanceAttackAnimation() {
 		loadingAttack = false;
 		AnimationManager.Instance.EndAttack();
-		
-		if (attackStamina == 0)
-			await Task.Delay(700);
-		else
-			await Task.Delay(500);
-		
+	}
+
+	public async void FireDistanceAttack() {
 		GameObject bullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity);
 		bullet.tag = "PlayerProjectile";
-		
+
 		Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
 		rbBullet.AddForce(bulletSpawnTransform.forward * bulletSpeed, ForceMode.Impulse);
 		rbBullet.AddForce(bulletSpawnTransform.up * 2f, ForceMode.Impulse);
 
 		getCollisions.playerBulletDamage = getCollisions.initialPlayerBulletDamage;
 
-		if (attackStamina == 0) {
+		if(attackStamina == 0) {
 			DecreaseStamina(1);
 		}
 		else {
 			DecreaseStamina(attackStamina);
 		}
-		
-		// Audio management
-		GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDistanceAttackShoot, rotatingSphere.transform.position);
 
 		distanceAttackLoadingBar.fillAmount = 0;
 
 		await Task.Delay(500);
 		attacking = false;
-		
+
 		rotateSphere.isRotating = true;
 		player.isFrozen = false;
-		
+
 		// Audio management
-		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp))
-		{
-			if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 1)
-			{
-				distanceAttackLoadingWithPowerUp1.stop(STOP_MODE.ALLOWFADEOUT);	
+		if(powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp)) {
+			if(powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 1) {
+				distanceAttackLoadingWithPowerUp1.stop(STOP_MODE.ALLOWFADEOUT);
 			}
-			else
-			{
-				distanceAttackLoadingWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);	
+			else {
+				distanceAttackLoadingWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);
 			}
 		}
 	}
@@ -409,37 +415,27 @@ public class PlayerShoot : MonoBehaviour
 		}
 	}
 	
-	async void FireCloseAttack() {
+	private void CloseAttackAnimation() {
 		loadingAttack = false;
 		player.isFrozen = true;
 		AnimationManager.Instance.EndAreaAttack();
-		
-		if (attackStamina == 0)
-			await Task.Delay(900);
-		else
-			await Task.Delay(500);
-		
-		
+	}
+
+	public void FireCloseAttack() {
 		DecreaseStamina(attackStamina);
-		
-		// Audio management
-		GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerCloseAttackShoot, rotatingSphere.transform.position);
 
 		closeAttackLoadingBar.fillAmount = 0;
 
 		SpawnAttackArea();
-		
+
 		// Audio management
-		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp))
-		{
-			if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 1)
-			{
-				closeAttackLoadingWithPowerUp1.stop(STOP_MODE.ALLOWFADEOUT);	
+		if(powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp)) {
+			if(powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 1) {
+				closeAttackLoadingWithPowerUp1.stop(STOP_MODE.ALLOWFADEOUT);
 			}
-			else
-			{
-				closeAttackLoadingWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);	
-			}	
+			else {
+				closeAttackLoadingWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);
+			}
 		}
 	}
 
@@ -557,7 +553,7 @@ public class PlayerShoot : MonoBehaviour
 		isShieldCoroutineRunning = false;
 	}
 
-	public async void TakeDamage(float damage, DamageTypes damageType, float x, float z) {
+	public void TakeDamage(float damage, DamageTypes damageType, int x, int z) {
      	health -= damage * damageReduction;
      	healthBar.SetHealth(health);
      
@@ -573,28 +569,31 @@ public class PlayerShoot : MonoBehaviour
      	{
 	        DisableAttacks(true);
 	        player.FreezeMovement(true);
-	        if (damageType == DamageTypes.DrakeBiteAttack)
-	        {
-		        // Audio management
-		        GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, player.transform.position);
-		        
-		        AnimationManager.Instance.Bite();
-		        await Task.Delay(2000);
-	        }
-	        
-     		// Audio management
-     		GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardGrunt, player.transform.position);
-
-			gameObject.layer = 0;
-		    AnimationManager.Instance.Death(x, z);
-			await Task.Delay(2500);
-
-     		Invoke(nameof(DestroyPlayer), 1f);
-
-			FadeManager.Instance.FadeOutIn(() => {
-				StartCoroutine(LoadRespawnSceneAsync());
-			});
+			if(damageType == DamageTypes.DrakeBiteAttack) {
+				// Audio management
+				GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, player.transform.position);
+				AnimationManager.Instance.Bite();
+			}
+			else {
+				DeathAnimation(x, z);
+			}
      	}
+	}
+
+	public void DeathAnimation(int x, int z) {
+		// Audio management
+		GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardGrunt, player.transform.position);
+
+		gameObject.layer = 0;
+		AnimationManager.Instance.Death(x, z);
+	}
+
+	public void LoadRespawnScene() {
+		Invoke(nameof(DestroyPlayer), 1f);
+
+		FadeManager.Instance.FadeOutIn(() => {
+			StartCoroutine(LoadRespawnSceneAsync());
+		});
 	}
 	
 	// Change player color when hit and change it back to normal after "duration" seconds
@@ -615,47 +614,35 @@ public class PlayerShoot : MonoBehaviour
 
 		renderer.material.color = originColor;
 	}
-	private async void HitAnimation(DamageTypes damageType, float x, float z) {
+	private void HitAnimation(DamageTypes damageType, int x, int z) {
 		if(!cannotAttack && !player.isFrozen) {
 			switch(damageType) {
 				case DamageTypes.Spit:
 					DisableAttacks(true);
 					player.FreezeMovement(true);
 					AnimationManager.Instance.HitSpit(x, z);
-					await Task.Delay(2000);
-
-					DisableAttacks(false);
-					player.FreezeMovement(false);
 					break;
 				case DamageTypes.MaynardDistanceAttack:
 					DisableAttacks(true);
 					player.FreezeMovement(true);
 					AnimationManager.Instance.Hit(x, z);
-					await Task.Delay(1000);
-
-					DisableAttacks(false);
-					player.FreezeMovement(false);
 					break;
 				case DamageTypes.CloseAttack:
 					DisableAttacks(true);
 					player.FreezeMovement(true);
 					AnimationManager.Instance.Hit(x, z);
-					await Task.Delay(1000);
-
-					DisableAttacks(false);
-					player.FreezeMovement(false);
 					break;
 				case DamageTypes.DrakeBiteAttack:
 					DisableAttacks(true);
 					player.FreezeMovement(true);
 					AnimationManager.Instance.Bite();
-					await Task.Delay(1000);
-
-					DisableAttacks(false);
-					player.FreezeMovement(false);
 					break;
 			}
 		}
+	}
+	public void FreePlayer() {
+		DisableAttacks(false);
+		player.FreezeMovement(false);
 	}
 	private void DestroyPlayer() {
 		Destroy(gameObject);
@@ -722,10 +709,10 @@ public class PlayerShoot : MonoBehaviour
 						switch (attackNumber)
 						{
 							case 1:
-								FireDistanceAttack();
+								DistanceAttackAnimation();
 								break;
 							case 2:
-								FireCloseAttack();
+								CloseAttackAnimation();
 								break;
 							default:
 								break;
