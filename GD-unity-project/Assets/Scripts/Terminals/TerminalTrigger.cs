@@ -159,7 +159,6 @@ public class TerminalTrigger : MonoBehaviour
 						powerUps.spherePowerUps.RemoveAt(powerUpIndexSphere);
 						busy = false;
 						
-						// Audio manangement
 						await Task.Delay(1500);
 						playerShoot.DecreaseStamina(1);
 						rotateSphere.isRotating = true;
@@ -184,7 +183,6 @@ public class TerminalTrigger : MonoBehaviour
 							// Generate a random power up
 							int powerUpIndexPlayer = rnd.Next(powerUps.playerPowerUps.Count);
 
-							// Audio management
 							var obtainedPowerUp = powerUps.playerPowerUps[powerUpIndexPlayer];
 							
 							if (obtainedPowerUp == PowerUp.PlayerPowerUpTypes.HealthBoost)
@@ -205,7 +203,6 @@ public class TerminalTrigger : MonoBehaviour
 							if (obtainedPowerUp == PowerUp.PlayerPowerUpTypes.DamageReduction)
 							{
 								AnimationManager.Instance.Drink();
-								//GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDrink, player.transform.position);
 
 								//NOTE: this await is needed and I can not use the events provided by the animation, since I would not have a way to know which is the right TerminalTrigger that I need to reference
 								await Task.Delay(1000);
@@ -243,7 +240,6 @@ public class TerminalTrigger : MonoBehaviour
 							playerShoot.DisableAttacks(true);
 							playerScript.FreezeMovement(true);
 
-							// Audio manangement
 							await Task.Delay(4200);
 							playerShoot.DecreaseStamina(1);
 							rotateSphere.isRotating = true;
@@ -301,7 +297,6 @@ public class TerminalTrigger : MonoBehaviour
 						playerShoot.DisableAttacks(true);
 						playerScript.FreezeMovement(true);
 
-						// Audio manangement
 						await Task.Delay(4200);
 						playerShoot.DecreaseStamina(1);
 						rotateSphere.isRotating = true;
@@ -333,7 +328,7 @@ public class TerminalTrigger : MonoBehaviour
 			yield return null;
 		}
 
-		player.transform.rotation = endRotation; // Ensure final alignment
+		player.transform.rotation = endRotation;
 	}
 
 	private void Update() {

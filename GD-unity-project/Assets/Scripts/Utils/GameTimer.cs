@@ -41,10 +41,6 @@ namespace Utils {
 			
 			yield return new WaitForSeconds(delay);
 			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerWakeUp, player.transform.position);
-			
-			yield return new WaitForSeconds(6);
-			playerScript.FreezeMovement(false);
-			playerShoot.DisableAttacks(false);
 		}
 
 		private void OnDestroy() {

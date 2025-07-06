@@ -72,10 +72,12 @@ namespace Animations
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
-            //GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerCloseAttackShoot, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerCloseAttackShoot, transform.position);
+
+            playerShoot.FireCloseAttack();
         }
 
-        public void DistanceAttackLoad()
+		public void DistanceAttackLoad()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
@@ -86,7 +88,9 @@ namespace Animations
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
-            //GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDistanceAttackShoot, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDistanceAttackShoot, transform.position);
+
+            playerShoot.FireDistanceAttack();
         }
 
         public void ShieldActivation()
@@ -146,7 +150,15 @@ namespace Animations
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieBackwardThud, transform.position);
         }
 
-        public void Drink()
+        public void PlayDeathAnimation() {
+            playerShoot.DeathAnimation(0, 1);
+        }
+
+        public void DeathAnimationEnd() {
+            playerShoot.LoadRespawnScene();
+        }
+
+		public void Drink()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
