@@ -95,7 +95,6 @@ public class Drake : MonoBehaviour, IEnemy
 		_reactFromFrontS = new DrakeReactFromFrontState("Hit", this);
         _defenseS = new DrakeDefenseState("Defense", this);
         _deathS = new DrakeDeathState("Death", this);
-
         //Transition
         _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(chaseS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
@@ -182,7 +181,6 @@ public class Drake : MonoBehaviour, IEnemy
 			}
 		}
         else {
-            print("Ciao");
             _stateMachine.SetState(_defenseS);
         }
 

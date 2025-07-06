@@ -54,7 +54,8 @@ public class DrakeBiteAttackState : State
     }
     public override void Enter()
     {
-        _drake.anim.lunchBiteAnim();
+		Debug.Log("Biting");
+		_drake.anim.lunchBiteAnim();
     }
 
     public override void Tik()
@@ -76,6 +77,7 @@ public class DrakeSwipingAttackState : State
     }
     public override void Enter()
     {
+        Debug.Log("Swiping");
         _drake.anim.lunchSwipingAnim();
     }
 
