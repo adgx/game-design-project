@@ -170,19 +170,20 @@ public class Drake : MonoBehaviour, IEnemy
 
         if(attackType == "c") {
             StartCoroutine(ChangeColor(Color.red, 0.8f, 0));
-        }
+
+			if(_health <= 0) {
+				gameObject.layer = 0;
+				gameObject.tag = "Untagged";
+
+				_stateMachine.SetState(_deathS);
+			}
+			else {
+				_stateMachine.SetState(_reactFromFrontS);
+			}
+		}
         else {
+            print("Ciao");
             _stateMachine.SetState(_defenseS);
-        }
-
-        if(_health <= 0) {
-            gameObject.layer = 0;
-            gameObject.tag = "Untagged";
-
-            _stateMachine.SetState(_deathS);
-        }
-        else {
-            _stateMachine.SetState(_reactFromFrontS);
         }
 
     }
