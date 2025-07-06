@@ -54,8 +54,8 @@ public class RotateSphere : MonoBehaviour
     void Update()
     {
         // Needed to avoid the sphere deforming when player collides with enemies
-        if (transform.rotation[0] != 0 || transform.rotation[2] != 0) {
-            transform.rotation = new Quaternion(0, transform.rotation[1], 0, transform.rotation[3]);
+        if (transform.rotation.eulerAngles[0] != -90 || transform.rotation.eulerAngles[2] != 0) {
+            transform.rotation = Quaternion.Euler(-90, transform.rotation.eulerAngles[1], 0);
         }
         
         if(isRotating) {

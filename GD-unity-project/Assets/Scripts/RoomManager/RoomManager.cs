@@ -244,10 +244,9 @@ namespace RoomManager
             IsPlayerSpawned = true;
 
             await Task.Delay(100);
-            fadeManagerLoadingScreen.Hide();
 
             OnRunReady?.Invoke();
-        }
+		}
 
         private void GenerateRoomAddOn()
         {

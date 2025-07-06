@@ -7,6 +7,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Helper;
+using Unity.Mathematics;
+using Unity.VisualScripting;
 
 public class PlayerShoot : MonoBehaviour
 {
@@ -72,6 +74,7 @@ public class PlayerShoot : MonoBehaviour
 	private Player player;
 	[SerializeField] private RotateSphere rotateSphere;
 	[SerializeField] private GameObject rotatingSphere;
+	[SerializeField] private Material sphereMaterial;
 
 	[SerializeField] private string respawnSceneName = "RespawnScene";
 
@@ -98,6 +101,8 @@ public class PlayerShoot : MonoBehaviour
 	private void Start() {
 		healthBar.SetMaxHealth(health);
 		player = GetComponent<Player>();
+
+		ChangeSphereColor(maxSphereStamina);
 		
 		// Audio management
 		distanceAttackLoadingWithPowerUp1 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerDistanceAttackLoadWithPowerUp1);
@@ -130,26 +135,32 @@ public class PlayerShoot : MonoBehaviour
 			instance.stop(STOP_MODE.ALLOWFADEOUT);
 	}
 	
-	void ChangeSphereColor() {
+	void ChangeSphereColor(int stamina) {
 		// TODO: chiedere ad Antonino come cambiare il colore della sfera
-		switch(sphereStamina) {
+		switch(stamina) {
 			case 5:
-				// rotatingSphere.ledColor = Color.blue;
+				sphereMaterial.color = Color.green;
+				sphereMaterial.SetColor("_EmissionColor", Color.green);
 				break;
 			case 4:
-				// rotatingSphere.ledColor = Color.green;
+				sphereMaterial.color = new Color(0, 1, 1);
+				sphereMaterial.SetColor("_EmissionColor", new Color(0, 1, 1));
 				break;
 			case 3:
-				// rotatingSphere.ledColor = Color.yellow;
+				sphereMaterial.color = Color.yellow;
+				sphereMaterial.SetColor("_EmissionColor", Color.yellow);
 				break;
 			case 2:
-				// rotatingSphere.ledColor = Color.orange;
+				sphereMaterial.color = new Color(1, 0.5f, 0);
+				sphereMaterial.SetColor("_EmissionColor", new Color(1, 0.1875f, 0));
 				break;
 			case 1:
-				// rotatingSphere.ledColor = Color.red;
+				sphereMaterial.color = Color.red;
+				sphereMaterial.SetColor("_EmissionColor", Color.red);
 				break;
 			case 0:
-				// rotatingSphere.ledColor = Color.red;
+				sphereMaterial.color = Color.red;
+				sphereMaterial.SetColor("_EmissionColor", Color.red);
 				break;
 			default:
 				break;
@@ -176,6 +187,7 @@ public class PlayerShoot : MonoBehaviour
 	public void DecreaseStamina(int amount) {
 		sphereStamina -= amount;
 		increaseStamina = false;
+		ChangeSphereColor(sphereStamina);
 	}
 
 	public async Task RecoverStamina() {
@@ -184,7 +196,8 @@ public class PlayerShoot : MonoBehaviour
 			await Task.Delay(500);
 			if(increaseStamina && !loadingAttack) {
 				sphereStamina += 1;
-				
+				ChangeSphereColor(sphereStamina);
+
 				// Audio management
 				if (sphereStamina == 5)
 				{
@@ -294,6 +307,7 @@ public class PlayerShoot : MonoBehaviour
 		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp) && loadingAttack)
 		{
 			attackStamina++;
+			ChangeSphereColor(attackStamina);
 
 			distanceAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
 
@@ -330,9 +344,7 @@ public class PlayerShoot : MonoBehaviour
 		distanceAttackLoadingBar.fillAmount = 0;
 
 		await Task.Delay(500);
-		attacking = false;
-
-		rotateSphere.isRotating = true;
+		ResetAttack();
 		player.isFrozen = false;
 
 		// Audio management
@@ -403,6 +415,7 @@ public class PlayerShoot : MonoBehaviour
 		
 		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp) && loadingAttack) {
 			attackStamina++;
+			ChangeSphereColor(attackStamina);
 
 			closeAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
 
@@ -454,13 +467,12 @@ public class PlayerShoot : MonoBehaviour
 
 		rotateSphere.positionSphere(new Vector3(rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
 		await Task.Delay(300);
-		rotateSphere.isRotating = true;
 
 		// Set values back to default
 		closeAttackDamage = defaultCloseAttackDamage;
 		damageRadius = defaultDamageRadius;
 		
-		attacking = false;
+		ResetAttack();
 	}
 
 	// Checks if there are enemies in the attack area and, if so, damages them
@@ -473,7 +485,13 @@ public class PlayerShoot : MonoBehaviour
 			}
 		}
 	}
-	
+
+	public void ResetAttack() {
+		loadingAttack = false;
+		attacking = false;
+		rotateSphere.isRotating = true;
+	}
+
 	async Task<bool> WaitUntilOrTimeout(Func<bool> condition, int timeoutMs, int checkIntervalMs = 25)
 	{
 		var stopwatch = System.Diagnostics.Stopwatch.StartNew();
