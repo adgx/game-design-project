@@ -6,7 +6,7 @@ public class GetCollisions : MonoBehaviour
     // Audio management
     private GameObject player;
 	
-    public float initialPlayerBulletDamage = 50, enemyBulletDamage = 20;
+    public float initialPlayerBulletDamage = 40, enemyBulletDamage = 20;
     public float playerBulletDamage;
 
     void Start()
@@ -27,15 +27,16 @@ public class GetCollisions : MonoBehaviour
                     if(contact.thisCollider.tag.Contains("EnemyAttack") && contact.otherCollider.CompareTag("Player")) {
                         PlayerShoot playerShoot = contact.otherCollider.GetComponent<PlayerShoot>();
 
-                        int normalizedX = (int)Math.Round(contact.point.x - Math.Truncate(contact.point.x));
-						int normalizedZ = (int)Math.Round(contact.point.z - Math.Truncate(contact.point.z));
+                        print(Math.Sign(contact.normal.x));
+						print(Math.Sign(contact.normal.z));
+
                         if (contact.thisCollider.tag.Contains("Spit"))
                         {
-							playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.Spit, normalizedX, normalizedZ);
+							playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.Spit, Math.Sign(contact.normal.x), Math.Sign(contact.normal.z));
 						}
                         else
                         {
-							playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.MaynardDistanceAttack, normalizedX, normalizedZ);
+							playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.MaynardDistanceAttack, Math.Sign(contact.normal.x), Math.Sign(contact.normal.z));
 						}
                     }
                 }

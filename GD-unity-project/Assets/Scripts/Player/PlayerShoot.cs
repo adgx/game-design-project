@@ -28,8 +28,8 @@ public class PlayerShoot : MonoBehaviour
 
 	// Attack2
 	[SerializeField] private GameObject attackAreaPrefab;
-	private int defaultCloseAttackDamage = 50;
-	private int closeAttackDamage = 50;
+	public int defaultCloseAttackDamage = 50;
+	public int closeAttackDamage = 50;
 	private float defaultDamageRadius = 2.5f;
 	private float damageRadius = 2.5f;
 
@@ -82,7 +82,7 @@ public class PlayerShoot : MonoBehaviour
 		DrakeBiteAttack
 	}
 
-private void Awake()
+	private void Awake()
     {
         if (Instance == null)
         {
