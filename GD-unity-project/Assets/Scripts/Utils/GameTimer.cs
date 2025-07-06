@@ -12,7 +12,7 @@ using Enemy.EnemyManager;
 namespace Utils {
 	public class GameTimer : MonoBehaviour {
 		// TODO: the timer is set to 2 minutes for debugging. It should be of 10 minutes.
-		private const float TimeLimit = 10 * 1f;
+		private const float TimeLimit = 30f; // 10 * 60f;
 		private float currentTime;
 
 		public TMP_Text timerText;
@@ -32,16 +32,6 @@ namespace Utils {
 
 		[SerializeField] private string respawnSceneName = "RespawnScene";
 		private bool sceneIsLoading = false;
-
-		private IEnumerator PlayWakeUpAfterDelay(float delay) {
-			playerScript.FreezeMovement(true);
-			playerShoot.DisableAttacks(true);
-			
-			AnimationManager.Instance.StandUp();
-			
-			yield return new WaitForSeconds(delay);
-			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerWakeUp, player.transform.position);
-		}
 
 		private void OnDestroy() {
 			if(roomManager) {
@@ -68,7 +58,10 @@ namespace Utils {
 			playerScript = player.GetComponent<Player>();
 			playerShoot = player.GetComponent<PlayerShoot>();
 			
-			StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
+			playerScript.FreezeMovement(true);
+			playerShoot.DisableAttacks(true);
+			
+			AnimationManager.Instance.StandUp();
 
 			GameStatus.gameEnded = false;
 			GameStatus.gamePaused = false;
@@ -175,7 +168,11 @@ namespace Utils {
 				timerOutlineImage.sprite = timerOutlineSpriteNormal;
 				StopCoroutine(Pulse());
 				
-				StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
+				playerScript.FreezeMovement(true);
+				playerShoot.DisableAttacks(true);
+			
+				AnimationManager.Instance.StandUp();
+				
 				isRunning = true;
 			});
 		}
