@@ -35,6 +35,7 @@ namespace Animations
         public void SetIdleState()
         {
             AnimationManager.Instance.rickState = RickStates.Idle;
+            playerShoot.FreePlayer();
         }
     
         public void SetHitSpitState()

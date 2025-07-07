@@ -345,7 +345,6 @@ public class PlayerShoot : MonoBehaviour
 
 		await Task.Delay(500);
 		ResetAttack();
-		player.isFrozen = false;
 
 		// Audio management
 		if(powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp)) {
@@ -362,6 +361,7 @@ public class PlayerShoot : MonoBehaviour
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
 		rotateSphere.positionSphere(new Vector3(0, 1.8f, 0), RotateSphere.Animation.Linear);
+		player.isFrozen = true;
 		AnimationManager.Instance.AreaAttack();
 		
 		// Audio management
@@ -429,7 +429,6 @@ public class PlayerShoot : MonoBehaviour
 	
 	private void CloseAttackAnimation() {
 		loadingAttack = false;
-		player.isFrozen = true;
 		AnimationManager.Instance.EndAreaAttack();
 	}
 
@@ -467,7 +466,6 @@ public class PlayerShoot : MonoBehaviour
 		await Task.Delay(500);
 
 		Destroy(attackArea);
-		player.isFrozen = false;
 
 		rotateSphere.positionSphere(new Vector3(rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
 		await Task.Delay(300);
@@ -699,7 +697,8 @@ public class PlayerShoot : MonoBehaviour
 			if (!cannotAttack)
 			{
 				// The attack is shot only on "Fire1" up
-				if (Input.GetButtonDown("Fire1") && AnimationManager.Instance.rickState == RickStates.Idle)
+				//  && AnimationManager.Instance.rickState == RickStates.Idle
+				if(Input.GetButtonDown("Fire1"))
 				{
 					if (!magneticShield && CheckStamina(1) && !attacking)
 					{
