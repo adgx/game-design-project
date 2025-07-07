@@ -21,7 +21,6 @@ public class AmbientLightManager : MonoBehaviour
     {
         // At startup, immediately set the light intensity to its initial value.
         RenderSettings.ambientIntensity = initialIntensity;
-        Debug.Log($"Luce iniziale impostata a: {initialIntensity}");
         
         if (GameEvents.current != null)
         {
