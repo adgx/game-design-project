@@ -53,7 +53,7 @@ namespace PlayerInteraction
             if (_isBusy || _healthObtained) return false;
 
             StartCoroutine(RotatePlayerTowards(transform, _rotationDuration));
-            AnimationManager.Instance.Idle();
+            //AnimationManager.Instance.Idle();
 
             StartCoroutine(_isHealthVendingMachineHacked ? GetItemSequence() : HackingSequence());
 
