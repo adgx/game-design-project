@@ -50,6 +50,7 @@ public class AnimationManager : MonoBehaviour
     //for switch from animation to another for the idle
     private bool randomIdleIsDone = true;
     private bool activeRandomIdle = true;
+    private bool justIdle = true;
     //sheildVFX  gameObj
     [SerializeField] GameObject prefabSheildVFX;
     private static AnimationManager instance;
@@ -103,7 +104,7 @@ public class AnimationManager : MonoBehaviour
 
     private void Update()
     {
-        if (randomIdleIsDone && activeRandomIdle)
+        if (randomIdleIsDone && rickState == RickStates.Idle)
         {
             randomIdleIsDone = false;
             RandomizeIdleAsync(WAIT_IDLE_TIME);
