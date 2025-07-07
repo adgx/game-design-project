@@ -98,7 +98,7 @@ namespace Animations
 
         public void ShieldActivation()
         {
-            // AnimationManager.Instance.DefenseVFX(transform.position);
+            AnimationManager.Instance.DefenseVFX(transform.position);
 
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
@@ -450,8 +450,4 @@ namespace Animations
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldDeactivation, transform.position);
         }
     }
-    
-
-    
 }
-
