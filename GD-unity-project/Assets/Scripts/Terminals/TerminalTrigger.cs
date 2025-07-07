@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Animations;
 using Audio;
 using FMODUnity;
 using TMPro;
@@ -14,8 +15,10 @@ public class TerminalTrigger : MonoBehaviour
 	private PlayerShoot playerShoot;
 	private Player playerScript;
     private PowerUp powerUps;
-    
-    private TextMeshProUGUI helpText;
+	private RickEvents rickEvents;
+	private PlayerInput playerInput;
+
+	private TextMeshProUGUI helpText;
 	private GameObject helpTextContainer;
 
     // You first hack the machine and then you press the button again to receive the snack.
@@ -42,8 +45,6 @@ public class TerminalTrigger : MonoBehaviour
 
     static System.Random rnd = new System.Random();
 
-	private PlayerInput playerInput;
-
 	// For PowerUps
 	[SerializeField] private GameObject EnergyDrinkMesh;
 	[SerializeField] private GameObject SnackMesh;
@@ -57,12 +58,23 @@ public class TerminalTrigger : MonoBehaviour
 	private GameObject LeftHand;
 	private GameObject RightHand;
 
+	private enum ItemToPick {
+		Drink,
+		Snack,
+		SpecialSnack
+	}
+	private ItemToPick itemToPick;
+
+	int powerUpIndexPlayer;
+	PowerUp.PlayerPowerUpTypes obtainedPowerUp;
+
 	private void Start() {
 		player = Player.Instance.gameObject;
 		playerInput = player.GetComponent<PlayerInput>();
 		playerShoot = player.GetComponent<PlayerShoot>();
 		playerScript = player.GetComponent<Player>();
 		powerUps = player.GetComponent<PowerUp>();
+		rickEvents = player.GetComponent<RickEvents>();
 
 		LeftHand = GameObject.Find("Player/Armature/mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand");
 		RightHand = GameObject.Find("Player/Armature/mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand");
@@ -93,7 +105,7 @@ public class TerminalTrigger : MonoBehaviour
 		    if (transform.CompareTag(TriggerType.PowerUpSnackDistributor.ToString())) {
 			    triggerType = TriggerType.PowerUpSnackDistributor;
 				if(!powerUpCollected) {
-					if(!healthVendingMachineHacked)
+					if(!powerUpVendingMachineHacked)
 						helpText.text = "Press E to interact with the snack distributor";
 					else
 						helpText.text = "Press E again to take a snack from the machine";
@@ -105,15 +117,17 @@ public class TerminalTrigger : MonoBehaviour
 		    else {
 			    if (transform.CompareTag(TriggerType.HealthSnackDistributor.ToString())) {
 				    triggerType = TriggerType.HealthSnackDistributor;
-					if(!powerUpVendingMachineHacked)
+					if(!healthVendingMachineHacked)
 						helpText.text = "Press E to interact with the snack distributor";
 					else
 						helpText.text = "Press E again to take a snack from the machine";
 				}
 		    }
 	    }
-	    
-	    helpTextContainer.SetActive(true);
+
+		if(!busy) {
+			helpTextContainer.SetActive(true);
+		}
     }
 
     private void OnTriggerExit(Collider other) {
@@ -180,53 +194,22 @@ public class TerminalTrigger : MonoBehaviour
 							busy = true;
 
 							// Generate a random power up
-							int powerUpIndexPlayer = rnd.Next(powerUps.playerPowerUps.Count);
+							powerUpIndexPlayer = rnd.Next(powerUps.playerPowerUps.Count);
 
-							var obtainedPowerUp = powerUps.playerPowerUps[powerUpIndexPlayer];
-							
-							if (obtainedPowerUp == PowerUp.PlayerPowerUpTypes.HealthBoost)
-							{
+							obtainedPowerUp = powerUps.playerPowerUps[powerUpIndexPlayer];
+
+							if(obtainedPowerUp == PowerUp.PlayerPowerUpTypes.HealthBoost) {
 								AnimationManager.Instance.EatChips();
-								//GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChips, player.transform.position);
-
-								await Task.Delay(1000);
-								PlaceSnackInHand();
-
-								await Task.Delay(5000);
-
-								playerShoot.maxHealth += 20;
-								playerShoot.health += 20;
-								Destroy(snack);
+								itemToPick = ItemToPick.Snack;
 							}
-							
-							if (obtainedPowerUp == PowerUp.PlayerPowerUpTypes.DamageReduction)
-							{
-								AnimationManager.Instance.Drink();
-
-								//NOTE: this await is needed and I can not use the events provided by the animation, since I would not have a way to know which is the right TerminalTrigger that I need to reference
-								await Task.Delay(1000);
-								PlaceDrinkInHand();
-
-								await Task.Delay(5000);
-
-								playerShoot.damageReduction -= 0.2f;
-								Destroy(energyDrink);
+							else {
+								if(obtainedPowerUp == PowerUp.PlayerPowerUpTypes.DamageReduction) {
+									AnimationManager.Instance.Drink();
+									itemToPick = ItemToPick.Drink;
+								}
 							}
 
-							// Show a message to the player
-							helpText.text = "You obtained a " + powerUps.playerPowerUps[powerUpIndexPlayer] + "!";
-							helpTextContainer.SetActive(true);
-
-							// Insert the power up in the dictionary of the obtained ones
-							powerUps.ObtainPowerUp(powerUps.playerPowerUps[powerUpIndexPlayer]);
-							powerUpCollected = true;
-
-							// Remove the power up from the list of power ups
-							powerUps.playerPowerUps.RemoveAt(powerUpIndexPlayer);
-							
-							busy = false;
-							playerShoot.DisableAttacks(false);
-							playerScript.FreezeMovement(false);
+							rickEvents.terminalTrigger = this;
 						}
 
 						else
@@ -236,20 +219,18 @@ public class TerminalTrigger : MonoBehaviour
 							rotateSphere.positionSphere(new Vector3(rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
 							
 							busy = true;
-							playerShoot.DisableAttacks(true);
-							playerScript.FreezeMovement(true);
-
-							await Task.Delay(4200);
-							playerShoot.DecreaseStamina(1);
+							await Task.Delay(500);
 							rotateSphere.isRotating = true;
+							playerShoot.DecreaseStamina(1);
 
+							await Task.Delay(3700);
+							
 							powerUpVendingMachineHacked = true;
 							helpText.text = "Press E again to take a snack from the machine";
-							helpTextContainer.SetActive(true);
+							if (triggerType == TriggerType.PowerUpSnackDistributor)
+								helpTextContainer.SetActive(true);
 
 							busy = false;
-							playerShoot.DisableAttacks(false);
-							playerScript.FreezeMovement(false);
 						}
 
 					}
@@ -269,23 +250,8 @@ public class TerminalTrigger : MonoBehaviour
 						healthVendingMachineHacked = false;
 
 						AnimationManager.Instance.EatSnack();
-						await Task.Delay(1000);
-						PlaceSpecialSnackInHand();
-
-						await Task.Delay(5000);
-						
-						// Show a message to the player
-						helpText.text = "Your health was recovered!";
-						helpTextContainer.SetActive(true);
-						Destroy(specialSnack);
-
-						// Audio management
-						//GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChocolate, player.transform.position);
-						
-						playerShoot.RecoverHealth(playerShoot.maxHealth);
-						busy = false;
-						playerShoot.DisableAttacks(false);
-						playerScript.FreezeMovement(false);
+						rickEvents.terminalTrigger = this;
+						itemToPick = ItemToPick.SpecialSnack;
 					}
 					else {
 						// Audio management
@@ -293,20 +259,18 @@ public class TerminalTrigger : MonoBehaviour
 						rotateSphere.positionSphere(new Vector3(rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
 
 						busy = true;
-						playerShoot.DisableAttacks(true);
-						playerScript.FreezeMovement(true);
-
-						await Task.Delay(4200);
+						await Task.Delay(500);
 						playerShoot.DecreaseStamina(1);
 						rotateSphere.isRotating = true;
 
+						await Task.Delay(4200);
+
 						healthVendingMachineHacked = true;
 						helpText.text = "Press E again to take a snack from the machine";
-						helpTextContainer.SetActive(true);
+						if (triggerType == TriggerType.HealthSnackDistributor)
+							helpTextContainer.SetActive(true);
 
 						busy = false;
-						playerShoot.DisableAttacks(false);
-						playerScript.FreezeMovement(false);
 					}
 
 					break;
@@ -336,24 +300,78 @@ public class TerminalTrigger : MonoBehaviour
         }
     }
 
-	public void PlaceDrinkInHand() {
+	public void PickItem() {
+		switch(itemToPick) {
+			case ItemToPick.Drink:
+				PlaceDrinkInHand();
+				break;
+			case ItemToPick.Snack:
+				PlaceSnackInHand();
+				break;
+			case ItemToPick.SpecialSnack:
+				PlaceSpecialSnackInHand();
+				break;
+			default:
+				break;
+		}
+	}
+
+	private void PlaceDrinkInHand() {
 		energyDrink = Instantiate(EnergyDrinkMesh);
 		energyDrink.transform.SetParent(LeftHand.transform);
 		energyDrink.transform.SetLocalPositionAndRotation(new Vector3(-7.91e-06f, 7.33e-06f, 3.93e-06f), new Quaternion(-3.593f, 99.3f, 0, 99.3f));
 		energyDrink.transform.localScale = new Vector3(0.0002f, 0.0002f, 0.0002f);
 	}
 
-	public void PlaceSnackInHand() {
+	private void PlaceSnackInHand() {
 		snack = Instantiate(SnackMesh);
 		snack.transform.SetParent(RightHand.transform);
 		snack.transform.SetLocalPositionAndRotation(new Vector3(3.59e-06f, 7.72e-06f, 1.022e-05f), new Quaternion(-85.337f, 90, 0, 90));
 		snack.transform.localScale = new Vector3(1.6e-05f, 1.6e-05f, 1.6e-05f);
 	}
 
-	public void PlaceSpecialSnackInHand() {
+	public void TerminatePlayerPowerUp() {
+		if(obtainedPowerUp == PowerUp.PlayerPowerUpTypes.HealthBoost) {
+			playerShoot.maxHealth += 20;
+			playerShoot.health += 20;
+			Destroy(snack);
+		}
+
+		if(obtainedPowerUp == PowerUp.PlayerPowerUpTypes.DamageReduction) {
+			playerShoot.damageReduction -= 0.2f;
+			Destroy(energyDrink);
+		}
+
+		// Show a message to the player
+		helpText.text = "You obtained a " + powerUps.playerPowerUps[powerUpIndexPlayer] + "!";
+		helpTextContainer.SetActive(true);
+
+		// Insert the power up in the dictionary of the obtained ones
+		powerUps.ObtainPowerUp(powerUps.playerPowerUps[powerUpIndexPlayer]);
+		powerUpCollected = true;
+
+		// Remove the power up from the list of power ups
+		powerUps.playerPowerUps.RemoveAt(powerUpIndexPlayer);
+
+		busy = false;
+		playerShoot.FreePlayer();
+	}
+
+	private void PlaceSpecialSnackInHand() {
 		specialSnack = Instantiate(SpecialSnackMesh);
 		specialSnack.transform.SetParent(LeftHand.transform);
 		specialSnack.transform.SetLocalPositionAndRotation(new Vector3(-5.51e-06f, 1.01e-05f, 3.32e-06f), Quaternion.Euler(-5.322f, 77.962f, -32.059f));
 		specialSnack.transform.localScale = new Vector3(0.00015f, 0.00015f, 0.00015f);
+	}
+
+	public void TerminateHealthRecovery() {
+		// Show a message to the player
+		helpText.text = "Your health was recovered!";
+		helpTextContainer.SetActive(true);
+		Destroy(specialSnack);
+
+		playerShoot.RecoverHealth(playerShoot.maxHealth);
+		busy = false;
+		playerShoot.FreePlayer();
 	}
 }
