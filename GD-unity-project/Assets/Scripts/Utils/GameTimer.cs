@@ -166,6 +166,11 @@ namespace Utils {
 
 				playerShoot.ResetAttack();
 
+				// Deleting the snacks that Rick has in hand, if any
+				Destroy(player.transform.Find("Armature/mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/EnergyDrink(Clone)")?.gameObject);
+				Destroy(player.transform.Find("Armature/mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand/Snack(Clone)")?.gameObject);
+				Destroy(player.transform.Find("Armature/mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand/SpecialSnack(Clone)")?.gameObject);
+
 				currentTime = TimeLimit;
 				timerOutlineImage.sprite = timerOutlineSpriteNormal;
 				StopCoroutine(Pulse());

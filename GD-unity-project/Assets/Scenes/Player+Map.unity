@@ -555,7 +555,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2828999337452523740, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2829475919528425057, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -1857,6 +1857,7 @@ MonoBehaviour:
   powerUp: {fileID: 972097725}
   playerShoot: {fileID: 972097727}
   fadeManagerLoadingScreen: {fileID: 347109501}
+  terminalTrigger: {fileID: 0}
 --- !u!4 &1012403241 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2790420675413420707, guid: 3be3347198f4941448250e9e3c013016, type: 3}

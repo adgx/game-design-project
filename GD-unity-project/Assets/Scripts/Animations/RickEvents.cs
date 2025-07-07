@@ -26,6 +26,7 @@ namespace Animations
         public PowerUp powerUp;
         public PlayerShoot playerShoot;
         [SerializeField] private FadeManagerLoadingScreen fadeManagerLoadingScreen;
+        [DoNotSerialize] public TerminalTrigger terminalTrigger;
 
         public void SetHitState()
         {
@@ -34,6 +35,7 @@ namespace Animations
         public void SetIdleState()
         {
             AnimationManager.Instance.rickState = RickStates.Idle;
+            playerShoot.FreePlayer();
         }
     
         public void SetHitSpitState()
@@ -173,11 +175,19 @@ namespace Animations
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChips, transform.position);
         }
 
-        public void EatChocolate()
+		public void EndPowerUp() {
+			terminalTrigger.TerminatePlayerPowerUp();
+		}
+
+		public void EatChocolate()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChocolate, transform.position);
+        }
+
+        public void EndHealthRecovery() {
+            terminalTrigger.TerminateHealthRecovery();
         }
 
 		public void FreePlayerAfterAnimation() {
@@ -211,6 +221,8 @@ namespace Animations
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineItemPickUp, transform.position);
+
+            terminalTrigger.PickItem();
         }
 
         public void WakeUp()
