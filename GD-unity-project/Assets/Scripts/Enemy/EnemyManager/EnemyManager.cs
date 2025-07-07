@@ -21,10 +21,14 @@ namespace Enemy.EnemyManager
         [Tooltip("The minimum number of enemies that must be spawned in a room if possible.")] [SerializeField]
         private int _minEnemiesPerRoom = 1;
 
-        [Tooltip("The maximum number of enemies that can be spawned in a single room.")] [SerializeField]
-        private int _maxEnemiesPerRoom = 5;
+        [Tooltip("The maximum number of enemies that can be spawned in a single room in Loop 1.")] [SerializeField]
+        private int _maxEnemiesPerRoomLoop1 = 3;
 
-        private RoomManager.RoomManager _roomManager;
+		[Tooltip("The maximum number of enemies that can be spawned in a single room.")]
+		[SerializeField]
+		private int _maxEnemiesPerRoom = 3;
+
+		private RoomManager.RoomManager _roomManager;
 
 		// List with all the indexes of the rooms where enemies have already spawned
 		private List<Vector3Int> roomsEnemiesSpawnedIndexes = new List<Vector3Int>();
@@ -141,6 +145,8 @@ namespace Enemy.EnemyManager
 			foreach(EnemyData.EnemyData enemyData in _availableEnemyData) {
 				enemyData.setDifficulty();
 			}
+
+            _maxEnemiesPerRoom = _maxEnemiesPerRoomLoop1 + ((int)GameStatus.loopIteration > 0 ? 1 : 0);
 		}
 
         public void DestroyAllEnemies() {

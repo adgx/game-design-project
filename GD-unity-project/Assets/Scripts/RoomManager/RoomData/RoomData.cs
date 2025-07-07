@@ -100,7 +100,7 @@ namespace RoomManager.RoomData
         public void SetDifficulty(float difficultyMultiplier)
         {
             roomSpawnBudget = roomSpawnBudgetLoop1 +
-                              (int)Math.Round(roomSpawnBudget * difficultyMultiplier * (int)GameStatus.loopIteration);
+                              (int)Math.Round(roomSpawnBudgetLoop1 * difficultyMultiplier * (int)GameStatus.loopIteration);
         }
         
         public RoomData Clone()
