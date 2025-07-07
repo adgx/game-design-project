@@ -33,16 +33,6 @@ namespace Utils {
 		[SerializeField] private string respawnSceneName = "RespawnScene";
 		private bool sceneIsLoading = false;
 
-		private IEnumerator PlayWakeUpAfterDelay(float delay) {
-			playerScript.FreezeMovement(true);
-			playerShoot.DisableAttacks(true);
-			
-			AnimationManager.Instance.StandUp();
-			
-			yield return new WaitForSeconds(delay);
-			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerWakeUp, player.transform.position);
-		}
-
 		private void OnDestroy() {
 			if(roomManager) {
 				roomManager.OnRunReady -= HandleRunReady;
@@ -68,7 +58,10 @@ namespace Utils {
 			playerScript = player.GetComponent<Player>();
 			playerShoot = player.GetComponent<PlayerShoot>();
 			
-			StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
+			playerScript.FreezeMovement(true);
+			playerShoot.DisableAttacks(true);
+			
+			AnimationManager.Instance.StandUp();
 
 			GameStatus.gameEnded = false;
 			GameStatus.gamePaused = false;
@@ -175,7 +168,11 @@ namespace Utils {
 				timerOutlineImage.sprite = timerOutlineSpriteNormal;
 				StopCoroutine(Pulse());
 				
-				StartCoroutine(PlayWakeUpAfterDelay(1.15f)); // 1.15 seconds delay
+				playerScript.FreezeMovement(true);
+				playerShoot.DisableAttacks(true);
+			
+				AnimationManager.Instance.StandUp();
+				
 				isRunning = true;
 			});
 		}

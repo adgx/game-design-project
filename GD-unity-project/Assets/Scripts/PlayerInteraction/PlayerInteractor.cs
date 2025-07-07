@@ -82,11 +82,32 @@ namespace PlayerInteraction
                 {
                     ClearTarget();
                 }
+
+                return;
             }
-            else
+            
+            Vector3 behindStartPoint = _mainCamera.transform.position - _mainCamera.transform.forward * 1.0f; 
+            Ray behindRay = new Ray(behindStartPoint, _mainCamera.transform.forward);
+            
+            if (Physics.Raycast(behindRay, out RaycastHit behindHit, _interactionDistance + 1.0f, _interactionLayer) &&
+                behindHit.collider.TryGetComponent(out IInteractable doorInteractable))
             {
-                ClearTarget();
+                if (doorInteractable.IsInteractable)
+                {
+                    if (doorInteractable == _currentTarget) return;
+            
+                    _currentTarget = doorInteractable;
+                    ShowPrompt();
+                }
+                else
+                {
+                    ClearTarget();
+                }
+                
+                return;
             }
+            
+            ClearTarget();
         }
 
         /// <summary>
