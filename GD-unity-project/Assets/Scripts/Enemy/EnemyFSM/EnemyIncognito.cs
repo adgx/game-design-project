@@ -92,8 +92,10 @@ public class Incognito : MonoBehaviour, IEnemy
         _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(chaseS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(chaseS, wonderS, () => _playerInSightRange && _playerInAttackRange);
-        _stateMachine.AddTransition(wonderS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
-        _stateMachine.AddTransition(shortSpitAttackS, wonderS, () => _alreadyAttacked);
+		_stateMachine.AddTransition(wonderS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
+		_stateMachine.AddTransition(wonderS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
+		_stateMachine.AddTransition(patrolS, wonderS, () => _playerInSightRange && _playerInAttackRange);
+		_stateMachine.AddTransition(shortSpitAttackS, wonderS, () => _alreadyAttacked);
         _stateMachine.AddTransition(wonderS, shortSpitAttackS, () => !_alreadyAttacked);
 
 		_stateMachine.AddTransition(_reactFromFrontS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
@@ -109,7 +111,7 @@ public class Incognito : MonoBehaviour, IEnemy
         //Check for sight and attack range
         _playerInSightRange = Physics.CheckSphere(transform.position, _sightRange, _whatIsPlayer);
         _playerInAttackRange = Physics.CheckSphere(transform.position, _attackRange, _whatIsPlayer);
-        _stateMachine.Tik();
+		_stateMachine.Tik();
     }
     public void Initialize(EnemyData enemyData, RoomManager.RoomManager roomManager)
     {
@@ -172,9 +174,11 @@ public class Incognito : MonoBehaviour, IEnemy
 
         _walkPoint = new Vector3(transform.position.x + randomX, transform.position.y,
             transform.position.z + randomZ);
-
-        if (Physics.Raycast(_walkPoint, -transform.up, 2f, _whatIsGround))
+        
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(_walkPoint, out hit, 2f, NavMesh.AllAreas))
         {
+            _walkPoint = hit.position;
             _walkPointSet = true;
         }
     }
@@ -208,7 +212,7 @@ public class Incognito : MonoBehaviour, IEnemy
 
     public void WonderAttackPlayer()
     {
-        if (_agent == null || !_agent.isOnNavMesh) return;
+		if (_agent == null || !_agent.isOnNavMesh) return;
         
         //Make sure enemy doesn't move
         _agent.SetDestination(transform.position);

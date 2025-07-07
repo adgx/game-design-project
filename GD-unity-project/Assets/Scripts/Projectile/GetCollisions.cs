@@ -27,9 +27,6 @@ public class GetCollisions : MonoBehaviour
                     if(contact.thisCollider.tag.Contains("EnemyAttack") && contact.otherCollider.CompareTag("Player")) {
                         PlayerShoot playerShoot = contact.otherCollider.GetComponent<PlayerShoot>();
 
-                        print(Math.Sign(contact.normal.x));
-						print(Math.Sign(contact.normal.z));
-
                         if (contact.thisCollider.tag.Contains("Spit"))
                         {
 							playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.Spit, Math.Sign(contact.normal.x), Math.Sign(contact.normal.z));

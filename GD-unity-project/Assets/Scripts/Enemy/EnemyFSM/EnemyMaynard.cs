@@ -101,7 +101,8 @@ public class Maynard : MonoBehaviour, IEnemy
         _stateMachine.AddTransition(chaseS, patrolS, () => !_playerInSightRange && !_playerInCloseAttackRange);
         _stateMachine.AddTransition(chaseS, wonderS, () =>  (_playerInCloseAttackRange && _playerInSightRange) || (_playerInRemoteAttackRange && _playerInSightRange));
         _stateMachine.AddTransition(wonderS, patrolS, () => !_playerInSightRange && !_playerInCloseAttackRange);
-        _stateMachine.AddTransition(wonderS, closeAttackS, () => _playerInCloseAttackRange && _playerInSightRange && !_alreadyAttacked);
+		_stateMachine.AddTransition(wonderS, chaseS, () => (_playerInCloseAttackRange && !_playerInSightRange) || (_playerInRemoteAttackRange && !_playerInSightRange));
+		_stateMachine.AddTransition(wonderS, closeAttackS, () => _playerInCloseAttackRange && _playerInSightRange && !_alreadyAttacked);
         _stateMachine.AddTransition(closeAttackS, wonderS, () => _alreadyAttacked);
         _stateMachine.AddTransition(wonderS, screamAttackS, () => !_alreadyAttacked);
         _stateMachine.AddTransition(screamAttackS, wonderS, () => _alreadyAttacked);
@@ -229,11 +230,12 @@ public class Maynard : MonoBehaviour, IEnemy
         _walkPoint = new Vector3(transform.position.x + randomX, transform.position.y,
             transform.position.z + randomZ);
 
-        if (Physics.Raycast(_walkPoint, -transform.up, 2f, _whatIsGround))
-        {
-            _walkPointSet = true;
-        }
-    }
+		NavMeshHit hit;
+		if(NavMesh.SamplePosition(_walkPoint, out hit, 2f, NavMesh.AllAreas)) {
+			_walkPoint = hit.position;
+			_walkPointSet = true;
+		}
+	}
 
     public void Patroling()
     {

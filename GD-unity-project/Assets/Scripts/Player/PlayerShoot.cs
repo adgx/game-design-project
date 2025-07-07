@@ -435,7 +435,12 @@ public class PlayerShoot : MonoBehaviour
 	}
 
 	public void FireCloseAttack() {
-		DecreaseStamina(attackStamina);
+		if(attackStamina == 0) {
+			DecreaseStamina(1);
+		}
+		else {
+			DecreaseStamina(attackStamina);
+		}
 
 		closeAttackLoadingBar.fillAmount = 0;
 
