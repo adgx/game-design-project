@@ -12,7 +12,7 @@ using Enemy.EnemyManager;
 namespace Utils {
 	public class GameTimer : MonoBehaviour {
 		// TODO: the timer is set to 2 minutes for debugging. It should be of 10 minutes.
-		private const float TimeLimit = 10 * 60f;
+		private const float TimeLimit = 2 * 60f; // 10 * 60f;
 		private float currentTime;
 
 		public TMP_Text timerText;
@@ -78,6 +78,9 @@ namespace Utils {
 			if(currentTime <= 0f) {
 				currentTime = 0f;
 				isRunning = false;
+				
+				// Ambient light management
+				GameEvents.current.TimerEnded(); 
 
 				if(GameStatus.loopIteration == GameStatus.LoopIteration.THIRD_ITERATION) {
 					GameStatus.gameEnded = true;

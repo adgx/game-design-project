@@ -85,6 +85,9 @@ public class RespawnScreen : MonoBehaviour
 		fadeOut = true;
 		changeScene = true;
 		GameStatus.gameEnded = false;
+		
+		// Ambient light management
+		AmbientLightManager.ResetLightSequence();
 	}
 
 	public void QuitGameClicked() {
