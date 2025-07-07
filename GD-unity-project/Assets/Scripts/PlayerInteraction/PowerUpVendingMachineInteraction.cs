@@ -64,8 +64,7 @@ namespace PlayerInteraction
             }
             
             StartCoroutine(RotatePlayerTowards(transform, _rotationDuration));
-            AnimationManager.Instance.Idle();
-            
+
             StartCoroutine(_isPowerUpVendingMachineHacked ? GetItemSequence() : HackingSequence());
 
             return true;

@@ -253,7 +253,7 @@ public class PlayerShoot : MonoBehaviour
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
 		rotateSphere.positionSphere(new Vector3(0, 0.8f, rotateSphere.DistanceFromPlayer), RotateSphere.Animation.RotateAround);
-		AnimationManager.Instance.Idle();
+		//AnimationManager.Instance.Idle();
 		AnimationManager.Instance.Attack();
 		
 		// Audio management
@@ -362,7 +362,6 @@ public class PlayerShoot : MonoBehaviour
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
 		rotateSphere.positionSphere(new Vector3(0, 1.8f, 0), RotateSphere.Animation.Linear);
-		AnimationManager.Instance.Idle();
 		AnimationManager.Instance.AreaAttack();
 		
 		// Audio management
@@ -695,7 +694,7 @@ public class PlayerShoot : MonoBehaviour
 			if (!cannotAttack)
 			{
 				// The attack is shot only on "Fire1" up
-				if (Input.GetButtonDown("Fire1"))
+				if (Input.GetButtonDown("Fire1") && AnimationManager.Instance.rickState == RickStates.Idle)
 				{
 					if (!magneticShield && CheckStamina(1) && !attacking)
 					{
@@ -738,7 +737,7 @@ public class PlayerShoot : MonoBehaviour
 					}
 				}
 
-				if (Input.GetButtonDown("Fire2") && !loadingAttack)
+				if (Input.GetButtonDown("Fire2") && !loadingAttack && AnimationManager.Instance.rickState == RickStates.Idle)
 				{
 					SpawnMagneticShield();
 				}

@@ -128,7 +128,6 @@ public class TerminalTrigger : MonoBehaviour
     async private void ManageVendingMachine() {
 		if(!busy) {
 			StartCoroutine(RotatePlayerTowards(transform, 0.2f));
-			AnimationManager.Instance.Idle();
 
 			helpText.text = "";
 			helpTextContainer.SetActive(false);

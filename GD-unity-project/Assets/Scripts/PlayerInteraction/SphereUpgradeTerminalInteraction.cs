@@ -47,7 +47,6 @@ namespace PlayerInteraction
             if (!IsInteractable) return false;
             
             StartCoroutine(RotatePlayerTowards(transform, _rotationDuration));
-            AnimationManager.Instance.Idle();
 
             StartCoroutine(UpgradeSequence());
             return true;
