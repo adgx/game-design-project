@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3200744810982350745}
   - component: {fileID: 7375003008208413156}
-  - component: {fileID: 6960341166638446533}
   - component: {fileID: 5568504960107932047}
+  - component: {fileID: 8948645165946471733}
   m_Layer: 0
   m_Name: PowerUpSnackDistributor
   m_TagString: PowerUpSnackDistributor
@@ -55,21 +55,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6960341166638446533
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3487362146699370316}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c95e080be36249ad9c5585fdf4428d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  EnergyDrinkMesh: {fileID: 919132149155446097, guid: cb04921020eb7443ea1506a029dd8ccd, type: 3}
-  SnackMesh: {fileID: 919132149155446097, guid: 789ce07a7489c4ad48e6d7c27ddbcdbb, type: 3}
-  SpecialSnackMesh: {fileID: 919132149155446097, guid: 81fcb738204ba413daba5d6b77229665, type: 3}
 --- !u!114 &5568504960107932047
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,6 +86,25 @@ MonoBehaviour:
   OverrideAttenuation: 1
   OverrideMinDistance: 1
   OverrideMaxDistance: 20
+--- !u!114 &8948645165946471733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3487362146699370316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 432ee9113b5c49aca8a4463349be0539, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _energyDrinkMeshPrefab: {fileID: 919132149155446097, guid: cb04921020eb7443ea1506a029dd8ccd, type: 3}
+  _snackMeshPrefab: {fileID: 919132149155446097, guid: 789ce07a7489c4ad48e6d7c27ddbcdbb, type: 3}
+  _hackingTime: 4.2
+  _itemHoldDelay: 1
+  _itemUseDuration: 5
+  _rotationDuration: 0.2
+  _feedbackMessageDuration: 3
 --- !u!1001 &2286981006449408380
 PrefabInstance:
   m_ObjectHideFlags: 0

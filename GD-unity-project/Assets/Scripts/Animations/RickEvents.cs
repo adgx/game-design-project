@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Audio;
 using FMOD.Studio;
+using PlayerInteraction;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -26,9 +27,11 @@ namespace Animations
         public PowerUp powerUp;
         public PlayerShoot playerShoot;
         [SerializeField] private FadeManagerLoadingScreen fadeManagerLoadingScreen;
-        [DoNotSerialize] public TerminalTrigger terminalTrigger;
+        [DoNotSerialize] public HealthVendingMachineInteraction healthVendingMachineInteraction;
+		[DoNotSerialize] public PowerUpVendingMachineInteraction powerUpVendingMachineInteraction;
+        [DoNotSerialize] public string machineType; // Can be "playerPowerUp" or "health"
 
-        public void SetHitState()
+		public void SetHitState()
         {
             AnimationManager.Instance.rickState = RickStates.Hit;
         }
@@ -176,7 +179,7 @@ namespace Animations
         }
 
 		public void EndPowerUp() {
-			terminalTrigger.TerminatePlayerPowerUp();
+			powerUpVendingMachineInteraction.TerminatePlayerPowerUp();
 		}
 
 		public void EatChocolate()
@@ -187,7 +190,7 @@ namespace Animations
         }
 
         public void EndHealthRecovery() {
-            terminalTrigger.TerminateHealthRecovery();
+            healthVendingMachineInteraction.TerminateHealthRecovery();
         }
 
 		public void FreePlayerAfterAnimation() {
@@ -222,7 +225,13 @@ namespace Animations
             ResetAudioState(); // TODO: to be removed once we have Rick's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineItemPickUp, transform.position);
 
-            terminalTrigger.PickItem();
+            if(machineType == "health")
+                healthVendingMachineInteraction.PlaceSpecialSnackInHand();
+            else {
+                if(machineType == "playerPowerUp") {
+                    powerUpVendingMachineInteraction.PlaceItemInHand();
+                }
+			}
         }
 
         public void WakeUp()

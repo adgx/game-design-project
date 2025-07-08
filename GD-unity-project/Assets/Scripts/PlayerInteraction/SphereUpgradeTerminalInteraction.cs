@@ -10,7 +10,9 @@ namespace PlayerInteraction
             ? "You obtained a " + _obtainedPowerUp.ToString() + "!"
             : (_powerUp != null && _powerUp.spherePowerUps.Count <= 0)
                 ? "Terminal is empty"
-                : "Press E to interact with the terminal";
+                : (_noMorePowerUp)
+                    ? "You have already collected a Power Up from this machine"
+					: "Press E to interact with the terminal";
 
         public bool IsInteractable =>
             !_isBusy && (_powerUp != null && _powerUp.spherePowerUps.Count > 0);
@@ -27,8 +29,9 @@ namespace PlayerInteraction
         private PowerUp.SpherePowerUpTypes _obtainedPowerUp;
         private bool _powerUpObtained = false;
         private bool _isBusy;
-        
-        private Player _player;
+		private bool _noMorePowerUp = false;
+
+		private Player _player;
         private PlayerShoot _playerShoot;
         private PowerUp _powerUp;
         private RotateSphere _rotateSphere;
@@ -103,7 +106,7 @@ namespace PlayerInteraction
             _powerUpObtained = true;
             yield return new WaitForSeconds(_feedbackMessageDuration);
             _powerUpObtained = false;
-            _isBusy = true;
+            _noMorePowerUp = true;
         }
     }
 }

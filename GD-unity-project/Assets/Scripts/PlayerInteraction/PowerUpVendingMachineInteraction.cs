@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 using Audio;
+using Animations;
+using FMOD.Studio;
 
 namespace PlayerInteraction
 {
@@ -8,9 +10,11 @@ namespace PlayerInteraction
     {
         public string InteractionPrompt => _powerUpObtained
             ? "You obtained a " + _obtainedPowerUp.ToString().Replace("Boost", " Boost") + "!"
-            : _isPowerUpVendingMachineHacked
-                ? "Press E again to take a snack from the machine"
-                : "Press E to interact with the snack distributor";
+            : (_noMorePowerUp
+                ? "You have already collected a Power Up from this machine"
+				: (_isPowerUpVendingMachineHacked
+                    ? "Press E again to take a snack from the machine"
+                    : "Press E to interact with the snack distributor"));
 
         public bool IsInteractable => !_isBusy;
 
@@ -19,9 +23,8 @@ namespace PlayerInteraction
         [SerializeField] private GameObject _snackMeshPrefab;
         
         [Header("Timings")]
-        [SerializeField] private float _hackingTime = 4.2f;
-        [SerializeField] private float _itemHoldDelay = 1.0f;
-        [SerializeField] private float _itemUseDuration = 5.0f;
+		[SerializeField] private float _freeSphere = 0.5f;
+		[SerializeField] private float _hackingTime = 3.7f;
         [SerializeField] private float _rotationDuration = 0.2f;
 
         [Header("UI Feedback")]
@@ -31,24 +34,34 @@ namespace PlayerInteraction
         static System.Random _random = new System.Random();
 
         private PowerUp.PlayerPowerUpTypes _obtainedPowerUp;
-        private bool _isPowerUpVendingMachineHacked = false;
+        private int powerUpIndexPlayer;
+		private bool _isPowerUpVendingMachineHacked = false;
         private bool _powerUpObtained = false;
         private bool _isBusy = false;
+        private bool _noMorePowerUp = false;
         
         private PlayerShoot _playerShoot;
         private Player _player;
         private PowerUp _powerUp;
         private RotateSphere _rotateSphere;
+        private RickEvents _rickEvents;
         private Transform _leftHand;
         private Transform _rightHand;
         private GameObject _instantiatedItem;
 
-        private void Start()
+		private enum ItemToPick {
+			Drink,
+			Snack
+		}
+		private ItemToPick itemToPick;
+
+		private void Start()
         {
             _playerShoot = PlayerShoot.Instance;
             _player = Player.Instance;
             _powerUp = PowerUp.Instance;
             _rotateSphere = RotateSphere.Instance;
+            _rickEvents = _player.GetComponent<RickEvents>();
             
             _leftHand = GameObject.Find("Player/Armature/mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand").transform;
             _rightHand = GameObject.Find("Player/Armature/mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand").transform;
@@ -56,7 +69,7 @@ namespace PlayerInteraction
 
         public bool Interact(GameObject interactor)
         {
-            if (_isBusy || _powerUpObtained) return false;
+            if (_isBusy || _powerUpObtained || _noMorePowerUp) return false;
             if (_powerUp.playerPowerUps.Count <= 0 && _isPowerUpVendingMachineHacked)
             {
                 Debug.Log("Vending machine is empty.");
@@ -65,9 +78,12 @@ namespace PlayerInteraction
             
             StartCoroutine(RotatePlayerTowards(transform, _rotationDuration));
 
-            StartCoroutine(_isPowerUpVendingMachineHacked ? GetItemSequence() : HackingSequence());
+			if(_isPowerUpVendingMachineHacked)
+				GetItemSequence();
+			else
+				StartCoroutine(HackingSequence());
 
-            return true;
+			return true;
         }
 
         private IEnumerator HackingSequence()
@@ -77,16 +93,18 @@ namespace PlayerInteraction
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineActivation, this.transform.position);
             _rotateSphere.positionSphere(new Vector3(_rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
 
-            yield return new WaitForSeconds(_hackingTime);
+			yield return new WaitForSeconds(_freeSphere);
+			_playerShoot.DecreaseStamina(1);
+			_rotateSphere.isRotating = true;
 
-            _playerShoot.DecreaseStamina(1);
-            _rotateSphere.isRotating = true;
+			yield return new WaitForSeconds(_hackingTime);
+			
             _isPowerUpVendingMachineHacked = true;
 
             _isBusy = false;
         }
 
-        private IEnumerator GetItemSequence()
+        private void GetItemSequence()
         {
             _isBusy = true;
             _player.FreezeMovement(true);
@@ -95,40 +113,38 @@ namespace PlayerInteraction
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineItemPickUp, this.transform.position);
             _isPowerUpVendingMachineHacked = false;
 
-            int powerUpIndexPlayer = _random.Next(_powerUp.playerPowerUps.Count);
+            powerUpIndexPlayer = _random.Next(_powerUp.playerPowerUps.Count);
             _obtainedPowerUp = _powerUp.playerPowerUps[powerUpIndexPlayer];
 
             if (_obtainedPowerUp == PowerUp.PlayerPowerUpTypes.HealthBoost)
             {
                 AnimationManager.Instance.EatChips();
-                yield return new WaitForSeconds(_itemHoldDelay);
-                PlaceSnackInHand();
-                yield return new WaitForSeconds(_itemUseDuration);
-                _playerShoot.maxHealth += 20;
-                _playerShoot.health += 20;
+				itemToPick = ItemToPick.Snack;
             }
             else if (_obtainedPowerUp == PowerUp.PlayerPowerUpTypes.DamageReduction)
             {
                 AnimationManager.Instance.Drink();
-                yield return new WaitForSeconds(_itemHoldDelay);
-                PlaceDrinkInHand();
-                yield return new WaitForSeconds(_itemUseDuration);
-                _playerShoot.damageReduction -= 0.2f;
+				itemToPick = ItemToPick.Drink;
             }
-            
-            if(_instantiatedItem != null) Destroy(_instantiatedItem);
 
-            _powerUp.ObtainPowerUp(_obtainedPowerUp);
-            _powerUp.playerPowerUps.RemoveAt(powerUpIndexPlayer);
-
-            StartCoroutine(ShowFeedbackMessage());
-
-            _player.FreezeMovement(false);
-            _playerShoot.DisableAttacks(false);
-            _isBusy = false;
+            _rickEvents.powerUpVendingMachineInteraction = this;
+            _rickEvents.machineType = "playerPowerUp";
         }
 
-        private void PlaceDrinkInHand() {
+		public void PlaceItemInHand() {
+			switch(itemToPick) {
+				case ItemToPick.Drink:
+					PlaceDrinkInHand();
+					break;
+				case ItemToPick.Snack:
+					PlaceSnackInHand();
+					break;
+				default:
+					break;
+			}
+		}
+
+		private void PlaceDrinkInHand() {
             _instantiatedItem = Instantiate(_energyDrinkMeshPrefab, _leftHand);
             _instantiatedItem.transform.SetLocalPositionAndRotation(new Vector3(-7.91e-06f, 7.33e-06f, 3.93e-06f), Quaternion.Euler(-3.593f, 99.3f, 0));
             _instantiatedItem.transform.localScale = new Vector3(0.0002f, 0.0002f, 0.0002f);
@@ -136,11 +152,37 @@ namespace PlayerInteraction
 
         private void PlaceSnackInHand() {
             _instantiatedItem = Instantiate(_snackMeshPrefab, _rightHand);
-            _instantiatedItem.transform.SetLocalPositionAndRotation(new Vector3(3.59e-06f, 7.72e-06f, 1.022e-05f), Quaternion.Euler(-85.337f, 90, 0));
+            _instantiatedItem.transform.SetLocalPositionAndRotation(new Vector3(8.85e-06f, 1.039e-05f, 7.75e-06f), Quaternion.Euler(-85.337f, 90, 0));
             _instantiatedItem.transform.localScale = new Vector3(1.6e-05f, 1.6e-05f, 1.6e-05f);
         }
 
-        private IEnumerator RotatePlayerTowards(Transform target, float duration) {
+		public void TerminatePlayerPowerUp() {
+			if(_obtainedPowerUp == PowerUp.PlayerPowerUpTypes.HealthBoost) {
+				_playerShoot.maxHealth += 20;
+				_playerShoot.health += 20;
+			}
+
+			if(_obtainedPowerUp == PowerUp.PlayerPowerUpTypes.DamageReduction) {
+				_playerShoot.damageReduction -= 0.2f;
+			}
+
+			if(_instantiatedItem != null) Destroy(_instantiatedItem);
+
+
+			// Show a message to the player
+			StartCoroutine(ShowFeedbackMessage());
+
+			// Insert the power up in the dictionary of the obtained ones
+			_powerUp.ObtainPowerUp(_obtainedPowerUp);
+
+			// Remove the power up from the list of power ups
+			_powerUp.playerPowerUps.RemoveAt(powerUpIndexPlayer);
+
+			_isBusy = false;
+			_playerShoot.FreePlayer();
+		}
+
+		private IEnumerator RotatePlayerTowards(Transform target, float duration) {
             Quaternion startRotation = _player.transform.rotation;
             Quaternion endRotation = Quaternion.LookRotation(target.forward, Vector3.up);
             float elapsed = 0f;
@@ -157,7 +199,7 @@ namespace PlayerInteraction
             _powerUpObtained = true;
             yield return new WaitForSeconds(_feedbackMessageDuration);
             _powerUpObtained = false;
-            _isBusy = true;
+            _noMorePowerUp = true;
         }
     }
 }
