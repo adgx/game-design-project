@@ -122,8 +122,9 @@ public class Incognito : MonoBehaviour, IEnemy
         if (enemyData == null || enemyData is not EnemyIncognitoData incognitoData) return;
 
         _agent.speed = enemyData.baseMoveSpeed;
+		_agent.angularSpeed = enemyData.angularSpeed;
 
-        _health = incognitoData.maxHealth;
+		_health = incognitoData.maxHealth;
         _walkPointRange = incognitoData.walkPointRange;
         _timeBetweenAttacks = incognitoData.timeBetweenAttacks;
 

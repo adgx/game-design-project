@@ -8,11 +8,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Enemy.EnemyManager;
+using System.Threading.Tasks;
 
 namespace Utils {
 	public class GameTimer : MonoBehaviour {
 		// TODO: the timer is set to 2 minutes for debugging. It should be of 10 minutes.
-		private const float TimeLimit = 30f; // 10 * 60f;
+		private const float TimeLimit = 0.5f * 60f;
 		private float currentTime;
 
 		public TMP_Text timerText;
@@ -20,7 +21,7 @@ namespace Utils {
 		[SerializeField] private Sprite timerOutlineSpriteRed;
 		[SerializeField] private Sprite timerOutlineSpriteNormal;
 
-		private bool isRunning;
+		public bool isRunning;
 
 		public RoomManager.RoomManager roomManager;
 		[SerializeField] private EnemyManager enemyManager;
@@ -52,14 +53,15 @@ namespace Utils {
 			}
 		}
 
-		private void Start() {
+		private async void Start() {
 			player = GameObject.FindWithTag("Player");
 			playerScript = player.GetComponent<Player>();
 			playerShoot = player.GetComponent<PlayerShoot>();
 			
 			playerScript.FreezeMovement(true);
 			playerShoot.DisableAttacks(true);
-			
+
+			await Task.Delay(50);
 			AnimationManager.Instance.StandUp();
 
 			GameStatus.gameEnded = false;
@@ -72,7 +74,7 @@ namespace Utils {
 		private void Update() {
 			if(!isRunning || GameStatus.gameEnded || sceneIsLoading)
 				return;
-
+			
 			currentTime -= Time.deltaTime;
 
 			if(currentTime <= 0f) {
