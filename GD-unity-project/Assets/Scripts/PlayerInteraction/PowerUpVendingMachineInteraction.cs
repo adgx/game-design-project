@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using Audio;
 using Animations;
-using FMOD.Studio;
 
 namespace PlayerInteraction
 {
@@ -110,7 +109,6 @@ namespace PlayerInteraction
             _player.FreezeMovement(true);
             _playerShoot.DisableAttacks(true);
             
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineItemPickUp, this.transform.position);
             _isPowerUpVendingMachineHacked = false;
 
             powerUpIndexPlayer = _random.Next(_powerUp.playerPowerUps.Count);

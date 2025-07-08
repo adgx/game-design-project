@@ -1,7 +1,6 @@
 using System.Collections;
 using Animations;
 using Audio;
-using FMOD.Studio;
 using UnityEngine;
 
 namespace PlayerInteraction
@@ -92,9 +91,7 @@ namespace PlayerInteraction
             _isBusy = true;
             _player.FreezeMovement(true);
             _playerShoot.DisableAttacks(true);
-
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineItemPickUp,
-                this.transform.position);
+            
             _isHealthVendingMachineHacked = false;
 
             AnimationManager.Instance.EatSnack();
