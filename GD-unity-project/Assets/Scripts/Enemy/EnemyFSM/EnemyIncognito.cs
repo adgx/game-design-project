@@ -157,6 +157,7 @@ public class Incognito : MonoBehaviour, IEnemy
         if(_health <= 0) {
             gameObject.layer = 0;
             gameObject.tag = "Untagged";
+            
 
             _stateMachine.SetState(_deathS);
         }

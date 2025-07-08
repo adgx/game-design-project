@@ -164,7 +164,7 @@ namespace Utils {
 
 				roomManager.SetRoomsDifficulty();
 				enemyManager.SetEnemyDifficulty();
-				enemyManager.DestroyAllEnemies();
+				enemyManager.DestroyEnemies(roomManager.CurrentRoomIndex);
 
 				playerShoot.ResetAttack();
 
