@@ -9296,15 +9296,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7473167638930628443, guid: 2565fc952690e45bea2c176f0925f9c6, type: 3}
       propertyPath: m_Size.x
-      value: 0.006
+      value: 0.0065
       objectReference: {fileID: 0}
     - target: {fileID: 7473167638930628443, guid: 2565fc952690e45bea2c176f0925f9c6, type: 3}
       propertyPath: m_Size.y
-      value: 0.008
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 7473167638930628443, guid: 2565fc952690e45bea2c176f0925f9c6, type: 3}
       propertyPath: m_Size.z
-      value: 0.01
+      value: 0.012
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -10143,9 +10143,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _energyDrinkMeshPrefab: {fileID: 919132149155446097, guid: cb04921020eb7443ea1506a029dd8ccd, type: 3}
   _snackMeshPrefab: {fileID: 919132149155446097, guid: 789ce07a7489c4ad48e6d7c27ddbcdbb, type: 3}
+  _freeSphere: 0.5
   _hackingTime: 4.2
-  _itemHoldDelay: 1
-  _itemUseDuration: 5
   _rotationDuration: 0.2
   _feedbackMessageDuration: 3
 --- !u!1001 &3229489542465933102
@@ -13195,9 +13194,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _specialSnackMeshPrefab: {fileID: 919132149155446097, guid: 81fcb738204ba413daba5d6b77229665, type: 3}
+  _freeSphere: 0.5
   _hackingTime: 4.2
-  _itemHoldDelay: 1
-  _itemUseDuration: 5
   _rotationDuration: 0.2
   _feedbackMessageDuration: 3
 --- !u!1 &2590364947605142084 stripped
