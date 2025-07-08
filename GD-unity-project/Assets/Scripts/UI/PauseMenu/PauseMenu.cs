@@ -151,10 +151,11 @@ public class PauseMenu : MonoBehaviour
 		EventSystem.current.SetSelectedGameObject(noButton);
 	}
 
-	public void YesButtonClick(GameObject button) {
+	public async void YesButtonClick(GameObject button) {
 		buttonEffects.OnMouseExit(button);
 
 		if(actionToConfirm == ActionToConfirm.StartNewGame) {
+			print("Ciao");
 			Destroy(GameObject.Find("RoomManager"));
 			StartCoroutine(LoadGameplaySceneAsync());
 		}

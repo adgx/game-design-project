@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Helper;
+using Utils;
 
 public class PlayerShoot : MonoBehaviour
 {
@@ -72,6 +73,7 @@ public class PlayerShoot : MonoBehaviour
 	[SerializeField] private Material sphereMaterial;
 
 	[SerializeField] private string respawnSceneName = "RespawnScene";
+	[SerializeField] private GameTimer gameTimer;
 
 	public enum DamageTypes {
 		Spit,
@@ -510,6 +512,7 @@ public class PlayerShoot : MonoBehaviour
      	{
 	        DisableAttacks(true);
 	        player.FreezeMovement(true);
+			gameTimer.isRunning = false;
 			if(damageType == DamageTypes.DrakeBiteAttack) {
 				AnimationManager.Instance.Bite();
 			}

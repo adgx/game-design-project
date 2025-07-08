@@ -135,6 +135,7 @@ public class Drake : MonoBehaviour, IEnemy
         if (enemyData == null || enemyData is not EnemyDrakeData drakeData) return;
 
         _agent.speed = enemyData.baseMoveSpeed;
+        _agent.angularSpeed = enemyData.angularSpeed;
 
         _health = drakeData.maxHealth;
         _walkPointRange = drakeData.walkPointRange;

@@ -145,8 +145,9 @@ public class Maynard : MonoBehaviour, IEnemy
         if (!enemyData || enemyData is not EnemyManyardData maynardData) return;
 
         _agent.speed = enemyData.baseMoveSpeed;
+		_agent.angularSpeed = enemyData.angularSpeed;
 
-        _health = maynardData.maxHealth;
+		_health = maynardData.maxHealth;
         _walkPointRange = maynardData.walkPointRange;
         _timeBetweenAttacks = maynardData.timeBetweenAttacks;
 
