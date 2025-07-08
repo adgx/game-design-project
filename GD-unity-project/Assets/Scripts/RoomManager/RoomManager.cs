@@ -435,7 +435,7 @@ namespace RoomManager
         /// <summary>
         /// Loads a new room and spawns the player inside it.
         /// </summary>
-        public void TraverseRoom(Vector3Int newRoomIndex, Vector3Int entryDirection)
+        public async void TraverseRoom(Vector3Int newRoomIndex, Vector3Int entryDirection)
         {
             if (!_isLayoutGenerated || !DoesRoomExistAt(newRoomIndex))
             {

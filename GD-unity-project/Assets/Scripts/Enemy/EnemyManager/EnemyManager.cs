@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using RoomManager;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -96,7 +97,7 @@ namespace Enemy.EnemyManager
                 .OrderBy(sp => Random.value)
                 .ToList();
 
-            for (int i = 0; i < _maxEnemiesPerRoom && shuffledSpawnPoints.Count > 0 && remainingBudget > 0; i++)
+			for (int i = 0; i < _maxEnemiesPerRoom && shuffledSpawnPoints.Count > 0 && remainingBudget > 0; i++)
             {
                 List<EnemyData.EnemyData> affordableEnemies = _availableEnemyData
                     .Where(enemyData => enemyData != null && enemyData.enemyPrefab != null && enemyData.spawnCost > 0 &&
@@ -118,13 +119,11 @@ namespace Enemy.EnemyManager
                 GameObject enemyInstance =
                     Instantiate(enemyToSpawnData.enemyPrefab, spawnPoint.position, spawnPoint.rotation);
 
-                if (enemyInstance.GetComponent<IEnemy>() is { } enemyScript)
-                {
+                if(enemyInstance.GetComponent<IEnemy>() is { } enemyScript) {
                     enemyScript.Initialize(enemyToSpawnData, _roomManager);
                     spawnedEnemies.Add(enemyInstance);
                 }
-                else
-                {
+                else {
                     Debug.LogWarning(
                         $"Spawned enemy '{enemyToSpawnData.enemyName}' from prefab '{enemyToSpawnData.enemyPrefab.name}' but it doesn't implement IEnemy.",
                         enemyInstance);
