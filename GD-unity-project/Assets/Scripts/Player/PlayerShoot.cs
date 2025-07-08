@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Threading.Tasks;
+using Animations;
 using Audio;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,7 @@ public class PlayerShoot : MonoBehaviour
 	// Audio management 
 	public bool IsSphereRotating => rotateSphere.isRotating;
 	private bool isShieldCoroutineRunning;
+	[SerializeField] private RickEvents rickEvents; 
 	
 	// Attack1
 	[SerializeField] private float bulletSpeed;
@@ -240,6 +242,12 @@ public class PlayerShoot : MonoBehaviour
 		// button in a very fast way (as for the loading sound)
 		await Task.Delay(50);
 		
+		// Audio management: if after the delay we are still charging, start the sound
+		if (loadingAttack && rickEvents != null)
+		{
+			rickEvents.ShouldPlayChargeSound = true;
+		}
+		
 		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp) && loadingAttack)
 		{
 			attackStamina++;
@@ -253,10 +261,23 @@ public class PlayerShoot : MonoBehaviour
 			
 			await Task.Delay(500);
 		}
+		
+		// Audio management: stop the loading sound of the attack when the loading is terminated 
+		if (rickEvents != null)
+		{
+			rickEvents.ShouldPlayChargeSound = false;
+		}
 	}
 	
 	private void DistanceAttackAnimation() {
 		loadingAttack = false;
+		
+		// Audio management: stop the loading sound of the attack if the button is released
+		if (rickEvents != null)
+		{
+			rickEvents.ShouldPlayChargeSound = false;
+		}
+		
 		AnimationManager.Instance.EndAttack();
 	}
 
@@ -313,6 +334,12 @@ public class PlayerShoot : MonoBehaviour
 		// button in a very fast way (as for the loading sound)
 		await Task.Delay(50);
 		
+		// Audio management: if after the delay we are still charging, start the sound
+		if (loadingAttack && rickEvents != null)
+		{
+			rickEvents.ShouldPlayChargeSound = true;
+		}
+		
 		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp) && loadingAttack) {
 			attackStamina++;
 			ChangeSphereColor(attackStamina);
@@ -326,10 +353,23 @@ public class PlayerShoot : MonoBehaviour
 			
 			await Task.Delay(500);
 		}
+		
+		// Audio management: stop the loading sound of the attack when the loading is terminated 
+		if (rickEvents != null)
+		{
+			rickEvents.ShouldPlayChargeSound = false;
+		}
 	}
 	
 	private void CloseAttackAnimation() {
 		loadingAttack = false;
+		
+		// Audio management: stop the loading sound of the attack if the button is released
+		if (rickEvents != null)
+		{
+			rickEvents.ShouldPlayChargeSound = false;
+		}
+		
 		AnimationManager.Instance.EndAreaAttack();
 	}
 

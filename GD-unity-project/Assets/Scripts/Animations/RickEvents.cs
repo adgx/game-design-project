@@ -17,6 +17,10 @@ namespace Animations
         private EventInstance rickWalkFootsteps;
         private EventInstance rickRunFootsteps;
         private EventInstance rickIdle;
+        
+        // This flag must be set to 'true' by the input script when the attack key is pressed,
+        // and to 'false' when released
+        public bool ShouldPlayChargeSound { get; set; } = false;
 
         public PowerUp powerUp;
         public PlayerShoot playerShoot;
@@ -258,140 +262,25 @@ namespace Animations
             rickIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             
             RickStates currentState = AnimationManager.Instance.rickState;
-
+            
+            // Condition for close-loading audio:
+            // Must be in the correct state and the isLoadingSoundPlaying flag must be true
+            bool shouldPlayCloseLoad = currentState == RickStates.LoadingCloseAttack && ShouldPlayChargeSound;
             if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp))
             {
-                // Start loadCloseAttack event if Rick is loading the close attack 
-                if (currentState == RickStates.LoadingCloseAttack) 
-                {
-                    // Get the playback state for the loadCloseAttack event
-                    PLAYBACK_STATE loadCloseAttackPlaybackState;
-
-                    if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 1)
-                    {
-                        rickLoadCloseAttackWithPowerUp1.getPlaybackState(out loadCloseAttackPlaybackState);
-                        if (loadCloseAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
-                        {
-                            rickLoadCloseAttackWithPowerUp1.start();
-                            _ = StopLoadingSoundAfterDelay(rickLoadCloseAttackWithPowerUp1, 1500, currentState);
-                        }
-                    }
-                    else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 2)
-                    {
-                        rickLoadCloseAttackWithPowerUp2.getPlaybackState(out loadCloseAttackPlaybackState);
-                        if (loadCloseAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
-                        {
-                            rickLoadCloseAttackWithPowerUp2.start();
-                            _ = StopLoadingSoundAfterDelay(rickLoadCloseAttackWithPowerUp2, 2500, currentState);
-                        }
-                    }
-                }
-                // Otherwise, stop the loadCloseAttack event
-                else
-                {
-                    if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 1)
-                    {
-                        rickLoadCloseAttackWithPowerUp1.stop(STOP_MODE.ALLOWFADEOUT);
-                    }
-                    else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 2)
-                    {
-                        rickLoadCloseAttackWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);
-                    }
-                }
+                HandleLoopingSound(rickLoadCloseAttackWithPowerUp1, shouldPlayCloseLoad && powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 1);
+                HandleLoopingSound(rickLoadCloseAttackWithPowerUp2, shouldPlayCloseLoad && powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 2);
             }
 
+            // Condition for remote loading audio:
+            bool shouldPlayDistanceLoad = currentState == RickStates.LoadingDistanceAttack && ShouldPlayChargeSound;
             if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp))
             {
-                // Start loadDistanceAttack event if Rick is loading the distance attack 
-                if (currentState == RickStates.LoadingDistanceAttack)
-                {
-                    // Get the playback state for the loadDistanceAttack event
-                    PLAYBACK_STATE loadDistanceAttackPlaybackState;
-
-                    if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 1)
-                    {
-                        rickLoadDistanceAttackWithPowerUp1.getPlaybackState(out loadDistanceAttackPlaybackState);
-                        if (loadDistanceAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
-                        {
-                            rickLoadDistanceAttackWithPowerUp1.start();
-                            _ = StopLoadingSoundAfterDelay(rickLoadDistanceAttackWithPowerUp1, 1500, currentState);
-                        }
-                    }
-                    else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 2)
-                    {
-                        rickLoadDistanceAttackWithPowerUp2.getPlaybackState(out loadDistanceAttackPlaybackState);
-                        if (loadDistanceAttackPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
-                        {
-                            rickLoadDistanceAttackWithPowerUp2.start();
-                            _ = StopLoadingSoundAfterDelay(rickLoadDistanceAttackWithPowerUp2, 2500, currentState);
-                        }
-                    }
-                }
-                // Otherwise, stop the loadDistanceAttack event
-                else
-                {
-                    if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 1)
-                    {
-                        rickLoadDistanceAttackWithPowerUp1.stop(STOP_MODE.ALLOWFADEOUT);
-                    }
-                    else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 2)
-                    {
-                        rickLoadDistanceAttackWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);
-                    }
-                }
+                HandleLoopingSound(rickLoadDistanceAttackWithPowerUp1, shouldPlayDistanceLoad && powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 1);
+                HandleLoopingSound(rickLoadDistanceAttackWithPowerUp2, shouldPlayDistanceLoad && powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 2);
             }
 
-            // Start walkFootsteps event if Rick is moving
-            if (currentState == RickStates.Walk)
-            {
-                // Get the playback state for the walkFootsteps event
-                PLAYBACK_STATE walkFootstepsPlaybackState;
-                rickWalkFootsteps.getPlaybackState(out walkFootstepsPlaybackState);
-                if (walkFootstepsPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
-                {
-                    rickWalkFootsteps.start();
-                }
-            }
-            // Otherwise, stop the walkFootsteps event
-            else
-            {
-                rickWalkFootsteps.stop(STOP_MODE.ALLOWFADEOUT);
-            }
-
-            // Start runFootsteps event if Rick is moving fast
-            if (currentState == RickStates.Run)
-            {
-                // Get the playback state for the runFootsteps event
-                PLAYBACK_STATE runFootstepsPlaybackState;
-                rickRunFootsteps.getPlaybackState(out runFootstepsPlaybackState);
-                if (runFootstepsPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
-                {
-                    rickRunFootsteps.start();
-                }
-            }
-            // Otherwise, stop the runFootsteps event
-            else
-            {
-                rickRunFootsteps.stop(STOP_MODE.ALLOWFADEOUT);
-            }
-
-            // Start idle event if Rick is using the idle animation
-            if (currentState == RickStates.Idle)
-            {
-                // Get the playback state for the idle event
-                PLAYBACK_STATE idlePlaybackState;
-                rickIdle.getPlaybackState(out idlePlaybackState);
-                if (idlePlaybackState.Equals(PLAYBACK_STATE.STOPPED))
-                {
-                    rickIdle.start();
-                }
-            }
-            // Otherwise, stop the idle event
-            else
-            {
-                rickIdle.stop(STOP_MODE.ALLOWFADEOUT);
-            }
-            
+            // Motion and idle sounds
             HandleLoopingSound(rickWalkFootsteps, currentState == RickStates.Walk);
             HandleLoopingSound(rickRunFootsteps, currentState == RickStates.Run);
             HandleLoopingSound(rickIdle, currentState == RickStates.Idle);
@@ -400,9 +289,10 @@ namespace Animations
         // Helper method to reduce code duplication for loop sounds
         private void HandleLoopingSound(EventInstance instance, bool shouldBePlaying)
         {
+            instance.getPlaybackState(out PLAYBACK_STATE playbackState);
+    
             if (shouldBePlaying)
             {
-                instance.getPlaybackState(out PLAYBACK_STATE playbackState);
                 if (playbackState == PLAYBACK_STATE.STOPPED)
                 {
                     instance.start();
@@ -410,36 +300,14 @@ namespace Animations
             }
             else
             {
-                instance.stop(STOP_MODE.ALLOWFADEOUT);
+                if (playbackState != PLAYBACK_STATE.STOPPING && playbackState != PLAYBACK_STATE.STOPPED)
+                {
+                    instance.stop(STOP_MODE.ALLOWFADEOUT);
+                }
             }
         }
 
         // Audio management
-        private async Task StopLoadingSoundAfterDelay(EventInstance instance, int delayMs, RickStates currentState)
-        {
-            await Task.Delay(delayMs);
-
-            if (!instance.isValid())
-                return;
-
-            PLAYBACK_STATE state;
-            var result = instance.getPlaybackState(out state);
-            if (result != FMOD.RESULT.OK)
-                return;
-
-            if (state != PLAYBACK_STATE.STOPPED)
-                instance.stop(STOP_MODE.ALLOWFADEOUT);
-
-            if (currentState == RickStates.LoadingCloseAttack && AnimationManager.Instance.rickState == currentState)
-            {
-                AnimationManager.Instance.rickState = RickStates.EndAreaAttack;
-            }
-            else if(AnimationManager.Instance.rickState == currentState)
-            {
-                AnimationManager.Instance.rickState = RickStates.EndAttack;   
-            }
-        }
-
         private async Task ShieldDeactivationAfterDelay(int delayMs)
         {
             await Task.Delay(delayMs);
