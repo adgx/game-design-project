@@ -39,7 +39,6 @@ public class TerminalTrigger : MonoBehaviour
     
     private TriggerType triggerType;
     
-    // Audio management
     private GameObject player;
     private RotateSphere rotateSphere;
 
@@ -150,10 +149,6 @@ public class TerminalTrigger : MonoBehaviour
 				case TriggerType.SphereTerminal:
 					// Give a random power up for the Sphere
 					if(powerUps.spherePowerUps.Count > 0) {
-						// Audio management
-						rotateSphere.positionSphere(new Vector3(rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
-						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerTerminalInteraction, this.transform.position);
-
 						busy = true;
 						await Task.Delay(2000);
 
@@ -184,11 +179,8 @@ public class TerminalTrigger : MonoBehaviour
 						if (powerUpVendingMachineHacked)
 						{
 							// Get power up, lose 1 stamina for the Sphere
-							// Audio management
-							GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineItemPickUp, this.transform.position);
 							powerUpVendingMachineHacked = false;
-
-
+							
 							playerShoot.DisableAttacks(true);
 							playerScript.FreezeMovement(true);
 							busy = true;
@@ -214,8 +206,6 @@ public class TerminalTrigger : MonoBehaviour
 
 						else
 						{
-							// Audio management
-							GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineActivation, this.transform.position);
 							rotateSphere.positionSphere(new Vector3(rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
 							
 							busy = true;
@@ -244,9 +234,6 @@ public class TerminalTrigger : MonoBehaviour
 						playerShoot.DisableAttacks(true);
 						playerScript.FreezeMovement(true);
 
-						// Audio management
-						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineItemPickUp, this.transform.position);
-
 						healthVendingMachineHacked = false;
 
 						AnimationManager.Instance.EatSnack();
@@ -254,8 +241,6 @@ public class TerminalTrigger : MonoBehaviour
 						itemToPick = ItemToPick.SpecialSnack;
 					}
 					else {
-						// Audio management
-						GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineActivation, this.transform.position);
 						rotateSphere.positionSphere(new Vector3(rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
 
 						busy = true;
