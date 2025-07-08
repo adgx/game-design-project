@@ -1,3 +1,5 @@
+using FMOD.Studio;
+using Audio;
 using UnityEngine;
 
 	public class Player : MonoBehaviour
@@ -29,6 +31,10 @@ using UnityEngine;
 		private PlayerInput input;
 		public bool isFrozen;
 		
+		// Audio management
+		private PlayerShoot playerShoot;
+		private EventInstance sphere;
+		private EventInstance sphereRotation;
 		[SerializeField] private GameObject rotatingSphere;
 
 		public void FreezeMovement(bool freeze)
@@ -80,8 +86,7 @@ using UnityEngine;
 
 			Vector3 direction = input.Vertical * (new Vector3(mainCamera.transform.forward.x, 0f, mainCamera.transform.forward.z)) + input.Horizontal * (new Vector3(mainCamera.transform.right.x, 0f, mainCamera.transform.right.z));
 			direction.Normalize();
-
-
+			
 			//animation stuff
 			float runBlendVal = ORF.Utils.Math.NormalizeValueByRage(0f, maxMovementSpeed, speed);
 			AnimationManager.Instance.SetRunBledingAnim(runBlendVal);
@@ -111,6 +116,14 @@ using UnityEngine;
 			// I need this constraint to avoid that the player turns upside down when it touches another collider
 			player.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 		}
+		
+		// Audio management
+		private void Start()
+		{
+			playerShoot = GetComponent<PlayerShoot>();
+			sphereRotation = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerSphereRotation);
+			sphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
+		}
 
 		// FixedUpdate is called once per frame
 		void FixedUpdate()
@@ -119,5 +132,32 @@ using UnityEngine;
 			{
 				Move();
 			}
+			
+			// Audio management
+			UpdateSound();
+		}
+		
+		// Audio management
+		private void UpdateSound()
+		{
+			sphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
+			
+			// Get the playback state for the rotation event
+			PLAYBACK_STATE rotationPlaybackState;
+			sphereRotation.getPlaybackState(out rotationPlaybackState);
+
+			if (playerShoot != null && playerShoot.IsSphereRotating)
+			{
+				// If the sphere is rotating, then start the sound
+				if (rotationPlaybackState == PLAYBACK_STATE.STOPPED)
+					sphereRotation.start();
+			}
+			else
+			{
+				// If the sphere is not rotating, then stop the sound
+				if (rotationPlaybackState != PLAYBACK_STATE.STOPPED)
+					sphereRotation.stop(STOP_MODE.ALLOWFADEOUT);
+			}
+
 		}
 	}
