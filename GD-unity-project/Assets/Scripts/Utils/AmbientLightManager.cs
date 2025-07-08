@@ -21,7 +21,6 @@ public class AmbientLightManager : MonoBehaviour
     {
         // At startup, immediately set the light intensity to its initial value.
         RenderSettings.ambientIntensity = initialIntensity;
-        Debug.Log($"Luce iniziale impostata a: {initialIntensity}");
         
         if (GameEvents.current != null)
         {
@@ -50,7 +49,6 @@ public class AmbientLightManager : MonoBehaviour
         {
             // If we are still within the sequence, take the next value.
             targetIntensity = intensitySequence[sequenceIndex];
-            Debug.Log($"Timer expired ({sequenceIndex + 1}° transition). Start light transition to: {targetIntensity}");
             
             // Increase the index for next time.
             sequenceIndex++;
@@ -59,7 +57,6 @@ public class AmbientLightManager : MonoBehaviour
         {
             // If the sequence is finished, it’s time to return to the initial value and reset the cycle.
             targetIntensity = initialIntensity;
-            Debug.Log("Fine del ciclo di luce. Ritorno al valore iniziale e reset.");
 
             // Resets the index to 0 to restart the cycle next time.
             sequenceIndex = 0;
@@ -82,7 +79,6 @@ public class AmbientLightManager : MonoBehaviour
         }
 
         RenderSettings.ambientIntensity = target;
-        Debug.Log("Transizione della luce completata.");
     }
     
     // Optional method to reset the counter if necessary (e.g. at the start of a new game)

@@ -1,4 +1,5 @@
 using System.Collections;
+using Animations;
 using Audio;
 using UnityEngine;
 
@@ -17,9 +18,9 @@ namespace PlayerInteraction
         [Header("Item Meshes")] [SerializeField]
         private GameObject _specialSnackMeshPrefab;
 
-        [Header("Timings")] [SerializeField] private float _hackingTime = 4.2f;
-        [SerializeField] private float _itemHoldDelay = 1.0f;
-        [SerializeField] private float _itemUseDuration = 5.0f;
+        [Header("Timings")]
+		[SerializeField] private float _freeSphere = 0.5f;
+		[SerializeField] private float _hackingTime = 3.7f;
         [SerializeField] private float _rotationDuration = 0.2f;
 
         [Header("UI Feedback")]
@@ -34,7 +35,8 @@ namespace PlayerInteraction
         private PlayerShoot _playerShoot;
         private Player _player;
         private RotateSphere _rotateSphere;
-        private Transform _leftHand;
+		private RickEvents _rickEvents;
+		private Transform _leftHand;
         private GameObject _instantiatedItem;
 
         private void Start()
@@ -46,7 +48,8 @@ namespace PlayerInteraction
                 .Find(
                     "Player/Armature/mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand")
                 .transform;
-        }
+			_rickEvents = _player.GetComponent<RickEvents>();
+		}
 
         public bool Interact(GameObject interactor)
         {
@@ -55,7 +58,10 @@ namespace PlayerInteraction
             StartCoroutine(RotatePlayerTowards(transform, _rotationDuration));
             //AnimationManager.Instance.Idle();
 
-            StartCoroutine(_isHealthVendingMachineHacked ? GetItemSequence() : HackingSequence());
+            if(_isHealthVendingMachineHacked)
+                GetItemSequence();
+            else 
+                StartCoroutine(HackingSequence());
 
             return true;
         }
@@ -69,43 +75,31 @@ namespace PlayerInteraction
             _rotateSphere.positionSphere(new Vector3(_rotateSphere.DistanceFromPlayer, 1f, 0),
                 RotateSphere.Animation.Linear);
 
-            yield return new WaitForSeconds(_hackingTime);
+            yield return new WaitForSeconds(_freeSphere);
+			_playerShoot.DecreaseStamina(1);
+			_rotateSphere.isRotating = true;
 
-            _playerShoot.DecreaseStamina(1);
-            _rotateSphere.isRotating = true;
+			yield return new WaitForSeconds(_hackingTime);
+
             _isHealthVendingMachineHacked = true;
             
             _isBusy = false;
         }
 
-        private IEnumerator GetItemSequence()
+        private void GetItemSequence()
         {
             _isBusy = true;
             _player.FreezeMovement(true);
             _playerShoot.DisableAttacks(true);
-
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineItemPickUp,
-                this.transform.position);
+            
             _isHealthVendingMachineHacked = false;
 
             AnimationManager.Instance.EatSnack();
-
-            yield return new WaitForSeconds(_itemHoldDelay);
-            PlaceSpecialSnackInHand();
-
-            yield return new WaitForSeconds(_itemUseDuration);
-
-            if (_instantiatedItem != null) Destroy(_instantiatedItem);
-            _playerShoot.RecoverHealth(_playerShoot.maxHealth);
-
-            StartCoroutine(ShowFeedbackMessage());
-
-            _player.FreezeMovement(false);
-            _playerShoot.DisableAttacks(false);
-            _isBusy = false;
+			_rickEvents.healthVendingMachineInteraction = this;
+            _rickEvents.machineType = "health";
         }
 
-        private void PlaceSpecialSnackInHand()
+        public void PlaceSpecialSnackInHand()
         {
             _instantiatedItem = Instantiate(_specialSnackMeshPrefab, _leftHand);
             _instantiatedItem.transform.SetLocalPositionAndRotation(new Vector3(-5.51e-06f, 1.01e-05f, 3.32e-06f),
@@ -113,7 +107,17 @@ namespace PlayerInteraction
             _instantiatedItem.transform.localScale = new Vector3(0.00015f, 0.00015f, 0.00015f);
         }
 
-        private IEnumerator RotatePlayerTowards(Transform target, float duration)
+		public void TerminateHealthRecovery() {
+			if(_instantiatedItem != null) Destroy(_instantiatedItem);
+			_playerShoot.RecoverHealth(_playerShoot.maxHealth);
+
+			StartCoroutine(ShowFeedbackMessage());
+
+			_isBusy = false;
+			_playerShoot.FreePlayer();
+		}
+
+		private IEnumerator RotatePlayerTowards(Transform target, float duration)
         {
             Quaternion startRotation = _player.transform.rotation;
             Quaternion endRotation = Quaternion.LookRotation(target.forward, Vector3.up);

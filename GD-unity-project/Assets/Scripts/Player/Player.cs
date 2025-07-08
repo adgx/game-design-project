@@ -1,8 +1,6 @@
 using FMOD.Studio;
-using System;
 using Audio;
 using UnityEngine;
-using UnityEngine.Assertions;
 
 	public class Player : MonoBehaviour
 	{
@@ -32,10 +30,9 @@ using UnityEngine.Assertions;
 
 		private PlayerInput input;
 		public bool isFrozen;
-
+		
 		// Audio management
 		private PlayerShoot playerShoot;
-		private EventInstance playerFootsteps;
 		private EventInstance sphere;
 		private EventInstance sphereRotation;
 		[SerializeField] private GameObject rotatingSphere;
@@ -89,8 +86,7 @@ using UnityEngine.Assertions;
 
 			Vector3 direction = input.Vertical * (new Vector3(mainCamera.transform.forward.x, 0f, mainCamera.transform.forward.z)) + input.Horizontal * (new Vector3(mainCamera.transform.right.x, 0f, mainCamera.transform.right.z));
 			direction.Normalize();
-
-
+			
 			//animation stuff
 			float runBlendVal = ORF.Utils.Math.NormalizeValueByRage(0f, maxMovementSpeed, speed);
 			AnimationManager.Instance.SetRunBledingAnim(runBlendVal);
@@ -120,13 +116,11 @@ using UnityEngine.Assertions;
 			// I need this constraint to avoid that the player turns upside down when it touches another collider
 			player.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 		}
-
+		
 		// Audio management
 		private void Start()
 		{
 			playerShoot = GetComponent<PlayerShoot>();
-			playerFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerRunFootsteps);
-			playerFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
 			sphereRotation = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerSphereRotation);
 			sphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
 		}
@@ -138,34 +132,16 @@ using UnityEngine.Assertions;
 			{
 				Move();
 			}
-
+			
 			// Audio management
 			UpdateSound();
 		}
-
+		
 		// Audio management
 		private void UpdateSound()
 		{
-			playerFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
 			sphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
-
-			// Start footsteps event if the player is moving
-			if ((Mathf.Abs(input.Horizontal) > 0.01f || Mathf.Abs(input.Vertical) > 0.01f) && !isFrozen)
-			{
-				// Get the playback state for the footsteps event
-				PLAYBACK_STATE footstepsPlaybackState;
-				playerFootsteps.getPlaybackState(out footstepsPlaybackState);
-				if (footstepsPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
-				{
-					playerFootsteps.start();
-				}
-			}
-			// Otherwise, stop the footsteps event
-			else
-			{
-				playerFootsteps.stop(STOP_MODE.ALLOWFADEOUT);
-			}
-
+			
 			// Get the playback state for the rotation event
 			PLAYBACK_STATE rotationPlaybackState;
 			sphereRotation.getPlaybackState(out rotationPlaybackState);

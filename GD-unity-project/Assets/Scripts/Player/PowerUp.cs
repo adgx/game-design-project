@@ -70,8 +70,8 @@ public class PowerUp : MonoBehaviour
         playerPowerUps.Add(PlayerPowerUpTypes.DamageReduction);
         playerPowerUps.Add(PlayerPowerUpTypes.DamageReduction);
 
-        powerUpsObtained[SpherePowerUpTypes.DistanceAttackPowerUp] = 2;
-        powerUpsObtained[SpherePowerUpTypes.CloseAttackPowerUp] = 2;
+        powerUpsObtained[SpherePowerUpTypes.DistanceAttackPowerUp] = 1;
+        powerUpsObtained[SpherePowerUpTypes.CloseAttackPowerUp] = 1;
 	}
 
     public void ObtainPowerUp(object powerUp)

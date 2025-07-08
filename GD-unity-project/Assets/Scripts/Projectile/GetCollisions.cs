@@ -3,16 +3,8 @@ using UnityEngine;
 
 public class GetCollisions : MonoBehaviour
 {
-    // Audio management
-    private GameObject player;
-	
     public float initialPlayerBulletDamage = 40, enemyBulletDamage = 20;
     public float playerBulletDamage;
-
-    void Start()
-    {
-        player = GameObject.Find("Player");
-    }
 
     // This function checks if the projectile shot by the player or by the enemy collides with something and, if so, it destroys the projectile
     void OnCollisionStay(Collision collision) {

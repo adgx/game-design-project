@@ -96,8 +96,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5927029882424549800}
   - component: {fileID: 4053890169049031869}
-  - component: {fileID: 3142825955245146545}
   - component: {fileID: 2870685218235177204}
+  - component: {fileID: 6778733229812253760}
   m_Layer: 0
   m_Name: SphereTerminal
   m_TagString: SphereTerminal
@@ -141,21 +141,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3142825955245146545
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1967102409082146531}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c95e080be36249ad9c5585fdf4428d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  EnergyDrinkMesh: {fileID: 919132149155446097, guid: cb04921020eb7443ea1506a029dd8ccd, type: 3}
-  SnackMesh: {fileID: 919132149155446097, guid: 789ce07a7489c4ad48e6d7c27ddbcdbb, type: 3}
-  SpecialSnackMesh: {fileID: 919132149155446097, guid: 81fcb738204ba413daba5d6b77229665, type: 3}
 --- !u!114 &2870685218235177204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,6 +172,22 @@ MonoBehaviour:
   OverrideAttenuation: 1
   OverrideMinDistance: 1
   OverrideMaxDistance: 20
+--- !u!114 &6778733229812253760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1967102409082146531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68d44a9b5f854abaabb544fdd223fb49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interactionTime: 2
+  _postInteractionDelay: 1.5
+  _rotationDuration: 0.2
+  _feedbackMessageDuration: 3
 --- !u!1 &2569465462184073077
 GameObject:
   m_ObjectHideFlags: 0

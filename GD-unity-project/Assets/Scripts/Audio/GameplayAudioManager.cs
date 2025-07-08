@@ -55,7 +55,6 @@ public class GamePlayAudioManager : MonoBehaviour
     
     private void InitializeMusic(EventReference musicEventReference)
     {
-        // Aggiungi un controllo di sicurezza per evitare di creare la musica due volte
         if (musicEventInstance.isValid())
         {
             return;
@@ -66,7 +65,6 @@ public class GamePlayAudioManager : MonoBehaviour
 
     public void SetMusicLoopIteration()
     {
-        // Aggiungi un controllo di sicurezza qui per prevenire errori futuri.
         if (musicEventInstance.isValid())
         {
             musicEventInstance.setParameterByName("loopIteration", (float)GameStatus.loopIteration);

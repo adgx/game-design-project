@@ -1,14 +1,12 @@
 using System;
 using System.Collections;
 using System.Threading.Tasks;
+using Animations;
 using Audio;
-using FMOD.Studio;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Helper;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 
 public class PlayerShoot : MonoBehaviour
 {
@@ -16,11 +14,8 @@ public class PlayerShoot : MonoBehaviour
 
 	// Audio management 
 	public bool IsSphereRotating => rotateSphere.isRotating;
-	private EventInstance distanceAttackLoadingWithPowerUp1;
-	private EventInstance closeAttackLoadingWithPowerUp1;
-	private EventInstance distanceAttackLoadingWithPowerUp2;
-	private EventInstance closeAttackLoadingWithPowerUp2;
 	private bool isShieldCoroutineRunning;
+	[SerializeField] private RickEvents rickEvents; 
 	
 	// Attack1
 	[SerializeField] private float bulletSpeed;
@@ -103,40 +98,9 @@ public class PlayerShoot : MonoBehaviour
 		player = GetComponent<Player>();
 
 		ChangeSphereColor(maxSphereStamina);
-		
-		// Audio management
-		distanceAttackLoadingWithPowerUp1 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerDistanceAttackLoadWithPowerUp1);
-		distanceAttackLoadingWithPowerUp1.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
-		
-		closeAttackLoadingWithPowerUp1 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerCloseAttackLoadWithPowerUp1);
-		closeAttackLoadingWithPowerUp1.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
-		
-		distanceAttackLoadingWithPowerUp2 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerDistanceAttackLoadWithPowerUp2);
-		distanceAttackLoadingWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
-		
-		closeAttackLoadingWithPowerUp2 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerCloseAttackLoadWithPowerUp2);
-		closeAttackLoadingWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
-	}
-	
-	// Audio management
-	private async Task StopLoadingSoundAfterDelay(EventInstance instance, int delayMs)
-	{
-		await Task.Delay(delayMs);
-
-		if (!instance.isValid())
-			return;
-
-		PLAYBACK_STATE state;
-		var result = instance.getPlaybackState(out state);
-		if (result != FMOD.RESULT.OK)
-			return;
-
-		if (state != PLAYBACK_STATE.STOPPED)
-			instance.stop(STOP_MODE.ALLOWFADEOUT);
 	}
 	
 	void ChangeSphereColor(int stamina) {
-		// TODO: chiedere ad Antonino come cambiare il colore della sfera
 		switch(stamina) {
 			case 5:
 				sphereMaterial.color = Color.green;
@@ -178,8 +142,7 @@ public class PlayerShoot : MonoBehaviour
 			return true;
 		}
 		
-		// The Sphere has finished the stamina
-		// Audio management
+		// Audio management: the Sphere has finished the stamina
 		GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerSphereDischarge, rotatingSphere.transform.position);
 		return false;
 	}
@@ -256,33 +219,8 @@ public class PlayerShoot : MonoBehaviour
 		//AnimationManager.Instance.Idle();
 		AnimationManager.Instance.Attack();
 		
-		// Audio management
-		bool playDistanceAttackSound = false;
 		await Task.Delay(50);
 		
-		if (Input.GetButton("Fire1") && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp))
-		{
-			playDistanceAttackSound = true;
-		}
-		
-		if (playDistanceAttackSound)
-		{
-			// TODO: modify the delay based on the available power ups
-
-			if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 1)
-			{
-				distanceAttackLoadingWithPowerUp1.stop(STOP_MODE.IMMEDIATE); // reset
-				distanceAttackLoadingWithPowerUp1.start(); // start
-				_ = StopLoadingSoundAfterDelay(distanceAttackLoadingWithPowerUp1, 1500);
-			}
-			else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 2)
-			{
-				distanceAttackLoadingWithPowerUp2.stop(STOP_MODE.IMMEDIATE); // reset
-				distanceAttackLoadingWithPowerUp2.start(); // start
-				_ = StopLoadingSoundAfterDelay(distanceAttackLoadingWithPowerUp2, 2500);	
-			}
-		}
-
 		attackStamina = 0;
 		int maxStamina = 0;
 		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp))
@@ -304,6 +242,12 @@ public class PlayerShoot : MonoBehaviour
 		// button in a very fast way (as for the loading sound)
 		await Task.Delay(50);
 		
+		// Audio management: if after the delay we are still charging, start the sound
+		if (loadingAttack && rickEvents != null)
+		{
+			rickEvents.ShouldPlayChargeSound = true;
+		}
+		
 		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp) && loadingAttack)
 		{
 			attackStamina++;
@@ -317,10 +261,23 @@ public class PlayerShoot : MonoBehaviour
 			
 			await Task.Delay(500);
 		}
+		
+		// Audio management: stop the loading sound of the attack when the loading is terminated 
+		if (rickEvents != null)
+		{
+			rickEvents.ShouldPlayChargeSound = false;
+		}
 	}
 	
 	private void DistanceAttackAnimation() {
 		loadingAttack = false;
+		
+		// Audio management: stop the loading sound of the attack if the button is released
+		if (rickEvents != null)
+		{
+			rickEvents.ShouldPlayChargeSound = false;
+		}
+		
 		AnimationManager.Instance.EndAttack();
 	}
 
@@ -345,16 +302,6 @@ public class PlayerShoot : MonoBehaviour
 
 		await Task.Delay(500);
 		ResetAttack();
-
-		// Audio management
-		if(powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp)) {
-			if(powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 1) {
-				distanceAttackLoadingWithPowerUp1.stop(STOP_MODE.ALLOWFADEOUT);
-			}
-			else {
-				distanceAttackLoadingWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);
-			}
-		}
 	}
 	
 	async void LoadCloseAttack() {
@@ -364,32 +311,7 @@ public class PlayerShoot : MonoBehaviour
 		player.isFrozen = true;
 		AnimationManager.Instance.AreaAttack();
 		
-		// Audio management
-		bool playCloseAttackSound = false;
 		await Task.Delay(50);
-		
-		if (Input.GetButton("Fire1") && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp))
-		{
-			playCloseAttackSound = true;
-		}
-		
-		if (playCloseAttackSound)
-		{
-			// TODO: modify the delay based on the available power ups 
-			
-			if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 1)
-			{
-				closeAttackLoadingWithPowerUp1.stop(STOP_MODE.IMMEDIATE); // reset loading SFX 
-				closeAttackLoadingWithPowerUp1.start(); // start loading SFX
-				_ = StopLoadingSoundAfterDelay(closeAttackLoadingWithPowerUp1, 1500);
-			}
-			else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 2)
-			{
-				closeAttackLoadingWithPowerUp2.stop(STOP_MODE.IMMEDIATE); // reset loading SFX 
-				closeAttackLoadingWithPowerUp2.start(); // start loading SFX
-				_ = StopLoadingSoundAfterDelay(closeAttackLoadingWithPowerUp2, 2500);	
-			}
-		}
 		
 		attackStamina = 0;
 		int maxStamina = 0;
@@ -412,6 +334,12 @@ public class PlayerShoot : MonoBehaviour
 		// button in a very fast way (as for the loading sound)
 		await Task.Delay(50);
 		
+		// Audio management: if after the delay we are still charging, start the sound
+		if (loadingAttack && rickEvents != null)
+		{
+			rickEvents.ShouldPlayChargeSound = true;
+		}
+		
 		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp) && loadingAttack) {
 			attackStamina++;
 			ChangeSphereColor(attackStamina);
@@ -425,10 +353,23 @@ public class PlayerShoot : MonoBehaviour
 			
 			await Task.Delay(500);
 		}
+		
+		// Audio management: stop the loading sound of the attack when the loading is terminated 
+		if (rickEvents != null)
+		{
+			rickEvents.ShouldPlayChargeSound = false;
+		}
 	}
 	
 	private void CloseAttackAnimation() {
 		loadingAttack = false;
+		
+		// Audio management: stop the loading sound of the attack if the button is released
+		if (rickEvents != null)
+		{
+			rickEvents.ShouldPlayChargeSound = false;
+		}
+		
 		AnimationManager.Instance.EndAreaAttack();
 	}
 
@@ -443,16 +384,6 @@ public class PlayerShoot : MonoBehaviour
 		closeAttackLoadingBar.fillAmount = 0;
 
 		SpawnAttackArea();
-
-		// Audio management
-		if(powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp)) {
-			if(powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 1) {
-				closeAttackLoadingWithPowerUp1.stop(STOP_MODE.ALLOWFADEOUT);
-			}
-			else {
-				closeAttackLoadingWithPowerUp2.stop(STOP_MODE.ALLOWFADEOUT);
-			}
-		}
 	}
 
 	async void SpawnAttackArea() {
@@ -514,8 +445,6 @@ public class PlayerShoot : MonoBehaviour
 		bool shieldClosed = await WaitUntilOrTimeout(() => !magneticShieldOpen, shieldTime * 1000);
 		if (magneticShield != null && !shieldClosed)
 		{
-			// Audio management
-			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldDeactivation, rotatingSphere.transform.position);
 			Destroy(magneticShield);
 			await Task.Delay(500);
 		}
@@ -535,10 +464,7 @@ public class PlayerShoot : MonoBehaviour
 		isShieldCoroutineRunning = true;
 		
 		if(!magneticShieldOpen) 
-		{
-			// Audio management
-			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldActivation, rotatingSphere.transform.position);
-
+		{ 
 			// to modify for the instantiate the vfx and lunch the animation character
 			//luch defense animation
 			AnimationManager.Instance.Defense();
@@ -561,8 +487,6 @@ public class PlayerShoot : MonoBehaviour
 		else 
 		{
 			if(magneticShield != null) {
-				// Audio management
-				GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldDeactivation, rotatingSphere.transform.position);
 				Destroy(magneticShield);
 				await Task.Delay(500);
 			}
@@ -581,17 +505,12 @@ public class PlayerShoot : MonoBehaviour
 
 		if(health > 0) {
 			HitAnimation(damageType, x, z);
-
-			// Audio management
-			GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, player.transform.position);
 		}
 		else
      	{
 	        DisableAttacks(true);
 	        player.FreezeMovement(true);
 			if(damageType == DamageTypes.DrakeBiteAttack) {
-				// Audio management
-				GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, player.transform.position);
 				AnimationManager.Instance.Bite();
 			}
 			else {
@@ -601,9 +520,6 @@ public class PlayerShoot : MonoBehaviour
 	}
 
 	public void DeathAnimation(int x, int z) {
-		// Audio management
-		GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardGrunt, player.transform.position);
-
 		gameObject.layer = 0;
 		AnimationManager.Instance.Death(x, z);
 	}
@@ -702,7 +618,6 @@ public class PlayerShoot : MonoBehaviour
 				{
 					if (!magneticShield && CheckStamina(1) && !attacking)
 					{
-						// Audio management
 						loadingAttack = true;
 						attacking = true;
 
@@ -719,9 +634,6 @@ public class PlayerShoot : MonoBehaviour
 						}
 					}
 				}
-
-				// Audio management
-				UpdateSound();
 
 				if (Input.GetButtonUp("Fire1"))
 				{
@@ -780,15 +692,5 @@ public class PlayerShoot : MonoBehaviour
 				}
 			}
 		}
-	}
-	
-	// Audio management
-	private void UpdateSound() 
-	{
-		distanceAttackLoadingWithPowerUp1.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
-		closeAttackLoadingWithPowerUp1.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotateSphere.transform));
-		
-		distanceAttackLoadingWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
-		closeAttackLoadingWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotateSphere.transform));
 	}
 }
