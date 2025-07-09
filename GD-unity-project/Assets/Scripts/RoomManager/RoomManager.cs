@@ -3,11 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Enemy.EnemyData;
-using RoomManager.RoomData;
+using Enemy.EnemyManager;
 using Unity.AI.Navigation;
-using Unity.VisualScripting;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -108,6 +105,9 @@ namespace RoomManager
 
         private const int GridSizeY = 1;
         [SerializeField] private int _gridSizeZ = 14;
+        
+        [Header("EnemyManager")]
+        [SerializeField] private EnemyManager _enemyManager;
 
         private Dictionary<RoomType, List<RoomData.RoomData>> _roomDataByType =
             new Dictionary<RoomType, List<RoomData.RoomData>>();
@@ -358,6 +358,7 @@ namespace RoomManager
         {
             if (_currentRoomInstance == null) return;
 
+            _enemyManager.DestroyEnemies(CurrentRoomIndex);
             Destroy(_currentRoomInstance.gameObject);
             _currentRoomInstance = null;
         }
@@ -435,7 +436,7 @@ namespace RoomManager
         /// <summary>
         /// Loads a new room and spawns the player inside it.
         /// </summary>
-        public void TraverseRoom(Vector3Int newRoomIndex, Vector3Int entryDirection)
+        public async void TraverseRoom(Vector3Int newRoomIndex, Vector3Int entryDirection)
         {
             if (!_isLayoutGenerated || !DoesRoomExistAt(newRoomIndex))
             {
