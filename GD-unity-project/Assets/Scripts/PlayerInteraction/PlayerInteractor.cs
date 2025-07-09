@@ -16,8 +16,6 @@ namespace PlayerInteraction
         [SerializeField]
         private float _interactionDistance = 6f;
 
-        private PlayerInput playerInput;
-
         [Tooltip("Layer mask to filter which objects can be interacted with.")] [SerializeField]
         private LayerMask _interactionLayer;
 
@@ -28,6 +26,8 @@ namespace PlayerInteraction
         private TextMeshProUGUI _helpText;
 
         private IInteractable _currentTarget;
+        private Player _player;
+        private PlayerInput _playerInput;
         private Camera _mainCamera;
 
         /// <summary>
@@ -41,9 +41,13 @@ namespace PlayerInteraction
             {
                 Debug.LogError("PlayerInteractor: No camera tagged 'MainCamera' was found in the scene!");
 			}
+        }
 
-			playerInput = Player.Instance.GetComponent<PlayerInput>();
-		}
+        private void Start()
+        {
+            _playerInput = PlayerInput.Instance;
+            _player = Player.Instance;
+        }
 
         /// <summary>
         /// Called once per frame. Handles detection and input logic.
@@ -71,7 +75,7 @@ namespace PlayerInteraction
             if (Physics.SphereCast(ray, 1.5f, out RaycastHit hit, _interactionDistance, _interactionLayer) &&
                 hit.collider.TryGetComponent(out IInteractable interactable))
             {
-                if (interactable.IsInteractable)
+                if (IsValidTarget(interactable))
                 {
                     if (interactable == _currentTarget) return;
                     
@@ -90,13 +94,13 @@ namespace PlayerInteraction
             Ray behindRay = new Ray(behindStartPoint, _mainCamera.transform.forward);
             
             if (Physics.Raycast(behindRay, out RaycastHit behindHit, _interactionDistance + 1.0f, _interactionLayer) &&
-                behindHit.collider.TryGetComponent(out IInteractable doorInteractable))
+                behindHit.collider.TryGetComponent(out IInteractable secondInteractable))
             {
-                if (doorInteractable.IsInteractable)
+                if (secondInteractable.IsInteractable)
                 {
-                    if (doorInteractable == _currentTarget) return;
+                    if (secondInteractable == _currentTarget) return;
             
-                    _currentTarget = doorInteractable;
+                    _currentTarget = secondInteractable;
                     ShowPrompt();
                 }
                 else
@@ -110,12 +114,31 @@ namespace PlayerInteraction
             ClearTarget();
         }
 
+        private bool IsValidTarget(IInteractable target)
+        {
+            if (!target.IsInteractable) return false;
+            
+            Collider requiredZone = target.InteractionZone;
+
+            if (requiredZone == null) return true;
+
+            Collider playerCollider = _player.GetComponent<Collider>();
+            
+            if (playerCollider == null)
+            {
+                Debug.LogWarning("PlayerInteractor: Player is missing a Collider component for zone checks.");
+                return false;
+            }
+
+            return requiredZone.bounds.Intersects(playerCollider.bounds);
+        }
+
         /// <summary>
         /// Checks for input and triggers interaction on the current target if available.
         /// </summary>
         private void HandleInteractionInput()
         {
-            if (playerInput.InteractionPressed() && _currentTarget != null)
+            if (_playerInput.InteractionPressed() && _currentTarget != null)
             {
                 _currentTarget.Interact(this.gameObject);
             }

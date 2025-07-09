@@ -14,6 +14,13 @@ namespace PlayerInteraction
                 : "Press E to interact with the snack distributor";
 
         public bool IsInteractable => !_isBusy;
+        
+        public Collider InteractionZone => _interactionZone;
+
+        [Header("Interaction Zone")]
+        [Tooltip("An optional trigger collider that defines the area the player must be in to use this.")]
+        [SerializeField]
+        private Collider _interactionZone;
 
         [Header("Item Meshes")] [SerializeField]
         private GameObject _specialSnackMeshPrefab;

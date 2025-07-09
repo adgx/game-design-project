@@ -17,6 +17,8 @@ namespace PlayerInteraction
         /// </summary>
         public string InteractionPrompt => $"Press E to use door";
 
+        public Collider InteractionZone => null;
+
         public bool IsInteractable => !_isTraversing;
 
         private GameObject player;
