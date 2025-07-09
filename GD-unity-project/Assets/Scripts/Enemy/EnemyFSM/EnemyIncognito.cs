@@ -16,6 +16,7 @@ public class Incognito : MonoBehaviour, IEnemy
     private float _distanceAttackDamage;
     private Transform _playerTransform;
     private float _health;
+    private string enemyName;
 
     //Materials
     private Material[] _materials;
@@ -47,6 +48,8 @@ public class Incognito : MonoBehaviour, IEnemy
 	private State _reactFromFrontS;
 	private State _deathS;
 
+    private EnemyManager enemyManager;
+
     void Awake()
     {
         Animator incognitoAC = GetComponent<Animator>();
@@ -61,6 +64,7 @@ public class Incognito : MonoBehaviour, IEnemy
         _agent = GetComponent<NavMeshAgent>();
         //we suppose that all enemy have an one SkinnedMeshRenderer 
         SkinnedMeshRenderer smr = GetComponentInChildren<SkinnedMeshRenderer>();
+        enemyManager = GameObject.Find("RoomManager").GetComponent<EnemyManager>();
 
         if (smr == null)
         {
@@ -127,6 +131,7 @@ public class Incognito : MonoBehaviour, IEnemy
 		_health = incognitoData.maxHealth;
         _walkPointRange = incognitoData.walkPointRange;
         _timeBetweenAttacks = incognitoData.timeBetweenAttacks;
+        enemyName = incognitoData.enemyName;
 
         if (incognitoData.bulletPrefab)
         {
@@ -157,6 +162,8 @@ public class Incognito : MonoBehaviour, IEnemy
         if(_health <= 0) {
             gameObject.layer = 0;
             gameObject.tag = "Untagged";
+            enemyManager.removeEnemyFromList(_roomManager.CurrentRoomIndex, gameObject, enemyName);
+            
 
             _stateMachine.SetState(_deathS);
         }

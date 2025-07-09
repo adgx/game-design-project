@@ -28,6 +28,8 @@ public class Maynard : MonoBehaviour, IEnemy
     private Transform _playerTransform;
 
     private float _health;
+    private string enemyName;
+    
     //Materials
     private Material[] _materials;
 
@@ -51,6 +53,8 @@ public class Maynard : MonoBehaviour, IEnemy
     private RoomManager.RoomManager _roomManager;
     
     private PlayerShoot playerShoot;
+    
+    private EnemyManager enemyManager;
 
     void Awake()
     {
@@ -65,6 +69,7 @@ public class Maynard : MonoBehaviour, IEnemy
         _playerTransform = GameObject.Find("Player").transform;
         _agent = GetComponent<NavMeshAgent>();
         playerShoot = Player.Instance.GetComponent<PlayerShoot>();
+        enemyManager = GameObject.Find("RoomManager").GetComponent<EnemyManager>();
         
         //we suppose that all enemy have an one SkinnedMeshRenderer 
         SkinnedMeshRenderer smr = GetComponentInChildren<SkinnedMeshRenderer>();
@@ -150,6 +155,7 @@ public class Maynard : MonoBehaviour, IEnemy
 		_health = maynardData.maxHealth;
         _walkPointRange = maynardData.walkPointRange;
         _timeBetweenAttacks = maynardData.timeBetweenAttacks;
+        enemyName = maynardData.enemyName;
 
         if (maynardData.bulletPrefab)
         {
@@ -184,6 +190,7 @@ public class Maynard : MonoBehaviour, IEnemy
         {
             gameObject.layer = 0;
             gameObject.tag = "Untagged";
+            enemyManager.removeEnemyFromList(_roomManager.CurrentRoomIndex, gameObject, enemyName);
             
             _stateMachine.SetState(_deathS);
         }

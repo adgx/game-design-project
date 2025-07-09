@@ -8,7 +8,7 @@ namespace Helper {
 		public static FadeManager Instance;
 
 		[SerializeField] private CanvasGroup fadeCanvasGroup;
-		[SerializeField] private float fadeDuration = 0.5f;
+		[SerializeField] private float fadeDuration = 1f;
 
 		private void Awake() {
 			if(Instance == null)
@@ -30,7 +30,7 @@ namespace Helper {
 			onFadeMidpoint?.Invoke();
 
 			yield return new WaitForEndOfFrame();
-			yield return new WaitForSeconds(0.5f);
+			yield return new WaitForSeconds(fadeDuration);
 
 			yield return StartCoroutine(FadeTo(0));
 		}

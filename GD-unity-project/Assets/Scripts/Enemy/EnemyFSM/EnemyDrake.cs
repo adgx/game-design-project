@@ -25,6 +25,7 @@ public class Drake : MonoBehaviour, IEnemy
     private float _closeAttackDamage;
     private Transform _playerTransform;
     private float _health;
+    private string enemyName;
 
     //Patroling
     private Vector3 _walkPoint;
@@ -51,6 +52,8 @@ public class Drake : MonoBehaviour, IEnemy
 	private State _defenseS;
 	private State _deathS;
 
+    private EnemyManager enemyManager;
+
     void Awake()
     {
         Animator drakeAC = GetComponent<Animator>();
@@ -65,6 +68,7 @@ public class Drake : MonoBehaviour, IEnemy
         Debug.Log($"{_playerTransform.position}");
         _agent = GetComponent<NavMeshAgent>();
         playerShoot = Player.Instance.GetComponent<PlayerShoot>();
+        enemyManager = GameObject.Find("RoomManager").GetComponent<EnemyManager>();
         //we suppose that all enemy have an one SkinnedMeshRenderer 
         SkinnedMeshRenderer smr = GetComponentInChildren<SkinnedMeshRenderer>();
 
@@ -140,6 +144,7 @@ public class Drake : MonoBehaviour, IEnemy
         _health = drakeData.maxHealth;
         _walkPointRange = drakeData.walkPointRange;
         _timeBetweenAttacks = drakeData.timeBetweenAttacks;
+        enemyName = drakeData.enemyName;
 
         if (drakeData.bulletPrefab)
         {
@@ -174,6 +179,7 @@ public class Drake : MonoBehaviour, IEnemy
 			if(_health <= 0) {
 				gameObject.layer = 0;
 				gameObject.tag = "Untagged";
+                enemyManager.removeEnemyFromList(_roomManager.CurrentRoomIndex, gameObject, enemyName);
 
 				_stateMachine.SetState(_deathS);
 			}
