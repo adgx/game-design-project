@@ -14,6 +14,8 @@ namespace PlayerInteraction
         /// </summary>
         public string InteractionPrompt => "Press E to collect paper";
 
+        public Collider InteractionZone => null;
+
         /// <summary>
         /// Indicates whether this paper is currently interactable (not yet collected).
         /// </summary>

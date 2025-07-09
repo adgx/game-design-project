@@ -16,6 +16,13 @@ namespace PlayerInteraction
 
         public bool IsInteractable =>
             !_isBusy && (_powerUp != null && _powerUp.spherePowerUps.Count > 0);
+        
+        public Collider InteractionZone => _interactionZone;
+
+        [Header("Interaction Zone")]
+        [Tooltip("An optional trigger collider that defines the area the player must be in to use this.")]
+        [SerializeField]
+        private Collider _interactionZone;
 
         [Header("Timings")] [SerializeField] private float _interactionTime = 2.0f;
         [SerializeField] private float _postInteractionDelay = 1.5f;
