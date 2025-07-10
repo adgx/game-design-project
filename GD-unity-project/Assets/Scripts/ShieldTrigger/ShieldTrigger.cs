@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Animations;
 using Audio;
 using UnityEngine;
 using UnityEngine.VFX;
@@ -45,10 +46,24 @@ public class ShieldTrigger : MonoBehaviour
 */
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag.Contains("EnemyAttack"))
-        {
+        if(other.tag.Contains("EnemyAttack")) {
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldHit, transform.position);
             Destroy(other.gameObject);
+        }
+        else {
+            switch(other.tag) {
+                case "EnemyDrake":
+                    other.GetComponent<Drake>().TakeDamage(0, "c");
+                    break;
+                case "EnemyIncognito":
+					other.GetComponent<Incognito>().TakeDamage(0, "c");
+					break;
+                case "EnemyMaynard":
+					other.GetComponent<Maynard>().TakeDamage(0, "c");
+					break;
+                default:
+                    break;
+            }
         }
     }
 }

@@ -81,7 +81,7 @@ namespace PlayerInteraction
                 Debug.Log("Vending machine is empty.");
                 return false;
             }
-            
+
             StartCoroutine(RotatePlayerTowards(transform, _rotationDuration));
 
 			if(_isPowerUpVendingMachineHacked)

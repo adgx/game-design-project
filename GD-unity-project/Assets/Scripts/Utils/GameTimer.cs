@@ -44,7 +44,7 @@ namespace Utils {
 		}
 
 		private void Awake() {
-			GameStatus.loopIteration = GameStatus.LoopIteration.FIRST_ITERATION;
+			GameStatus.loopIteration = GameStatus.LoopIteration.THIRD_ITERATION;
 			if(roomManager) {
 				roomManager.OnRunReady += HandleRunReady;
 
@@ -80,6 +80,8 @@ namespace Utils {
 			if(currentTime <= 0f) {
 				currentTime = 0f;
 				isRunning = false;
+
+				AnimationManager.Instance.Idle();
 				
 				// Ambient light management
 				GameEvents.current.TimerEnded(); 

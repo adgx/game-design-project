@@ -1,4 +1,5 @@
 using System.Collections;
+using Animations;
 using Audio;
 using UnityEngine;
 
@@ -41,6 +42,7 @@ namespace PlayerInteraction
 		private Player _player;
         private PlayerShoot _playerShoot;
         private PowerUp _powerUp;
+        private RickEvents _rickEvents;
         private RotateSphere _rotateSphere;
         static System.Random _random = new System.Random();
 
@@ -50,13 +52,16 @@ namespace PlayerInteraction
             _playerShoot = PlayerShoot.Instance;
             _powerUp = PowerUp.Instance;
             _rotateSphere = RotateSphere.Instance;
+            _rickEvents = _player.GetComponent<RickEvents>();
         }
 
         public bool Interact(GameObject interactor)
         {
             if (!IsInteractable) return false;
-            
-            StartCoroutine(RotatePlayerTowards(transform, _rotationDuration));
+
+			_rickEvents.SetIdleState();
+            AnimationManager.Instance.Idle();
+			StartCoroutine(RotatePlayerTowards(transform, _rotationDuration));
 
             StartCoroutine(UpgradeSequence());
             return true;
@@ -82,13 +87,13 @@ namespace PlayerInteraction
 
             StartCoroutine(ShowFeedbackMessage());
 
-            _player.FreezeMovement(false);
-            _playerShoot.DisableAttacks(false);
-
             yield return new WaitForSeconds(_postInteractionDelay);
 
             _playerShoot.DecreaseStamina(1);
-            _rotateSphere.isRotating = true;
+
+			_player.FreezeMovement(false);
+			_playerShoot.DisableAttacks(false);
+			_rotateSphere.isRotating = true;
 
             _isBusy = false;
         }
