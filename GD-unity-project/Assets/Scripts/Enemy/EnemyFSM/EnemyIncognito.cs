@@ -42,7 +42,7 @@ public class Incognito : MonoBehaviour, IEnemy
     private bool _alreadyAttacked;
     private GameObject _bulletPrefab;
     //Debug flag
-    private bool _debug = true;
+    private bool _debug = false;
     //condition 
     private float _sightRange, _attackRange;
     private bool _playerInSightRange, _playerInAttackRange;

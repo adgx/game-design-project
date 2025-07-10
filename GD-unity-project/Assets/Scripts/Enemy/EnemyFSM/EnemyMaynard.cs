@@ -61,7 +61,7 @@ public class Maynard : MonoBehaviour, IEnemy
 
     private EnemyManager enemyManager;
 
-    public bool debug = true;
+    public bool debug = false;
 
     void Awake()
     {
@@ -171,18 +171,6 @@ public class Maynard : MonoBehaviour, IEnemy
         _playerInSightRange = Physics.CheckSphere(transform.position, _sightRange, _whatIsPlayer);
         _playerInRemoteAttackRange = Physics.CheckSphere(transform.position, _remoteAttackRange, _whatIsPlayer);
         _playerInCloseAttackRange = Physics.CheckSphere(transform.position, _closeAttackRange, _whatIsPlayer);
-        /*    
-            if (!playerInSightRange && !playerInCloseAttackRange)
-                Patroling();
-            if (playerInSightRange && !playerInCloseAttackRange)
-                ChasePlayer();
-            if (playerInCloseAttackRange && playerInSightRange)
-                CloseAttackPlayer();
-            else if (playerInRemoteAttackRange && playerInSightRange)
-            {
-                RemoteAttackPlayer();
-            }
-        */
         _stateMachine.Tik();
     }
 

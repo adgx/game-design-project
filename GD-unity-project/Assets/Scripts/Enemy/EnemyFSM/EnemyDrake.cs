@@ -60,7 +60,7 @@ public class Drake : MonoBehaviour, IEnemy
     private State _deathS;
 
     private EnemyManager enemyManager;
-    private bool _debug = true;
+    private bool _debug = false;
 
     void Awake()
     {
@@ -144,8 +144,8 @@ public class Drake : MonoBehaviour, IEnemy
         _stateMachine.AddTransition(wonderS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(wonderS, waitS, () => _alreadyAttacked);
         //change playerShoot.health with playerHDG, and playerShoot.damageReduction with  _playerDRDG if you Debug it  
-        _stateMachine.AddTransition(wonderS, swipingS, () => !_alreadyAttacked && _playerInSightRange && _playerInAttackRange && _playerHDG > _closeAttackDamage * _playerDRDG);
-        _stateMachine.AddTransition(wonderS, biteS, () => !_alreadyAttacked && _playerInSightRange && _playerInAttackRange && _playerHDG <= _closeAttackDamage * _playerDRDG);
+        _stateMachine.AddTransition(wonderS, swipingS, () => !_alreadyAttacked && _playerInSightRange && _playerInAttackRange && playerShoot.health > _closeAttackDamage * playerShoot.damageReduction);
+        _stateMachine.AddTransition(wonderS, biteS, () => !_alreadyAttacked && _playerInSightRange && _playerInAttackRange && playerShoot.health <= _closeAttackDamage * playerShoot.damageReduction);
         //wait
         _stateMachine.AddTransition(waitS, wonderS, () => !_alreadyAttacked);
         //swipingS
