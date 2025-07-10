@@ -62,8 +62,7 @@ namespace Utils {
 			playerShoot.DisableAttacks(true);
 
 			await Task.Delay(50);
-			//AnimationManager.Instance.StandUp();
-			playerShoot.FreePlayer();
+			AnimationManager.Instance.StandUp();
 
 			GameStatus.gameEnded = false;
 			GameStatus.gamePaused = false;
