@@ -29,7 +29,6 @@ public class MaynardAnimation
         _maynardAC = maynardAC;
         _idleASHash = Animator.StringToHash("Base Layer.Idle");
         _runASHash = Animator.StringToHash("Base Layer.Run");
-        Debug.Log($"idle index: {_idleASHash}, run index{_runASHash}");
         _deathTriggerHash = Animator.StringToHash("Death");
         _runTriggerHash = Animator.StringToHash("Run");
         _attackTriggerHash = Animator.StringToHash("Attack");
