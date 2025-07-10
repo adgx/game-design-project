@@ -13,6 +13,12 @@ public class IncognitoAnimation
     private int _dirZVarHash;
     private int _hitTriggerHash;
     private int _idleTriggerHash;
+    private bool _endShortSpit = true;
+    private bool _endLongSpit = true;
+
+    public bool EndShortSpit { get { return _endShortSpit; } set { _endShortSpit = value; } }
+    public bool EndLongSpit { get { return _endLongSpit; } set { _endLongSpit = value; } }
+
     public IncognitoAnimation(Animator incognitoAC)
     {
         _incognitoAC = incognitoAC;
@@ -27,8 +33,9 @@ public class IncognitoAnimation
     }
 
     public void lunchIdleAnim()
-    { 
-        if (this != null && _incognitoAC != null && _incognitoAC.gameObject != null && _incognitoAC.isActiveAndEnabled)
+    {
+        AnimatorStateInfo stateInfo = _incognitoAC.GetCurrentAnimatorStateInfo(0);
+        if (this != null && _incognitoAC != null && _incognitoAC.gameObject != null && _incognitoAC.isActiveAndEnabled && !stateInfo.IsTag("Idle"))
         {
             _incognitoAC.SetTrigger(_idleTriggerHash);
         }
@@ -36,7 +43,8 @@ public class IncognitoAnimation
 
     public void lunchRunAnim()
     {
-        if (this != null && _incognitoAC != null && _incognitoAC.gameObject != null && _incognitoAC.isActiveAndEnabled)
+        AnimatorStateInfo stateInfo = _incognitoAC.GetCurrentAnimatorStateInfo(0);
+        if (this != null && _incognitoAC != null && _incognitoAC.gameObject != null && _incognitoAC.isActiveAndEnabled && !stateInfo.IsTag("Run"))
         {
             _incognitoAC.SetTrigger(_runTriggerHash);
         }
@@ -104,6 +112,7 @@ public class IncognitoAnimation
     {
         if (this != null && _incognitoAC != null && _incognitoAC.gameObject != null && _incognitoAC.isActiveAndEnabled)
         {
+            _endShortSpit = false;
             _incognitoAC.SetTrigger(_shortSpitTriggerHash);
         }
     }
@@ -112,6 +121,7 @@ public class IncognitoAnimation
     { 
         if (this != null && _incognitoAC != null && _incognitoAC.gameObject != null && _incognitoAC.isActiveAndEnabled)
         {
+            _endLongSpit = false;
             _incognitoAC.SetTrigger(_longSpitTriggerHash);
         }
     }

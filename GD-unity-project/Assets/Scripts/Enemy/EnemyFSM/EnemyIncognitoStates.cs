@@ -1,4 +1,4 @@
-
+using UnityEngine;
 
 public class IncognitoPatrolState : State
 {
@@ -11,6 +11,7 @@ public class IncognitoPatrolState : State
 
     public override void Enter()
     {
+        Debug.Log(base.Name);
         _incognito.anim.lunchRunAnim();
     }
 
@@ -33,6 +34,8 @@ public class IncognitoChaseState : State
     }
     public override void Enter()
     {
+        Debug.Log(base.Name);
+        _incognito.anim.lunchRunAnim();
     }
 
     public override void Tik()
@@ -50,16 +53,17 @@ public class IncognitoWonderState : State
     private Incognito _incognito;
     public IncognitoWonderState(string name, Incognito incognito) : base(name)
     {
+        Debug.Log(base.Name);
         _incognito = incognito;
     }
     public override void Enter()
     {
-        _incognito.anim.lunchIdleAnim();
+        _incognito.WonderAttackPlayer();
     }
 
     public override void Tik()
     {
-        _incognito.WonderAttackPlayer();
+        
     }
 
     public override void Exit()
@@ -77,6 +81,7 @@ public class IncognitoShortSpitAttackState : State
     }
     public override void Enter()
     {
+        Debug.Log(base.Name);
         _incognito.anim.lunchShortSpitAnim();
     }
 
@@ -126,5 +131,57 @@ public class IncognitoDeathState : State
 
     public override void Exit()
     {
+    }
+}
+
+public class IncognitoWaitState : State
+{
+    private Incognito _incognito;
+
+    public IncognitoWaitState(string name, Incognito incognito) : base(name)
+    {
+
+        _incognito = incognito;
+    }
+    public override void Enter()
+    {
+        Debug.Log(base.Name);
+        _incognito.anim.lunchIdleAnim();
+    }
+
+    public override void Tik()
+    {
+    }
+
+    public override void Exit()
+    {
+    }
+}
+
+public class IncognitoIdleState : State
+{
+    private Incognito _incognito;
+
+    public IncognitoIdleState(string name, Incognito incognito) : base(name)
+    {
+        
+        _incognito = incognito;
+    }
+    public override void Enter()
+    {
+        Debug.Log(base.Name);
+        _incognito.clearWaitTime();
+        _incognito.SetRandomTimeIdle();
+        _incognito.anim.lunchIdleAnim();
+    }
+
+    public override void Tik()
+    {
+        _incognito.updateWaitTime();
+    }
+
+    public override void Exit()
+    {
+        _incognito.clearWaitTime();
     }
 }

@@ -36,6 +36,7 @@ public class DrakeChaseState : State
     public override void Enter()
     {
         Debug.Log(base.Name);
+        _drake.anim.lunchRunAnim();
     }
 
     public override void Tik()
