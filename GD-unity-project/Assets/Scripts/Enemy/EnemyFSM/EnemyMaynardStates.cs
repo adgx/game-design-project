@@ -99,7 +99,6 @@ public class MaynardScreamAttackState : State
 
     public override void Exit()
     {
-        _maynard.anim.lunchIdleAnim();
     }
 }
 
@@ -124,7 +123,6 @@ public class MaynardCloseAttackState : State
 
     public override void Exit()
     {
-        _maynard.anim.lunchIdleAnim();
     }
 }
 
@@ -175,7 +173,7 @@ public class MaynardDeathState : State
 public class MaynardIdleState : State
 {
     private Maynard _maynard;
-    
+
     public MaynardIdleState(string name, Maynard maynard) : base(name)
     {
         Debug.Log(base.Name);
@@ -196,5 +194,28 @@ public class MaynardIdleState : State
     public override void Exit()
     {
         _maynard.clearWaitTime();
+    }
+}
+
+public class MaynardWaitState : State
+{
+    private Maynard _maynard;
+    
+    public MaynardWaitState(string name, Maynard maynard) : base(name)
+    {
+        _maynard = maynard;
+    } 
+    public override void Enter()
+    {
+        Debug.Log(base.Name);
+        _maynard.anim.lunchIdleAnim();
+    }
+
+    public override void Tik()
+    {
+    }
+
+    public override void Exit()
+    {
     }
 }

@@ -131,9 +131,13 @@ public class Maynard : MonoBehaviour, IEnemy
         State wonderS = new MaynardWonderState("Wonder", this);
         State screamAttackS = new MaynardScreamAttackState("ScreamAttack", this);
         State closeAttackS = new MaynardCloseAttackState("CloseAttack", this);
+        State waitS = new MaynardWaitState("Wait", this);
         _reactFromFrontS = new MaynardReactFromFrontState("Hit", this);
         _deathS = new MaynardDeathState("Death", this);
         //take attention on the order with the transitions are added
+        //idle Transitions
+        _stateMachine.AddTransition(idleS, chaseS, () => _playerInSightRange && (_playerInRemoteAttackRange || _playerInCloseAttackRange));
+        _stateMachine.AddTransition(idleS, patrolS, () => !_playerInSightRange && _waitCurTime >= _timeIdle);
         //Patrol
         _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && (!_playerInCloseAttackRange || !_playerInRemoteAttackRange));
         //chase
@@ -142,8 +146,11 @@ public class Maynard : MonoBehaviour, IEnemy
         //wonder
         _stateMachine.AddTransition(wonderS, patrolS, () => !_playerInSightRange);
         _stateMachine.AddTransition(wonderS, chaseS, () => _playerInSightRange && !_playerInRemoteAttackRange && !_playerInCloseAttackRange);
+        _stateMachine.AddTransition(wonderS, waitS, () => _alreadyAttacked);
         _stateMachine.AddTransition(wonderS, closeAttackS, () => _playerInCloseAttackRange && _playerInSightRange && !_alreadyAttacked);
         _stateMachine.AddTransition(wonderS, screamAttackS, () => _playerInRemoteAttackRange && _playerInSightRange && !_alreadyAttacked);
+        //wait
+        _stateMachine.AddTransition(waitS, wonderS, () => !_alreadyAttacked);
         //attacks
         _stateMachine.AddTransition(closeAttackS, wonderS, () => anim.EndCloseAttack);
         _stateMachine.AddTransition(screamAttackS, wonderS, () => anim.EndScream);
@@ -151,9 +158,7 @@ public class Maynard : MonoBehaviour, IEnemy
         _stateMachine.AddTransition(_reactFromFrontS, patrolS, () => !_playerInSightRange && !_playerInCloseAttackRange);
         _stateMachine.AddTransition(_reactFromFrontS, chaseS, () => _playerInSightRange && !_playerInCloseAttackRange);
         _stateMachine.AddTransition(_reactFromFrontS, wonderS, () => (_playerInCloseAttackRange && _playerInSightRange) || (_playerInRemoteAttackRange && _playerInSightRange));
-        //idle Transitions
-        _stateMachine.AddTransition(idleS, chaseS, () => _playerInSightRange && (_playerInRemoteAttackRange || _playerInCloseAttackRange));
-        _stateMachine.AddTransition(idleS, patrolS, () => !_playerInSightRange && _waitCurTime >= _timeIdle);
+        
 
 
         //Set Initial state
@@ -342,15 +347,16 @@ public class Maynard : MonoBehaviour, IEnemy
     public void EmitScream()
     {
         //Attack code here
-        /*
-        GameObject bullet = Instantiate(_bulletPrefab, attackSpawn.transform.position, Quaternion.identity);
-        bullet.tag = "EnemyAttack";
-        bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
+        if (!debug)
+        {
+            GameObject bullet = Instantiate(_bulletPrefab, attackSpawn.transform.position, Quaternion.identity);
+            bullet.tag = "EnemyAttack";
+            bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
 
-        Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
-        rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
-        rbBullet.AddForce(transform.up * 1f, ForceMode.Impulse);
-        */
+            Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
+            rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
+            rbBullet.AddForce(transform.up * 1f, ForceMode.Impulse);
+        }
         //End of attack code
     }
 
@@ -364,7 +370,10 @@ public class Maynard : MonoBehaviour, IEnemy
     {
         if (Physics.CheckSphere(transform.position, 2f, _whatIsPlayer))
         {
-            //playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, 5, 5);
+            if (!debug)
+            {
+                playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, 5, 5);
+            }
         }
     }
 
