@@ -11,6 +11,7 @@ public class DrakePatrolState : State
 
     public override void Enter()
     {
+        Debug.Log(base.Name);
         _drake.anim.lunchRunAnim();
     }
 
@@ -21,6 +22,7 @@ public class DrakePatrolState : State
 
     public override void Exit()
     {
+        
     }
 }
 
@@ -33,16 +35,19 @@ public class DrakeChaseState : State
     }
     public override void Enter()
     {
-    }
-
-    public override void Exit()
-    {
+        Debug.Log(base.Name);
     }
 
     public override void Tik()
     {
         _drake.ChasePlayer();
     }
+
+    public override void Exit()
+    {
+    }
+
+    
 }
 
 public class DrakeBiteAttackState : State
@@ -54,17 +59,20 @@ public class DrakeBiteAttackState : State
     }
     public override void Enter()
     {
-		Debug.Log("Biting");
+		Debug.Log(base.Name);
+        _drake.anim.EndBit = false;
+        _drake.AttackPlayer();
 		_drake.anim.lunchBiteAnim();
     }
 
     public override void Tik()
     {
-        _drake.AttackPlayer();
+        
     }
 
     public override void Exit()
     {
+        _drake.anim.lunchRunAnim();
     }
 }
 
@@ -77,13 +85,15 @@ public class DrakeSwipingAttackState : State
     }
     public override void Enter()
     {
-        Debug.Log("Swiping");
+        Debug.Log(base.Name);
+        _drake.anim.EndSwiping = false;
+        _drake.AttackPlayer();
         _drake.anim.lunchSwipingAnim();
     }
 
     public override void Tik()
     {
-        _drake.AttackPlayer();
+        
     }
 
     public override void Exit()
@@ -100,12 +110,13 @@ public class DrakeWonderState : State
     }
     public override void Enter()
     {
-        _drake.anim.lunchIdleAnim();
+        Debug.Log(base.Name);
+        _drake.WonderAttackPlayer();
     }
 
     public override void Tik()
     {
-        _drake.WonderAttackPlayer();
+        
     }
 
     public override void Exit()
@@ -157,6 +168,58 @@ public class DrakeDeathState : State
     public override void Enter()
     {
         _drake.anim.lunchDeathAnim();
+    }
+
+    public override void Tik()
+    {
+    }
+
+    public override void Exit()
+    {
+    }
+}
+
+public class DrakeIdleState : State
+{
+    private Drake _drake;
+
+    public DrakeIdleState(string name, Drake drake) : base(name)
+    {
+        
+        _drake = drake;
+    }
+    public override void Enter()
+    {
+        Debug.Log(base.Name);
+        _drake.clearWaitTime();
+        _drake.SetRandomTimeIdle();
+        _drake.anim.lunchIdleAnim();
+    }
+
+    public override void Tik()
+    {
+        _drake.updateWaitTime();
+    }
+
+    public override void Exit()
+    {
+        _drake.clearWaitTime();
+    }
+}
+
+public class DrakeWaitState : State
+{
+    private Drake _drake;
+    
+    public DrakeWaitState(string name, Drake drake) : base(name)
+    {
+        
+        _drake = drake;
+    }
+    public override void Enter()
+    {
+        Debug.Log(base.Name);
+        _drake.anim.lunchIdleAnim();
     }
 
     public override void Tik()

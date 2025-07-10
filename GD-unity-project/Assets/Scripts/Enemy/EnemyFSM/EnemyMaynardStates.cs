@@ -65,7 +65,6 @@ public class MaynardWonderState : State
     public override void Enter()
     {
         Debug.Log(base.Name);
-        //_maynard.anim.lunchIdleAnim();
     }
 
     public override void Tik()
