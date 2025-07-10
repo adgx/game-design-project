@@ -14,10 +14,22 @@ public class MaynardAnimation
     private int _dirZVarHash;
     private int _hitTriggerHash;
     private int _idleTriggerHash;
+    private int _runASHash;
+    private int _idleASHash;
+
+    private bool _endScream = true;
+     private bool _endCloseAttack = true;
+
+    public bool EndScream { get { return _endScream; } set { _endScream = value; } }
+    public bool EndCloseAttack { get { return _endCloseAttack; } set { _endCloseAttack = value; } }
+
 
     public MaynardAnimation(Animator maynardAC)
     {
         _maynardAC = maynardAC;
+        _idleASHash = Animator.StringToHash("Base Layer.Idle");
+        _runASHash = Animator.StringToHash("Base Layer.Run");
+        Debug.Log($"idle index: {_idleASHash}, run index{_runASHash}");
         _deathTriggerHash = Animator.StringToHash("Death");
         _runTriggerHash = Animator.StringToHash("Run");
         _attackTriggerHash = Animator.StringToHash("Attack");
@@ -27,11 +39,14 @@ public class MaynardAnimation
         _dirZVarHash = Animator.StringToHash("DirZ");
         _hitTriggerHash = Animator.StringToHash("Hit");
         _idleTriggerHash = Animator.StringToHash("Idle");
+
     }
 
     public void lunchIdleAnim()
-    { 
-        if (this != null && _maynardAC != null && _maynardAC.gameObject != null && _maynardAC.isActiveAndEnabled)
+    {
+        AnimatorStateInfo stateInfo = _maynardAC.GetCurrentAnimatorStateInfo(0);
+
+        if (this != null && _maynardAC != null && _maynardAC.gameObject != null && _maynardAC.isActiveAndEnabled && !stateInfo.IsTag("Idle"))
         {
             _maynardAC.SetTrigger(_idleTriggerHash);
         }
@@ -39,7 +54,9 @@ public class MaynardAnimation
 
     public void lunchRunAnim()
     {
-        if (this != null && _maynardAC != null && _maynardAC.gameObject != null && _maynardAC.isActiveAndEnabled)
+        AnimatorStateInfo stateInfo = _maynardAC.GetCurrentAnimatorStateInfo(0);
+
+        if (this != null && _maynardAC != null && _maynardAC.gameObject != null && _maynardAC.isActiveAndEnabled && !stateInfo.IsTag("Run"))
         {
             _maynardAC.SetTrigger(_runTriggerHash);
         }
@@ -47,6 +64,7 @@ public class MaynardAnimation
 
     public void lunchDeathAnim()
     {
+
         if (this != null && _maynardAC != null && _maynardAC.gameObject != null && _maynardAC.isActiveAndEnabled)
         {
             _maynardAC.SetTrigger(_deathTriggerHash);
@@ -55,6 +73,7 @@ public class MaynardAnimation
 
     public void lunchReactFromLeft()
     {
+
         if (this != null && _maynardAC != null && _maynardAC.gameObject != null && _maynardAC.isActiveAndEnabled)
         {
             _maynardAC.SetInteger(_dirXVarHash, -1);
@@ -65,6 +84,7 @@ public class MaynardAnimation
 
     public void lunchReactFromRight()
     {
+
         if (this != null && _maynardAC != null && _maynardAC.gameObject != null && _maynardAC.isActiveAndEnabled)
         {
             _maynardAC.SetInteger(_dirXVarHash, 1);
@@ -75,6 +95,7 @@ public class MaynardAnimation
 
     public void lunchReactFromFront()
     {
+
         if (this != null && _maynardAC != null && _maynardAC.gameObject != null && _maynardAC.isActiveAndEnabled)
         {
             _maynardAC.SetInteger(_dirXVarHash, 0);
@@ -85,6 +106,7 @@ public class MaynardAnimation
 
     public void lunchReactFromBack()
     {
+
         if (this != null && _maynardAC != null && _maynardAC.gameObject != null && _maynardAC.isActiveAndEnabled)
         {
             _maynardAC.SetInteger(_dirXVarHash, 0);
@@ -105,6 +127,7 @@ public class MaynardAnimation
 
     public void lunchScreamAnim()
     {
+        _endScream = false;
         if (this != null && _maynardAC != null && _maynardAC.gameObject != null && _maynardAC.isActiveAndEnabled)
         {
             _maynardAC.SetTrigger(_screamTriggerHash);
@@ -113,6 +136,7 @@ public class MaynardAnimation
 
     public void lunchAttackAnim()
     {
+        _endCloseAttack = false;
         if (this != null && _maynardAC != null && _maynardAC.gameObject != null && _maynardAC.isActiveAndEnabled)
         {
             _maynardAC.SetTrigger(_attackTriggerHash);
@@ -120,10 +144,12 @@ public class MaynardAnimation
     }
 
     public void lunchRoaringAnim()
-    { 
+    {
         if (this != null && _maynardAC != null && _maynardAC.gameObject != null && _maynardAC.isActiveAndEnabled)
         {
             _maynardAC.SetTrigger(_roaringTriggerHash);
         }
-    }   
+    } 
+
+
 }

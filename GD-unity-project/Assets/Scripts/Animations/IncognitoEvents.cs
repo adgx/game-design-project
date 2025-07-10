@@ -1,5 +1,6 @@
 using Audio;
 using FMOD.Studio;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Animations
@@ -9,10 +10,23 @@ namespace Animations
         // Audio management
         private EventInstance incognitoFootsteps;
         private EventInstance incognitoIdle;
-        private Incognito incognito; 
+        private Incognito incognito;
+        private IncognitoAnimation incognitoAnim;
         private bool isRunning = false; // TODO: to be removed once we have Incognito's FSM
         private bool isIdle = false; // TODO: to be removed once we have Incognito's FSM
 
+        private void Start()
+        {
+            incognito = GetComponent<Incognito>();
+
+            incognitoAnim = incognito.anim;
+
+            incognitoFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.IncognitoFootsteps);
+            incognitoFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+
+            incognitoIdle = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.IncognitoIdle);
+            incognitoIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+        }
         public void Idle()
         {
             // Audio management
@@ -35,9 +49,10 @@ namespace Animations
         }
 
         // This function is called when Incognito should emit its spit
-        public void Spitting() {
-			incognito.EmitSpit();
-		}
+        public void Spitting()
+        {
+            incognito.EmitSpit();
+        }
 
         public void LongDistanceSpitLoad()
         {
@@ -45,49 +60,49 @@ namespace Animations
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoDistanceAttack2Load, transform.position);
         }
-        
+
         public void LongDistanceSpitShoot()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoDistanceAttack2Spit, transform.position);
         }
-        
+
         public void FallScream()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoHitFallScream, transform.position);
         }
-        
+
         public void FallFootstep1()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoHitFallFootstep1, transform.position);
         }
-        
+
         public void FallFootstep2()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoHitFallFootstep2, transform.position);
         }
-        
+
         public void FallThud()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoHitFallThud, transform.position);
         }
-    
+
         public void StandUpFootstep1()
         {
             // Audio management;
             ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoStandUpFootstep1, transform.position);
         }
-    
+
         public void StandUpFootstep2()
         {
             // Audio management;
@@ -150,16 +165,7 @@ namespace Animations
         }
 
         // Audio management
-        private void Start()
-        {
-            incognito = GetComponent<Incognito>();
-            
-            incognitoFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.IncognitoFootsteps);
-            incognitoFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
 
-            incognitoIdle = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.IncognitoIdle);
-            incognitoIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-        }
 
         // FixedUpdate is called once per frame
         void FixedUpdate()
@@ -215,5 +221,16 @@ namespace Animations
             isRunning = false;
             isIdle = false;
         }
+
+        public void EndShortSpit()
+        {
+            incognitoAnim.EndShortSpit = true;
+        }
+
+        public void EndLongSpit()
+        {
+            incognitoAnim.EndShortSpit = true;
+        }
+        
     }
 }

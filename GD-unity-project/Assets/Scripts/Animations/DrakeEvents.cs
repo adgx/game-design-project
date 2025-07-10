@@ -9,9 +9,9 @@ namespace Animations
         // Audio management
         private EventInstance drakeFootsteps;
         private EventInstance drakeIdle;
+        private DrakeAnimation drakeAnim;
+        private Drake drake;
 
-        private Drake drake; 
-    
         private bool isRunning = false; // TODO: to be removed once we have Drake's FSM
         private bool isIdle = false; // TODO: to be removed once we have Drake's FSM
 
@@ -23,7 +23,19 @@ namespace Animations
             if (drake == null)
             {
                 Debug.LogError($"{ToString()}: Drake not found");
-            }        
+            }
+        }
+
+        // Audio management
+        private void Start()
+        {
+            drakeAnim = drake.anim;
+
+            drakeFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.DrakeFootsteps);
+            drakeFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+
+            drakeIdle = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.DrakeIdle);
+            drakeIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
         }
         public void Idle()
         {
@@ -31,14 +43,14 @@ namespace Animations
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             isIdle = true; // TODO: to be removed once we have Drake's FSM
         }
-        
+
         public void Run()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             isRunning = true; // TODO: to be removed once we have Drake's FSM
         }
-        
+
         public void Bite()
         {
             // Audio management
@@ -47,7 +59,7 @@ namespace Animations
 
             drake.CheckBiteAttackDamage();
         }
-    
+
         public void Swiping()
         {
             // Audio management
@@ -59,35 +71,35 @@ namespace Animations
         {
             drake.CheckSwipingAttackDamage();
         }
-    
+
         public void Defense()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeDefense, transform.position);
         }
-    
+
         public void ReactLargeFromRight()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeHitFromLeftOrRight, transform.position);
         }
-    
+
         public void ReactLargeFromLeft()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeHitFromLeftOrRight, transform.position);
         }
-    
+
         public void ReactLargeFromFront()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeHitFromFrontOrBack, transform.position);
         }
-    
+
         public void ReactLargeFromBack()
         {
             // Audio management
@@ -101,14 +113,14 @@ namespace Animations
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeDieHit, transform.position);
         }
-        
+
         public void DeathFootstep1()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeDieFoostep1, transform.position);
         }
-        
+
         public void DeathFootstep2()
         {
             // Audio management
@@ -120,31 +132,23 @@ namespace Animations
         {
             drake.DestroyEnemy();
         }
-        
+
         public void DeathThud()
         {
             // Audio management
             ResetAudioState(); // TODO: to be removed once we have Drake's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.DrakeDieThud, transform.position);
         }
-    
-        // Audio management
-        private void Start()
-        {
-            drakeFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.DrakeFootsteps);
-            drakeFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-        
-            drakeIdle = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.DrakeIdle);
-            drakeIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-        }
-    
+
+
+
         // FixedUpdate is called once per frame
         void FixedUpdate()
         {
             // Audio management
             UpdateSound();
         }
-    
+
         private void UpdateSound()
         {
             drakeFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
@@ -166,7 +170,7 @@ namespace Animations
             {
                 drakeFootsteps.stop(STOP_MODE.ALLOWFADEOUT);
             }
-        
+
             // Start idle event if Drake is using the idle animation
             if (isIdle) // TODO: check Drake's state (something like <<DrakeState != Idle>>)
             {
@@ -183,16 +187,30 @@ namespace Animations
             {
                 drakeIdle.stop(STOP_MODE.ALLOWFADEOUT);
             }
-        
+
         }
-    
+
         // TODO: to be removed once we have Drake's FSM
         private void ResetAudioState()
         {
             isRunning = false;
             isIdle = false;
         }
+
+        public void EndSwiping()
+        {
+            drakeAnim.EndSwiping = true;
+            Debug.Log($"End Swiping: {drakeAnim.EndSwiping}");
+        }
+
+        public void EndBite()
+        {
+            drakeAnim.EndBit = true;
+            Debug.Log($"End Bite: {drakeAnim.EndBit}");
+        }
     }
+    
+    
 }
 
 
