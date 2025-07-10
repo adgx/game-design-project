@@ -111,6 +111,11 @@ namespace Animations
             }
         }
 
+        public void ShieldDeactivation() {
+            AnimationManager.Instance.RemoveDefenseVfx();
+			playerShoot.CloseShield();
+        }
+
         public void DeathForwardGrunt()
         {
             // Audio management

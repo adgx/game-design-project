@@ -48,7 +48,7 @@ public class PlayerShoot : MonoBehaviour
 	// Defense
 	[SerializeField] private GameObject magneticShieldPrefab;
 	GameObject magneticShield;
-	private bool magneticShieldOpen = false;
+	public bool magneticShieldOpen = false;
 	
 	// Health
 	public float maxHealth = 120;
@@ -441,20 +441,8 @@ public class PlayerShoot : MonoBehaviour
 
 		return false; // Timeout scaduto
 	}
-	
-	async Task ManageShieldTime(int shieldTime)
-	{
-		bool shieldClosed = await WaitUntilOrTimeout(() => !magneticShieldOpen, shieldTime * 1000);
-		if (magneticShield != null && !shieldClosed)
-		{
-			Destroy(magneticShield);
-			await Task.Delay(500);
-		}
-		player.isFrozen = false;
-		magneticShieldOpen = false;
-	}
 
-	async void SpawnMagneticShield() {
+	private void SpawnMagneticShield() {
 		// Without this check, if the button for activating/deactivating the shield is pushed and released more than once in a very fast way, then
 		// the function is called multiple times, creating a race condition among multiple concurrent instances of it (buggy code)
 		if (isShieldCoroutineRunning)
@@ -462,7 +450,6 @@ public class PlayerShoot : MonoBehaviour
 			return;
 		}
 		
-		int shieldTime = 2;
 		isShieldCoroutineRunning = true;
 		
 		if(!magneticShieldOpen) 
@@ -470,33 +457,16 @@ public class PlayerShoot : MonoBehaviour
 			// to modify for the instantiate the vfx and lunch the animation character
 			//luch defense animation
 			AnimationManager.Instance.Defense();
-			//magneticShield = Instantiate(magneticShieldPrefab, new Vector3(player.transform.position.x, player.transform.position.y - 1f, player.transform.position.z), Quaternion.identity);
-			//magneticShield.transform.parent = transform;
 			magneticShieldOpen = true;
 			player.isFrozen = true;
-			
-			if(powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp)) {
-				if(powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1) {
-					shieldTime = 5;
-				}
-				else {
-					shieldTime = 10;
-				}
-			}
-
-			_ = ManageShieldTime(shieldTime);
-		}
-		else 
-		{
-			if(magneticShield != null) {
-				Destroy(magneticShield);
-				await Task.Delay(500);
-			}
-			player.isFrozen = false;
-			magneticShieldOpen = false;
 		}
 		
 		isShieldCoroutineRunning = false;
+	}
+
+	public void CloseShield() {
+		player.isFrozen = false;
+		magneticShieldOpen = false;
 	}
 
 	public void TakeDamage(float damage, DamageTypes damageType, int x, int z) {
@@ -656,7 +626,8 @@ public class PlayerShoot : MonoBehaviour
 					}
 				}
 
-				if (Input.GetButtonDown("Fire2") && !loadingAttack && AnimationManager.Instance.rickState == RickStates.Idle)
+				//&& AnimationManager.Instance.rickState == RickStates.Idle
+				if(Input.GetButtonDown("Fire2") && !loadingAttack)
 				{
 					SpawnMagneticShield();
 				}

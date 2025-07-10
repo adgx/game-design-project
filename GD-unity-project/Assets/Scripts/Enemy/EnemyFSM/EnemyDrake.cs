@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using RoomManager;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 
 public class Drake : MonoBehaviour, IEnemy
 {
@@ -124,6 +125,12 @@ public class Drake : MonoBehaviour, IEnemy
 
     void Update()
     {
+        // Maybe not a great idea to have this check here, but I don't know where to put it
+        if(!playerShoot.magneticShieldOpen) 
+            _attackRange = 1;
+        else
+            _attackRange = 2;
+
         //Check for sight and attack range
         _playerInSightRange = Physics.CheckSphere(transform.position, _sightRange, whatIsPlayer);
         _playerInAttackRange = Physics.CheckSphere(transform.position, _attackRange, whatIsPlayer);
@@ -294,7 +301,7 @@ public class Drake : MonoBehaviour, IEnemy
     
     public void CheckSwipingAttackDamage()
     {
-        if (Physics.CheckSphere(transform.position, 2f, whatIsPlayer))
+        if (Physics.CheckSphere(transform.position, 2f, whatIsPlayer) && !playerShoot.magneticShieldOpen)
         {
             playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, 5, 5);
         }
@@ -302,7 +309,7 @@ public class Drake : MonoBehaviour, IEnemy
     
     public void CheckBiteAttackDamage()
     {
-        if (Physics.CheckSphere(transform.position, 2f, whatIsPlayer))
+        if (Physics.CheckSphere(transform.position, 2f, whatIsPlayer) && !playerShoot.magneticShieldOpen)
         {
             playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.DrakeBiteAttack, 5, 5);
         }

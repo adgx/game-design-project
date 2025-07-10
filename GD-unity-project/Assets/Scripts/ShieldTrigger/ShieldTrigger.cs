@@ -10,14 +10,10 @@ public class ShieldTrigger : MonoBehaviour
     //private VFXSpawnerState _ss;
     //private float _amount;
     //private float _frequency;
-    private SphereCollider _sc;
+    //private SphereCollider _sc;
     //private float _t = 4.712389f;
     //private float _time = 0;
 
-    void Awake()
-    { 
-        
-    }
     void Start()
     {
         //_sc = GetComponent<SphereCollider>();
@@ -28,11 +24,6 @@ public class ShieldTrigger : MonoBehaviour
         //Debug.Log($"_amount: {_amount}");
         //_frequency = _shieldVFX.GetFloat(Shader.PropertyToID("VertexFrequency"));
         //Debug.Log($"_freqeuncy: {_frequency}");
-
-        if (_sc == null)
-        {
-            Debug.LogError("Collider not found");
-        }
     }
 
 /*
