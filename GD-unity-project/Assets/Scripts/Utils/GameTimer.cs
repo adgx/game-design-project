@@ -44,7 +44,7 @@ namespace Utils {
 		}
 
 		private void Awake() {
-			GameStatus.loopIteration = GameStatus.LoopIteration.THIRD_ITERATION;
+			GameStatus.loopIteration = GameStatus.LoopIteration.FIRST_ITERATION;
 			if(roomManager) {
 				roomManager.OnRunReady += HandleRunReady;
 
