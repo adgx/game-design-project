@@ -80,6 +80,8 @@ namespace Utils {
 			if(currentTime <= 0f) {
 				currentTime = 0f;
 				isRunning = false;
+
+				AnimationManager.Instance.Idle();
 				
 				// Ambient light management
 				GameEvents.current.TimerEnded(); 
