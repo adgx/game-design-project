@@ -122,22 +122,17 @@ public class Maynard : MonoBehaviour, IEnemy
 
     void Update()
     {
-        //Check for sight and attack range
-        _playerInSightRange = Physics.CheckSphere(transform.position, _sightRange, _whatIsPlayer);
+		// Maybe not a great idea to have this check here, but I don't know where to put it
+		if(!playerShoot.magneticShieldOpen)
+			_closeAttackRange = 1;
+		else
+			_closeAttackRange = 2;
+
+		//Check for sight and attack range
+		_playerInSightRange = Physics.CheckSphere(transform.position, _sightRange, _whatIsPlayer);
         _playerInRemoteAttackRange = Physics.CheckSphere(transform.position, _remoteAttackRange, _whatIsPlayer);
         _playerInCloseAttackRange = Physics.CheckSphere(transform.position, _closeAttackRange, _whatIsPlayer);
-        /*    
-            if (!playerInSightRange && !playerInCloseAttackRange)
-                Patroling();
-            if (playerInSightRange && !playerInCloseAttackRange)
-                ChasePlayer();
-            if (playerInCloseAttackRange && playerInSightRange)
-                CloseAttackPlayer();
-            else if (playerInRemoteAttackRange && playerInSightRange)
-            {
-                RemoteAttackPlayer();
-            }
-        */
+
         _stateMachine.Tik();
     }
 
@@ -317,7 +312,7 @@ public class Maynard : MonoBehaviour, IEnemy
 
     public void CheckCloseAttackDamage()
     {
-        if (Physics.CheckSphere(transform.position, 2f, _whatIsPlayer))
+        if (Physics.CheckSphere(transform.position, 2f, _whatIsPlayer) && !playerShoot.magneticShieldOpen)
         {
             playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, 5, 5);
         }

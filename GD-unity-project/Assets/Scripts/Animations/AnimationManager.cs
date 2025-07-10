@@ -56,6 +56,7 @@ public class AnimationManager : MonoBehaviour
     private bool justIdle = true;
     //sheildVFX  gameObj
     [SerializeField] GameObject prefabSheildVFX;
+    private GameObject shield;
     private static AnimationManager instance;
 
     public static AnimationManager Instance { get { return instance; } }
@@ -176,7 +177,11 @@ public class AnimationManager : MonoBehaviour
 
     public void DefenseVFX(Vector3 pos)
     {
-        Instantiate(prefabSheildVFX, pos, Quaternion.identity);
+        shield = Instantiate(prefabSheildVFX, pos, Quaternion.identity);
+    }
+
+    public void RemoveDefenseVfx() {
+        Destroy(shield);
     }
     
     public void Hit(int x, int z)

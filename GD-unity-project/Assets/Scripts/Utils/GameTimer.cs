@@ -44,7 +44,7 @@ namespace Utils {
 		}
 
 		private void Awake() {
-			GameStatus.loopIteration = GameStatus.LoopIteration.SECOND_ITERATION;
+			GameStatus.loopIteration = GameStatus.LoopIteration.THIRD_ITERATION;
 			if(roomManager) {
 				roomManager.OnRunReady += HandleRunReady;
 
@@ -62,7 +62,8 @@ namespace Utils {
 			playerShoot.DisableAttacks(true);
 
 			await Task.Delay(50);
-			AnimationManager.Instance.StandUp();
+			//AnimationManager.Instance.StandUp();
+			playerShoot.FreePlayer();
 
 			GameStatus.gameEnded = false;
 			GameStatus.gamePaused = false;
