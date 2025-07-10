@@ -900,7 +900,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8287082142061304406}
   - component: {fileID: 9130117436386636892}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Decal Projector muro corto
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1921,7 +1921,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6045781142439636329}
   - component: {fileID: 264538975630548374}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Decal Projector muro lungo1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2085,7 +2085,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4243999967138900584}
   - component: {fileID: 7641774633200969532}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Decal Projector muro corto1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4157,7 +4157,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4041830114988994657}
   - component: {fileID: 8051725340065994718}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Decal Projector floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7565,7 +7565,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7711785753415853329}
   - component: {fileID: 773662175879186822}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Decal Projector muro lungo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7898,7 +7898,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3363909722944986188}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: DECAL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10141,6 +10141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 432ee9113b5c49aca8a4463349be0539, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interactionZone: {fileID: 0}
   _energyDrinkMeshPrefab: {fileID: 919132149155446097, guid: cb04921020eb7443ea1506a029dd8ccd, type: 3}
   _snackMeshPrefab: {fileID: 919132149155446097, guid: 789ce07a7489c4ad48e6d7c27ddbcdbb, type: 3}
   _freeSphere: 0.5
@@ -12835,6 +12836,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68d44a9b5f854abaabb544fdd223fb49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interactionZone: {fileID: 0}
   _interactionTime: 2
   _postInteractionDelay: 1.5
   _rotationDuration: 0.2
@@ -13193,6 +13195,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99835b05d00344edad66298040afd79a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interactionZone: {fileID: 0}
   _specialSnackMeshPrefab: {fileID: 919132149155446097, guid: 81fcb738204ba413daba5d6b77229665, type: 3}
   _freeSphere: 0.5
   _hackingTime: 4.2

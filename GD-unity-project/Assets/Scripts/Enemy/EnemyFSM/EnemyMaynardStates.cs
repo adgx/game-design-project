@@ -1,3 +1,6 @@
+using System;
+using UnityEngine;
+
 public class MaynardPatrolState : State
 {
     private Maynard _maynard;
@@ -9,16 +12,22 @@ public class MaynardPatrolState : State
 
     public override void Enter()
     {
+        Debug.Log(base.Name);
+        _maynard.SetChaseRange();
+        _maynard.clearWaitTime();
+        _maynard.SetRandomTimeIdle();
         _maynard.anim.lunchRunAnim();
     }
 
     public override void Tik()
     {
         _maynard.Patroling();
+        _maynard.updateWaitTime();
     }
 
     public override void Exit()
     {
+        _maynard.clearWaitTime();
     }
 }
 
@@ -31,6 +40,9 @@ public class MaynardChaseState : State
     }
     public override void Enter()
     {
+        Debug.Log(base.Name);
+        _maynard.SetChaseRange();
+        _maynard.anim.lunchRunAnim();
     }
 
     public override void Tik()
@@ -52,7 +64,8 @@ public class MaynardWonderState : State
     }
     public override void Enter()
     {
-        _maynard.anim.lunchIdleAnim();
+        Debug.Log(base.Name);
+        //_maynard.anim.lunchIdleAnim();
     }
 
     public override void Tik()
@@ -75,16 +88,19 @@ public class MaynardScreamAttackState : State
     }
     public override void Enter()
     {
+        Debug.Log(base.Name);
         _maynard.anim.lunchScreamAnim();
+        _maynard.ScreamAttackPlayer();
     }
 
     public override void Tik()
     {
-        _maynard.ScreamAttackPlayer();
+        
     }
 
     public override void Exit()
     {
+        _maynard.anim.lunchIdleAnim();
     }
 }
 
@@ -97,16 +113,19 @@ public class MaynardCloseAttackState : State
     }
     public override void Enter()
     {
+        Debug.Log(base.Name);
         _maynard.anim.lunchAttackAnim();
+        _maynard.CloseAttackPlayer();
     }
 
     public override void Tik()
     {
-        _maynard.CloseAttackPlayer();
+        
     }
 
     public override void Exit()
     {
+        _maynard.anim.lunchIdleAnim();
     }
 }
 
@@ -115,14 +134,19 @@ public class MaynardReactFromFrontState : State {
 	public MaynardReactFromFrontState(string name, Maynard maynard) : base(name) {
 		_maynard = maynard;
 	}
-	public override void Enter() {
+	public override void Enter()
+    {   
+        Debug.Log(base.Name);
 		_maynard.anim.lunchReactFromFront();
 	}
 
-	public override void Tik() {
+	public override void Tik()
+    {
 	}
 
-	public override void Exit() {
+    public override void Exit()
+    {
+        
 	}
 }
 
@@ -135,6 +159,7 @@ public class MaynardDeathState : State
     }
     public override void Enter()
     {
+        Debug.Log(base.Name);
         _maynard.anim.lunchDeathAnim();
     }
 
@@ -144,5 +169,33 @@ public class MaynardDeathState : State
 
     public override void Exit()
     {
+        
+    }
+}
+
+public class MaynardIdleState : State
+{
+    private Maynard _maynard;
+    
+    public MaynardIdleState(string name, Maynard maynard) : base(name)
+    {
+        Debug.Log(base.Name);
+        _maynard = maynard;
+    }
+    public override void Enter()
+    {
+        _maynard.clearWaitTime();
+        _maynard.SetRandomTimeIdle();
+        _maynard.anim.lunchIdleAnim();
+    }
+
+    public override void Tik()
+    {
+        _maynard.updateWaitTime();
+    }
+
+    public override void Exit()
+    {
+        _maynard.clearWaitTime();
     }
 }

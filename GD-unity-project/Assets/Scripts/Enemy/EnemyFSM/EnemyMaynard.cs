@@ -10,6 +10,7 @@ public class Maynard : MonoBehaviour, IEnemy
     [SerializeField] private LayerMask _whatIsGround, _whatIsPlayer;
     [SerializeField] private GameObject attackSpawn;
 
+
     //FSM
     private FiniteStateMachine<Maynard> _stateMachine;
     // This variable increases (> 1) or reduces (< 1) the damage taken by this enemy type when attacked
@@ -29,7 +30,7 @@ public class Maynard : MonoBehaviour, IEnemy
 
     private float _health;
     private string enemyName;
-    
+
     //Materials
     private Material[] _materials;
 
@@ -38,23 +39,29 @@ public class Maynard : MonoBehaviour, IEnemy
     private bool _walkPointSet;
     private float _walkPointRange;
 
+    //Idle
+    private float _timeIdle;
+
+    private float _waitCurTime;
     //Attacking
     private float _timeBetweenAttacks;
     private bool _alreadyAttacked;
     private GameObject _bulletPrefab;
 
     //checks
-    private float _sightRange, _remoteAttackRange, _closeAttackRange;
+    private float _sightRange, _remoteAttackRange, _closeAttackRange, _chaseRange;
     private bool _playerInSightRange, _playerInRemoteAttackRange, _playerInCloseAttackRange;
-	//states
-	private State _reactFromFrontS;
-	private State _deathS;
+    //states
+    private State _reactFromFrontS;
+    private State _deathS;
 
     private RoomManager.RoomManager _roomManager;
-    
+
     private PlayerShoot playerShoot;
-    
+
     private EnemyManager enemyManager;
+
+    public bool debug = true;
 
     void Awake()
     {
@@ -68,9 +75,11 @@ public class Maynard : MonoBehaviour, IEnemy
         anim = new MaynardAnimation(maynardAC);
         _playerTransform = GameObject.Find("Player").transform;
         _agent = GetComponent<NavMeshAgent>();
-        playerShoot = Player.Instance.GetComponent<PlayerShoot>();
-        enemyManager = GameObject.Find("RoomManager").GetComponent<EnemyManager>();
-        
+        if (!debug)
+        {
+            playerShoot = Player.Instance.GetComponent<PlayerShoot>();
+            enemyManager = GameObject.Find("RoomManager").GetComponent<EnemyManager>();
+        }
         //we suppose that all enemy have an one SkinnedMeshRenderer 
         SkinnedMeshRenderer smr = GetComponentInChildren<SkinnedMeshRenderer>();
 
@@ -85,6 +94,29 @@ public class Maynard : MonoBehaviour, IEnemy
         {
             Debug.LogError(this.ToString() + ": No materials are found");
         }
+        if (debug)
+        {
+            _agent = GetComponent<NavMeshAgent>();
+            _sightRange = 12f;
+            _remoteAttackRange = 7f;
+            _closeAttackRange = 1;
+            gameObject.name = $"_Instance_{GetInstanceID()}";
+
+            _distanceAttackDamageMultiplier = 1f;
+            _closeAttackDamageMultiplier = 1f;
+
+            _closeAttackDamage = 1f;
+            _distanceAttackDamage = 13f;
+
+            _agent.speed = 5f;
+            _agent.angularSpeed = 200;
+
+            _health = 120f;
+            _walkPointRange = 10f;
+            _timeBetweenAttacks = 3f;
+            enemyName = "";
+        }
+
     }
 
     void Start()
@@ -93,31 +125,39 @@ public class Maynard : MonoBehaviour, IEnemy
         _stateMachine = new FiniteStateMachine<Maynard>(this);
 
         //Define states
+        State idleS = new MaynardIdleState("Idle", this);
         State patrolS = new MaynardPatrolState("Patrol", this);
         State chaseS = new MaynardChaseState("Chase", this);
         State wonderS = new MaynardWonderState("Wonder", this);
         State screamAttackS = new MaynardScreamAttackState("ScreamAttack", this);
         State closeAttackS = new MaynardCloseAttackState("CloseAttack", this);
-		_reactFromFrontS = new MaynardReactFromFrontState("Hit", this);
-		_deathS = new MaynardDeathState("Death", this);
+        _reactFromFrontS = new MaynardReactFromFrontState("Hit", this);
+        _deathS = new MaynardDeathState("Death", this);
+        //take attention on the order with the transitions are added
+        //Patrol
+        _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && (!_playerInCloseAttackRange || !_playerInRemoteAttackRange));
+        //chase
+        _stateMachine.AddTransition(chaseS, patrolS, () => !_playerInSightRange);
+        _stateMachine.AddTransition(chaseS, wonderS, () => _playerInSightRange && (_playerInRemoteAttackRange || _playerInRemoteAttackRange)); // funzione obbiettivo
+        //wonder
+        _stateMachine.AddTransition(wonderS, patrolS, () => !_playerInSightRange);
+        _stateMachine.AddTransition(wonderS, chaseS, () => _playerInSightRange && !_playerInRemoteAttackRange && !_playerInCloseAttackRange);
+        _stateMachine.AddTransition(wonderS, closeAttackS, () => _playerInCloseAttackRange && _playerInSightRange && !_alreadyAttacked);
+        _stateMachine.AddTransition(wonderS, screamAttackS, () => _playerInRemoteAttackRange && _playerInSightRange && !_alreadyAttacked);
+        //attacks
+        _stateMachine.AddTransition(closeAttackS, wonderS, () => anim.EndCloseAttack);
+        _stateMachine.AddTransition(screamAttackS, wonderS, () => anim.EndScream);
+        //react
+        _stateMachine.AddTransition(_reactFromFrontS, patrolS, () => !_playerInSightRange && !_playerInCloseAttackRange);
+        _stateMachine.AddTransition(_reactFromFrontS, chaseS, () => _playerInSightRange && !_playerInCloseAttackRange);
+        _stateMachine.AddTransition(_reactFromFrontS, wonderS, () => (_playerInCloseAttackRange && _playerInSightRange) || (_playerInRemoteAttackRange && _playerInSightRange));
+        //idle Transitions
+        _stateMachine.AddTransition(idleS, chaseS, () => _playerInSightRange && (_playerInRemoteAttackRange || _playerInCloseAttackRange));
+        _stateMachine.AddTransition(idleS, patrolS, () => !_playerInSightRange && _waitCurTime >= _timeIdle);
 
-        //Transition
-        _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && !_playerInCloseAttackRange);
-        _stateMachine.AddTransition(chaseS, patrolS, () => !_playerInSightRange && !_playerInCloseAttackRange);
-        _stateMachine.AddTransition(chaseS, wonderS, () =>  (_playerInCloseAttackRange && _playerInSightRange) || (_playerInRemoteAttackRange && _playerInSightRange));
-        _stateMachine.AddTransition(wonderS, patrolS, () => !_playerInSightRange && !_playerInCloseAttackRange);
-		_stateMachine.AddTransition(wonderS, chaseS, () => (_playerInCloseAttackRange && !_playerInSightRange) || (_playerInRemoteAttackRange && !_playerInSightRange));
-		_stateMachine.AddTransition(wonderS, closeAttackS, () => _playerInCloseAttackRange && _playerInSightRange && !_alreadyAttacked);
-        _stateMachine.AddTransition(closeAttackS, wonderS, () => _alreadyAttacked);
-        _stateMachine.AddTransition(wonderS, screamAttackS, () => !_alreadyAttacked);
-        _stateMachine.AddTransition(screamAttackS, wonderS, () => _alreadyAttacked);
 
-		_stateMachine.AddTransition(_reactFromFrontS, patrolS, () => !_playerInSightRange && !_playerInCloseAttackRange);
-		_stateMachine.AddTransition(_reactFromFrontS, chaseS, () => _playerInSightRange && !_playerInCloseAttackRange);
-		_stateMachine.AddTransition(_reactFromFrontS, wonderS, () => (_playerInCloseAttackRange && _playerInSightRange) || (_playerInRemoteAttackRange && _playerInSightRange));
-		
         //Set Initial state
-		_stateMachine.SetState(patrolS);
+        _stateMachine.SetState(idleS);
     }
 
     void Update()
@@ -150,9 +190,9 @@ public class Maynard : MonoBehaviour, IEnemy
         if (!enemyData || enemyData is not EnemyManyardData maynardData) return;
 
         _agent.speed = enemyData.baseMoveSpeed;
-		_agent.angularSpeed = enemyData.angularSpeed;
+        _agent.angularSpeed = enemyData.angularSpeed;
 
-		_health = maynardData.maxHealth;
+        _health = maynardData.maxHealth;
         _walkPointRange = maynardData.walkPointRange;
         _timeBetweenAttacks = maynardData.timeBetweenAttacks;
         enemyName = maynardData.enemyName;
@@ -191,13 +231,14 @@ public class Maynard : MonoBehaviour, IEnemy
             gameObject.layer = 0;
             gameObject.tag = "Untagged";
             enemyManager.removeEnemyFromList(_roomManager.CurrentRoomIndex, gameObject, enemyName);
-            
+
             _stateMachine.SetState(_deathS);
         }
-		else {
-			_stateMachine.SetState(_reactFromFrontS);
-		}
-	}
+        else
+        {
+            _stateMachine.SetState(_reactFromFrontS);
+        }
+    }
 
     private IEnumerator ChangeColor(Color dmgColor, float duration, float delay)
     {
@@ -238,12 +279,13 @@ public class Maynard : MonoBehaviour, IEnemy
         _walkPoint = new Vector3(transform.position.x + randomX, transform.position.y,
             transform.position.z + randomZ);
 
-		NavMeshHit hit;
-		if(NavMesh.SamplePosition(_walkPoint, out hit, 2f, NavMesh.AllAreas)) {
-			_walkPoint = hit.position;
-			_walkPointSet = true;
-		}
-	}
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(_walkPoint, out hit, 2f, NavMesh.AllAreas))
+        {
+            _walkPoint = hit.position;
+            _walkPointSet = true;
+        }
+    }
 
     public void Patroling()
     {
@@ -266,7 +308,7 @@ public class Maynard : MonoBehaviour, IEnemy
     {
         if (_agent == null || !_agent.isOnNavMesh) return;
 
-        if (_roomManager.IsNavMeshBaked)
+        if (debug || _roomManager.IsNavMeshBaked)
         {
             _agent.SetDestination(_playerTransform.position);
         }
@@ -292,24 +334,27 @@ public class Maynard : MonoBehaviour, IEnemy
     }
 
     public void ScreamAttackPlayer()
-    { 
+    {
         _alreadyAttacked = true;
         Invoke(nameof(ResetAttack), _timeBetweenAttacks);
     }
 
-    public void EmitScream() {
-		//Attack code here
-		GameObject bullet = Instantiate(_bulletPrefab, attackSpawn.transform.position, Quaternion.identity);
-		bullet.tag = "EnemyAttack";
-		bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
+    public void EmitScream()
+    {
+        //Attack code here
+        /*
+        GameObject bullet = Instantiate(_bulletPrefab, attackSpawn.transform.position, Quaternion.identity);
+        bullet.tag = "EnemyAttack";
+        bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
 
-		Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
-		rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
-		rbBullet.AddForce(transform.up * 1f, ForceMode.Impulse);
-		//End of attack code
-	}
+        Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
+        rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
+        rbBullet.AddForce(transform.up * 1f, ForceMode.Impulse);
+        */
+        //End of attack code
+    }
 
-	public void CloseAttackPlayer()
+    public void CloseAttackPlayer()
     {
         _alreadyAttacked = true;
         Invoke(nameof(ResetAttack), _timeBetweenAttacks);
@@ -319,7 +364,37 @@ public class Maynard : MonoBehaviour, IEnemy
     {
         if (Physics.CheckSphere(transform.position, 2f, _whatIsPlayer))
         {
-            playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, 5, 5);
+            //playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, 5, 5);
         }
+    }
+
+    //Idle Logic
+    public void clearWaitTime()
+    {
+        _waitCurTime = 0;
+    }
+    public void updateWaitTime()
+    {
+        _waitCurTime += Time.deltaTime;
+    }
+    public void SetRandomTimeIdle()
+    {
+        _timeIdle = Random.Range(1f, 3f);
+    }
+
+    public void SetChaseRange()
+    {
+        int choice = Random.Range(0, 2);
+
+        _chaseRange = choice == 0 ? _remoteAttackRange : _closeAttackRange;
+    }
+
+    public bool CheckeChaseRange()
+    {
+        if (_chaseRange == _remoteAttackRange)
+        {
+            return _playerInRemoteAttackRange;
+        }
+        else return _playerInCloseAttackRange;
     }
 }
