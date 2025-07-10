@@ -95,7 +95,9 @@ namespace CollectablePapers
                 _paperText.SetText(messageContent + "\n\n<color=yellow>[Press E to Close]</color>");
                 _paperTextContainer.SetActive(true);
 
-                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerPaperInteraction, paperPosition);
+				Cursor.lockState = CursorLockMode.None;
+
+				GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerPaperInteraction, paperPosition);
             }
             else
             {
@@ -111,6 +113,7 @@ namespace CollectablePapers
             _isPaperUiOpen = false;
             _paperTextContainer.SetActive(false);
             _player.isFrozen = false;
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         /// <summary>
