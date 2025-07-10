@@ -13,6 +13,8 @@ namespace PlayerInteraction
         string InteractionPrompt { get; }
         
         bool IsInteractable { get; }
+        
+        Collider InteractionZone { get; }
 
         /// <summary>
         /// The method to be called when the player interacts with this object.
