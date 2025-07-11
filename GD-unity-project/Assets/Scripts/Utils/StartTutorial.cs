@@ -22,11 +22,7 @@ public class StartTutorial : MonoBehaviour
             helpText.text = tutorial[i];
             helpTextContainer.SetActive(true);
 
-            print("Apri");
-
             yield return new WaitForSeconds(tipDuration);
-
-            print("Chiudi");
 
             helpTextContainer.SetActive(false);
         }

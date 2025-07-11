@@ -30,7 +30,6 @@ public class ParticleAttackController : MonoBehaviour
         //offset
         _destPos.y += 1f;
 
-        Debug.Log($"destPos: {_destPos}, positon:{transform.position}");
         transform.LookAt(_destPos);
         gameObject.SetActive(true);
         _attackPS.Play();

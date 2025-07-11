@@ -42,7 +42,7 @@ public class Drake : MonoBehaviour, IEnemy
 
     //Attacking 
     private float _timeBetweenAttacks;
-    private bool _alreadyAttacked = false;
+    public bool _alreadyAttacked = false;
     private GameObject _bulletPrefab;
     private float _sightRange, _attackRange;
 
@@ -74,7 +74,6 @@ public class Drake : MonoBehaviour, IEnemy
 
         anim = new DrakeAnimation(drakeAC);
         _playerTransform = GameObject.Find("Player").transform;
-        Debug.Log($"{_playerTransform.position}");
         _agent = GetComponent<NavMeshAgent>();
         if (!_debug)
         {
@@ -344,7 +343,7 @@ public class Drake : MonoBehaviour, IEnemy
     public void AttackPlayer()
     {
         _alreadyAttacked = true;
-        Invoke(nameof(ResetAttack), _timeBetweenAttacks);
+        StartCoroutine(ResetAttack());
     }
 
     public void CheckSwipingAttackDamage()
@@ -366,9 +365,9 @@ public class Drake : MonoBehaviour, IEnemy
         }
     }
 
-    void ResetAttack()
+    IEnumerator ResetAttack()
     {
-        Debug.Log($"Reset Attack {_alreadyAttacked}");
+        yield return new WaitForSeconds(_timeBetweenAttacks);
         _alreadyAttacked = false;
     }
 
