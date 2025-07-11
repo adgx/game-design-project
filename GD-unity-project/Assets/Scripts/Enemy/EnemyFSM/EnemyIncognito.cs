@@ -18,6 +18,10 @@ public class Incognito : MonoBehaviour, IEnemy
     private float _health;
     private string enemyName;
 
+    //Idle
+    private float _timeIdle;
+    private float _waitCurTime;
+
     //Materials
     private Material[] _materials;
     //FSM
@@ -37,16 +41,17 @@ public class Incognito : MonoBehaviour, IEnemy
     private float _timeBetweenAttacks;
     private bool _alreadyAttacked;
     private GameObject _bulletPrefab;
-
+    //Debug flag
+    private bool _debug = false;
     //condition 
     private float _sightRange, _attackRange;
     private bool _playerInSightRange, _playerInAttackRange;
 
     private RoomManager.RoomManager _roomManager;
 
-	//states
-	private State _reactFromFrontS;
-	private State _deathS;
+    //states
+    private State _reactFromFrontS;
+    private State _deathS;
 
     private EnemyManager enemyManager;
 
@@ -64,7 +69,10 @@ public class Incognito : MonoBehaviour, IEnemy
         _agent = GetComponent<NavMeshAgent>();
         //we suppose that all enemy have an one SkinnedMeshRenderer 
         SkinnedMeshRenderer smr = GetComponentInChildren<SkinnedMeshRenderer>();
-        enemyManager = GameObject.Find("RoomManager").GetComponent<EnemyManager>();
+        if (!_debug)
+        {
+            enemyManager = GameObject.Find("RoomManager").GetComponent<EnemyManager>();
+        }
 
         if (smr == null)
         {
@@ -81,33 +89,63 @@ public class Incognito : MonoBehaviour, IEnemy
 
     void Start()
     {
+        if (_debug)
+        {
+            _agent.speed = 5f;
+            _agent.angularSpeed = 200f;
+
+            _health = 120f;
+            _walkPointRange = 8f;
+            _timeBetweenAttacks = 4f;
+            enemyName = "";
+            _sightRange = 12f;
+            _attackRange = 8f;
+
+            _distanceAttackDamageMultiplier = 1.4f;
+            _closeAttackDamageMultiplier = 1.4f;
+
+            _distanceAttackDamage = 10f;
+        }
         //FMS base
-        _stateMachine = new FiniteStateMachine<Incognito>(this);
+            _stateMachine = new FiniteStateMachine<Incognito>(this);
 
         //Define states
+        State idleS = new IncognitoIdleState("Idle", this);
         State patrolS = new IncognitoPatrolState("Patrol", this);
         State chaseS = new IncognitoChaseState("Chase", this);
         State wonderS = new IncognitoWonderState("Wonder", this);
         State shortSpitAttackS = new IncognitoShortSpitAttackState("ShortSpitAttack", this);
-		_reactFromFrontS = new IncognitoReactFromFrontState("Hit", this);
-		_deathS = new IncognitoDeathState("Death", this);
+        State waitS = new IncognitoWaitState("Wait", this);
+        _reactFromFrontS = new IncognitoReactFromFrontState("Hit", this);
+        _deathS = new IncognitoDeathState("Death", this);
 
         //Transition
+        //idle
+        _stateMachine.AddTransition(idleS, patrolS, () => !_playerInSightRange && _waitCurTime >= _timeIdle);
+        _stateMachine.AddTransition(idleS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
+        //patrol
         _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
+        _stateMachine.AddTransition(patrolS, wonderS, () => _playerInSightRange && _playerInAttackRange);
+        //chase
         _stateMachine.AddTransition(chaseS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(chaseS, wonderS, () => _playerInSightRange && _playerInAttackRange);
-		_stateMachine.AddTransition(wonderS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
-		_stateMachine.AddTransition(wonderS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
-		_stateMachine.AddTransition(patrolS, wonderS, () => _playerInSightRange && _playerInAttackRange);
-		_stateMachine.AddTransition(shortSpitAttackS, wonderS, () => _alreadyAttacked);
-        _stateMachine.AddTransition(wonderS, shortSpitAttackS, () => !_alreadyAttacked);
+        //wonderS
+        _stateMachine.AddTransition(wonderS, waitS, () => _alreadyAttacked);
+        _stateMachine.AddTransition(wonderS, shortSpitAttackS, () => !_alreadyAttacked && _playerInSightRange && _playerInAttackRange);
+        _stateMachine.AddTransition(wonderS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
+        _stateMachine.AddTransition(wonderS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
+        //shortSpitAttack
+        _stateMachine.AddTransition(shortSpitAttackS, wonderS, () => anim.EndShortSpit);
+        //wait
+        _stateMachine.AddTransition(waitS, wonderS, () => !_alreadyAttacked);
+        //ReactFrom
+        _stateMachine.AddTransition(_reactFromFrontS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
+        _stateMachine.AddTransition(_reactFromFrontS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
+        _stateMachine.AddTransition(_reactFromFrontS, wonderS, () => _playerInSightRange && _playerInAttackRange);
 
-		_stateMachine.AddTransition(_reactFromFrontS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
-		_stateMachine.AddTransition(_reactFromFrontS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
-		_stateMachine.AddTransition(_reactFromFrontS, wonderS, () => _playerInSightRange && _playerInAttackRange);
 
-		//Set Initial state
-		_stateMachine.SetState(patrolS);
+        //Set Initial state
+        _stateMachine.SetState(idleS);
     }
 
     void Update()
@@ -115,7 +153,7 @@ public class Incognito : MonoBehaviour, IEnemy
         //Check for sight and attack range
         _playerInSightRange = Physics.CheckSphere(transform.position, _sightRange, _whatIsPlayer);
         _playerInAttackRange = Physics.CheckSphere(transform.position, _attackRange, _whatIsPlayer);
-		_stateMachine.Tik();
+        _stateMachine.Tik();
     }
     public void Initialize(EnemyData enemyData, RoomManager.RoomManager roomManager)
     {
@@ -126,9 +164,9 @@ public class Incognito : MonoBehaviour, IEnemy
         if (enemyData == null || enemyData is not EnemyIncognitoData incognitoData) return;
 
         _agent.speed = enemyData.baseMoveSpeed;
-		_agent.angularSpeed = enemyData.angularSpeed;
+        _agent.angularSpeed = enemyData.angularSpeed;
 
-		_health = incognitoData.maxHealth;
+        _health = incognitoData.maxHealth;
         _walkPointRange = incognitoData.walkPointRange;
         _timeBetweenAttacks = incognitoData.timeBetweenAttacks;
         enemyName = incognitoData.enemyName;
@@ -159,19 +197,21 @@ public class Incognito : MonoBehaviour, IEnemy
 
         StartCoroutine(ChangeColor(Color.red, 0.8f, 0));
 
-        if(_health <= 0) {
+        if (_health <= 0)
+        {
             gameObject.layer = 0;
             gameObject.tag = "Untagged";
             enemyManager.removeEnemyFromList(_roomManager.CurrentRoomIndex, gameObject, enemyName);
-            
+
 
             _stateMachine.SetState(_deathS);
         }
-        else {
+        else
+        {
             _stateMachine.SetState(_reactFromFrontS);
         }
 
-        
+
     }
 
     void SearchWalkPoint()
@@ -182,7 +222,7 @@ public class Incognito : MonoBehaviour, IEnemy
 
         _walkPoint = new Vector3(transform.position.x + randomX, transform.position.y,
             transform.position.z + randomZ);
-        
+
         NavMeshHit hit;
         if (NavMesh.SamplePosition(_walkPoint, out hit, 2f, NavMesh.AllAreas))
         {
@@ -194,7 +234,7 @@ public class Incognito : MonoBehaviour, IEnemy
     public void Patroling()
     {
         if (_agent == null || !_agent.isOnNavMesh) return;
-        
+
         if (!_walkPointSet)
             SearchWalkPoint();
 
@@ -212,7 +252,7 @@ public class Incognito : MonoBehaviour, IEnemy
     {
         if (_agent == null || !_agent.isOnNavMesh) return;
 
-        if (_roomManager.IsNavMeshBaked)
+        if (_debug || _roomManager.IsNavMeshBaked)
         {
             _agent.SetDestination(_playerTransform.position);
         }
@@ -220,8 +260,8 @@ public class Incognito : MonoBehaviour, IEnemy
 
     public void WonderAttackPlayer()
     {
-		if (_agent == null || !_agent.isOnNavMesh) return;
-        
+        if (_agent == null || !_agent.isOnNavMesh) return;
+
         //Make sure enemy doesn't move
         _agent.SetDestination(transform.position);
 
@@ -234,19 +274,23 @@ public class Incognito : MonoBehaviour, IEnemy
         Invoke(nameof(ResetAttack), _timeBetweenAttacks);
     }
 
-    public void EmitSpit() {
-		//Attack code here
-		GameObject bullet = Instantiate(_bulletPrefab, attackSpawn.transform.position, Quaternion.identity);
-		bullet.tag = "SpitEnemyAttack";
-		bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
+    public void EmitSpit()
+    {
+        if (!_debug)
+        {
+            //Attack code here
+            GameObject bullet = Instantiate(_bulletPrefab, attackSpawn.transform.position, Quaternion.identity);
+            bullet.tag = "SpitEnemyAttack";
+            bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
 
-		Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
-		rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
-		rbBullet.AddForce(transform.up * 1f, ForceMode.Impulse);
-		//End of attack code
-	}
+            Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
+            rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
+            rbBullet.AddForce(transform.up * 1f, ForceMode.Impulse);
+            //End of attack code
+        }
+    }
 
-	void ResetAttack()
+    void ResetAttack()
     {
         _alreadyAttacked = false;
     }
@@ -275,10 +319,24 @@ public class Incognito : MonoBehaviour, IEnemy
         foreach (Material mat in _materials)
             mat.color = originColor;
     }
-    
+
     public void DestroyEnemy()
     {
         Destroy(gameObject);
+    }
+    
+    //Idle Logic
+    public void clearWaitTime()
+    {
+        _waitCurTime = 0;
+    }
+    public void updateWaitTime()
+    {
+        _waitCurTime += Time.deltaTime;
+    }
+    public void SetRandomTimeIdle()
+    {
+        _timeIdle = Random.Range(1f, 3f);
     }
 
 }

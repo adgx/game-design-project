@@ -14,6 +14,12 @@ public class DrakeAnimation
     private int _dirZVarHash;
     private int _hitTriggerHash;
     private int _idleTriggerHash;
+
+    private bool _endSwiping = true;
+     private bool _endBit = true;
+
+    public bool EndSwiping { get { return _endSwiping; } set { _endSwiping = value; } }
+    public bool EndBit { get { return _endBit; } set { _endBit = value; } }
     
     public DrakeAnimation(Animator drakeAC)
     {
@@ -30,8 +36,9 @@ public class DrakeAnimation
     }
 
     public void lunchIdleAnim()
-    { 
-        if (this != null && _drakeAC != null && _drakeAC.gameObject != null && _drakeAC.isActiveAndEnabled)
+    {
+        AnimatorStateInfo stateInfo = _drakeAC.GetCurrentAnimatorStateInfo(0);
+        if (this != null && _drakeAC != null && _drakeAC.gameObject != null && _drakeAC.isActiveAndEnabled && !stateInfo.IsTag("Idle"))
         {
             _drakeAC.SetTrigger(_idleTriggerHash);
         }
@@ -39,6 +46,7 @@ public class DrakeAnimation
 
     public void lunchSwipingAnim()
     {
+        
         if (this != null && _drakeAC != null && _drakeAC.gameObject != null && _drakeAC.isActiveAndEnabled)
         {
             _drakeAC.SetTrigger(_swipingTriggerHash);
@@ -47,7 +55,8 @@ public class DrakeAnimation
 
     public void lunchRunAnim()
     {
-        if (this != null && _drakeAC != null && _drakeAC.gameObject != null && _drakeAC.isActiveAndEnabled)
+        AnimatorStateInfo stateInfo = _drakeAC.GetCurrentAnimatorStateInfo(0);
+        if (this != null && _drakeAC != null && _drakeAC.gameObject != null && _drakeAC.isActiveAndEnabled && !stateInfo.IsTag("Run"))
         {
             _drakeAC.SetTrigger(_runTriggerHash);
         }
