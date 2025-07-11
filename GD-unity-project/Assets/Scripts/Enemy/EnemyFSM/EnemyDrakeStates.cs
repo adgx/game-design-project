@@ -61,7 +61,7 @@ public class DrakeChaseState : State
     public override void Exit()
     {
         // Audio management: stops footsteps event if Drake is not chasing
-        _events.StartRunningSound();
+        _events.StopRunningSound();
     }
 }
 
