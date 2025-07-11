@@ -4,6 +4,7 @@ using Helper;
 using RoomManager;
 using TMPro;
 using UnityEngine;
+using Utils;
 
 namespace PlayerInteraction
 {
@@ -37,12 +38,15 @@ namespace PlayerInteraction
         private GameObject helpTextContainer;
         private TextMeshProUGUI helpText;
 
+        private GameTimer _gameTimer;
+
         /// <summary>
         /// Initializes door references and optionally infers direction from the GameObject's name.
         /// </summary>
         private void Start()
         {
             _roomManager = RoomManager.RoomManager.Instance;
+            _gameTimer = _roomManager.GetComponent<GameTimer>();
             _parentRoom = GetComponentInParent<Room>();
             player = GameObject.Find("Player");
             playerScript = player.GetComponent<Player>();
@@ -67,7 +71,7 @@ namespace PlayerInteraction
         /// <returns>True if interaction was successful.</returns>
         public bool Interact(GameObject interactor)
         {
-            if (_isTraversing) return false;
+            if (_isTraversing || _gameTimer.currentTime <= 5f) return false;
 
             ConnectorDirection thisDoorsLocalConnectorDirection =
                 RoomManager.RoomManager.GetOppositeLocalDirection(_leadsToWorldDirection * -1);

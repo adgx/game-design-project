@@ -12,8 +12,8 @@ using System.Threading.Tasks;
 
 namespace Utils {
 	public class GameTimer : MonoBehaviour {
-		private const float TimeLimit = 10 * 60f;
-		private float currentTime;
+		private const float TimeLimit = 10f * 60f;
+		public float currentTime;
 
 		public TMP_Text timerText;
 		[SerializeField] private Image timerOutlineImage;
