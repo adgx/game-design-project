@@ -487,14 +487,17 @@ public class PlayerShoot : MonoBehaviour
 				AnimationManager.Instance.Bite();
 			}
 			else {
-				DeathAnimation(x, z);
+				DeathAnimation(1, 1);
 			}
      	}
 	}
 
 	public void DeathAnimation(int x, int z) {
-		gameObject.layer = 0;
 		AnimationManager.Instance.Death(x, z);
+	}
+
+	public void SetLayerToZero() {
+		gameObject.layer = 0;
 	}
 
 	public void LoadRespawnScene() {
