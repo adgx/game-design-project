@@ -74,20 +74,5 @@ public class ParticleAttackController : MonoBehaviour
             Destroy(gameObject);
     }
 
-    void OnParticleTrigger()
-    {
-        List<ParticleSystem.Particle> enter = new();
-        ParticleSystem.ColliderData colData = new();
-
-        int numEnter = _attackPS.GetTriggerParticles(ParticleSystemTriggerEventType.Enter, enter, out colData);
-
-        Collider collider = (Collider)colData.GetCollider(0, 0);
-        Debug.Log("Triggered");
-        if (collider.CompareTag("Shield"))
-        {
-            Debug.Log("Shield");
-        }
-    }
-
 
 }
