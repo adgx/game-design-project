@@ -32,6 +32,17 @@ namespace Animations
             incognitoIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
         }
         
+        private void OnDestroy()
+        {
+            // Stop events immediately to prevent the sound from continuing after destruction
+            // and releases the resources used by the instances
+            if (GamePlayAudioManager.instance != null)
+            {
+                GamePlayAudioManager.instance.ReleaseInstance(incognitoFootsteps);
+                GamePlayAudioManager.instance.ReleaseInstance(incognitoIdle);
+            }
+        }
+        
         // This function is called when Incognito should emit its spit
         public void Spitting()
         {

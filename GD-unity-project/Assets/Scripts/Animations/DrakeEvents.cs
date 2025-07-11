@@ -37,6 +37,17 @@ namespace Animations
             drakeFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             drakeIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
         }
+        
+        private void OnDestroy()
+        {
+            // Stop events immediately to prevent the sound from continuing after destruction
+            // and releases the resources used by the instances
+            if (GamePlayAudioManager.instance != null)
+            {
+                GamePlayAudioManager.instance.ReleaseInstance(drakeFootsteps);
+                GamePlayAudioManager.instance.ReleaseInstance(drakeIdle);
+            }
+        }
 
         public void Bite()
         {

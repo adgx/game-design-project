@@ -118,8 +118,9 @@ public class Drake : MonoBehaviour, IEnemy
             _closeAttackDamageMultiplier = 0.8f;
             _closeAttackDamage = 20f;
         }
+        
         //FMS base
-            _stateMachine = new FiniteStateMachine<Drake>(this);
+        _stateMachine = new FiniteStateMachine<Drake>(this);
 
         //Define states
         State idleS = new DrakeIdleState("Idle", this, _events);
