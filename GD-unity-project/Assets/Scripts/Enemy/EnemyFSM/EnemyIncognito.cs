@@ -40,7 +40,7 @@ public class Incognito : MonoBehaviour, IEnemy
 
     //Attacking 
     private float _timeBetweenAttacks;
-    private bool _alreadyAttacked;
+    public bool _alreadyAttacked;
     private GameObject _bulletPrefab;
     //Debug flag
     private bool _debug = false;
@@ -274,7 +274,7 @@ public class Incognito : MonoBehaviour, IEnemy
     public void ShortSpitAttackPlayer()
     {
         _alreadyAttacked = true;
-        Invoke(nameof(ResetAttack), _timeBetweenAttacks);
+        StartCoroutine(ResetAttack());
     }
 
     public void EmitSpit()
@@ -287,16 +287,12 @@ public class Incognito : MonoBehaviour, IEnemy
         bullet.GetComponent<ParticleAttackController>().targetPos = _playerTransform;
         bullet.SetActive(true);
         _bulletPrefab.gameObject.SetActive(true);
-        /*
-        Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
-        rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
-        rbBullet.AddForce(transform.up * 1f, ForceMode.Impulse);
-        */
         //End of attack code
     }
 
-    void ResetAttack()
+    IEnumerator ResetAttack()
     {
+        yield return new WaitForSeconds(_timeBetweenAttacks);
         _alreadyAttacked = false;
     }
 

@@ -200,13 +200,11 @@ namespace Animations
         public void EndSwiping()
         {
             drakeAnim.EndSwiping = true;
-            Debug.Log($"End Swiping: {drakeAnim.EndSwiping}");
         }
 
         public void EndBite()
         {
             drakeAnim.EndBit = true;
-            Debug.Log($"End Bite: {drakeAnim.EndBit}");
         }
     }
     

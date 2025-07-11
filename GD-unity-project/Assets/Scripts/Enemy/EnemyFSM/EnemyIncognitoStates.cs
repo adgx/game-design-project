@@ -11,7 +11,6 @@ public class IncognitoPatrolState : State
 
     public override void Enter()
     {
-        Debug.Log(base.Name);
         _incognito.anim.lunchRunAnim();
     }
 
@@ -34,7 +33,6 @@ public class IncognitoChaseState : State
     }
     public override void Enter()
     {
-        Debug.Log(base.Name);
         _incognito.anim.lunchRunAnim();
     }
 
@@ -53,7 +51,6 @@ public class IncognitoWonderState : State
     private Incognito _incognito;
     public IncognitoWonderState(string name, Incognito incognito) : base(name)
     {
-        Debug.Log(base.Name);
         _incognito = incognito;
     }
     public override void Enter()
@@ -81,8 +78,9 @@ public class IncognitoShortSpitAttackState : State
     }
     public override void Enter()
     {
-        Debug.Log(base.Name);
-        _incognito.anim.lunchShortSpitAnim();
+        if(!_incognito._alreadyAttacked) {
+            _incognito.anim.lunchShortSpitAnim();
+        }
     }
 
     public override void Tik()
@@ -145,7 +143,6 @@ public class IncognitoWaitState : State
     }
     public override void Enter()
     {
-        Debug.Log(base.Name);
         _incognito.anim.lunchIdleAnim();
     }
 
@@ -169,7 +166,6 @@ public class IncognitoIdleState : State
     }
     public override void Enter()
     {
-        Debug.Log(base.Name);
         _incognito.clearWaitTime();
         _incognito.SetRandomTimeIdle();
         _incognito.anim.lunchIdleAnim();

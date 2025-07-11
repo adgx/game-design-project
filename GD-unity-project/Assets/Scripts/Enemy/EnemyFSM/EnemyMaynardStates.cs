@@ -12,7 +12,6 @@ public class MaynardPatrolState : State
 
     public override void Enter()
     {
-        Debug.Log(base.Name);
         _maynard.SetChaseRange();
         _maynard.clearWaitTime();
         _maynard.SetRandomTimeIdle();
@@ -40,7 +39,6 @@ public class MaynardChaseState : State
     }
     public override void Enter()
     {
-        Debug.Log(base.Name);
         _maynard.SetChaseRange();
         _maynard.anim.lunchRunAnim();
     }
@@ -64,7 +62,7 @@ public class MaynardWonderState : State
     }
     public override void Enter()
     {
-        Debug.Log(base.Name);
+        
     }
 
     public override void Tik()
@@ -87,9 +85,10 @@ public class MaynardScreamAttackState : State
     }
     public override void Enter()
     {
-        Debug.Log(base.Name);
-        _maynard.anim.lunchScreamAnim();
-        _maynard.ScreamAttackPlayer();
+        if(!_maynard._alreadyAttacked) {
+            _maynard.anim.lunchScreamAnim();
+            _maynard.ScreamAttackPlayer();
+        }
     }
 
     public override void Tik()
@@ -111,7 +110,6 @@ public class MaynardCloseAttackState : State
     }
     public override void Enter()
     {
-        Debug.Log(base.Name);
         _maynard.anim.lunchAttackAnim();
         _maynard.CloseAttackPlayer();
     }
@@ -132,8 +130,7 @@ public class MaynardReactFromFrontState : State {
 		_maynard = maynard;
 	}
 	public override void Enter()
-    {   
-        Debug.Log(base.Name);
+    {
 		_maynard.anim.lunchReactFromFront();
 	}
 
@@ -156,7 +153,6 @@ public class MaynardDeathState : State
     }
     public override void Enter()
     {
-        Debug.Log(base.Name);
         _maynard.anim.lunchDeathAnim();
     }
 
@@ -176,7 +172,6 @@ public class MaynardIdleState : State
 
     public MaynardIdleState(string name, Maynard maynard) : base(name)
     {
-        Debug.Log(base.Name);
         _maynard = maynard;
     }
     public override void Enter()
@@ -207,7 +202,6 @@ public class MaynardWaitState : State
     } 
     public override void Enter()
     {
-        Debug.Log(base.Name);
         _maynard.anim.lunchIdleAnim();
     }
 

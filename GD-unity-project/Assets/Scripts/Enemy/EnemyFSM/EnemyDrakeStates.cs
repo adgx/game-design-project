@@ -11,7 +11,6 @@ public class DrakePatrolState : State
 
     public override void Enter()
     {
-        Debug.Log(base.Name);
         _drake.anim.lunchRunAnim();
     }
 
@@ -35,7 +34,6 @@ public class DrakeChaseState : State
     }
     public override void Enter()
     {
-        Debug.Log(base.Name);
         _drake.anim.lunchRunAnim();
     }
 
@@ -60,10 +58,11 @@ public class DrakeBiteAttackState : State
     }
     public override void Enter()
     {
-		Debug.Log(base.Name);
-        _drake.anim.EndBit = false;
-        _drake.AttackPlayer();
-		_drake.anim.lunchBiteAnim();
+        if(!_drake._alreadyAttacked) {
+            _drake.anim.EndBit = false;
+            _drake.AttackPlayer();
+            _drake.anim.lunchBiteAnim();
+        }
     }
 
     public override void Tik()
@@ -86,10 +85,11 @@ public class DrakeSwipingAttackState : State
     }
     public override void Enter()
     {
-        Debug.Log(base.Name);
-        _drake.anim.EndSwiping = false;
-        _drake.AttackPlayer();
-        _drake.anim.lunchSwipingAnim();
+        if(!_drake._alreadyAttacked) {
+            _drake.anim.EndSwiping = false;
+            _drake.AttackPlayer();
+            _drake.anim.lunchSwipingAnim();
+        }
     }
 
     public override void Tik()
@@ -111,7 +111,6 @@ public class DrakeWonderState : State
     }
     public override void Enter()
     {
-        Debug.Log(base.Name);
         _drake.WonderAttackPlayer();
     }
 
@@ -191,7 +190,6 @@ public class DrakeIdleState : State
     }
     public override void Enter()
     {
-        Debug.Log(base.Name);
         _drake.clearWaitTime();
         _drake.SetRandomTimeIdle();
         _drake.anim.lunchIdleAnim();
@@ -219,7 +217,6 @@ public class DrakeWaitState : State
     }
     public override void Enter()
     {
-        Debug.Log(base.Name);
         _drake.anim.lunchIdleAnim();
     }
 

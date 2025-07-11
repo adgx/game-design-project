@@ -9,11 +9,12 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Enemy.EnemyManager;
 using System.Threading.Tasks;
+using Animations;
 
 namespace Utils {
 	public class GameTimer : MonoBehaviour {
-		private const float TimeLimit = 10 * 60f;
-		private float currentTime;
+		private const float TimeLimit = 10f * 60f;
+		public float currentTime;
 
 		public TMP_Text timerText;
 		[SerializeField] private Image timerOutlineImage;
@@ -29,6 +30,7 @@ namespace Utils {
 
 		private Player playerScript;
 		private PlayerShoot playerShoot;
+		private RickEvents rickEvents;
 
 		[SerializeField] private string respawnSceneName = "RespawnScene";
 		private bool sceneIsLoading = false;
@@ -56,6 +58,7 @@ namespace Utils {
 			player = GameObject.FindWithTag("Player");
 			playerScript = player.GetComponent<Player>();
 			playerShoot = player.GetComponent<PlayerShoot>();
+			rickEvents = player.GetComponent<RickEvents>();
 			
 			playerScript.FreezeMovement(true);
 			playerShoot.DisableAttacks(true);
@@ -81,6 +84,7 @@ namespace Utils {
 				isRunning = false;
 
 				AnimationManager.Instance.Idle();
+				rickEvents.SetIdleState();
 				
 				// Ambient light management
 				GameEvents.current.TimerEnded(); 

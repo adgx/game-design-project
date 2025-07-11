@@ -45,7 +45,7 @@ public class Maynard : MonoBehaviour, IEnemy
     private float _waitCurTime;
     //Attacking
     private float _timeBetweenAttacks;
-    private bool _alreadyAttacked;
+    public bool _alreadyAttacked;
     private GameObject _bulletPrefab;
 
     //checks
@@ -315,8 +315,9 @@ public class Maynard : MonoBehaviour, IEnemy
         }
     }
 
-    void ResetAttack()
+    IEnumerator ResetAttack()
     {
+        yield return new WaitForSeconds(_timeBetweenAttacks);
         _alreadyAttacked = false;
     }
 
@@ -337,7 +338,7 @@ public class Maynard : MonoBehaviour, IEnemy
     public void ScreamAttackPlayer()
     {
         _alreadyAttacked = true;
-        Invoke(nameof(ResetAttack), _timeBetweenAttacks);
+        StartCoroutine(ResetAttack());
     }
 
     public void EmitScream()
@@ -359,8 +360,8 @@ public class Maynard : MonoBehaviour, IEnemy
     public void CloseAttackPlayer()
     {
         _alreadyAttacked = true;
-        Invoke(nameof(ResetAttack), _timeBetweenAttacks);
-    }
+		StartCoroutine(ResetAttack());
+	}
 
     public void CheckCloseAttackDamage()
     {
