@@ -286,19 +286,27 @@ public class PlayerShoot : MonoBehaviour
 	}
 
 	public async void FireDistanceAttack() {
+		bulletPrefab.gameObject.SetActive(false);
 		GameObject bullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity);
 		bullet.tag = "PlayerProjectile";
-
+		ParticleAttackController PAC = bullet.GetComponent<ParticleAttackController>();
+		PAC.playerBulletDamage = PAC.initialPlayerBulletDamage;
+		bullet.SetActive(true);
+		bulletPrefab.gameObject.SetActive(true);
+		/*
 		Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
 		rbBullet.AddForce(bulletSpawnTransform.forward * bulletSpeed, ForceMode.Impulse);
 		rbBullet.AddForce(bulletSpawnTransform.up * 2f, ForceMode.Impulse);
-
+		
 		getCollisions.playerBulletDamage = getCollisions.initialPlayerBulletDamage;
-
-		if(attackStamina == 0) {
+		*/
+		
+		if (attackStamina == 0)
+		{
 			DecreaseStamina(1);
 		}
-		else {
+		else
+		{
 			DecreaseStamina(attackStamina);
 		}
 

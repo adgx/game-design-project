@@ -1,17 +1,18 @@
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 
 public class ParticleAttackController : MonoBehaviour
 {
     [SerializeField] private ParticleSystem _attackPS;
     //acceleration
-    private float _a = 13f;
+    [SerializeField] private float _a = 13f;
     private float _g = -9.81f;
-    private float _vyInit = 0.2f;
+    [SerializeField] private float _vyInit = 0.2f;
     //velocity max
-    private float _vMax = 15f;
+    [SerializeField] private float _vMax = 15f;
 
     public Transform targetPos;
     private Vector3 _destPos;
@@ -26,11 +27,19 @@ public class ParticleAttackController : MonoBehaviour
         _currentVF = 0f;
         _currentVUp = _vyInit;
         gameObject.SetActive(false);
-        _destPos = targetPos.position;
-        //offset
-        _destPos.y += 1f;
 
-        transform.LookAt(_destPos);
+        if (gameObject.CompareTag("PlayerProjectile"))
+        {
+            Debug.Log("");
+        }
+        else if (gameObject.CompareTag("SpitEnemyAttack"))
+        {
+            _destPos = targetPos.position;
+            //offset
+            _destPos.y += 1f;
+            transform.LookAt(_destPos);
+        } 
+        
         gameObject.SetActive(true);
         _attackPS.Play();
 
@@ -58,20 +67,31 @@ public class ParticleAttackController : MonoBehaviour
         List<ParticleCollisionEvent> ce = new();
         _attackPS.GetCollisionEvents(other, ce);
         Debug.Log($"Collision Detected :{other.gameObject.tag}");
-        if (other.CompareTag("Player"))
+        if (gameObject.CompareTag("SpitEnemyAttack"))
         {
-            PlayerShoot playerShoot = other.GetComponent<PlayerShoot>();
-            playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.Spit, Math.Sign(ce[0].normal.x), Math.Sign(ce[0].normal.z));
-            Destroy(gameObject);
+            if (other.CompareTag("Player"))
+            {
+                PlayerShoot playerShoot = other.GetComponent<PlayerShoot>();
+                playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.Spit, Math.Sign(ce[0].normal.x), Math.Sign(ce[0].normal.z));
+                Destroy(gameObject);
+            }
+            else if (other.CompareTag("Shield"))
+            {
+                Debug.Log("Shield");
+                GamePlayAudioManager.instance.PlayOneShot(Audio.FMODEvents.Instance.PlayerShieldHit, transform.position);
+                Destroy(gameObject);
+            }
+            else if (!other.CompareTag("EnemyIncognito"))
+                Destroy(gameObject);
         }
-        else if (other.CompareTag("Shield"))
+        else if (gameObject.CompareTag("PlayerProjectile"))
         {
-            Debug.Log("Shield");
-            GamePlayAudioManager.instance.PlayOneShot(Audio.FMODEvents.Instance.PlayerShieldHit, transform.position);
-            Destroy(gameObject);
+            if (other.CompareTag("Enemy") && !other.CompareTag("EnemyAttack"))
+            {
+                other.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(playerBulletDamage, "d");
+            }
+            else Destroy(gameObject);
         }
-        else if (!other.CompareTag("EnemyIncognito"))
-            Destroy(gameObject);
     }
 
 

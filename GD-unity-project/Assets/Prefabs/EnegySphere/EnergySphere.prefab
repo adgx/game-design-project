@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6596373235176271736}
   m_Layer: 0
   m_Name: EnergySphere
-  m_TagString: Untagged
+  m_TagString: PlayerProjectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4916,9 +4916,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c099241424eab844a692c6567f7218e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _energyPS: {fileID: 4613886763997286794}
-  _targetPos: {fileID: 0}
-  playerBulletDamage: 50
+  _attackPS: {fileID: 4613886763997286794}
+  _a: 13
+  _vyInit: 0.2
+  _vMax: 15
+  targetPos: {fileID: 0}
+  initialPlayerBulletDamage: 40
+  enemyBulletDamage: 20
+  playerBulletDamage: 40
 --- !u!1 &3451113329393740865
 GameObject:
   m_ObjectHideFlags: 0
