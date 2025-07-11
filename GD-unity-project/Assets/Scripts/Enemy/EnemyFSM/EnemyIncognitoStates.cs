@@ -1,3 +1,4 @@
+using Animations;
 using UnityEngine;
 
 public class IncognitoPatrolState : State
@@ -12,6 +13,9 @@ public class IncognitoPatrolState : State
     public override void Enter()
     {
         _incognito.anim.lunchRunAnim();
+        
+        // Audio management: start footsteps event if incognito is moving
+        IncognitoEvents.StartRunningSound();
     }
 
     public override void Tik()
@@ -21,6 +25,8 @@ public class IncognitoPatrolState : State
 
     public override void Exit()
     {
+        // Audio management: stops footsteps event if incognito is not moving anymore
+        IncognitoEvents.StopRunningSound();
     }
 }
 
@@ -34,6 +40,9 @@ public class IncognitoChaseState : State
     public override void Enter()
     {
         _incognito.anim.lunchRunAnim();
+        
+        // Audio management: start footsteps event if incognito is moving
+        IncognitoEvents.StartRunningSound();
     }
 
     public override void Tik()
@@ -43,6 +52,8 @@ public class IncognitoChaseState : State
 
     public override void Exit()
     {
+        // Audio management: stops footsteps event if incognito is not moving anymore
+        IncognitoEvents.StopRunningSound();
     }
 }
 
@@ -91,8 +102,6 @@ public class IncognitoShortSpitAttackState : State
     public override void Exit()
     {
     }
-
-
 }
 
 public class IncognitoReactFromFrontState : State {
@@ -144,6 +153,9 @@ public class IncognitoWaitState : State
     public override void Enter()
     {
         _incognito.anim.lunchIdleAnim();
+        
+        // Audio management: start idle event if incognito is moving
+        IncognitoEvents.StartIdleSound();
     }
 
     public override void Tik()
@@ -152,6 +164,8 @@ public class IncognitoWaitState : State
 
     public override void Exit()
     {
+        // Audio management: stops idle event if incognito is not waiting anymore
+        IncognitoEvents.StopIdleSound();
     }
 }
 
@@ -161,7 +175,6 @@ public class IncognitoIdleState : State
 
     public IncognitoIdleState(string name, Incognito incognito) : base(name)
     {
-        
         _incognito = incognito;
     }
     public override void Enter()
@@ -169,6 +182,9 @@ public class IncognitoIdleState : State
         _incognito.clearWaitTime();
         _incognito.SetRandomTimeIdle();
         _incognito.anim.lunchIdleAnim();
+        
+        // Audio management: start idle event if incognito is moving
+        IncognitoEvents.StartIdleSound();
     }
 
     public override void Tik()
@@ -179,5 +195,8 @@ public class IncognitoIdleState : State
     public override void Exit()
     {
         _incognito.clearWaitTime();
+        
+        // Audio management: stops idle event if incognito is not waiting anymore
+        IncognitoEvents.StopIdleSound();
     }
 }
