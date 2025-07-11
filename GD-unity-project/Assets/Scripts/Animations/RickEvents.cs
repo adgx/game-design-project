@@ -120,7 +120,9 @@ namespace Animations
         {
             // Audio management
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardGrunt, transform.position);
-        }
+
+			playerShoot.SetLayerToZero();
+		}
 
         public void DeathForwardThud1()
         {
@@ -138,6 +140,8 @@ namespace Animations
         {
             // Audio management
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieBackwardGrunt, transform.position);
+
+            playerShoot.SetLayerToZero();
         }
 
         public void DeathBackwardThud()

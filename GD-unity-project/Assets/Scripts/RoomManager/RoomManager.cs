@@ -359,7 +359,13 @@ namespace RoomManager
             if (_currentRoomInstance == null) return;
 
             _enemyManager.DestroyEnemies(CurrentRoomIndex);
-            Destroy(_currentRoomInstance.gameObject);
+            foreach(GameObject projectile in GameObject.FindGameObjectsWithTag("SpitEnemyAttack")) {
+                Destroy(projectile);
+            }
+			foreach(GameObject projectile in GameObject.FindGameObjectsWithTag("EnemyAttack")) {
+				Destroy(projectile);
+			}
+			Destroy(_currentRoomInstance.gameObject);
             _currentRoomInstance = null;
         }
 
