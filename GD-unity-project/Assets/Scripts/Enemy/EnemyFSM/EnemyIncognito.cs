@@ -125,6 +125,7 @@ public class Incognito : MonoBehaviour, IEnemy
         //idle
         _stateMachine.AddTransition(idleS, patrolS, () => !_playerInSightRange && _waitCurTime >= _timeIdle);
         _stateMachine.AddTransition(idleS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
+        _stateMachine.AddTransition(idleS, wonderS, () => _playerInSightRange && _playerInAttackRange);
         //patrol
         _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(patrolS, wonderS, () => _playerInSightRange && _playerInAttackRange);
@@ -281,10 +282,13 @@ public class Incognito : MonoBehaviour, IEnemy
         if (_debug)
         {
             //Attack code here
+            _bulletPrefab.gameObject.SetActive(false);
             GameObject bullet = Instantiate(_bulletPrefab, _attackSpawn.transform.position, Quaternion.identity);
             bullet.tag = "SpitEnemyAttack";
-            bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
-
+            bullet.GetComponent<ParticleAttackController>().enemyBulletDamage = _distanceAttackDamage;
+            bullet.GetComponent<ParticleAttackController>().targetPos = _playerTransform;
+            bullet.SetActive(true);
+            _bulletPrefab.gameObject.SetActive(true);
             /*
             Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
             rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);

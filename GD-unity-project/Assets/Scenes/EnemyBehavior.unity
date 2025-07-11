@@ -563,7 +563,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6635268580633063533, guid: a68a969db10e47e4294fc8705c93da1e, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -963,6 +963,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6935603555765237207, guid: b1b325b0ad3f20a47b57643bfa5b51fc, type: 3}
+      propertyPath: _attackSpawn
+      value: 
+      objectReference: {fileID: 1688801118894755981}
     - target: {fileID: 8345268695102665143, guid: b1b325b0ad3f20a47b57643bfa5b51fc, type: 3}
       propertyPath: m_Name
       value: Incognito
@@ -976,6 +980,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b1b325b0ad3f20a47b57643bfa5b51fc, type: 3}
+--- !u!1 &1688801118894755981 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8179008764724427063, guid: b1b325b0ad3f20a47b57643bfa5b51fc, type: 3}
+  m_PrefabInstance: {fileID: 1688801118894755980}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3030388769902169527
 PrefabInstance:
   m_ObjectHideFlags: 0
