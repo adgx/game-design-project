@@ -45,16 +45,12 @@ public class RickAnim : MonoBehaviour
     }
 
     void RandomizeIdleCo()
-    {
-        Debug.Log("RandomizeIdle called");
-        
-        StartCoroutine(RandomIdleIndex());
-        
+    {   
+        StartCoroutine(RandomIdleIndex());   
     }
 
     async void RandomizeIdleAsync()
     {
-        Debug.Log("RandomizeIdle called");
         await Task.Delay(10000);
         int idleIndex = Random.Range(0, NUM_IDLE_ANIMATIONS);
         rickAC.SetInteger("IdleIndex", idleIndex);
@@ -63,7 +59,6 @@ public class RickAnim : MonoBehaviour
 
     IEnumerator RandomIdleIndex() 
     {
-        Debug.Log("Start waiting");
         yield return new WaitForSeconds(WAIT_IDLE_TIME);
         int idleIndex = Random.Range(0, NUM_IDLE_ANIMATIONS);
         rickAC.SetInteger(idleIndexHash, idleIndex);

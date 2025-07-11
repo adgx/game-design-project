@@ -12,7 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99514756e321d41bda00e2ed01584df6, type: 3}
   m_Name: CanteenRoomData
   m_EditorClassIdentifier: 
-  roomPrefab: {fileID: 8883446361754839683, guid: 25df3705f5420424e899abb1f59b2583, type: 3}
+  roomPrefab:
+  - {fileID: 8883446361754839683, guid: 25df3705f5420424e899abb1f59b2583, type: 3}
+  - {fileID: 8883446361754839683, guid: 44c5db0bda2ed419785f96c0165a269d, type: 3}
+  - {fileID: 8883446361754839683, guid: 253b1fd474fa44470a5a81fd7c9adb47, type: 3}
   roomName: Canteen
-  roomSpawnBudget: 2
+  roomSpawnBudget: 6
+  roomSpawnBudgetLoop1: 3
+  healthVendingMachineSpawnChance: 1
+  spawnHealthVendingMachine: 0
+  powerUpVendingMachineSpawnChance: 1
+  spawnPowerUpVendingMachine: 0
+  upgradeTerminalSpawnChance: 1
+  spawnUpgradeTerminal: 0
+  paperSpawnChance: 1
+  spawnPaper: 0
   roomType: 3

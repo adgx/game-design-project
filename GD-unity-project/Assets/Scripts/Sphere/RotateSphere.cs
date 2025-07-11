@@ -5,7 +5,10 @@ using ORF;
 
 public class RotateSphere : MonoBehaviour
 {
+    public static RotateSphere Instance { get; private set; }
+    
     [SerializeField] private GameObject player;
+    public float DistanceFromPlayer = 0.6f;
     [SerializeField] private float rotationSpeed = 100f;
     [SerializeField] private float transitionSpeed = 10f;
     
@@ -23,8 +26,21 @@ public class RotateSphere : MonoBehaviour
 
     private new Animation animation;
 
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
+    
     void Start() {
-        transform.localPosition = player.transform.forward * 0.7f;
+        transform.localPosition = player.transform.forward * DistanceFromPlayer;
     }
 
     // This function positions the Sphere in the specified position around the Player, moving it with the specified animation
@@ -38,8 +54,8 @@ public class RotateSphere : MonoBehaviour
     void Update()
     {
         // Needed to avoid the sphere deforming when player collides with enemies
-        if (transform.rotation[0] != 0 || transform.rotation[2] != 0) {
-            transform.rotation = new Quaternion(0, transform.rotation[1], 0, transform.rotation[3]);
+        if (transform.rotation.eulerAngles[0] != -90 || transform.rotation.eulerAngles[2] != 0) {
+            transform.rotation = Quaternion.Euler(-90, transform.rotation.eulerAngles[1], 0);
         }
         
         if(isRotating) {

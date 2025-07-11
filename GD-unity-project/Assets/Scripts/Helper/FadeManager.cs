@@ -8,9 +8,7 @@ namespace Helper {
 		public static FadeManager Instance;
 
 		[SerializeField] private CanvasGroup fadeCanvasGroup;
-		[SerializeField] private float fadeDuration = 0.5f;
-
-		private Player player;
+		[SerializeField] private float fadeDuration = 1f;
 
 		private void Awake() {
 			if(Instance == null)
@@ -20,8 +18,6 @@ namespace Helper {
 
 			transform.SetParent(null); // Detach from "Managers" to avoid warnings
 			DontDestroyOnLoad(gameObject);
-
-			player = GameObject.FindWithTag("Player").GetComponent<Player>();
 		}
 
 		public void FadeOutIn(Action onFadeMidpoint) {
@@ -29,16 +25,13 @@ namespace Helper {
 		}
 
 		private IEnumerator FadeOutInRoutine(Action onFadeMidpoint) {
-			player.FreezeMovement(true);
-
 			yield return StartCoroutine(FadeTo(1));
 
 			onFadeMidpoint?.Invoke();
 
 			yield return new WaitForEndOfFrame();
-			yield return new WaitForSeconds(0.5f);
+			yield return new WaitForSeconds(fadeDuration);
 
-			player.FreezeMovement(false);
 			yield return StartCoroutine(FadeTo(0));
 		}
 

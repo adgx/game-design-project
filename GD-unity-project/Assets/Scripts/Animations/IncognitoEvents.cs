@@ -9,235 +9,183 @@ namespace Animations
         // Audio management
         private EventInstance incognitoFootsteps;
         private EventInstance incognitoIdle;
+        
+        private Incognito incognito;
+        private IncognitoAnimation incognitoAnim;
 
-        private bool isRunning = false; // TODO: to be removed once we have Incognito's FSM
-        private bool isIdle = false; // TODO: to be removed once we have Incognito's FSM
-
-        public void Idle()
+        private void Start()
         {
-            Debug.Log("Idle");
-
-            // Audio management
-            ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
-            isIdle = true; // TODO: to be removed once we have Incognito's FSM
+            incognitoAnim = incognito.anim;
         }
 
-        public void Run()
+        private void Awake()
         {
-            Debug.Log("Run");
+            incognito = GetComponent<Incognito>();
 
             // Audio management
-            ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
-            isRunning = true; // TODO: to be removed once we have Incognito's FSM
+            incognitoFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.IncognitoFootsteps);
+            incognitoFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            incognitoIdle = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.IncognitoIdle);
+            incognitoIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
         }
-
+        
+        private void FixedUpdate()
+        {
+            // Audio management: update Incognito's position as he's a sound source
+            incognitoFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            incognitoIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+        }
+        
+        private void OnDestroy()
+        {
+            // Stop events immediately to prevent the sound from continuing after destruction
+            // and releases the resources used by the instances
+            if (GamePlayAudioManager.instance != null)
+            {
+                GamePlayAudioManager.instance.ReleaseInstance(incognitoFootsteps);
+                GamePlayAudioManager.instance.ReleaseInstance(incognitoIdle);
+            }
+        }
+        
+        // This function is called when Incognito should emit its spit
+        public void Spitting()
+        {
+            incognito.EmitSpit();
+        }
+        
         public void ShortDistanceSpit()
         {
-            Debug.Log("ShortDistanceSpit");
-
             // Audio management
-            ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoDistanceAttack1, transform.position);
+        }
+        
+        public void EndShortSpit()
+        {
+            incognitoAnim.EndShortSpit = true;
         }
 
         public void LongDistanceSpitLoad()
         {
-            Debug.Log("LongDistanceSpitLoad");
-
             // Audio management
-            ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoDistanceAttack2Load, transform.position);
         }
-        
+
         public void LongDistanceSpitShoot()
         {
-            Debug.Log("LongDistanceSpitShoot");
-
             // Audio management
-            ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoDistanceAttack2Spit, transform.position);
+        }
+        
+        public void EndLongSpit()
+        {
+            incognitoAnim.EndShortSpit = true;
         }
         
         public void FallScream()
         {
-            Debug.Log("FallScream");
-        
             // Audio management
-            ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoHitFallScream, transform.position);
         }
-        
+
         public void FallFootstep1()
         {
-            Debug.Log("FallFootstep1");
-        
             // Audio management
-            ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoHitFallFootstep1, transform.position);
         }
-        
+
         public void FallFootstep2()
         {
-            Debug.Log("FallFootstep2");
-        
             // Audio management
-            ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoHitFallFootstep2, transform.position);
         }
-        
+
         public void FallThud()
         {
-            Debug.Log("FallThud");
-        
             // Audio management
-            ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoHitFallThud, transform.position);
         }
-    
+
         public void StandUpFootstep1()
         {
-            Debug.Log("StandUpFootstep1");
-        
             // Audio management;
-            ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoStandUpFootstep1, transform.position);
         }
-    
+
         public void StandUpFootstep2()
         {
-            Debug.Log("StandUpFootstep2");
-        
             // Audio management;
-            ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoStandUpFootstep2, transform.position);
         }
 
         public void ReactLargeFromRight()
         {
-            Debug.Log("ReactLargeFromRight");
-
             // Audio management
-            ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoHitFromLeftOrRight, transform.position);
         }
 
         public void ReactLargeFromLeft()
         {
-            Debug.Log("ReactLargeFromLeft");
-
             // Audio management
-            ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoHitFromLeftOrRight, transform.position);
         }
 
         public void ReactLargeGut()
         {
-            Debug.Log("ReactLargeFromFront");
-
             // Audio management
-            ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoHitFromFront2, transform.position);
         }
 
         public void ReactLargeFromFront()
         {
-            Debug.Log("ReactLargeFromBack");
-
             // Audio management
-            ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoHitFromFront1, transform.position);
         }
 
         public void DeathGrunt()
         {
-            Debug.Log("DeathGrunt");
-
             // Audio management
-            ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoDieGrunt, transform.position);
         }
 
         public void DeathThud1()
         {
-            Debug.Log("DeathThud1");
-
             // Audio management
-            ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoDieThud1, transform.position);
         }
 
         public void DeathThud2()
         {
-            Debug.Log("DeathThud2");
-
             // Audio management
-            ResetAudioState(); // TODO: to be removed once we have Incognito's FSM
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoDieThud2, transform.position);
         }
 
+        public void DeathIncognito()
+        {
+            incognito.DestroyEnemy();
+        }
+        
         // Audio management
-        private void Start()
+        public void StartRunningSound()
         {
-            incognitoFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.IncognitoFootsteps);
-            incognitoFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-
-            incognitoIdle = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.IncognitoIdle);
-            incognitoIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            incognitoFootsteps.start();
         }
-
-        // FixedUpdate is called once per frame
-        void FixedUpdate()
+        
+        // Audio management
+        public void StopRunningSound()
         {
-            // Audio management
-            UpdateSound();
+            incognitoFootsteps.stop(STOP_MODE.ALLOWFADEOUT);
         }
-
-        private void UpdateSound()
+        
+        // Audio management
+        public void StartIdleSound()
         {
-            incognitoFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-            incognitoIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-
-            // Start footsteps event if incognito is moving
-            if (isRunning) // TODO: check Incognito's state (something like <<IncognitoState != Run>>)
-            {
-                // Get the playback state for the footsteps event
-                PLAYBACK_STATE footstepsPlaybackState;
-                incognitoFootsteps.getPlaybackState(out footstepsPlaybackState);
-                if (footstepsPlaybackState.Equals(PLAYBACK_STATE.STOPPED))
-                {
-                    incognitoFootsteps.start();
-                }
-            }
-            // Otherwise, stop the footsteps event
-            else
-            {
-                incognitoFootsteps.stop(STOP_MODE.ALLOWFADEOUT);
-            }
-
-            // Start idle event if incognito is using the idle animation
-            if (isIdle) // TODO: check Incognito's state (something like <<IncognitoState != Idle>>)
-            {
-                // Get the playback state for the idle event
-                PLAYBACK_STATE idlePlaybackState;
-                incognitoIdle.getPlaybackState(out idlePlaybackState);
-                if (idlePlaybackState.Equals(PLAYBACK_STATE.STOPPED))
-                {
-                    incognitoIdle.start();
-                }
-            }
-            // Otherwise, stop the idle event
-            else
-            {
-                incognitoIdle.stop(STOP_MODE.ALLOWFADEOUT);
-            }
-
+            incognitoIdle.start();
         }
-
-        // TODO: to be removed once we have Incognito's FSM
-        private void ResetAudioState()
+        
+        // Audio management
+        public void StopIdleSound()
         {
-            isRunning = false;
-            isIdle = false;
+            incognitoIdle.stop(STOP_MODE.ALLOWFADEOUT);
         }
     }
 }

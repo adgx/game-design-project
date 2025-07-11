@@ -12,7 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99514756e321d41bda00e2ed01584df6, type: 3}
   m_Name: CorridorRoomData
   m_EditorClassIdentifier: 
-  roomPrefab: {fileID: 4323597427231605597, guid: 4099f7cfac81645b2aefc1fc331b6c5d, type: 3}
+  roomPrefab:
+  - {fileID: 4323597427231605597, guid: 4099f7cfac81645b2aefc1fc331b6c5d, type: 3}
+  - {fileID: 4323597427231605597, guid: d0d422c1df8a34f0898c87557ae0c689, type: 3}
+  - {fileID: 4323597427231605597, guid: e21a2a815ee35475e9e924b494786af1, type: 3}
   roomName: Corridor
-  roomSpawnBudget: 3
+  roomSpawnBudget: 6
+  roomSpawnBudgetLoop1: 4
+  healthVendingMachineSpawnChance: 1
+  spawnHealthVendingMachine: 0
+  powerUpVendingMachineSpawnChance: 1
+  spawnPowerUpVendingMachine: 0
+  upgradeTerminalSpawnChance: 1
+  spawnUpgradeTerminal: 0
+  paperSpawnChance: 1
+  spawnPaper: 0
   roomType: 5

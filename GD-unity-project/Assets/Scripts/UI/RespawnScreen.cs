@@ -14,8 +14,8 @@ public class RespawnScreen : MonoBehaviour
 	[SerializeField] private GameObject deathMessageContainer;
 	[SerializeField] private GameObject confirmMenu;
 
-	[SerializeField] private TextMeshProUGUI title;
-	[SerializeField] private TextMeshProUGUI subtitle;
+	[SerializeField] private GameObject GameEndMessageContainer;
+	[SerializeField] private GameObject DiedMessageContainer;
 
 	[SerializeField] private GameObject firstSelected;
 	[SerializeField] private GameObject noButton;
@@ -27,13 +27,15 @@ public class RespawnScreen : MonoBehaviour
 		EventSystem.current.SetSelectedGameObject(firstSelected);
 
 		if(GameStatus.gameEnded) {
-			title.text = "Thanks for playing!";
-			subtitle.text = "This demo ends here. If you want, you can play again";
+			GameEndMessageContainer.SetActive(true);
+			DiedMessageContainer.SetActive(false);
 		}
 		else {
-			title.text = "You died!";
-			subtitle.text = "";
+			GameEndMessageContainer.SetActive(false);
+			DiedMessageContainer.SetActive(true);
 		}
+
+		Cursor.lockState = CursorLockMode.None;
 	}
 
 	void Update() {
@@ -67,6 +69,8 @@ public class RespawnScreen : MonoBehaviour
 
 		// Activate the scene
 		asyncLoad.allowSceneActivation = true;
+
+		Cursor.lockState = CursorLockMode.Locked;
 	}
 
 	void BackToPause() {
@@ -81,6 +85,9 @@ public class RespawnScreen : MonoBehaviour
 		fadeOut = true;
 		changeScene = true;
 		GameStatus.gameEnded = false;
+		
+		// Ambient light management
+		AmbientLightManager.ResetLightSequence();
 	}
 
 	public void QuitGameClicked() {
@@ -90,7 +97,7 @@ public class RespawnScreen : MonoBehaviour
 	}
 
 	public void YesClicked() {
-		// TODO: to be implemented
+		Application.Quit();
 	}
 
 	public void NoClicked() {

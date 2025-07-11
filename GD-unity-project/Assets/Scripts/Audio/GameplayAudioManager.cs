@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using Audio;
 using UnityEngine;
@@ -43,11 +42,7 @@ public class GamePlayAudioManager : MonoBehaviour
         musicBus = RuntimeManager.GetBus("bus:/Music");
         ambienceBus = RuntimeManager.GetBus("bus:/Ambience");
         sfxBus = RuntimeManager.GetBus("bus:/SFX");
-    }
-    
-    private void Start()
-    {
-        InitializeMusic(FMODEvents.Instance.GameplayMusic);
+        InitializeMusic(FMODEvents.Instance.GameplayMusic); 
     }
     
     private void Update()
@@ -60,13 +55,24 @@ public class GamePlayAudioManager : MonoBehaviour
     
     private void InitializeMusic(EventReference musicEventReference)
     {
+        if (musicEventInstance.isValid())
+        {
+            return;
+        }
         musicEventInstance = CreateInstance(musicEventReference);
         musicEventInstance.start();
     }
-    
-    public void SetMusicLoopIteration(MusicLoopIteration iteration)
+
+    public void SetMusicLoopIteration()
     {
-        musicEventInstance.setParameterByName("loopIteration", (float) iteration);
+        if (musicEventInstance.isValid())
+        {
+            musicEventInstance.setParameterByName("loopIteration", (float)GameStatus.loopIteration);
+        }
+        else
+        {
+            Debug.LogWarning("SetMusicLoopIteration called, but music instance is not valid yet.");
+        }
     }
     
     public void PlayOneShot(EventReference sound, Vector3 worldPos)
@@ -116,12 +122,27 @@ public class GamePlayAudioManager : MonoBehaviour
         // Stop all of the event emitters, because if we don't they may hang around in other scenes
         foreach (StudioEventEmitter emitter in eventEmitters)
         {
-            emitter.Stop();
+            if(emitter.IsActive)
+                emitter.Stop();
         }
     }
 
     private void OnDestroy()
     {
         CleanUp();
+    }
+
+    // Allows any script to request the release of a specific auio instance
+    public void ReleaseInstance(EventInstance eventInstance)
+    {
+        if (eventInstance.isValid())
+        {
+            // Stop and release a given instance
+            eventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            eventInstance.release(); 
+            
+            // Remove it from the list so you don’t try to release it again in CleanUp()
+            eventInstances.Remove(eventInstance);
+        }
     }
 }

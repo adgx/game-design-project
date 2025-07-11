@@ -12,16 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d95f7173e1a6c4bdfa993e08bf4c6084, type: 3}
   m_Name: EnemyManyardData
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 859019898052101284, guid: 72113f51a60da47d9b85103533bac397, type: 3}
+  enemyPrefab: {fileID: 7403537042484224595, guid: 6bf5573084facef45b5cd5f0ffaa2f95, type: 3}
   enemyName: Capo
   spawnCost: 2
-  maxHealth: 100
-  baseMoveSpeed: 0
+  maxHealth: 120
+  maxHealthLoop1: 120
+  baseMoveSpeed: 5
+  angularSpeed: 200
+  distanceAttackDamage: 13
+  distanceAttackDamageLoop1: 13
+  closeAttackDamage: 13
+  closeAttackDamageLoop1: 13
+  difficultyMultiplier: 0.2
   walkPointRange: 10
-  timeBetweenAttacks: 2
+  timeBetweenAttacks: 3
   bulletPrefab: {fileID: 3780818778376199547, guid: e2193c01f07e84362a8e9f21a5774953, type: 3}
   sightRange: 12
   remoteAttackRange: 7
   closeAttackRange: 1
   bulletForce: 16
   bulletUpwardForce: 2
+  distanceAttackDamageMultiplier: 1
+  closeAttackDamageMultiplier: 1

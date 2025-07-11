@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2790420675413420707}
   - component: {fileID: 5156949295081283927}
+  - component: {fileID: 2131097317971317463}
   - component: {fileID: 3317605172333357637}
   m_Layer: 0
   m_Name: AudioManager
@@ -50,6 +51,18 @@ MonoBehaviour:
   musicVolume: 1
   ambienceVolume: 1
   SFXVolume: 1
+--- !u!114 &2131097317971317463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2734006157922122384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cfcd71bfb7371e45af1dfb0a6d67804, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3317605172333357637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,13 +121,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a172540b2659d6478bffcda3bd29118, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <PlayerCloseAttackLoad>k__BackingField:
+  <PlayerCloseAttackLoadWithPowerUp1>k__BackingField:
+    Guid:
+      Data1: -1346989557
+      Data2: 1107540091
+      Data3: -809879423
+      Data4: 1310332962
+    Path: event:/SFX/Player/Attack/Close/CloseLoadWithPowerUp1
+  <PlayerCloseAttackLoadWithPowerUp2>k__BackingField:
     Guid:
       Data1: -703277264
       Data2: 1223194215
       Data3: 1297837189
       Data4: -1550215625
-    Path: event:/SFX/Player/Attack/Close/CloseLoad
+    Path: event:/SFX/Player/Attack/Close/CloseLoadWithPowerUp2
   <PlayerCloseAttackShoot>k__BackingField:
     Guid:
       Data1: 217779173
@@ -122,13 +142,20 @@ MonoBehaviour:
       Data3: 1027034795
       Data4: 1380500985
     Path: event:/SFX/Player/Attack/Close/CloseShoot
-  <PlayerDistanceAttackLoad>k__BackingField:
+  <PlayerDistanceAttackLoadWithPowerUp1>k__BackingField:
+    Guid:
+      Data1: -1958469322
+      Data2: 1233643908
+      Data3: 168623008
+      Data4: -1280426753
+    Path: event:/SFX/Player/Attack/Distance/DistanceLoadWithPowerUp1
+  <PlayerDistanceAttackLoadWithPowerUp2>k__BackingField:
     Guid:
       Data1: -1504091649
       Data2: 1341889062
       Data3: -1489269578
       Data4: 2056284491
-    Path: event:/SFX/Player/Attack/Distance/DistanceLoad
+    Path: event:/SFX/Player/Attack/Distance/DistanceLoadWithPowerUp2
   <PlayerDistanceAttackShoot>k__BackingField:
     Guid:
       Data1: 1745601595
@@ -157,13 +184,41 @@ MonoBehaviour:
       Data3: -1050364744
       Data4: -834285941
     Path: event:/SFX/Player/Defense/ShieldHit
-  <PlayerDie>k__BackingField:
+  <PlayerDieBackwardGrunt>k__BackingField:
     Guid:
       Data1: 196964975
       Data2: 1311451549
       Data3: 993772194
       Data4: -661125539
-    Path: event:/SFX/Player/Die/Die
+    Path: event:/SFX/Player/Die/Backward/1_Grunt
+  <PlayerDieBackwardThud>k__BackingField:
+    Guid:
+      Data1: -2759566
+      Data2: 1305583980
+      Data3: 1128245693
+      Data4: 965838199
+    Path: event:/SFX/Player/Die/Backward/2_Thud
+  <PlayerDieForwardGrunt>k__BackingField:
+    Guid:
+      Data1: -1681735762
+      Data2: 1300559804
+      Data3: -130297726
+      Data4: 562605602
+    Path: event:/SFX/Player/Die/Forward/1_Grunt
+  <PlayerDieForwardThud1>k__BackingField:
+    Guid:
+      Data1: 637397891
+      Data2: 1339006424
+      Data3: -577572676
+      Data4: 1591395041
+    Path: event:/SFX/Player/Die/Forward/2_Thud1
+  <PlayerDieForwardThud2>k__BackingField:
+    Guid:
+      Data1: -1822381764
+      Data2: 1150656886
+      Data3: 765770368
+      Data4: -1487992515
+    Path: event:/SFX/Player/Die/Forward/3_Thud2
   <PlayerDoorOpen>k__BackingField:
     Guid:
       Data1: -305465452
@@ -206,6 +261,27 @@ MonoBehaviour:
       Data3: 624404368
       Data4: 1545182479
     Path: event:/SFX/Player/Hit/Hit
+  <PlayerHitBySpit>k__BackingField:
+    Guid:
+      Data1: 1025152362
+      Data2: 1323253786
+      Data3: 958918805
+      Data4: -1893402642
+    Path: event:/SFX/Player/Hit/HitBySpit
+  <PlayerHitByBite>k__BackingField:
+    Guid:
+      Data1: -1093092179
+      Data2: 1136320978
+      Data3: -2033345370
+      Data4: 1729545409
+    Path: event:/SFX/Player/Hit/HitByBite
+  <PlayerIdle>k__BackingField:
+    Guid:
+      Data1: -351354358
+      Data2: 1094868867
+      Data3: 1070708646
+      Data4: -391724231
+    Path: event:/SFX/Player/Idle/Idle
   <PlayerPaperInteraction>k__BackingField:
     Guid:
       Data1: 1770494798
@@ -213,7 +289,14 @@ MonoBehaviour:
       Data3: -90282078
       Data4: 1208520339
     Path: event:/SFX/Player/Paper/PaperInteraction
-  <PlayerFootsteps>k__BackingField:
+  <PlayerWalkFootsteps>k__BackingField:
+    Guid:
+      Data1: 1665913983
+      Data2: 1118245076
+      Data3: 11430334
+      Data4: -1716941681
+    Path: event:/SFX/Player/Walk/Footsteps
+  <PlayerRunFootsteps>k__BackingField:
     Guid:
       Data1: 1166419053
       Data2: 1320623170
@@ -640,13 +723,6 @@ MonoBehaviour:
       Data3: 987327118
       Data4: -2100846542
     Path: event:/Ambience/Bathroom/FlushingWater
-  <GameplayMusic>k__BackingField:
-    Guid:
-      Data1: -2119342206
-      Data2: 1082500063
-      Data3: 1155554688
-      Data4: -1221304368
-    Path: event:/Music/GameplaySoundtrack
   <MainMenuMusic>k__BackingField:
     Guid:
       Data1: 1420891451
@@ -654,3 +730,17 @@ MonoBehaviour:
       Data3: -1673499477
       Data4: -370306340
     Path: event:/Music/MainMenuSoundtrack
+  <GameplayMusic>k__BackingField:
+    Guid:
+      Data1: -2119342206
+      Data2: 1082500063
+      Data3: 1155554688
+      Data4: -1221304368
+    Path: event:/Music/GameplaySoundtrack
+  <DeathMenuMusic>k__BackingField:
+    Guid:
+      Data1: 362884850
+      Data2: 1319001730
+      Data3: -550303570
+      Data4: -105174518
+    Path: event:/Music/DeathMenuSoundtrack

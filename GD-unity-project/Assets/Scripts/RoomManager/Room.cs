@@ -52,7 +52,7 @@ namespace RoomManager
         /// <summary>
         /// Gets or sets the spawn point linked to this connector.
         /// </summary>
-        public Transform SpawnPoint { get; set; }
+        public Transform SpawnPoint => _spawnPoint;
 
         /// <summary>
         /// Indicates whether this connector has been linked to another room.
@@ -76,32 +76,29 @@ namespace RoomManager
         [Tooltip("Points in the room where enemies can spawn.")] [SerializeField]
         private List<Transform> _enemySpawnPoints;
 
-        [Tooltip("Prefab for a vending machine that may spawn in the room.")] [SerializeField]
-        private GameObject _vendingMachinePrefab;
+		[Tooltip("Prefab for a health vending machine that may spawn in the room.")] [SerializeField]
+		private GameObject _healthVendingMachinePrefab;
 
-        [Tooltip("Chance (0–1) for a vending machine to spawn.")] [Range(0f, 1f)] [SerializeField]
-        private float _vendingMachineSpawnChance = 0.5f;
+		private float _healthVendingMachineSpawnChance;
+		private bool _spawnHealthVendingMachine;
 
-        [Tooltip("Whether a vending machine is allowed to spawn in this room.")] [SerializeField]
-        private bool _canVendingMachineSpawn;
+		[Tooltip("Prefab for a power up vending machine that may spawn in the room.")] [SerializeField]
+        private GameObject _powerUpVendingMachinePrefab;
+        
+        private float _powerUpVendingMachineSpawnChance;
+        private bool _spawnPowerUpVendingMachine;
 
         [Tooltip("Prefab for an upgrade terminal that may spawn in the room.")] [SerializeField]
         private GameObject _upgradeTerminalPrefab;
-
-        [Tooltip("Chance (0–1) for an upgrade terminal to spawn.")] [Range(0f, 1f)] [SerializeField]
-        private float _upgradeTerminalSpawnChance = 0.5f;
-
-        [Tooltip("Whether an upgrade terminal is allowed to spawn in this room.")] [SerializeField]
-        private bool _canUpgradeTerminalSpawn;
+        
+        private float _upgradeTerminalSpawnChance;
+        private bool _spawnUpgradeTerminal;
 
         [Tooltip("Prefab for a collectible paper item that may appear in the room.")] [SerializeField]
         private GameObject _paperPrefab;
-
-        [Tooltip("Chance (0–1) for the paper to spawn.")] [Range(0f, 1f)] [SerializeField]
-        private float _paperSpawnChance = 0.1f;
-
-        [Tooltip("Whether the paper is allowed to spawn in this room.")] [SerializeField]
-        private bool _canPaperSpawn;
+        
+        private float _paperSpawnChance;
+        private bool _spawnPaper;
 
         private RoomManager _roomManager;
 
@@ -113,7 +110,7 @@ namespace RoomManager
         /// <summary>
         /// Gets the maximum allowed cost for enemy spawning in this room.
         /// </summary>
-        public int MaxSpawnCost { get; private set; } = 10;
+        public int MaxSpawnCost { get; set; } = 10;
 
         /// <summary>
         /// Gets or sets the room’s position within the dungeon grid.
@@ -142,12 +139,24 @@ namespace RoomManager
         /// <param name="roomManager">Reference to the room manager.</param>
         public void Initialize(RoomData.RoomData roomData, RoomManager roomManager)
         {
-            this._roomManager = roomManager;
+            _roomManager = roomManager;
 
             if (roomData == null) return;
 
             MaxSpawnCost = roomData.roomSpawnBudget;
             RoomType = roomData.roomType;
+
+			_healthVendingMachineSpawnChance = roomData.healthVendingMachineSpawnChance;
+			_spawnHealthVendingMachine = roomData.spawnHealthVendingMachine;
+
+			_powerUpVendingMachineSpawnChance = roomData.powerUpVendingMachineSpawnChance;
+            _spawnPowerUpVendingMachine = roomData.spawnPowerUpVendingMachine;
+            
+            _upgradeTerminalSpawnChance = roomData.upgradeTerminalSpawnChance;
+            _spawnUpgradeTerminal = roomData.spawnUpgradeTerminal;
+            
+            _paperSpawnChance = roomData.paperSpawnChance;
+            _spawnPaper = roomData.spawnPaper;
         }
 
         private void Awake()
@@ -168,48 +177,7 @@ namespace RoomManager
                 }
 
                 connector.IsConnected = false;
-                
-                if (connector.SpawnPoint == null)
-                {
-                    connector.SpawnPoint = CreateSpawnPointForConnector(connector);
-                }
             }
-        }
-
-        /// <summary>
-        /// Creates a spawn point for a connector if one doesn't exist.
-        /// </summary>
-        private Transform CreateSpawnPointForConnector(RoomConnector connector)
-        {
-            GameObject spawnPointGameObject = new GameObject($"{connector.Direction}SpawnPoint_Generated");
-            spawnPointGameObject.transform.SetParent(transform);
-
-            Vector3 spawnLocalPos;
-            const float offset = 1.5f;
-
-            if (connector.PassageVisual != null)
-            {
-                Vector3 inwardLocalDir = -RoomManager.GetWorldVectorFromLocalDirection(connector.Direction, transform)
-                    .normalized;
-                spawnLocalPos = connector.PassageVisual.transform.localPosition + (inwardLocalDir * offset);
-            }
-            else
-            {
-                float halfWidth = _roomManager != null ? RoomManager.GetCellWorldWidth() / 2f : 100f;
-                float halfDepth = _roomManager != null ? RoomManager.GetCellWorldDepth() / 2f : 100f;
-
-                spawnLocalPos = connector.Direction switch
-                {
-                    ConnectorDirection.North => new Vector3(0, 0, halfDepth - offset),
-                    ConnectorDirection.South => new Vector3(0, 0, -halfDepth + offset),
-                    ConnectorDirection.East => new Vector3(halfWidth - offset, 0, 0),
-                    ConnectorDirection.West => new Vector3(-halfWidth + offset, 0, 0),
-                    _ => Vector3.zero
-                };
-            }
-
-            spawnPointGameObject.transform.localPosition = spawnLocalPos;
-            return spawnPointGameObject.transform;
         }
 
         /// <summary>
@@ -270,16 +238,26 @@ namespace RoomManager
             }
         }
 
-        /// <summary>
-        /// Attempts to spawn the vending machine based on chance and eligibility.
-        /// </summary>
-        public bool PostInitializeVendingMachine()
-        {
-            if (!_canVendingMachineSpawn) return false;
+		/// <summary>
+		/// Attempts to spawn the health vending machine based on chance and eligibility.
+		/// </summary>
+		public bool PostInitializeHealthVendingMachine() {
+			if(_healthVendingMachineSpawnChance == 0)
+				return false;
 
-            bool spawned = Random.value < _vendingMachineSpawnChance;
-            _vendingMachinePrefab.SetActive(spawned);
-            return spawned;
+			_healthVendingMachinePrefab.SetActive(_spawnHealthVendingMachine);
+			return _spawnHealthVendingMachine;
+		}
+
+		/// <summary>
+		/// Attempts to spawn the power up vending machine based on chance and eligibility.
+		/// </summary>
+		public bool PostInitializePowerUpVendingMachine()
+        {
+            if (_powerUpVendingMachineSpawnChance == 0) return false;
+
+            _powerUpVendingMachinePrefab.SetActive(_spawnPowerUpVendingMachine);
+            return _spawnPowerUpVendingMachine;
         }
 
         /// <summary>
@@ -287,11 +265,10 @@ namespace RoomManager
         /// </summary>
         public bool PostInitializeUpgradeTerminal()
         {
-            if (!_canUpgradeTerminalSpawn) return false;
+            if (_upgradeTerminalSpawnChance == 0) return false;
 
-            bool spawned = Random.value < _upgradeTerminalSpawnChance;
-            _upgradeTerminalPrefab.SetActive(spawned);
-            return spawned;
+            _upgradeTerminalPrefab.SetActive(_spawnUpgradeTerminal);
+            return _spawnUpgradeTerminal;
         }
 
         /// <summary>
@@ -299,59 +276,10 @@ namespace RoomManager
         /// </summary>
         public bool PostInitializePaper()
         {
-            if (!_canPaperSpawn) return false;
+            if (_paperSpawnChance == 0) return false;
 
-            bool spawned = Random.value < _paperSpawnChance;
-            _paperPrefab.SetActive(spawned);
-
-            if (!spawned)
-            {
-                _paperSpawnChance *= 1.3f;
-            }
-            
-            return spawned;
-        }
-
-        private void OnDrawGizmosSelected()
-        {
-            float width = Application.isPlaying && RoomManager.Instance != null
-                ? RoomManager.GetCellWorldWidth()
-                : 200f;
-            float depth = Application.isPlaying && RoomManager.Instance != null
-                ? RoomManager.GetCellWorldDepth()
-                : 200f;
-
-            Gizmos.color = new Color(1f, 0.92f, 0.016f, 0.5f);
-            Gizmos.DrawWireCube(transform.position, new Vector3(width, 5f, depth));
-
-            if (_connectors == null) return;
-
-            foreach (var connector in _connectors)
-            {
-                Vector3 connectorPos = connector.PassageVisual != null
-                    ? connector.PassageVisual.transform.position
-                    : transform.position;
-
-                Gizmos.color = connector.IsConnected ? Color.cyan : Color.red;
-                Gizmos.DrawSphere(connectorPos, 1f);
-
-                Gizmos.color = Color.blue;
-                Vector3 direction = RoomManager.GetWorldVectorFromLocalDirection(connector.Direction, transform);
-                Gizmos.DrawRay(connectorPos, direction * 5f);
-
-                if (connector.SpawnPoint != null)
-                {
-                    Gizmos.color = Color.green;
-                    Gizmos.DrawSphere(connector.SpawnPoint.position, 0.8f);
-                    Gizmos.DrawLine(connectorPos, connector.SpawnPoint.position);
-                }
-            }
-
-            if (_centralSpawnPoint != null)
-            {
-                Gizmos.color = Color.magenta;
-                Gizmos.DrawSphere(_centralSpawnPoint.position, 1f);
-            }
+            _paperPrefab.SetActive(_spawnPaper);
+            return _spawnPaper;
         }
     }
 }

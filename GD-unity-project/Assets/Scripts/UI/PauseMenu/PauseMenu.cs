@@ -67,12 +67,14 @@ public class PauseMenu : MonoBehaviour
 		if(paused) {
 			// Setting timeScale to 0 pauses the game
 			Time.timeScale = 0f;
+			Cursor.lockState = CursorLockMode.None;
 		}
 		else {
 			// Resume the game
 			Time.timeScale = 1f;
 			await Task.Delay(100);
 			EventSystem.current.SetSelectedGameObject(null);
+			Cursor.lockState = CursorLockMode.Locked;
 		}
 
 		GameStatus.gamePaused = paused;
@@ -149,15 +151,17 @@ public class PauseMenu : MonoBehaviour
 		EventSystem.current.SetSelectedGameObject(noButton);
 	}
 
-	public void YesButtonClick(GameObject button) {
+	public async void YesButtonClick(GameObject button) {
 		buttonEffects.OnMouseExit(button);
 
 		if(actionToConfirm == ActionToConfirm.StartNewGame) {
+			print("Ciao");
 			Destroy(GameObject.Find("RoomManager"));
 			StartCoroutine(LoadGameplaySceneAsync());
 		}
 		else {
-			// TODO: to be implemented
+			// This only works with the compiled game (.exe)
+			Application.Quit();
 		}
 	}
 

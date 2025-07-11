@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Animations;
 using Audio;
 using TMPro;
 using UnityEngine;
@@ -28,7 +29,10 @@ namespace CollectablePapers
         private HashSet<int> _collectedPapers = new();
         private bool _isPaperUiOpen = false;
 
-        private PlayerInput playerInput;
+        [SerializeField] private PlayerInput playerInput;
+		[SerializeField] private RickEvents _rickEvents;
+
+		[SerializeField] StartTutorial _startTutorial;
 
         private void Awake()
         {
@@ -43,15 +47,15 @@ namespace CollectablePapers
             }
 
             LoadPaperData();
-		}
+        }
 
         private void Start()
         {
             if (_paperTextContainer != null)
                 _paperTextContainer.SetActive(false);
 
-			playerInput = Player.Instance.GetComponent<PlayerInput>();
-		}
+            playerInput = Player.Instance.GetComponent<PlayerInput>();
+        }
 
         /// <summary>
         /// Loads paper message data from a JSON file in the Resources folder.
@@ -81,26 +85,28 @@ namespace CollectablePapers
         /// <summary>
         /// Displays a paper's content on screen and freezes the player.
         /// </summary>
-        /// <param name="paperID">ID of the paper to display.</param>
         /// <param name="paperPosition">World position of the paper (used for sound).</param>
-        public void ShowPaper(int paperID, Vector3 paperPosition)
+        public void ShowPaper(Vector3 paperPosition)
         {
             if (_isPaperUiOpen) return;
 
-            if (_paperMessages.TryGetValue(paperID, out string messageContent))
+            if (_paperMessages.TryGetValue(_collectedPapers.Count, out string messageContent))
             {
                 _isPaperUiOpen = true;
-                _collectedPapers.Add(paperID);
+                _collectedPapers.Add(_collectedPapers.Count);
 
-                _player.isFrozen = true;
-                _paperText.SetText(messageContent + "\n\n<color=yellow>[Press E to Close]</color>");
+                AnimationManager.Instance.Idle();
+                _rickEvents.SetIdleState();
+				_player.isFrozen = true;
+
+				_paperText.SetText(messageContent + "\n\n<color=yellow>[Press E to Close]</color>");
                 _paperTextContainer.SetActive(true);
 
-                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerPaperInteraction, paperPosition);
+				GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerPaperInteraction, paperPosition);
             }
             else
             {
-                Debug.LogWarning($"PaperManager: Tried to show paper with invalid ID: {paperID}");
+                Debug.LogWarning($"PaperManager: Tried to show paper with invalid ID: {_collectedPapers.Count}");
             }
         }
 
@@ -109,6 +115,9 @@ namespace CollectablePapers
         /// </summary>
         private void ClosePaperUI()
         {
+            if(_collectedPapers.Count <= 4) {
+                StartCoroutine(_startTutorial.ShowTip(_collectedPapers.Count - 1));
+            }
             _isPaperUiOpen = false;
             _paperTextContainer.SetActive(false);
             _player.isFrozen = false;

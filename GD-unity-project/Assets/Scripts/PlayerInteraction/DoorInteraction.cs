@@ -4,6 +4,7 @@ using Helper;
 using RoomManager;
 using TMPro;
 using UnityEngine;
+using Utils;
 
 namespace PlayerInteraction
 {
@@ -17,9 +18,12 @@ namespace PlayerInteraction
         /// </summary>
         public string InteractionPrompt => $"Press E to use door";
 
+        public Collider InteractionZone => null;
+
         public bool IsInteractable => !_isTraversing;
 
         private GameObject player;
+        private Player playerScript;
 
         [Header("Door Configuration")]
         [Tooltip(
@@ -34,13 +38,18 @@ namespace PlayerInteraction
         private GameObject helpTextContainer;
         private TextMeshProUGUI helpText;
 
+        private GameTimer _gameTimer;
+
         /// <summary>
         /// Initializes door references and optionally infers direction from the GameObject's name.
         /// </summary>
         private void Start()
         {
             _roomManager = RoomManager.RoomManager.Instance;
+            _gameTimer = _roomManager.GetComponent<GameTimer>();
             _parentRoom = GetComponentInParent<Room>();
+            player = GameObject.Find("Player");
+            playerScript = player.GetComponent<Player>();
 
             if (_roomManager == null)
                 Debug.LogError("DoorInteraction: RoomManager.Instance not found!", this);
@@ -62,7 +71,7 @@ namespace PlayerInteraction
         /// <returns>True if interaction was successful.</returns>
         public bool Interact(GameObject interactor)
         {
-            if (_isTraversing) return false;
+            if (_isTraversing || _gameTimer.currentTime <= 5f) return false;
 
             ConnectorDirection thisDoorsLocalConnectorDirection =
                 RoomManager.RoomManager.GetOppositeLocalDirection(_leadsToWorldDirection * -1);
@@ -94,9 +103,11 @@ namespace PlayerInteraction
 
                 FadeManager.Instance.FadeOutIn(() =>
                 {
+                    playerScript.FreezeMovement(true);
                     _roomManager.TraverseRoom(nextRoomGridIndex, _leadsToWorldDirection);
                     GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDoorClose,
                         interactor.transform.position);
+                    playerScript.FreezeMovement(false);
                 });
             }
             else

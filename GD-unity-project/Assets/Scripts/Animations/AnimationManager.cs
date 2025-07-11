@@ -6,8 +6,23 @@ public enum RickStates
 {
     None,
     Idle,
-    Run, 
-    DefenseStart
+    Walk,
+    Run,
+    LoadingCloseAttack,
+    LoadingDistanceAttack,
+    Attack,
+    EndAttack,
+    AreaAttack,
+    EndAreaAttack,
+    DefenseStart,
+    Hit,
+    HitSpit,
+    Bite,
+    EatSnack,
+    Drink,
+    EatChips,
+    Death,
+    StandUp
 }
 
 //used to handle the character animations across of the scripts 
@@ -20,14 +35,28 @@ public class AnimationManager : MonoBehaviour
     private int runTriggerHash;
     private int idleIndexHash;
     private int velocityHash;
+    private int attackHash;
+    private int endAttackHash;
+    private int areaAttackHash;
+    private int endAreaAttackHash;
     private int defenseHash;
+    private int hitHash;
+    private int hitSpitHash;
+    private int biteHash;
+    private int eatSnackHash;
+    private int eatChipsHash;
+    private int drinkHash;
+    private int deathHash;
+    private int standUpHash;
     //rick current state
     public RickStates rickState;
     //for switch from animation to another for the idle
     private bool randomIdleIsDone = true;
     private bool activeRandomIdle = true;
+    private bool justIdle = true;
     //sheildVFX  gameObj
     [SerializeField] GameObject prefabSheildVFX;
+    private GameObject shield;
     private static AnimationManager instance;
 
     public static AnimationManager Instance { get { return instance; } }
@@ -38,7 +67,8 @@ public class AnimationManager : MonoBehaviour
         {
             Destroy(instance);
         }
-        else {
+        else
+        {
             instance = this;
         }
     }
@@ -55,7 +85,19 @@ public class AnimationManager : MonoBehaviour
         runTriggerHash = Animator.StringToHash("Run");
         velocityHash = Animator.StringToHash("Velocity");
         idleIndexHash = Animator.StringToHash("IdleIndex");
+        attackHash = Animator.StringToHash("Attack");
+        endAttackHash = Animator.StringToHash("EndAttack");
+        areaAttackHash = Animator.StringToHash("AreaAttack");
+        endAreaAttackHash = Animator.StringToHash("EndAreaAttack");
         defenseHash = Animator.StringToHash("Defense");
+        hitHash = Animator.StringToHash("Hit");
+        hitSpitHash = Animator.StringToHash("HitSpit");
+        biteHash = Animator.StringToHash("Bite");
+        eatSnackHash = Animator.StringToHash("EatSnack");
+        drinkHash = Animator.StringToHash("Drink");
+        eatChipsHash = Animator.StringToHash("EatChips");
+        deathHash = Animator.StringToHash("Death");
+        standUpHash = Animator.StringToHash("StandUp");
         //set the initial state for the rick character
         rickState = RickStates.Idle;
 
@@ -66,7 +108,7 @@ public class AnimationManager : MonoBehaviour
 
     private void Update()
     {
-        if (randomIdleIsDone && activeRandomIdle)
+        if (randomIdleIsDone && rickState == RickStates.Idle)
         {
             randomIdleIsDone = false;
             RandomizeIdleAsync(WAIT_IDLE_TIME);
@@ -75,11 +117,11 @@ public class AnimationManager : MonoBehaviour
 
     async void RandomizeIdleAsync(int sec)
     {
-        await Task.Delay(sec*1000);
+        await Task.Delay(sec * 1000);
         int idleIndex = Random.Range(0, NUM_IDLE_ANIMATIONS);
         if (this != null && rickAC != null && rickAC.gameObject != null && rickAC.isActiveAndEnabled)
         {
-            rickAC.SetInteger("IdleIndex", idleIndex);   
+            rickAC.SetInteger("IdleIndex", idleIndex);
         }
         randomIdleIsDone = true;
     }
@@ -91,7 +133,7 @@ public class AnimationManager : MonoBehaviour
         rickState = RickStates.Run;
 
     }
-    public void Defense() 
+    public void Defense()
     {
         rickAC.SetTrigger(defenseHash);
         rickState = RickStates.DefenseStart;
@@ -109,8 +151,95 @@ public class AnimationManager : MonoBehaviour
         rickState = RickStates.Idle;
     }
 
+    public void Attack()
+    {
+        rickAC.SetTrigger(attackHash);
+        rickState = RickStates.Attack;
+    }
+
+    public void EndAttack()
+    {
+        rickAC.SetTrigger(endAttackHash);
+        rickState = RickStates.EndAttack;
+    }
+
+    public void AreaAttack()
+    {
+        rickAC.SetTrigger(areaAttackHash);
+        rickState = RickStates.AreaAttack;
+    }
+
+    public void EndAreaAttack()
+    {
+        rickAC.SetTrigger(endAreaAttackHash);
+        rickState = RickStates.EndAreaAttack;
+    }
+
     public void DefenseVFX(Vector3 pos)
     {
-        Instantiate(prefabSheildVFX, pos, Quaternion.identity); 
+        shield = Instantiate(prefabSheildVFX, pos, Quaternion.identity);
     }
+
+    public void RemoveDefenseVfx() {
+        Destroy(shield);
+    }
+    
+    public void Hit(int x, int z)
+    {
+        rickAC.SetInteger("DirHitX", x);
+		rickAC.SetInteger("DirHitZ", z);
+
+        rickAC.SetTrigger(hitHash);
+        rickState = RickStates.Hit;
+    }
+    
+    public void HitSpit(int x, int z)
+    {
+		rickAC.SetInteger("DirHitX", x);
+		rickAC.SetInteger("DirHitZ", z);
+
+        rickAC.SetTrigger(hitSpitHash);
+        rickState = RickStates.HitSpit;
+    }
+
+    public void Bite()
+    {
+        rickAC.SetTrigger(biteHash);
+        rickState = RickStates.Bite;
+    }
+
+    public void EatSnack()
+    {
+        rickAC.SetTrigger(eatSnackHash);
+        rickState = RickStates.EatSnack;
+    }
+
+    public void Drink()
+    {
+        rickAC.SetTrigger(drinkHash);
+        rickState = RickStates.Drink;
+    }
+
+    public void EatChips()
+    {
+        rickAC.SetTrigger(eatChipsHash);
+        rickState = RickStates.EatChips;
+    }
+
+	public void Death(int x, int z)
+    {
+		rickAC.SetInteger("DirHitX", x);
+		rickAC.SetInteger("DirHitZ", z);
+
+        rickAC.SetTrigger(deathHash);
+        rickState = RickStates.Death;
+    }
+
+    public void StandUp()
+    {
+        rickAC.SetTrigger(standUpHash);
+        rickState = RickStates.StandUp;
+    }
+
+    
 }

@@ -5,11 +5,10 @@ public class FadeManagerLoadingScreen : MonoBehaviour
     [SerializeField] private CanvasGroup LoadingScreenCanvas;
     [SerializeField] private GameObject LoadingScreen;
     
-    private bool fadeIn = false, fadeOut = false;
+    public bool fadeIn = false, fadeOut = false;
 
     public void Show()
     {
-        LoadingScreen.SetActive(true);
         fadeIn = true;
         fadeOut = false;
     }
@@ -44,7 +43,6 @@ public class FadeManagerLoadingScreen : MonoBehaviour
                 if (LoadingScreenCanvas.alpha <= 0)
                 {
                     LoadingScreenCanvas.alpha = 0;
-                    LoadingScreen.SetActive(false);
                     fadeOut = false;
                 }
             }
