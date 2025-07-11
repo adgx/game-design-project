@@ -12,11 +12,15 @@ namespace Animations
         
         private MaynardAnimation _maynardAnim;
         private Maynard maynard;
+
+        private void Start()
+        {
+            _maynardAnim = maynard.anim;
+        }
         
         private void Awake()
         {
             maynard = GetComponent<Maynard>();
-            // _maynardAnim = maynardAnimation; //TODO: genera un errore
             
             // Audio management
             maynardFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.MaynardFootsteps);
@@ -41,11 +45,6 @@ namespace Animations
                 GamePlayAudioManager.instance.ReleaseInstance(maynardFootsteps);
                 GamePlayAudioManager.instance.ReleaseInstance(maynardIdle);
             }
-        }
-        
-        public void InitMaynardAnim(MaynardAnimation maynardAnimation)
-        {
-            _maynardAnim = maynardAnimation;
         }
 
         public void Scream()

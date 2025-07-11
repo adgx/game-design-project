@@ -13,10 +13,14 @@ namespace Animations
         private Incognito incognito;
         private IncognitoAnimation incognitoAnim;
 
+        private void Start()
+        {
+            incognitoAnim = incognito.anim;
+        }
+
         private void Awake()
         {
             incognito = GetComponent<Incognito>();
-            incognitoAnim = incognito.anim;
 
             // Audio management
             incognitoFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.IncognitoFootsteps);

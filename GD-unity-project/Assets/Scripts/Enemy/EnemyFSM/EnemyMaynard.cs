@@ -166,9 +166,6 @@ public class Maynard : MonoBehaviour, IEnemy
         
         //Set Initial state
         _stateMachine.SetState(idleS);
-        
-        // Initialize Maynard's animations
-        _events.InitMaynardAnim(this.anim);
     }
 
     void Update()

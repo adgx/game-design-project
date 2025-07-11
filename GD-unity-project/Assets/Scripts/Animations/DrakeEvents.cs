@@ -11,17 +11,15 @@ namespace Animations
         private EventInstance drakeIdle;
         private DrakeAnimation drakeAnim;
         private Drake drake;
+
+        private void Start()
+        {
+            drakeAnim = drake.anim;
+        }
         
         private void Awake()
         {
             drake = GetComponent<Drake>();
-
-            if (drake == null)
-            {
-                Debug.LogError($"{ToString()}: Drake not found");
-            }
-            
-            drakeAnim = drake.anim;
 
             // Audio management
             drakeFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.DrakeFootsteps);
