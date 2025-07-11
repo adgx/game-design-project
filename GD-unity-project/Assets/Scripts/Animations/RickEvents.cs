@@ -151,7 +151,7 @@ namespace Animations
         }
 
         public void PlayDeathAnimation() {
-            playerShoot.DeathAnimation(0, 1);
+            playerShoot.DeathAnimation(1, 1);
         }
 
         public void DeathAnimationEnd() {
