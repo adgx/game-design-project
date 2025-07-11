@@ -61,7 +61,7 @@ public class Maynard : MonoBehaviour, IEnemy
 
     private EnemyManager enemyManager;
 
-    public bool debug = false;
+    private bool _debug = false;
 
     void Awake()
     {
@@ -75,7 +75,8 @@ public class Maynard : MonoBehaviour, IEnemy
         anim = new MaynardAnimation(maynardAC);
         _playerTransform = GameObject.Find("Player").transform;
         _agent = GetComponent<NavMeshAgent>();
-        if (!debug)
+
+        if (!_debug)
         {
             playerShoot = Player.Instance.GetComponent<PlayerShoot>();
             enemyManager = GameObject.Find("RoomManager").GetComponent<EnemyManager>();
@@ -94,7 +95,7 @@ public class Maynard : MonoBehaviour, IEnemy
         {
             Debug.LogError(this.ToString() + ": No materials are found");
         }
-        if (debug)
+        if (_debug)
         {
             _agent = GetComponent<NavMeshAgent>();
             _sightRange = 12f;
@@ -308,7 +309,7 @@ public class Maynard : MonoBehaviour, IEnemy
     {
         if (_agent == null || !_agent.isOnNavMesh) return;
 
-        if (debug || _roomManager.IsNavMeshBaked)
+        if (_debug || _roomManager.IsNavMeshBaked)
         {
             _agent.SetDestination(_playerTransform.position);
         }
@@ -342,7 +343,7 @@ public class Maynard : MonoBehaviour, IEnemy
     public void EmitScream()
     {
         //Attack code here
-        if (!debug)
+        if (!_debug)
         {
             GameObject bullet = Instantiate(_bulletPrefab, attackSpawn.transform.position, Quaternion.identity);
             bullet.tag = "EnemyAttack";
@@ -369,7 +370,7 @@ public class Maynard : MonoBehaviour, IEnemy
         }
         if (Physics.CheckSphere(transform.position, 2f, _whatIsPlayer))
         {
-            if (!debug)
+            if (!_debug)
             {
                 playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, 5, 5);
             }
