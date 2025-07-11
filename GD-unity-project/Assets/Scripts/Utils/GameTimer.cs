@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Enemy.EnemyManager;
 using System.Threading.Tasks;
+using Animations;
 
 namespace Utils {
 	public class GameTimer : MonoBehaviour {
@@ -29,6 +30,7 @@ namespace Utils {
 
 		private Player playerScript;
 		private PlayerShoot playerShoot;
+		private RickEvents rickEvents;
 
 		[SerializeField] private string respawnSceneName = "RespawnScene";
 		private bool sceneIsLoading = false;
@@ -56,6 +58,7 @@ namespace Utils {
 			player = GameObject.FindWithTag("Player");
 			playerScript = player.GetComponent<Player>();
 			playerShoot = player.GetComponent<PlayerShoot>();
+			rickEvents = player.GetComponent<RickEvents>();
 			
 			playerScript.FreezeMovement(true);
 			playerShoot.DisableAttacks(true);
@@ -81,6 +84,7 @@ namespace Utils {
 				isRunning = false;
 
 				AnimationManager.Instance.Idle();
+				rickEvents.SetIdleState();
 				
 				// Ambient light management
 				GameEvents.current.TimerEnded(); 

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Animations;
 using Audio;
 using TMPro;
 using UnityEngine;
@@ -28,7 +29,10 @@ namespace CollectablePapers
         private HashSet<int> _collectedPapers = new();
         private bool _isPaperUiOpen = false;
 
-        private PlayerInput playerInput;
+        [SerializeField] private PlayerInput playerInput;
+		[SerializeField] private RickEvents _rickEvents;
+
+		[SerializeField] StartTutorial _startTutorial;
 
         private void Awake()
         {
@@ -91,11 +95,12 @@ namespace CollectablePapers
                 _isPaperUiOpen = true;
                 _collectedPapers.Add(_collectedPapers.Count);
 
-                _player.isFrozen = true;
-                _paperText.SetText(messageContent + "\n\n<color=yellow>[Press E to Close]</color>");
-                _paperTextContainer.SetActive(true);
+                AnimationManager.Instance.Idle();
+                _rickEvents.SetIdleState();
+				_player.isFrozen = true;
 
-				Cursor.lockState = CursorLockMode.None;
+				_paperText.SetText(messageContent + "\n\n<color=yellow>[Press E to Close]</color>");
+                _paperTextContainer.SetActive(true);
 
 				GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerPaperInteraction, paperPosition);
             }
@@ -110,10 +115,12 @@ namespace CollectablePapers
         /// </summary>
         private void ClosePaperUI()
         {
+            if(_collectedPapers.Count <= 4) {
+                StartCoroutine(_startTutorial.ShowTip(_collectedPapers.Count - 1));
+            }
             _isPaperUiOpen = false;
             _paperTextContainer.SetActive(false);
             _player.isFrozen = false;
-            Cursor.lockState = CursorLockMode.Locked;
         }
 
         /// <summary>

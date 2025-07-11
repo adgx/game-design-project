@@ -15,7 +15,7 @@ public class PapersMenu : MonoBehaviour
     [SerializeField] private GameObject paperScrollContent;
     [SerializeField] private GameObject paperButton;
 
-    public async void OpenMenu()
+    public void OpenMenu()
     {
         foreach (Transform child in paperScrollContent.transform)
         {
@@ -39,9 +39,6 @@ public class PapersMenu : MonoBehaviour
             bool isCollected = PaperManager.Instance.IsPaperCollected(buttonIndex);
             button.GetComponent<Button>().interactable = isCollected;
 
-            await Task.Delay(1);
-            button.transform.localPosition = new Vector3(141, -30 - (78 * i), 0);
-            button.transform.localScale = Vector3.one;
             button.SetActive(true);
         }
     }
