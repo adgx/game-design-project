@@ -1,6 +1,5 @@
 using Audio;
 using FMOD.Studio;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Animations
@@ -8,21 +7,29 @@ namespace Animations
     public class IncognitoEvents : MonoBehaviour
     {
         // Audio management
-        private static EventInstance incognitoFootsteps;
-        private static EventInstance incognitoIdle;
+        private EventInstance incognitoFootsteps;
+        private EventInstance incognitoIdle;
+        
         private Incognito incognito;
         private IncognitoAnimation incognitoAnim;
 
-        private void Start()
+        private void Awake()
         {
             incognito = GetComponent<Incognito>();
 
             incognitoAnim = incognito.anim;
 
+            // Audio management
             incognitoFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.IncognitoFootsteps);
             incognitoFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-
             incognitoIdle = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.IncognitoIdle);
+            incognitoIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+        }
+        
+        private void FixedUpdate()
+        {
+            // Audio management: update Incognito's position as he's a sound source
+            incognitoFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             incognitoIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
         }
         
@@ -144,25 +151,25 @@ namespace Animations
         }
         
         // Audio management
-        public static void StartRunningSound()
+        public void StartRunningSound()
         {
             incognitoFootsteps.start();
         }
         
         // Audio management
-        public static void StopRunningSound()
+        public void StopRunningSound()
         {
             incognitoFootsteps.stop(STOP_MODE.ALLOWFADEOUT);
         }
         
         // Audio management
-        public static void StartIdleSound()
+        public void StartIdleSound()
         {
             incognitoIdle.start();
         }
         
         // Audio management
-        public static void StopIdleSound()
+        public void StopIdleSound()
         {
             incognitoIdle.stop(STOP_MODE.ALLOWFADEOUT);
         }

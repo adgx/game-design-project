@@ -1,4 +1,5 @@
 using System.Collections;
+using Animations;
 using Enemy.EnemyData;
 using Enemy.EnemyManager;
 using UnityEngine;
@@ -9,8 +10,7 @@ public class Maynard : MonoBehaviour, IEnemy
     [SerializeField] private NavMeshAgent _agent;
     [SerializeField] private LayerMask _whatIsGround, _whatIsPlayer;
     [SerializeField] private GameObject attackSpawn;
-
-
+    
     //FSM
     private FiniteStateMachine<Maynard> _stateMachine;
     // This variable increases (> 1) or reduces (< 1) the damage taken by this enemy type when attacked
@@ -62,6 +62,8 @@ public class Maynard : MonoBehaviour, IEnemy
     private EnemyManager enemyManager;
 
     private bool _debug = false;
+
+    private MaynardEvents _events;
 
     void Awake()
     {
@@ -126,13 +128,13 @@ public class Maynard : MonoBehaviour, IEnemy
         _stateMachine = new FiniteStateMachine<Maynard>(this);
 
         //Define states
-        State idleS = new MaynardIdleState("Idle", this);
-        State patrolS = new MaynardPatrolState("Patrol", this);
-        State chaseS = new MaynardChaseState("Chase", this);
+        State idleS = new MaynardIdleState("Idle", this, _events);
+        State patrolS = new MaynardPatrolState("Patrol", this, _events);
+        State chaseS = new MaynardChaseState("Chase", this, _events);
         State wonderS = new MaynardWonderState("Wonder", this);
         State screamAttackS = new MaynardScreamAttackState("ScreamAttack", this);
         State closeAttackS = new MaynardCloseAttackState("CloseAttack", this);
-        State waitS = new MaynardWaitState("Wait", this);
+        State waitS = new MaynardWaitState("Wait", this, _events);
         _reactFromFrontS = new MaynardReactFromFrontState("Hit", this);
         _deathS = new MaynardDeathState("Death", this);
         //take attention on the order with the transitions are added
@@ -160,8 +162,6 @@ public class Maynard : MonoBehaviour, IEnemy
         _stateMachine.AddTransition(_reactFromFrontS, chaseS, () => _playerInSightRange && !_playerInCloseAttackRange);
         _stateMachine.AddTransition(_reactFromFrontS, wonderS, () => (_playerInCloseAttackRange && _playerInSightRange) || (_playerInRemoteAttackRange && _playerInSightRange));
         
-
-
         //Set Initial state
         _stateMachine.SetState(idleS);
     }
