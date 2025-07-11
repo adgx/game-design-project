@@ -1,53 +1,71 @@
 using System;
 using UnityEngine;
+using System.Collections.Generic;
+
 
 public class ParticleAttackController : MonoBehaviour
 {
     [SerializeField] private ParticleSystem _attackPS;
     //acceleration
-    private float _a = 10f;
+    private float _a = 13f;
+    private float _g = -9.81f;
+    private float _vyInit = 0.2f;
     //velocity max
     private float _vMax = 15f;
 
-    [SerializeField] private Transform _targetPos;
+    public Transform targetPos;
     private Vector3 _destPos;
-    private float _currentV;
+    private float _currentVF;
+    private float _currentVUp;
     private float _t = 0;
-    public float playerBulletDamage = 50f;
+    public float initialPlayerBulletDamage = 40, enemyBulletDamage = 20;
+    public float playerBulletDamage;
 
     void Start()
     {
-        _currentV = 0f;
+        _currentVF = 0f;
+        _currentVUp = _vyInit;
         gameObject.SetActive(false);
-        _destPos = _targetPos.position;
-        transform.LookAt((_destPos- transform.position).normalized);
+        _destPos = targetPos.position;
+        //offset
+        _destPos.y += 1f;
+
+        Debug.Log($"destPos: {_destPos}, positon:{transform.position}");
+        transform.LookAt(_destPos);
         gameObject.SetActive(true);
         _attackPS.Play();
 
     }
     void Update()
     {
-        if (_currentV < _vMax)
+        if (_currentVF < _vMax)
         {
             _t += Time.deltaTime * _a/_vMax;
-            _currentV = Mathf.Lerp(0f, _vMax, _t);
+            _currentVF = Mathf.Lerp(0f, _vMax, _t);
         }
 
-        Vector3 vDir = transform.forward * _currentV * Time.deltaTime;
-        transform.position += vDir;  
+        _currentVUp = _g * Time.deltaTime;
+
+
+        Vector3 sDirF = transform.forward * _currentVF * Time.deltaTime;
+        Vector3 sDirUp = transform.up * _currentVUp * Time.deltaTime;
+        transform.position += sDirF + sDirUp;  
             
     }
 
 
     void OnParticleCollision(GameObject other)
     {
-
+        List<ParticleCollisionEvent> ce = new();
+        _attackPS.GetCollisionEvents(other, ce);
         Debug.Log("Collision Detected");
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag("Player"))
         {
-            //other.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(playerBulletDamage, "Energy");
-            Destroy(other);
+            PlayerShoot playerShoot = other.GetComponent<PlayerShoot>();
+            playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.Spit, Math.Sign(ce[0].normal.x), Math.Sign(ce[0].normal.z));
+            Destroy(gameObject);
         }
-        Destroy(gameObject);
+        if(!other.CompareTag("EnemyIncognito"))
+            Destroy(gameObject);
     }
 }
