@@ -279,6 +279,8 @@ public class PlayerShoot : MonoBehaviour
 		{
 			rickEvents.ShouldPlayChargeSound = false;
 		}
+
+		print("Ciao");
 		
 		AnimationManager.Instance.EndAttack();
 	}
@@ -476,7 +478,7 @@ public class PlayerShoot : MonoBehaviour
      	StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
 
 		if(health > 0) {
-			HitAnimation(damageType, x, z);
+			HitAnimation(damageType, 0, 1);
 		}
 		else
      	{

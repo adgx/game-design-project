@@ -39,7 +39,7 @@ public class ParticleAttackController : MonoBehaviour
     {
         if (_currentVF < _vMax)
         {
-            _t += Time.deltaTime * _a/_vMax;
+            _t += Time.deltaTime * _a / _vMax;
             _currentVF = Mathf.Lerp(0f, _vMax, _t);
         }
 
@@ -48,8 +48,8 @@ public class ParticleAttackController : MonoBehaviour
 
         Vector3 sDirF = transform.forward * _currentVF * Time.deltaTime;
         Vector3 sDirUp = transform.up * _currentVUp * Time.deltaTime;
-        transform.position += sDirF + sDirUp;  
-            
+        transform.position += sDirF + sDirUp;
+
     }
 
 
@@ -57,14 +57,22 @@ public class ParticleAttackController : MonoBehaviour
     {
         List<ParticleCollisionEvent> ce = new();
         _attackPS.GetCollisionEvents(other, ce);
-        Debug.Log("Collision Detected");
+        Debug.Log($"Collision Detected :{other.gameObject.tag}");
         if (other.CompareTag("Player"))
         {
             PlayerShoot playerShoot = other.GetComponent<PlayerShoot>();
             playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.Spit, Math.Sign(ce[0].normal.x), Math.Sign(ce[0].normal.z));
             Destroy(gameObject);
         }
-        if(!other.CompareTag("EnemyIncognito"))
+        else if (other.CompareTag("Shield"))
+        {
+            Debug.Log("Shield");
+            GamePlayAudioManager.instance.PlayOneShot(Audio.FMODEvents.Instance.PlayerShieldHit, transform.position);
+            Destroy(gameObject);
+        }
+        else if (!other.CompareTag("EnemyIncognito"))
             Destroy(gameObject);
     }
+
+
 }
