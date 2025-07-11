@@ -10,7 +10,7 @@ public class Incognito : MonoBehaviour, IEnemy
     [SerializeField] private NavMeshAgent _agent;
     [SerializeField] private LayerMask _whatIsGround, _whatIsPlayer;
     [SerializeField] private GameObject _attackSpawn;
-    [SerializeField] private GameObject _spit;
+    [SerializeField] private GameObject _spitDegub;
 
     private float _distanceAttackDamageMultiplier;
     private float _closeAttackDamageMultiplier;
@@ -43,7 +43,7 @@ public class Incognito : MonoBehaviour, IEnemy
     private bool _alreadyAttacked;
     private GameObject _bulletPrefab;
     //Debug flag
-    private bool _debug = true;
+    private bool _debug = false;
     //condition 
     private float _sightRange, _attackRange;
     private bool _playerInSightRange, _playerInAttackRange;
@@ -101,7 +101,7 @@ public class Incognito : MonoBehaviour, IEnemy
             enemyName = "";
             _sightRange = 12f;
             _attackRange = 8f;
-            _bulletPrefab = _spit;
+            _bulletPrefab = _spitDegub;
 
             _distanceAttackDamageMultiplier = 1.4f;
             _closeAttackDamageMultiplier = 1.4f;
@@ -279,23 +279,20 @@ public class Incognito : MonoBehaviour, IEnemy
 
     public void EmitSpit()
     {
-        if (_debug)
-        {
-            //Attack code here
-            _bulletPrefab.gameObject.SetActive(false);
-            GameObject bullet = Instantiate(_bulletPrefab, _attackSpawn.transform.position, Quaternion.identity);
-            bullet.tag = "SpitEnemyAttack";
-            bullet.GetComponent<ParticleAttackController>().enemyBulletDamage = _distanceAttackDamage;
-            bullet.GetComponent<ParticleAttackController>().targetPos = _playerTransform;
-            bullet.SetActive(true);
-            _bulletPrefab.gameObject.SetActive(true);
-            /*
-            Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
-            rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
-            rbBullet.AddForce(transform.up * 1f, ForceMode.Impulse);
-            */
-            //End of attack code
-        }
+        //Attack code here
+        _bulletPrefab.gameObject.SetActive(false);
+        GameObject bullet = Instantiate(_bulletPrefab, _attackSpawn.transform.position, Quaternion.identity);
+        bullet.tag = "SpitEnemyAttack";
+        bullet.GetComponent<ParticleAttackController>().enemyBulletDamage = _distanceAttackDamage;
+        bullet.GetComponent<ParticleAttackController>().targetPos = _playerTransform;
+        bullet.SetActive(true);
+        _bulletPrefab.gameObject.SetActive(true);
+        /*
+        Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
+        rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
+        rbBullet.AddForce(transform.up * 1f, ForceMode.Impulse);
+        */
+        //End of attack code
     }
 
     void ResetAttack()

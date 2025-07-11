@@ -236,7 +236,7 @@ Transform:
   m_GameObject: {fileID: 664263491}
   serializedVersion: 2
   m_LocalRotation: {x: 0.16313682, y: 0, z: 0, w: 0.9866035}
-  m_LocalPosition: {x: 1.3, y: 1.88, z: -31.84}
+  m_LocalPosition: {x: -2.79, y: 1.88, z: -5.2200003}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -360,7 +360,7 @@ Transform:
   m_GameObject: {fileID: 679236112}
   serializedVersion: 2
   m_LocalRotation: {x: 0.16313682, y: 0, z: 0, w: 0.9866035}
-  m_LocalPosition: {x: 1.3, y: 1.88, z: -31.84}
+  m_LocalPosition: {x: -2.79, y: 1.88, z: -5.2200003}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -734,7 +734,7 @@ Transform:
   m_GameObject: {fileID: 1199873368}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.3, y: 0, z: -29.1}
+  m_LocalPosition: {x: -2.79, y: 0, z: -2.48}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -783,7 +783,7 @@ CapsuleCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.9
@@ -919,6 +919,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 906661177866086450, guid: b1b325b0ad3f20a47b57643bfa5b51fc, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.56
+      objectReference: {fileID: 0}
     - target: {fileID: 3041820409546440435, guid: b1b325b0ad3f20a47b57643bfa5b51fc, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
@@ -964,6 +968,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6935603555765237207, guid: b1b325b0ad3f20a47b57643bfa5b51fc, type: 3}
+      propertyPath: _spit
+      value: 
+      objectReference: {fileID: 5307357100113418555, guid: d88fa7372adc968479a6665293dbd067, type: 3}
+    - target: {fileID: 6935603555765237207, guid: b1b325b0ad3f20a47b57643bfa5b51fc, type: 3}
       propertyPath: _attackSpawn
       value: 
       objectReference: {fileID: 1688801118894755981}
@@ -973,7 +981,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8345268695102665143, guid: b1b325b0ad3f20a47b57643bfa5b51fc, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
