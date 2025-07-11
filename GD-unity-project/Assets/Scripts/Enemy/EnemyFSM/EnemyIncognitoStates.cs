@@ -28,7 +28,7 @@ public class IncognitoPatrolState : State
 
     public override void Exit()
     {
-        // Audio management: stops footsteps event if Incognito is not patrolling anymore
+        // Audio management: stop footsteps event if Incognito is not patrolling anymore
         _events.StopRunningSound();
     }
 }
@@ -59,7 +59,7 @@ public class IncognitoChaseState : State
 
     public override void Exit()
     {
-        // Audio management: stops footsteps event if Incognito is not chasing anymore
+        // Audio management: stop footsteps event if Incognito is not chasing anymore
         _events.StopRunningSound();
     }
 }
@@ -174,7 +174,7 @@ public class IncognitoWaitState : State
 
     public override void Exit()
     {
-        // Audio management: stops idle event if Incognito is not waiting anymore
+        // Audio management: stop idle event if Incognito is not waiting anymore
         _events.StopIdleSound();
     }
 }
@@ -211,7 +211,7 @@ public class IncognitoIdleState : State
     {
         _incognito.clearWaitTime();
         
-        // Audio management: stops idle event if Incognito is not idling anymore
+        // Audio management: stop idle event if Incognito is not idling anymore
         _events.StopIdleSound();
     }
 }

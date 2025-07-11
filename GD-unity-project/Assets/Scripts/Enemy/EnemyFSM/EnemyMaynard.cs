@@ -119,7 +119,9 @@ public class Maynard : MonoBehaviour, IEnemy
             _timeBetweenAttacks = 3f;
             enemyName = "";
         }
-
+        
+        // Audio management
+        _events = GetComponent<MaynardEvents>(); 
     }
 
     void Start()
@@ -164,6 +166,9 @@ public class Maynard : MonoBehaviour, IEnemy
         
         //Set Initial state
         _stateMachine.SetState(idleS);
+        
+        // Initialize Maynard's animations
+        _events.InitMaynardAnim(this.anim);
     }
 
     void Update()

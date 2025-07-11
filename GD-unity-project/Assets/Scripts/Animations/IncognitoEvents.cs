@@ -16,7 +16,6 @@ namespace Animations
         private void Awake()
         {
             incognito = GetComponent<Incognito>();
-
             incognitoAnim = incognito.anim;
 
             // Audio management

@@ -34,7 +34,7 @@ public class MaynardPatrolState : State
     {
         _maynard.clearWaitTime();
         
-        // Audio management: stops footsteps event if Maynard is not patrolling anymore
+        // Audio management: stop footsteps event if Maynard is not patrolling anymore
         _events.StopRunningSound();
     }
 }
@@ -67,7 +67,7 @@ public class MaynardChaseState : State
 
     public override void Exit()
     {
-        // Audio management: stops footsteps event if Maynard is not chasing anymore
+        // Audio management: stop footsteps event if Maynard is not chasing anymore
         _events.StopRunningSound();
     }
 }
@@ -216,7 +216,7 @@ public class MaynardIdleState : State
     {
         _maynard.clearWaitTime();
         
-        // Audio management: stops idle event if Maynard is not idling anymore
+        // Audio management: stop idle event if Maynard is not idling anymore
         _events.StopIdleSound();
     }
 }
@@ -247,7 +247,7 @@ public class MaynardWaitState : State
 
     public override void Exit()
     {
-        // Audio management: stops idle event if Maynard is not waiting anymore
+        // Audio management: stop idle event if Maynard is not waiting anymore
         _events.StopIdleSound();
     }
 }

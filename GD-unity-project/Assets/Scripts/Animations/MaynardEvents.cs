@@ -16,12 +16,19 @@ namespace Animations
         private void Awake()
         {
             maynard = GetComponent<Maynard>();
-            _maynardAnim = maynard.anim;
+            // _maynardAnim = maynardAnimation; //TODO: genera un errore
             
             // Audio management
             maynardFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.MaynardFootsteps);
             maynardFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             maynardIdle = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.MaynardIdle);
+            maynardIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+        }
+        
+        private void FixedUpdate()
+        {
+            // Audio management: update Maynard's position as he's a sound source
+            maynardFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             maynardIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
         }
         
