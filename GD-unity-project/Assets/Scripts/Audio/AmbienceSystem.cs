@@ -20,21 +20,4 @@ public static class AmbienceSystem
             _activeRooms.Remove(room);
         }
     }
-
-    /// <summary>
-    /// Comando centrale per spegnere tutti i suoni ambientali di tutte le stanze attive.
-    /// </summary>
-    public static void StopAllRoomAmbience()
-    {
-        // Itera su una copia per sicurezza
-        List<RoomAmbienceController> roomsToStop = new List<RoomAmbienceController>(_activeRooms);
-        
-        foreach (var room in roomsToStop)
-        {
-            if (room != null)
-            {
-                room.DeactivateAllSounds();
-            }
-        }
-    }
 }

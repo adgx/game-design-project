@@ -940,6 +940,59 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &992004844196966740
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6214825311628717247}
+  - component: {fileID: 3814081975668219162}
+  m_Layer: 9
+  m_Name: _AmbienceTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6214825311628717247
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 992004844196966740}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.97, y: 3.4, z: 0.98}
+  m_LocalScale: {x: 4.3532214, y: 6.25573, z: 12.155229}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6468963621349640749}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3814081975668219162
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 992004844196966740}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &993517008515154399
 GameObject:
   m_ObjectHideFlags: 0
@@ -11010,13 +11063,61 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4936140224891934647, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3751612440267928947}
-    m_AddedComponents: []
+    - targetCorrespondingSourceObject: {fileID: 4936140224891934647, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6214825311628717247}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2397693676041395911, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2579797035932597297}
   m_SourcePrefab: {fileID: 100100000, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
 --- !u!4 &1060162677341879559 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1436829788770525341, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
   m_PrefabInstance: {fileID: 2109603556889402778}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &4323597427231605597 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2397693676041395911, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}
+  m_PrefabInstance: {fileID: 2109603556889402778}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2579797035932597297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4323597427231605597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 003547e1813a24741ab28b05f0b2e736, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundsToManage:
+  - objectTag: AlarmSpeaker
+    fmodEvent:
+      Guid:
+        Data1: 1373224865
+        Data2: 1258097855
+        Data3: -654289524
+        Data4: 410566001
+      Path: event:/Ambience/General/Alarm
+  - objectTag: FlickeringLED
+    fmodEvent:
+      Guid:
+        Data1: 28823743
+        Data2: 1225098834
+        Data3: 1945257915
+        Data4: 1039743675
+      Path: event:/Ambience/Hallway/FlickeringLED
+  - objectTag: Elevator
+    fmodEvent:
+      Guid:
+        Data1: 1356801504
+        Data2: 1243640970
+        Data3: 166545854
+        Data4: 1583370833
+      Path: event:/Ambience/Hallway/ElevatorNoise
 --- !u!4 &6468963621349640749 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4936140224891934647, guid: 749eb7facdc624fb5bd416d1a014ea01, type: 3}

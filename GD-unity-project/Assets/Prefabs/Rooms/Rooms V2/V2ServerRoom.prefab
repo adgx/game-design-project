@@ -4062,6 +4062,59 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3.810975, y: 0.38561398, z: 0.77070856}
   m_Center: {x: 1.8984098, y: -0.19254711, z: 0}
+--- !u!1 &5305446220099059424
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6754441683200577252}
+  - component: {fileID: 6167777282552761561}
+  m_Layer: 9
+  m_Name: _AmbienceTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6754441683200577252
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5305446220099059424}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.02, y: 3.53, z: 1}
+  m_LocalScale: {x: 8.246593, y: 6.642512, z: 8.46875}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4977402327728931212}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &6167777282552761561
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5305446220099059424}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5322424781064832849
 GameObject:
   m_ObjectHideFlags: 0
@@ -6334,6 +6387,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4977402327728931212}
   - component: {fileID: 3387052329859460017}
+  - component: {fileID: 429389780706640977}
   m_Layer: 0
   m_Name: V2ServerRoom
   m_TagString: Untagged
@@ -6371,6 +6425,7 @@ Transform:
   - {fileID: 8228296495942259595}
   - {fileID: 4780174928830970866}
   - {fileID: 4183781743665733132}
+  - {fileID: 6754441683200577252}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3387052329859460017
@@ -6416,6 +6471,35 @@ MonoBehaviour:
   _powerUpVendingMachinePrefab: {fileID: 8429428749154104105}
   _upgradeTerminalPrefab: {fileID: 7962233153558062209}
   _paperPrefab: {fileID: 3311216181374165737}
+--- !u!114 &429389780706640977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7322676706815848639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 003547e1813a24741ab28b05f0b2e736, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundsToManage:
+  - objectTag: AlarmSpeaker
+    fmodEvent:
+      Guid:
+        Data1: 1373224865
+        Data2: 1258097855
+        Data3: -654289524
+        Data4: 410566001
+      Path: event:/Ambience/General/Alarm
+  - objectTag: Server
+    fmodEvent:
+      Guid:
+        Data1: -2014649865
+        Data2: 1292488745
+        Data3: 1648386715
+        Data4: -700621535
+      Path: event:/Ambience/Server room/ServerNoise
 --- !u!1 &7385654115760586923
 GameObject:
   m_ObjectHideFlags: 0

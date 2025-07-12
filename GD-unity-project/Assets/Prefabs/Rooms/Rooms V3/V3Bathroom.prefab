@@ -692,6 +692,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5337260740105535007}
   - component: {fileID: 8753745212488098596}
+  - component: {fileID: 5862543215579209510}
   m_Layer: 0
   m_Name: V3Bathroom
   m_TagString: Untagged
@@ -732,6 +733,7 @@ Transform:
   - {fileID: 3399077886616715353}
   - {fileID: 6497669553591224795}
   - {fileID: 4341581497959528321}
+  - {fileID: 3484425124974631074}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8753745212488098596
@@ -755,15 +757,39 @@ MonoBehaviour:
   _centralSpawnPoint: {fileID: 2556233178477582439}
   _enemySpawnPoints:
   - {fileID: 7590300882084718737}
-  _vendingMachinePrefab: {fileID: 0}
-  _vendingMachineSpawnChance: 0.5
-  _canVendingMachineSpawn: 0
+  _healthVendingMachinePrefab: {fileID: 0}
+  _powerUpVendingMachinePrefab: {fileID: 0}
   _upgradeTerminalPrefab: {fileID: 0}
-  _upgradeTerminalSpawnChance: 0.5
-  _canUpgradeTerminalSpawn: 0
   _paperPrefab: {fileID: 0}
-  _paperSpawnChance: 0.1
-  _canPaperSpawn: 0
+--- !u!114 &5862543215579209510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2360249369967940935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 003547e1813a24741ab28b05f0b2e736, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundsToManage:
+  - objectTag: AlarmSpeaker
+    fmodEvent:
+      Guid:
+        Data1: 1373224865
+        Data2: 1258097855
+        Data3: -654289524
+        Data4: 410566001
+      Path: event:/Ambience/General/Alarm
+  - objectTag: FlushingWC
+    fmodEvent:
+      Guid:
+        Data1: -283890271
+        Data2: 1141973038
+        Data3: 987327118
+        Data4: -2100846542
+      Path: event:/Ambience/Bathroom/FlushingWater
 --- !u!1 &2854547184470649121
 GameObject:
   m_ObjectHideFlags: 0
@@ -2654,6 +2680,59 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &8977134222132323420
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3484425124974631074}
+  - component: {fileID: 2642553575077651886}
+  m_Layer: 9
+  m_Name: _AmbienceTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3484425124974631074
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8977134222132323420}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.66, y: 3.57, z: 3.26}
+  m_LocalScale: {x: 15.543147, y: 4.129721, z: 21.180292}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5337260740105535007}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2642553575077651886
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8977134222132323420}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &9051561971611992124
 GameObject:
   m_ObjectHideFlags: 0
