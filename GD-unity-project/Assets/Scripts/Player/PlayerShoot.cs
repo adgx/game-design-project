@@ -60,7 +60,8 @@ public class PlayerShoot : MonoBehaviour
 	public int maxSphereStamina = 5;
 	public bool increaseStamina = false, increasingStamina = false;
 	public int sphereStamina = 5;
-
+	private bool sphereIsDischarged = false;
+	
 	// PowerUps
 	public PowerUp powerUp;
 
@@ -142,11 +143,11 @@ public class PlayerShoot : MonoBehaviour
 
 	private bool CheckStamina(int value) {
 		// The Sphere still has stamina
-		if (sphereStamina >= value) {
+		if (sphereStamina >= value && !sphereIsDischarged) {
 			return true;
 		}
 		
-		// Audio management: the Sphere has finished the stamina
+		// Audio management: the Sphere has finished the stamina or is loading after having been completely discharged
 		GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerSphereDischarge, rotatingSphere.transform.position);
 		return false;
 	}
@@ -166,8 +167,9 @@ public class PlayerShoot : MonoBehaviour
 				ChangeSphereColor(sphereStamina);
 
 				// Audio management
-				if (sphereStamina == 5)
+				if (sphereStamina == maxSphereStamina)
 				{
+					sphereIsDischarged = false; 
 					GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerSphereFullRecharge, rotatingSphere.transform.position);
 				}
 			}
@@ -454,6 +456,12 @@ public class PlayerShoot : MonoBehaviour
 	}
 
 	private void SpawnMagneticShield() {
+		if (!CheckStamina(1)) {
+			return; // Exits the function if the shield cannot be activated
+		}
+		
+		DecreaseStamina(1);
+		
 		// Without this check, if the button for activating/deactivating the shield is pushed and released more than once in a very fast way, then
 		// the function is called multiple times, creating a race condition among multiple concurrent instances of it (buggy code)
 		if (isShieldCoroutineRunning)
@@ -672,6 +680,8 @@ public class PlayerShoot : MonoBehaviour
 				// Not that good, but I don't have better ways to manage it
 				if (sphereStamina <= 0)
 				{
+					sphereIsDischarged = true;
+					
 					if (!increasingStamina)
 					{
 						increaseStamina = true;
