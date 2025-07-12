@@ -74,11 +74,13 @@ namespace Animations
         {
             // Audio management
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoDistanceAttack2Spit, transform.position);
-        }
+
+			incognito.EmitSpit();
+		}
         
         public void EndLongSpit()
         {
-            incognitoAnim.EndShortSpit = true;
+            incognitoAnim.EndLongSpit = true;
         }
         
         public void FallScream()
