@@ -95,42 +95,44 @@ public class PlayerShoot : MonoBehaviour
         }
     }
 
-	private void Start() {
+	private void Start()
+	{
 		healthBar.SetMaxHealth(health);
 		player = GetComponent<Player>();
 
+		
 		ChangeSphereColor(maxSphereStamina);
+		
 	}
-	
-	void ChangeSphereColor(int stamina) {
-		switch(stamina) {
+
+	void ChangeSphereColor(int stamina)
+	{
+		switch (stamina)
+		{
 			case 5:
-				sphereMaterial.color = Color.green;
-				sphereMaterial.SetColor("_EmissionColor", Color.green);
+				sphereMaterial.SetColor("_EmissionColor", Color.green * 2f);
 				break;
 			case 4:
-				sphereMaterial.color = new Color(0, 1, 1);
-				sphereMaterial.SetColor("_EmissionColor", new Color(0, 1, 1));
+				sphereMaterial.SetColor("_EmissionColor", new Color(0, 1, 1) * 2f);
 				break;
 			case 3:
-				sphereMaterial.color = Color.yellow;
-				sphereMaterial.SetColor("_EmissionColor", Color.yellow);
+				sphereMaterial.SetColor("_EmissionColor", Color.yellow * 2f);
 				break;
 			case 2:
-				sphereMaterial.color = new Color(1, 0.5f, 0);
-				sphereMaterial.SetColor("_EmissionColor", new Color(1, 0.1875f, 0));
+				sphereMaterial.SetColor("_EmissionColor", new Color(1, 0.1875f, 0) * 2f);
 				break;
 			case 1:
-				sphereMaterial.color = Color.red;
-				sphereMaterial.SetColor("_EmissionColor", Color.red);
+				sphereMaterial.SetColor("_EmissionColor", Color.red * 2f);
 				break;
 			case 0:
-				sphereMaterial.color = Color.red;
-				sphereMaterial.SetColor("_EmissionColor", Color.red);
+				sphereMaterial.SetColor("_EmissionColor", Color.red * 2f);
 				break;
 			default:
 				break;
+
 		}
+		sphereMaterial.EnableKeyword("_EMISSION");
+		
 	}
 
 	public void DisableAttacks(bool value)
@@ -218,7 +220,7 @@ public class PlayerShoot : MonoBehaviour
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
 		rotateSphere.positionSphere(new Vector3(0, 0.8f, rotateSphere.DistanceFromPlayer), RotateSphere.Animation.RotateAround);
-		//AnimationManager.Instance.Idle();
+
 		AnimationManager.Instance.Attack();
 		
 		await Task.Delay(50);
@@ -279,26 +281,33 @@ public class PlayerShoot : MonoBehaviour
 		{
 			rickEvents.ShouldPlayChargeSound = false;
 		}
-
-		print("Ciao");
 		
 		AnimationManager.Instance.EndAttack();
 	}
 
 	public async void FireDistanceAttack() {
+		bulletPrefab.gameObject.SetActive(false);
 		GameObject bullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity);
 		bullet.tag = "PlayerProjectile";
-
+		ParticleAttackController PAC = bullet.GetComponent<ParticleAttackController>();
+		PAC.playerBulletDamage = PAC.initialPlayerBulletDamage;
+		PAC.targetPos = bulletSpawnTransform;
+		bullet.SetActive(true);
+		bulletPrefab.gameObject.SetActive(true);
+		/*
 		Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
 		rbBullet.AddForce(bulletSpawnTransform.forward * bulletSpeed, ForceMode.Impulse);
 		rbBullet.AddForce(bulletSpawnTransform.up * 2f, ForceMode.Impulse);
-
+		
 		getCollisions.playerBulletDamage = getCollisions.initialPlayerBulletDamage;
-
-		if(attackStamina == 0) {
+		*/
+		
+		if (attackStamina == 0)
+		{
 			DecreaseStamina(1);
 		}
-		else {
+		else
+		{
 			DecreaseStamina(attackStamina);
 		}
 

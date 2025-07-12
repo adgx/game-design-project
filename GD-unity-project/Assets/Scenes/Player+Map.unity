@@ -1580,6 +1580,72 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &770730842
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 947324215}
+    m_Modifications:
+    - target: {fileID: 457609803666391033, guid: c2450a6f74fe3ff4fabfc1209eef3078, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 972097719}
+    - target: {fileID: 6999135266191828137, guid: c2450a6f74fe3ff4fabfc1209eef3078, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999135266191828137, guid: c2450a6f74fe3ff4fabfc1209eef3078, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999135266191828137, guid: c2450a6f74fe3ff4fabfc1209eef3078, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999135266191828137, guid: c2450a6f74fe3ff4fabfc1209eef3078, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999135266191828137, guid: c2450a6f74fe3ff4fabfc1209eef3078, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999135266191828137, guid: c2450a6f74fe3ff4fabfc1209eef3078, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999135266191828137, guid: c2450a6f74fe3ff4fabfc1209eef3078, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999135266191828137, guid: c2450a6f74fe3ff4fabfc1209eef3078, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999135266191828137, guid: c2450a6f74fe3ff4fabfc1209eef3078, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6999135266191828137, guid: c2450a6f74fe3ff4fabfc1209eef3078, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7979408394238467436, guid: c2450a6f74fe3ff4fabfc1209eef3078, type: 3}
+      propertyPath: m_Name
+      value: rotatingSphere
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c2450a6f74fe3ff4fabfc1209eef3078, type: 3}
+--- !u!4 &770730843 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6999135266191828137, guid: c2450a6f74fe3ff4fabfc1209eef3078, type: 3}
+  m_PrefabInstance: {fileID: 770730842}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &851811541 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8997945320522567967, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
@@ -1827,7 +1893,7 @@ MonoBehaviour:
   rickEvents: {fileID: 972097730}
   bulletSpeed: 16
   bulletSpawnTransform: {fileID: 1811753037}
-  bulletPrefab: {fileID: 3780818778376199547, guid: e2193c01f07e84362a8e9f21a5774953, type: 3}
+  bulletPrefab: {fileID: 1351494042883776938, guid: eb29ac79095518f468dd53ef8494cebb, type: 3}
   attackAreaPrefab: {fileID: 1847315181234349731, guid: 3902c314b9067494cadeb754c1359a24, type: 3}
   defaultCloseAttackDamage: 50
   closeAttackDamage: 50
@@ -1852,7 +1918,7 @@ MonoBehaviour:
   getCollisions: {fileID: 347109498}
   rotateSphere: {fileID: 1732426663}
   rotatingSphere: {fileID: 1881446011}
-  sphereMaterial: {fileID: 2100000, guid: b190bb1bfe2713d4f90349535891e2a0, type: 2}
+  sphereMaterial: {fileID: 2100000, guid: 5d16e6bd7dbf26f489a710633ffd7491, type: 2}
   respawnSceneName: RespawnScene
   gameTimer: {fileID: 1738691470}
 --- !u!114 &972097728
@@ -2273,6 +2339,14 @@ PrefabInstance:
       propertyPath: distanceAttackImage
       value: 
       objectReference: {fileID: 766725499}
+    - target: {fileID: 1413776906730153237, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_Name
+      value: rotatingSphereTemp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1413776906730153237, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2929882482803849405, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
       propertyPath: player
       value: 
@@ -2343,7 +2417,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 7942380145102555645, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      insertIndex: 4
+      addedObject: {fileID: 770730843}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7310133868445848391, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
       insertIndex: -1
