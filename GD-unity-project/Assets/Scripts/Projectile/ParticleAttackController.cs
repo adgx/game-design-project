@@ -106,6 +106,7 @@ public class ParticleAttackController : MonoBehaviour
             {
                 Debug.Log("Attacked");
                 other.gameObject.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(playerBulletDamage, "d");
+                Destroy(gameObject);
             }
             else
             {
