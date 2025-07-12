@@ -30,7 +30,8 @@ public class ParticleAttackController : MonoBehaviour
 
         if (gameObject.CompareTag("PlayerProjectile"))
         {
-            Debug.Log("");
+            Debug.Log($"PlayerProjectile: {targetPos.position}");
+            transform.LookAt(targetPos.position + targetPos.forward);
         }
         else if (gameObject.CompareTag("SpitEnemyAttack"))
         {
@@ -40,6 +41,7 @@ public class ParticleAttackController : MonoBehaviour
             transform.LookAt(_destPos);
         } 
         
+
         gameObject.SetActive(true);
         _attackPS.Play();
 
@@ -84,15 +86,32 @@ public class ParticleAttackController : MonoBehaviour
             else if (!other.CompareTag("EnemyIncognito"))
                 Destroy(gameObject);
         }
-        else if (gameObject.CompareTag("PlayerProjectile"))
-        {
-            if (other.CompareTag("Enemy") && !other.CompareTag("EnemyAttack"))
-            {
-                other.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(playerBulletDamage, "d");
-            }
-            else Destroy(gameObject);
-        }
     }
 
-
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Triggered");
+        if (gameObject.CompareTag("SpitEnemyAttack"))
+        {
+            if (other.gameObject.CompareTag("PlayerProjectile"))
+            {
+                Destroy(gameObject);
+            }
+        }
+        
+        if (gameObject.CompareTag("PlayerProjectile"))
+        {
+            Debug.Log($"{gameObject.tag} collided with:{other.gameObject.tag}");
+            if (other.gameObject.tag.Contains("Enemy") && !other.gameObject.tag.Contains("EnemyAttack"))
+            {
+                Debug.Log("Attacked");
+                other.gameObject.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(playerBulletDamage, "d");
+            }
+            else
+            {
+                Debug.Log("Destroy");
+                Destroy(gameObject);
+            }
+        }  
+    }
 }
