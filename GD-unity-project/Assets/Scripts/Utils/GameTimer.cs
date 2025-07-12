@@ -180,9 +180,6 @@ namespace Utils {
 
 			FadeManager.Instance.FadeOutIn(() => {
 				roomManager.RegenerateRooms();
-				
-				// Audio management: after the new rooms have been created we tell everyone to reset their alarms
-				AmbienceSystem.ResetAllSpecialEmitters();
 
 				roomManager.SetRoomsDifficulty();
 				enemyManager.SetEnemyDifficulty();

@@ -15,8 +15,8 @@ public class RoomAmbienceController : MonoBehaviour
     [SerializeField]
     private List<AmbienceSoundDefinition> soundsToManage;
 
-    private List<StudioEventEmitter> activeEmitters = new List<StudioEventEmitter>();
-    private StudioEventEmitter alarmEmitter;
+    private List<StudioEventEmitter> activeEmitters;
+    private List<StudioEventEmitter> alarmEmitters;
 
     // Quando la stanza viene creata
     private void Awake()
@@ -35,6 +35,9 @@ public class RoomAmbienceController : MonoBehaviour
 
     private void InitializeRoomEmitters()
     {
+        activeEmitters = new List<StudioEventEmitter>();
+        alarmEmitters = new List<StudioEventEmitter>();
+        
         foreach (var definition in soundsToManage)
         {
             Transform[] children = GetComponentsInChildren<Transform>(true);
@@ -48,7 +51,7 @@ public class RoomAmbienceController : MonoBehaviour
                     {
                         if (definition.objectTag == "AlarmSpeaker")
                         {
-                            alarmEmitter = emitter;
+                            alarmEmitters.Add(emitter);
                         }
                         else
                         {
@@ -72,15 +75,6 @@ public class RoomAmbienceController : MonoBehaviour
         }
     }
 
-    // Attiva l'allarme
-    public void ActivateAlarm()
-    {
-        if (alarmEmitter != null && !alarmEmitter.IsPlaying())
-        {
-            alarmEmitter.Play();
-        }
-    }
-
     // Spegne TUTTI i suoni di questa stanza IMMEDIATAMENTE
     public void DeactivateAllSounds()
     {
@@ -92,27 +86,24 @@ public class RoomAmbienceController : MonoBehaviour
             }
         }
 
-        if (alarmEmitter != null && alarmEmitter.IsPlaying())
+        foreach (var alarm in alarmEmitters)
         {
-            alarmEmitter.EventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            if (alarm != null && alarm.IsPlaying())
+            {
+                alarm.EventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            }
         }
     }
     
-    /// <summary>
-    /// Resetta lo stato degli emitter speciali (come l'allarme)
-    /// senza spegnere i suoni ambientali di base.
-    /// Viene chiamato dal sistema centrale all'inizio di un nuovo ciclo.
-    /// </summary>
-    public void ResetSpecialEmittersState()
+    // Attiva l'allarme
+    public void ActivateAlarm()
     {
-        // Al momento, l'unico emitter con uno "stato" è l'allarme.
-        // Se l'allarme stava suonando, lo spegniamo.
-        // Questo previene che un allarme attivato in un ciclo
-        // venga considerato "già attivo" nel ciclo successivo.
-        if (alarmEmitter != null && alarmEmitter.IsPlaying())
+        foreach (var alarm in alarmEmitters)
         {
-            alarmEmitter.EventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            if (alarm != null && !alarm.IsPlaying())
+            {
+                alarm.Play();
+            }
         }
     }
-
 }

@@ -37,20 +37,4 @@ public static class AmbienceSystem
             }
         }
     }
-    
-    /// <summary>
-    /// Itera su tutte le stanze attualmente esistenti e resetta lo stato
-    /// dei loro emitter speciali (es. l'allarme).
-    /// </summary>
-    public static void ResetAllSpecialEmitters()
-    {
-        List<RoomAmbienceController> roomsToReset = new List<RoomAmbienceController>(_activeRooms);
-        foreach (var room in roomsToReset)
-        {
-            if (room != null)
-            {
-                room.ResetSpecialEmittersState();
-            }
-        }
-    }
 }
