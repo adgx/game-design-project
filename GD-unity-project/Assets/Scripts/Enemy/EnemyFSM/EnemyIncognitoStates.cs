@@ -98,9 +98,7 @@ public class IncognitoShortSpitAttackState : State
     }
     public override void Enter()
     {
-        if(!_incognito._alreadyAttacked) {
-            _incognito.anim.lunchShortSpitAnim();
-        }
+        _incognito.anim.lunchShortSpitAnim();
     }
 
     public override void Tik()
@@ -119,9 +117,7 @@ public class IncognitoLongSpitAttackState : State {
 		_incognito = incognito;
 	}
 	public override void Enter() {
-		if(!_incognito._alreadyAttacked) {
-			_incognito.anim.lunchLongSpitAnim();
-		}
+		_incognito.anim.lunchLongSpitAnim();
 	}
 
 	public override void Tik() {

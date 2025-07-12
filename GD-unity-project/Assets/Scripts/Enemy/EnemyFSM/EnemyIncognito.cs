@@ -14,8 +14,9 @@ public class Incognito : MonoBehaviour, IEnemy
 
     private float _distanceAttackDamageMultiplier;
     private float _closeAttackDamageMultiplier;
-    private float _distanceAttackDamage;
-    private Transform _playerTransform;
+    private float _shortSpitAttackDamage;
+	private float _longSpitAttackDamage;
+	private Transform _playerTransform;
     private float _health;
     private string enemyName;
 
@@ -113,7 +114,8 @@ public class Incognito : MonoBehaviour, IEnemy
             _distanceAttackDamageMultiplier = 1.4f;
             _closeAttackDamageMultiplier = 1.4f;
 
-            _distanceAttackDamage = 10f;
+			_shortSpitAttackDamage = 10f;
+            _longSpitAttackDamage = 20f;
         }
         //FMS base
         _stateMachine = new FiniteStateMachine<Incognito>(this);
@@ -148,8 +150,10 @@ public class Incognito : MonoBehaviour, IEnemy
         _stateMachine.AddTransition(wonderS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
         //shortSpitAttack
         _stateMachine.AddTransition(shortSpitAttackS, wonderS, () => anim.EndShortSpit);
+		_stateMachine.AddTransition(shortSpitAttackS, waitS, () => _alreadyAttacked);
 		//longSpitAttack
 		_stateMachine.AddTransition(longSpitAttackS, wonderS, () => anim.EndLongSpit);
+		_stateMachine.AddTransition(longSpitAttackS, waitS, () => _alreadyAttacked);
 		//wait
 		_stateMachine.AddTransition(waitS, wonderS, () => !_alreadyAttacked);
         //ReactFrom
@@ -211,8 +215,9 @@ public class Incognito : MonoBehaviour, IEnemy
         _distanceAttackDamageMultiplier = incognitoData.distanceAttackDamageMultiplier;
         _closeAttackDamageMultiplier = incognitoData.closeAttackDamageMultiplier;
 
-        _distanceAttackDamage = incognitoData.distanceAttackDamage;
-    }
+        _shortSpitAttackDamage = incognitoData.distanceAttackDamage;
+		_longSpitAttackDamage = incognitoData.longSpitAttackDamage;
+	}
 
     public void TakeDamage(float damage, string attackType)
     {
@@ -283,6 +288,7 @@ public class Incognito : MonoBehaviour, IEnemy
 
     public void WonderAttackPlayer()
     {
+        print("WonderAttack");
         if (_agent == null || !_agent.isOnNavMesh) return;
 
         //Make sure enemy doesn't move
@@ -293,18 +299,27 @@ public class Incognito : MonoBehaviour, IEnemy
 
     public void SpitAttackPlayer()
     {
+        print("Spit attack");
         _alreadyAttacked = true;
         StartCoroutine(ResetAttack());
     }
 
-    public void EmitSpit()
+    public void EmitSpit(bool shortSpit)
     {
         //Attack code here
         _bulletPrefab.gameObject.SetActive(false);
         GameObject bullet = Instantiate(_bulletPrefab, _attackSpawn.transform.position, Quaternion.identity);
         bullet.tag = "SpitEnemyAttack";
-        bullet.GetComponent<ParticleAttackController>().enemyBulletDamage = _distanceAttackDamage;
+        //bullet.GetComponent<ParticleAttackController>().enemyBulletDamage = _distanceAttackDamage;
         bullet.GetComponent<ParticleAttackController>().targetPos = _playerTransform;
+
+        if(shortSpit) {
+            bullet.GetComponent<ParticleAttackController>().enemyBulletDamage = _shortSpitAttackDamage;
+        }
+        else {
+			bullet.GetComponent<ParticleAttackController>().enemyBulletDamage = _longSpitAttackDamage;
+		}
+
         bullet.SetActive(true);
         _bulletPrefab.gameObject.SetActive(true);
         //End of attack code

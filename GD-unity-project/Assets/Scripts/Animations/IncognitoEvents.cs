@@ -50,7 +50,7 @@ namespace Animations
         // This function is called when Incognito should emit its spit
         public void Spitting()
         {
-            incognito.EmitSpit();
+            incognito.EmitSpit(shortSpit: true);
         }
         
         public void ShortDistanceSpit()
@@ -75,7 +75,7 @@ namespace Animations
             // Audio management
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.IncognitoDistanceAttack2Spit, transform.position);
 
-			incognito.EmitSpit();
+			incognito.EmitSpit(shortSpit: false);
 		}
         
         public void EndLongSpit()

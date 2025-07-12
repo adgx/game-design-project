@@ -74,11 +74,9 @@ public class DrakeBiteAttackState : State
     }
     public override void Enter()
     {
-        if(!_drake._alreadyAttacked) {
-            _drake.anim.EndBit = false;
-            _drake.AttackPlayer();
-            _drake.anim.lunchBiteAnim();
-        }
+        _drake.anim.EndBit = false;
+        _drake.AttackPlayer();
+        _drake.anim.lunchBiteAnim();
     }
 
     public override void Tik()
@@ -101,11 +99,9 @@ public class DrakeSwipingAttackState : State
     }
     public override void Enter()
     {
-        if(!_drake._alreadyAttacked) {
-            _drake.anim.EndSwiping = false;
-            _drake.AttackPlayer();
-            _drake.anim.lunchSwipingAnim();
-        }
+        _drake.anim.EndSwiping = false;
+        _drake.AttackPlayer();
+        _drake.anim.lunchSwipingAnim();
     }
 
     public override void Tik()
