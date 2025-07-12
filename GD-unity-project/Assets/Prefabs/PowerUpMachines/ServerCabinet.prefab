@@ -184,6 +184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68d44a9b5f854abaabb544fdd223fb49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interactionZone: {fileID: 0}
   _interactionTime: 2
   _postInteractionDelay: 1.5
   _rotationDuration: 0.2
@@ -199,6 +200,7 @@ GameObject:
   - component: {fileID: 5146106810897514751}
   - component: {fileID: 5085705598246997529}
   - component: {fileID: 8891251962975580332}
+  - component: {fileID: 3765686640130013430}
   m_Layer: 0
   m_Name: Cube.023
   m_TagString: Untagged
@@ -252,7 +254,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 911011021337367313, guid: 881cb2f022eac4b44ab05bfd0eaab33f, type: 3}
+  - {fileID: 2100000, guid: 093e663ca55d0ba4fb9346a7b7cdb593, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -274,6 +276,55 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &3765686640130013430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2569465462184073077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 816fb8f65f856b746b460663dc75e2f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flickerSpeed: 0.5
+  brightnessCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.5
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -2
+      outSlope: -2
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  whatIsPlayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &2817162762448826793
 GameObject:
   m_ObjectHideFlags: 0
