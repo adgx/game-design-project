@@ -47,6 +47,7 @@ public class Incognito : MonoBehaviour, IEnemy
     //condition 
     private float _sightRange, _attackRange;
     private bool _playerInSightRange, _playerInAttackRange;
+    private bool shortDistanceSpit;
 
     private RoomManager.RoomManager _roomManager;
 
@@ -123,6 +124,7 @@ public class Incognito : MonoBehaviour, IEnemy
         State chaseS = new IncognitoChaseState("Chase", this, _events);
         State wonderS = new IncognitoWonderState("Wonder", this);
         State shortSpitAttackS = new IncognitoShortSpitAttackState("ShortSpitAttack", this);
+        State longSpitAttackS = new IncognitoLongSpitAttackState("LongSpitAttack", this);
         State waitS = new IncognitoWaitState("Wait", this, _events);
         _reactFromFrontS = new IncognitoReactFromFrontState("Hit", this);
         _deathS = new IncognitoDeathState("Death", this);
@@ -140,13 +142,16 @@ public class Incognito : MonoBehaviour, IEnemy
         _stateMachine.AddTransition(chaseS, wonderS, () => _playerInSightRange && _playerInAttackRange);
         //wonderS
         _stateMachine.AddTransition(wonderS, waitS, () => _alreadyAttacked);
-        _stateMachine.AddTransition(wonderS, shortSpitAttackS, () => !_alreadyAttacked && _playerInSightRange && _playerInAttackRange);
-        _stateMachine.AddTransition(wonderS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
+        _stateMachine.AddTransition(wonderS, shortSpitAttackS, () => !_alreadyAttacked && _playerInSightRange && _playerInAttackRange && shortDistanceSpit);
+		_stateMachine.AddTransition(wonderS, longSpitAttackS, () => !_alreadyAttacked && _playerInSightRange && _playerInAttackRange && !shortDistanceSpit);
+		_stateMachine.AddTransition(wonderS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(wonderS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
         //shortSpitAttack
         _stateMachine.AddTransition(shortSpitAttackS, wonderS, () => anim.EndShortSpit);
-        //wait
-        _stateMachine.AddTransition(waitS, wonderS, () => !_alreadyAttacked);
+		//longSpitAttack
+		_stateMachine.AddTransition(longSpitAttackS, wonderS, () => anim.EndLongSpit);
+		//wait
+		_stateMachine.AddTransition(waitS, wonderS, () => !_alreadyAttacked);
         //ReactFrom
         _stateMachine.AddTransition(_reactFromFrontS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(_reactFromFrontS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
@@ -162,6 +167,15 @@ public class Incognito : MonoBehaviour, IEnemy
         //Check for sight and attack range
         _playerInSightRange = Physics.CheckSphere(transform.position, _sightRange, _whatIsPlayer);
         _playerInAttackRange = Physics.CheckSphere(transform.position, _attackRange, _whatIsPlayer);
+        if(_playerInAttackRange) {
+            if(Random.Range(0, 2) == 0) {
+                shortDistanceSpit = false;
+            }
+            else {
+				shortDistanceSpit = true;
+			}
+        }
+
         _stateMachine.Tik();
     }
     public void Initialize(EnemyData enemyData, RoomManager.RoomManager roomManager)
@@ -277,7 +291,7 @@ public class Incognito : MonoBehaviour, IEnemy
         transform.LookAt(new Vector3(_playerTransform.position.x, transform.position.y, _playerTransform.position.z));
     }
 
-    public void ShortSpitAttackPlayer()
+    public void SpitAttackPlayer()
     {
         _alreadyAttacked = true;
         StartCoroutine(ResetAttack());
