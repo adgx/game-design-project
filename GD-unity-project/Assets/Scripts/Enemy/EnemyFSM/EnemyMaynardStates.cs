@@ -104,10 +104,8 @@ public class MaynardScreamAttackState : State
     }
     public override void Enter()
     {
-        if(!_maynard._alreadyAttacked) {
-            _maynard.anim.lunchScreamAnim();
-            _maynard.ScreamAttackPlayer();
-        }
+        _maynard.anim.lunchScreamAnim();
+        _maynard.ScreamAttackPlayer();
     }
 
     public override void Tik()
