@@ -60,7 +60,8 @@ public class PlayerShoot : MonoBehaviour
 	public int maxSphereStamina = 5;
 	public bool increaseStamina = false, increasingStamina = false;
 	public int sphereStamina = 5;
-
+	private bool sphereIsDischarged = false;
+	
 	// PowerUps
 	public PowerUp powerUp;
 
@@ -95,42 +96,44 @@ public class PlayerShoot : MonoBehaviour
         }
     }
 
-	private void Start() {
+	private void Start()
+	{
 		healthBar.SetMaxHealth(health);
 		player = GetComponent<Player>();
 
+		
 		ChangeSphereColor(maxSphereStamina);
+		
 	}
-	
-	void ChangeSphereColor(int stamina) {
-		switch(stamina) {
+
+	void ChangeSphereColor(int stamina)
+	{
+		switch (stamina)
+		{
 			case 5:
-				sphereMaterial.color = Color.green;
-				sphereMaterial.SetColor("_EmissionColor", Color.green);
+				sphereMaterial.SetColor("_EmissionColor", Color.green * 2f);
 				break;
 			case 4:
-				sphereMaterial.color = new Color(0, 1, 1);
-				sphereMaterial.SetColor("_EmissionColor", new Color(0, 1, 1));
+				sphereMaterial.SetColor("_EmissionColor", new Color(0, 1, 1) * 2f);
 				break;
 			case 3:
-				sphereMaterial.color = Color.yellow;
-				sphereMaterial.SetColor("_EmissionColor", Color.yellow);
+				sphereMaterial.SetColor("_EmissionColor", Color.yellow * 2f);
 				break;
 			case 2:
-				sphereMaterial.color = new Color(1, 0.5f, 0);
-				sphereMaterial.SetColor("_EmissionColor", new Color(1, 0.1875f, 0));
+				sphereMaterial.SetColor("_EmissionColor", new Color(1, 0.1875f, 0) * 2f);
 				break;
 			case 1:
-				sphereMaterial.color = Color.red;
-				sphereMaterial.SetColor("_EmissionColor", Color.red);
+				sphereMaterial.SetColor("_EmissionColor", Color.red * 2f);
 				break;
 			case 0:
-				sphereMaterial.color = Color.red;
-				sphereMaterial.SetColor("_EmissionColor", Color.red);
+				sphereMaterial.SetColor("_EmissionColor", Color.red * 2f);
 				break;
 			default:
 				break;
+
 		}
+		sphereMaterial.EnableKeyword("_EMISSION");
+		
 	}
 
 	public void DisableAttacks(bool value)
@@ -140,11 +143,11 @@ public class PlayerShoot : MonoBehaviour
 
 	private bool CheckStamina(int value) {
 		// The Sphere still has stamina
-		if (sphereStamina >= value) {
+		if (sphereStamina >= value && !sphereIsDischarged) {
 			return true;
 		}
 		
-		// Audio management: the Sphere has finished the stamina
+		// Audio management: the Sphere has finished the stamina or is loading after having been completely discharged
 		GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerSphereDischarge, rotatingSphere.transform.position);
 		return false;
 	}
@@ -164,8 +167,9 @@ public class PlayerShoot : MonoBehaviour
 				ChangeSphereColor(sphereStamina);
 
 				// Audio management
-				if (sphereStamina == 5)
+				if (sphereStamina == maxSphereStamina)
 				{
+					sphereIsDischarged = false; 
 					GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerSphereFullRecharge, rotatingSphere.transform.position);
 				}
 			}
@@ -218,7 +222,7 @@ public class PlayerShoot : MonoBehaviour
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
 		rotateSphere.positionSphere(new Vector3(0, 0.8f, rotateSphere.DistanceFromPlayer), RotateSphere.Animation.RotateAround);
-		//AnimationManager.Instance.Idle();
+
 		AnimationManager.Instance.Attack();
 		
 		await Task.Delay(50);
@@ -279,26 +283,33 @@ public class PlayerShoot : MonoBehaviour
 		{
 			rickEvents.ShouldPlayChargeSound = false;
 		}
-
-		print("Ciao");
 		
 		AnimationManager.Instance.EndAttack();
 	}
 
 	public async void FireDistanceAttack() {
+		bulletPrefab.gameObject.SetActive(false);
 		GameObject bullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity);
 		bullet.tag = "PlayerProjectile";
-
+		ParticleAttackController PAC = bullet.GetComponent<ParticleAttackController>();
+		PAC.playerBulletDamage = PAC.initialPlayerBulletDamage;
+		PAC.targetPos = bulletSpawnTransform;
+		bullet.SetActive(true);
+		bulletPrefab.gameObject.SetActive(true);
+		/*
 		Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
 		rbBullet.AddForce(bulletSpawnTransform.forward * bulletSpeed, ForceMode.Impulse);
 		rbBullet.AddForce(bulletSpawnTransform.up * 2f, ForceMode.Impulse);
-
+		
 		getCollisions.playerBulletDamage = getCollisions.initialPlayerBulletDamage;
-
-		if(attackStamina == 0) {
+		*/
+		
+		if (attackStamina == 0)
+		{
 			DecreaseStamina(1);
 		}
-		else {
+		else
+		{
 			DecreaseStamina(attackStamina);
 		}
 
@@ -445,6 +456,12 @@ public class PlayerShoot : MonoBehaviour
 	}
 
 	private void SpawnMagneticShield() {
+		if (!CheckStamina(1)) {
+			return; // Exits the function if the shield cannot be activated
+		}
+		
+		DecreaseStamina(1);
+		
 		// Without this check, if the button for activating/deactivating the shield is pushed and released more than once in a very fast way, then
 		// the function is called multiple times, creating a race condition among multiple concurrent instances of it (buggy code)
 		if (isShieldCoroutineRunning)
@@ -663,6 +680,8 @@ public class PlayerShoot : MonoBehaviour
 				// Not that good, but I don't have better ways to manage it
 				if (sphereStamina <= 0)
 				{
+					sphereIsDischarged = true;
+					
 					if (!increasingStamina)
 					{
 						increaseStamina = true;

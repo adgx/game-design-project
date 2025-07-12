@@ -99,7 +99,7 @@ namespace CollectablePapers
                 _rickEvents.SetIdleState();
 				_player.isFrozen = true;
 
-				_paperText.SetText(messageContent + "\n\n<color=yellow>[Press E to Close]</color>");
+				_paperText.SetText(messageContent + "\n\n<color=#806d06>[Press E to Close]</color>");
                 _paperTextContainer.SetActive(true);
 
 				GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerPaperInteraction, paperPosition);

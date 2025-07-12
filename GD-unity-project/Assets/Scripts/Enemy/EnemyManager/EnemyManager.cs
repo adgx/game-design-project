@@ -189,7 +189,7 @@ namespace Enemy.EnemyManager
 
         public void SetEnemyDifficulty() {
 			foreach(EnemyData.EnemyData enemyData in _availableEnemyData) {
-				enemyData.setDifficulty();
+				enemyData.SetDifficulty();
 			}
 
             _maxEnemiesPerRoom = _maxEnemiesPerRoomLoop1 + ((int)GameStatus.loopIteration > 0 ? 1 : 0);

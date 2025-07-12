@@ -1,17 +1,18 @@
 using System;
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 
 public class ParticleAttackController : MonoBehaviour
 {
     [SerializeField] private ParticleSystem _attackPS;
     //acceleration
-    private float _a = 13f;
+    [SerializeField] private float _a = 13f;
     private float _g = -9.81f;
-    private float _vyInit = 0.2f;
+    [SerializeField] private float _vyInit = 0.2f;
     //velocity max
-    private float _vMax = 15f;
+    [SerializeField] private float _vMax = 15f;
 
     public Transform targetPos;
     private Vector3 _destPos;
@@ -26,11 +27,21 @@ public class ParticleAttackController : MonoBehaviour
         _currentVF = 0f;
         _currentVUp = _vyInit;
         gameObject.SetActive(false);
-        _destPos = targetPos.position;
-        //offset
-        _destPos.y += 1f;
 
-        transform.LookAt(_destPos);
+        if (gameObject.CompareTag("PlayerProjectile"))
+        {
+            Debug.Log($"PlayerProjectile: {targetPos.position}");
+            transform.LookAt(targetPos.position + targetPos.forward);
+        }
+        else if (gameObject.CompareTag("SpitEnemyAttack"))
+        {
+            _destPos = targetPos.position;
+            //offset
+            _destPos.y += 1f;
+            transform.LookAt(_destPos);
+        } 
+        
+
         gameObject.SetActive(true);
         _attackPS.Play();
 
@@ -58,21 +69,50 @@ public class ParticleAttackController : MonoBehaviour
         List<ParticleCollisionEvent> ce = new();
         _attackPS.GetCollisionEvents(other, ce);
         Debug.Log($"Collision Detected :{other.gameObject.tag}");
-        if (other.CompareTag("Player"))
+        if (gameObject.CompareTag("SpitEnemyAttack"))
         {
-            PlayerShoot playerShoot = other.GetComponent<PlayerShoot>();
-            playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.Spit, Math.Sign(ce[0].normal.x), Math.Sign(ce[0].normal.z));
-            Destroy(gameObject);
+            if (other.CompareTag("Player"))
+            {
+                PlayerShoot playerShoot = other.GetComponent<PlayerShoot>();
+                playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.Spit, Math.Sign(ce[0].normal.x), Math.Sign(ce[0].normal.z));
+                Destroy(gameObject);
+            }
+            else if (other.CompareTag("Shield"))
+            {
+                Debug.Log("Shield");
+                GamePlayAudioManager.instance.PlayOneShot(Audio.FMODEvents.Instance.PlayerShieldHit, transform.position);
+                Destroy(gameObject);
+            }
+            else if (!other.CompareTag("EnemyIncognito"))
+                Destroy(gameObject);
         }
-        else if (other.CompareTag("Shield"))
-        {
-            Debug.Log("Shield");
-            GamePlayAudioManager.instance.PlayOneShot(Audio.FMODEvents.Instance.PlayerShieldHit, transform.position);
-            Destroy(gameObject);
-        }
-        else if (!other.CompareTag("EnemyIncognito"))
-            Destroy(gameObject);
     }
 
-
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Triggered");
+        if (gameObject.CompareTag("SpitEnemyAttack"))
+        {
+            if (other.gameObject.CompareTag("PlayerProjectile"))
+            {
+                Destroy(gameObject);
+            }
+        }
+        
+        if (gameObject.CompareTag("PlayerProjectile"))
+        {
+            Debug.Log($"{gameObject.tag} collided with:{other.gameObject.tag}");
+            if (other.gameObject.tag.Contains("Enemy") && !other.gameObject.tag.Contains("EnemyAttack"))
+            {
+                Debug.Log("Attacked");
+                other.gameObject.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(playerBulletDamage, "d");
+                Destroy(gameObject);
+            }
+            else
+            {
+                Debug.Log("Destroy");
+                Destroy(gameObject);
+            }
+        }  
+    }
 }

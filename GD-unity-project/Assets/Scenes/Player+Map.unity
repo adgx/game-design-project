@@ -145,6 +145,22 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4098809374271638049, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
   m_PrefabInstance: {fileID: 361144709}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &134964747 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7466109011567372119, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+  m_PrefabInstance: {fileID: 1732426662}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &134964749 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1115131906452555202, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+  m_PrefabInstance: {fileID: 1732426662}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 134964747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dad34a4a5f712da48b945001b741a9ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &150900882 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4425991590383879962, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
@@ -1761,7 +1777,7 @@ MonoBehaviour:
   player: {fileID: 972097721}
   mainCamera: {fileID: 2143297039}
   isFrozen: 0
-  rotatingSphere: {fileID: 1881446011}
+  rotatingSphere: {fileID: 134964747}
 --- !u!114 &972097724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1827,7 +1843,7 @@ MonoBehaviour:
   rickEvents: {fileID: 972097730}
   bulletSpeed: 16
   bulletSpawnTransform: {fileID: 1811753037}
-  bulletPrefab: {fileID: 3780818778376199547, guid: e2193c01f07e84362a8e9f21a5774953, type: 3}
+  bulletPrefab: {fileID: 1351494042883776938, guid: eb29ac79095518f468dd53ef8494cebb, type: 3}
   attackAreaPrefab: {fileID: 1847315181234349731, guid: 3902c314b9067494cadeb754c1359a24, type: 3}
   defaultCloseAttackDamage: 50
   closeAttackDamage: 50
@@ -1850,9 +1866,9 @@ MonoBehaviour:
   sphereStamina: 5
   powerUp: {fileID: 972097725}
   getCollisions: {fileID: 347109498}
-  rotateSphere: {fileID: 1732426663}
-  rotatingSphere: {fileID: 1881446011}
-  sphereMaterial: {fileID: 2100000, guid: b190bb1bfe2713d4f90349535891e2a0, type: 2}
+  rotateSphere: {fileID: 134964749}
+  rotatingSphere: {fileID: 134964747}
+  sphereMaterial: {fileID: 2100000, guid: 5d16e6bd7dbf26f489a710633ffd7491, type: 2}
   respawnSceneName: RespawnScene
   gameTimer: {fileID: 1738691470}
 --- !u!114 &972097728
@@ -1939,9 +1955,6 @@ MonoBehaviour:
   powerUp: {fileID: 972097725}
   playerShoot: {fileID: 972097727}
   fadeManagerLoadingScreen: {fileID: 347109501}
-  healthVendingMachineInteraction: {fileID: 0}
-  powerUpVendingMachineInteraction: {fileID: 0}
-  machineType: 
 --- !u!4 &1012403241 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2790420675413420707, guid: 3be3347198f4941448250e9e3c013016, type: 3}
@@ -2257,6 +2270,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1115131906452555202, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 972097719}
     - target: {fileID: 1193285330504239187, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
       propertyPath: healthBar
       value: 
@@ -2273,6 +2290,14 @@ PrefabInstance:
       propertyPath: distanceAttackImage
       value: 
       objectReference: {fileID: 766725499}
+    - target: {fileID: 1413776906730153237, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_Name
+      value: rotatingSphereTemp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1413776906730153237, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2929882482803849405, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
       propertyPath: player
       value: 
@@ -2288,6 +2313,18 @@ PrefabInstance:
     - target: {fileID: 4096354255052067719, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
       propertyPath: m_ApplyRootMotion
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4647093185041228041, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4647093185041228041, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4647093185041228041, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.6
       objectReference: {fileID: 0}
     - target: {fileID: 7310133868445848391, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
       propertyPath: m_Name
@@ -2342,7 +2379,8 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 1413776906730153237, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 7310133868445848391, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
@@ -2376,17 +2414,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 972097730}
   m_SourcePrefab: {fileID: 100100000, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
---- !u!114 &1732426663 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1471667939448109650, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
-  m_PrefabInstance: {fileID: 1732426662}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1881446011}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dad34a4a5f712da48b945001b741a9ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1738691462
 GameObject:
   m_ObjectHideFlags: 0
@@ -2569,8 +2596,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _availableEnemyData:
-  - {fileID: 11400000, guid: b39eedc323f9a44b789682e1655c6221, type: 2}
   - {fileID: 11400000, guid: d628d10d2db4548ec94973aa4b57d7ef, type: 2}
+  - {fileID: 11400000, guid: b39eedc323f9a44b789682e1655c6221, type: 2}
   - {fileID: 11400000, guid: 8158b0295563c43c7aa696777996f264, type: 2}
   _minEnemiesPerRoom: 1
   _maxEnemiesPerRoomLoop1: 3
@@ -2601,11 +2628,6 @@ Transform:
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5503118764985198306, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
   m_PrefabInstance: {fileID: 361144709}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1881446011 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1413776906730153237, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
-  m_PrefabInstance: {fileID: 1732426662}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1892409780
 PrefabInstance:
