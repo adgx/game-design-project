@@ -1588,6 +1588,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 947324215}
     m_Modifications:
+    - target: {fileID: 457609803666391033, guid: c2450a6f74fe3ff4fabfc1209eef3078, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 972097719}
     - target: {fileID: 6999135266191828137, guid: c2450a6f74fe3ff4fabfc1209eef3078, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.7
@@ -1630,7 +1634,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7979408394238467436, guid: c2450a6f74fe3ff4fabfc1209eef3078, type: 3}
       propertyPath: m_Name
-      value: rotatingSphere (1)
+      value: rotatingSphere
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1914,7 +1918,7 @@ MonoBehaviour:
   getCollisions: {fileID: 347109498}
   rotateSphere: {fileID: 1732426663}
   rotatingSphere: {fileID: 1881446011}
-  sphereMaterial: {fileID: 2100000, guid: b190bb1bfe2713d4f90349535891e2a0, type: 2}
+  sphereMaterial: {fileID: 2100000, guid: 5d16e6bd7dbf26f489a710633ffd7491, type: 2}
   respawnSceneName: RespawnScene
   gameTimer: {fileID: 1738691470}
 --- !u!114 &972097728
