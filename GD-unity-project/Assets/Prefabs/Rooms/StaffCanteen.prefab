@@ -929,6 +929,59 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &6690524559047205083
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4518412402794621698}
+  - component: {fileID: 866509001489135950}
+  m_Layer: 9
+  m_Name: _AmbienceTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4518412402794621698
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6690524559047205083}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 19.06, y: 3.41, z: 14.58}
+  m_LocalScale: {x: 30.89498, y: 4.2872267, z: 20.082172}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1764597301372391908}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &866509001489135950
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6690524559047205083}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7586022029633447512
 GameObject:
   m_ObjectHideFlags: 0
@@ -1141,6 +1194,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1764597301372391908}
   - component: {fileID: 4342715560608983373}
+  - component: {fileID: 5077461465078479627}
   m_Layer: 0
   m_Name: StaffCanteen
   m_TagString: Untagged
@@ -1171,6 +1225,7 @@ Transform:
   - {fileID: 7511779828658512499}
   - {fileID: 1096195767745341189}
   - {fileID: 5433183169957891040}
+  - {fileID: 4518412402794621698}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4342715560608983373
@@ -1206,6 +1261,35 @@ MonoBehaviour:
   _powerUpVendingMachinePrefab: {fileID: 4244855144719349046}
   _upgradeTerminalPrefab: {fileID: 2925730794849845460}
   _paperPrefab: {fileID: 453321968324626936}
+--- !u!114 &5077461465078479627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8883446361754839683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 003547e1813a24741ab28b05f0b2e736, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundsToManage:
+  - objectTag: AlarmSpeaker
+    fmodEvent:
+      Guid:
+        Data1: 1373224865
+        Data2: 1258097855
+        Data3: -654289524
+        Data4: 410566001
+      Path: event:/Ambience/General/Alarm
+  - objectTag: Refrigerator
+    fmodEvent:
+      Guid:
+        Data1: 1227867096
+        Data2: 1232235182
+        Data3: 1331899567
+        Data4: 1296162209
+      Path: event:/Ambience/Staff canteen/RefrigeratorNoise
 --- !u!1 &9006042238951089546
 GameObject:
   m_ObjectHideFlags: 0
