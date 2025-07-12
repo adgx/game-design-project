@@ -1,9 +1,9 @@
 using System.Collections;
+using Animations;
 using Enemy.EnemyData;
 using Enemy.EnemyManager;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Serialization;
 
 public class Incognito : MonoBehaviour, IEnemy
 {
@@ -56,6 +56,9 @@ public class Incognito : MonoBehaviour, IEnemy
 
     private EnemyManager enemyManager;
 
+    // Audio management
+    private IncognitoEvents _events;
+    
     void Awake()
     {
         Animator incognitoAC = GetComponent<Animator>();
@@ -86,6 +89,9 @@ public class Incognito : MonoBehaviour, IEnemy
         {
             Debug.LogError(this.ToString() + ": No materials are found");
         }
+        
+        // Audio management
+        _events = GetComponent<IncognitoEvents>(); 
     }
 
     void Start()
@@ -109,15 +115,15 @@ public class Incognito : MonoBehaviour, IEnemy
             _distanceAttackDamage = 10f;
         }
         //FMS base
-            _stateMachine = new FiniteStateMachine<Incognito>(this);
+        _stateMachine = new FiniteStateMachine<Incognito>(this);
 
         //Define states
-        State idleS = new IncognitoIdleState("Idle", this);
-        State patrolS = new IncognitoPatrolState("Patrol", this);
-        State chaseS = new IncognitoChaseState("Chase", this);
+        State idleS = new IncognitoIdleState("Idle", this, _events);
+        State patrolS = new IncognitoPatrolState("Patrol", this, _events);
+        State chaseS = new IncognitoChaseState("Chase", this, _events);
         State wonderS = new IncognitoWonderState("Wonder", this);
         State shortSpitAttackS = new IncognitoShortSpitAttackState("ShortSpitAttack", this);
-        State waitS = new IncognitoWaitState("Wait", this);
+        State waitS = new IncognitoWaitState("Wait", this, _events);
         _reactFromFrontS = new IncognitoReactFromFrontState("Hit", this);
         _deathS = new IncognitoDeathState("Death", this);
 

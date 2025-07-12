@@ -1,12 +1,9 @@
-
 using System.Collections;
+using Animations;
 using Enemy.EnemyData;
 using Enemy.EnemyManager;
 using UnityEngine;
 using UnityEngine.AI;
-using RoomManager;
-using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 
 public class Drake : MonoBehaviour, IEnemy
 {
@@ -62,6 +59,9 @@ public class Drake : MonoBehaviour, IEnemy
 
     private EnemyManager enemyManager;
     private bool _debug = false;
+    
+    // Audio management
+    private DrakeEvents _events;
 
     void Awake()
     {
@@ -94,6 +94,9 @@ public class Drake : MonoBehaviour, IEnemy
         {
             Debug.LogError(this.ToString() + ": No materials are found");
         }
+        
+        // Audio management
+        _events = GetComponent<DrakeEvents>(); 
     }
 
     void Start()
@@ -115,17 +118,18 @@ public class Drake : MonoBehaviour, IEnemy
             _closeAttackDamageMultiplier = 0.8f;
             _closeAttackDamage = 20f;
         }
+        
         //FMS base
-            _stateMachine = new FiniteStateMachine<Drake>(this);
+        _stateMachine = new FiniteStateMachine<Drake>(this);
 
         //Define states
-        State idleS = new DrakeIdleState("Idle", this);
-        State patrolS = new DrakePatrolState("Patrol", this);
-        State chaseS = new DrakeChaseState("Chase", this);
+        State idleS = new DrakeIdleState("Idle", this, _events);
+        State patrolS = new DrakePatrolState("Patrol", this, _events);
+        State chaseS = new DrakeChaseState("Chase", this, _events);
         State wonderS = new DrakeWonderState("Wonder", this);
         State swipingS = new DrakeSwipingAttackState("Swiping", this);
         State biteS = new DrakeBiteAttackState("Bite", this);
-        State waitS = new DrakeWaitState("Wait", this);
+        State waitS = new DrakeWaitState("Wait", this, _events);
 
         _reactFromFrontS = new DrakeReactFromFrontState("Hit", this);
         _defenseS = new DrakeDefenseState("Defense", this);

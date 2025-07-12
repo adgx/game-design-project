@@ -1,4 +1,5 @@
 using System.Collections;
+using Animations;
 using Enemy.EnemyData;
 using Enemy.EnemyManager;
 using UnityEngine;
@@ -9,8 +10,7 @@ public class Maynard : MonoBehaviour, IEnemy
     [SerializeField] private NavMeshAgent _agent;
     [SerializeField] private LayerMask _whatIsGround, _whatIsPlayer;
     [SerializeField] private GameObject attackSpawn;
-
-
+    
     //FSM
     private FiniteStateMachine<Maynard> _stateMachine;
     // This variable increases (> 1) or reduces (< 1) the damage taken by this enemy type when attacked
@@ -61,7 +61,9 @@ public class Maynard : MonoBehaviour, IEnemy
 
     private EnemyManager enemyManager;
 
-    public bool debug = false;
+    private bool _debug = false;
+
+    private MaynardEvents _events;
 
     void Awake()
     {
@@ -75,7 +77,8 @@ public class Maynard : MonoBehaviour, IEnemy
         anim = new MaynardAnimation(maynardAC);
         _playerTransform = GameObject.Find("Player").transform;
         _agent = GetComponent<NavMeshAgent>();
-        if (!debug)
+
+        if (!_debug)
         {
             playerShoot = Player.Instance.GetComponent<PlayerShoot>();
             enemyManager = GameObject.Find("RoomManager").GetComponent<EnemyManager>();
@@ -94,7 +97,7 @@ public class Maynard : MonoBehaviour, IEnemy
         {
             Debug.LogError(this.ToString() + ": No materials are found");
         }
-        if (debug)
+        if (_debug)
         {
             _agent = GetComponent<NavMeshAgent>();
             _sightRange = 12f;
@@ -116,7 +119,9 @@ public class Maynard : MonoBehaviour, IEnemy
             _timeBetweenAttacks = 3f;
             enemyName = "";
         }
-
+        
+        // Audio management
+        _events = GetComponent<MaynardEvents>(); 
     }
 
     void Start()
@@ -125,13 +130,13 @@ public class Maynard : MonoBehaviour, IEnemy
         _stateMachine = new FiniteStateMachine<Maynard>(this);
 
         //Define states
-        State idleS = new MaynardIdleState("Idle", this);
-        State patrolS = new MaynardPatrolState("Patrol", this);
-        State chaseS = new MaynardChaseState("Chase", this);
+        State idleS = new MaynardIdleState("Idle", this, _events);
+        State patrolS = new MaynardPatrolState("Patrol", this, _events);
+        State chaseS = new MaynardChaseState("Chase", this, _events);
         State wonderS = new MaynardWonderState("Wonder", this);
         State screamAttackS = new MaynardScreamAttackState("ScreamAttack", this);
         State closeAttackS = new MaynardCloseAttackState("CloseAttack", this);
-        State waitS = new MaynardWaitState("Wait", this);
+        State waitS = new MaynardWaitState("Wait", this, _events);
         _reactFromFrontS = new MaynardReactFromFrontState("Hit", this);
         _deathS = new MaynardDeathState("Death", this);
         //take attention on the order with the transitions are added
@@ -159,8 +164,6 @@ public class Maynard : MonoBehaviour, IEnemy
         _stateMachine.AddTransition(_reactFromFrontS, chaseS, () => _playerInSightRange && !_playerInCloseAttackRange);
         _stateMachine.AddTransition(_reactFromFrontS, wonderS, () => (_playerInCloseAttackRange && _playerInSightRange) || (_playerInRemoteAttackRange && _playerInSightRange));
         
-
-
         //Set Initial state
         _stateMachine.SetState(idleS);
     }
@@ -308,7 +311,7 @@ public class Maynard : MonoBehaviour, IEnemy
     {
         if (_agent == null || !_agent.isOnNavMesh) return;
 
-        if (debug || _roomManager.IsNavMeshBaked)
+        if (_debug || _roomManager.IsNavMeshBaked)
         {
             _agent.SetDestination(_playerTransform.position);
         }
@@ -343,7 +346,7 @@ public class Maynard : MonoBehaviour, IEnemy
     public void EmitScream()
     {
         //Attack code here
-        if (!debug)
+        if (!_debug)
         {
             GameObject bullet = Instantiate(_bulletPrefab, attackSpawn.transform.position, Quaternion.identity);
             bullet.tag = "EnemyAttack";
@@ -370,7 +373,7 @@ public class Maynard : MonoBehaviour, IEnemy
         }
         if (Physics.CheckSphere(transform.position, 2f, _whatIsPlayer))
         {
-            if (!debug)
+            if (!_debug)
             {
                 playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, 5, 5);
             }

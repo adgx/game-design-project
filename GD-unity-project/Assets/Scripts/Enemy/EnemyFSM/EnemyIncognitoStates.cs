@@ -1,17 +1,24 @@
-using UnityEngine;
+using Animations;
 
 public class IncognitoPatrolState : State
 {
     private Incognito _incognito;
+    
+    // Audio management
+    private IncognitoEvents _events;
 
-    public IncognitoPatrolState(string name, Incognito incognito) : base(name)
+    public IncognitoPatrolState(string name, Incognito incognito, IncognitoEvents events) : base(name)
     {
         _incognito = incognito;
+        _events = events;
     }
 
     public override void Enter()
     {
         _incognito.anim.lunchRunAnim();
+        
+        // Audio management: start footsteps event if Incognito is patrolling
+        _events.StartRunningSound();
     }
 
     public override void Tik()
@@ -21,19 +28,28 @@ public class IncognitoPatrolState : State
 
     public override void Exit()
     {
+        // Audio management: stop footsteps event if Incognito is not patrolling anymore
+        _events.StopRunningSound();
     }
 }
 
 public class IncognitoChaseState : State
 {
     private Incognito _incognito;
-    public IncognitoChaseState(string name, Incognito incognito) : base(name)
+    
+    // Audio management
+    private IncognitoEvents _events;
+    public IncognitoChaseState(string name, Incognito incognito, IncognitoEvents events) : base(name)
     {
         _incognito = incognito;
+        _events = events;
     }
     public override void Enter()
     {
         _incognito.anim.lunchRunAnim();
+        
+        // Audio management: start footsteps event if Incognito is chasing
+        _events.StartRunningSound();
     }
 
     public override void Tik()
@@ -43,6 +59,8 @@ public class IncognitoChaseState : State
 
     public override void Exit()
     {
+        // Audio management: stop footsteps event if Incognito is not chasing anymore
+        _events.StopRunningSound();
     }
 }
 
@@ -91,8 +109,6 @@ public class IncognitoShortSpitAttackState : State
     public override void Exit()
     {
     }
-
-
 }
 
 public class IncognitoReactFromFrontState : State {
@@ -136,14 +152,20 @@ public class IncognitoWaitState : State
 {
     private Incognito _incognito;
 
-    public IncognitoWaitState(string name, Incognito incognito) : base(name)
+    // Audio management
+    private IncognitoEvents _events;
+    
+    public IncognitoWaitState(string name, Incognito incognito, IncognitoEvents events) : base(name)
     {
-
         _incognito = incognito;
+        _events = events;
     }
     public override void Enter()
     {
         _incognito.anim.lunchIdleAnim();
+        
+        // Audio management: start idle event if Incognito is waiting
+        _events.StartIdleSound();
     }
 
     public override void Tik()
@@ -152,23 +174,32 @@ public class IncognitoWaitState : State
 
     public override void Exit()
     {
+        // Audio management: stop idle event if Incognito is not waiting anymore
+        _events.StopIdleSound();
     }
 }
 
 public class IncognitoIdleState : State
 {
     private Incognito _incognito;
+    
+    // Audio management
+    private IncognitoEvents _events;
 
-    public IncognitoIdleState(string name, Incognito incognito) : base(name)
+    public IncognitoIdleState(string name, Incognito incognito, IncognitoEvents events) : base(name)
     {
-        
         _incognito = incognito;
+        _events = events;
     }
+    
     public override void Enter()
     {
         _incognito.clearWaitTime();
         _incognito.SetRandomTimeIdle();
         _incognito.anim.lunchIdleAnim();
+        
+        // Audio management: start idle event if Incognito is idling
+        _events.StartIdleSound();
     }
 
     public override void Tik()
@@ -179,5 +210,8 @@ public class IncognitoIdleState : State
     public override void Exit()
     {
         _incognito.clearWaitTime();
+        
+        // Audio management: stop idle event if Incognito is not idling anymore
+        _events.StopIdleSound();
     }
 }

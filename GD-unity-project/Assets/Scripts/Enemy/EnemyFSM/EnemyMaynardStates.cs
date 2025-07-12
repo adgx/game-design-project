@@ -1,13 +1,16 @@
-using System;
-using UnityEngine;
+using Animations;
 
 public class MaynardPatrolState : State
 {
     private Maynard _maynard;
+    
+    // Audio management
+    private MaynardEvents _events;
 
-    public MaynardPatrolState(string name, Maynard maynard) : base(name)
+    public MaynardPatrolState(string name, Maynard maynard, MaynardEvents events) : base(name)
     {
         _maynard = maynard;
+        _events = events;
     }
 
     public override void Enter()
@@ -16,6 +19,9 @@ public class MaynardPatrolState : State
         _maynard.clearWaitTime();
         _maynard.SetRandomTimeIdle();
         _maynard.anim.lunchRunAnim();
+        
+        // Audio management: start footsteps event if Maynard is patrolling
+        _events.StartRunningSound();
     }
 
     public override void Tik()
@@ -27,20 +33,31 @@ public class MaynardPatrolState : State
     public override void Exit()
     {
         _maynard.clearWaitTime();
+        
+        // Audio management: stop footsteps event if Maynard is not patrolling anymore
+        _events.StopRunningSound();
     }
 }
 
 public class MaynardChaseState : State
 {
     private Maynard _maynard;
-    public MaynardChaseState(string name, Maynard maynard) : base(name)
+    
+    // Audio management
+    private MaynardEvents _events;
+    
+    public MaynardChaseState(string name, Maynard maynard, MaynardEvents events) : base(name)
     {
         _maynard = maynard;
+        _events = events;
     }
     public override void Enter()
     {
         _maynard.SetChaseRange();
         _maynard.anim.lunchRunAnim();
+        
+        // Audio management: start footsteps event if Maynard is chasing
+        _events.StartRunningSound();
     }
 
     public override void Tik()
@@ -50,6 +67,8 @@ public class MaynardChaseState : State
 
     public override void Exit()
     {
+        // Audio management: stop footsteps event if Maynard is not chasing anymore
+        _events.StopRunningSound();
     }
 }
 
@@ -169,16 +188,23 @@ public class MaynardDeathState : State
 public class MaynardIdleState : State
 {
     private Maynard _maynard;
+    
+    // Audio management
+    private MaynardEvents _events;
 
-    public MaynardIdleState(string name, Maynard maynard) : base(name)
+    public MaynardIdleState(string name, Maynard maynard, MaynardEvents events) : base(name)
     {
         _maynard = maynard;
+        _events = events;
     }
     public override void Enter()
     {
         _maynard.clearWaitTime();
         _maynard.SetRandomTimeIdle();
         _maynard.anim.lunchIdleAnim();
+        
+        // Audio management: start idle event if Maynard is idling
+        _events.StartIdleSound();
     }
 
     public override void Tik()
@@ -189,6 +215,9 @@ public class MaynardIdleState : State
     public override void Exit()
     {
         _maynard.clearWaitTime();
+        
+        // Audio management: stop idle event if Maynard is not idling anymore
+        _events.StopIdleSound();
     }
 }
 
@@ -196,13 +225,20 @@ public class MaynardWaitState : State
 {
     private Maynard _maynard;
     
-    public MaynardWaitState(string name, Maynard maynard) : base(name)
+    // Audio management
+    private MaynardEvents _events;
+    
+    public MaynardWaitState(string name, Maynard maynard, MaynardEvents events) : base(name)
     {
         _maynard = maynard;
+        _events = events;
     } 
     public override void Enter()
     {
         _maynard.anim.lunchIdleAnim();
+        
+        // Audio management: start idle event if Maynard is waiting
+        _events.StartIdleSound();
     }
 
     public override void Tik()
@@ -211,5 +247,7 @@ public class MaynardWaitState : State
 
     public override void Exit()
     {
+        // Audio management: stop idle event if Maynard is not waiting anymore
+        _events.StopIdleSound();
     }
 }
