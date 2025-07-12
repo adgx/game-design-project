@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Audio;
 using FMOD.Studio;
@@ -25,9 +26,9 @@ namespace Animations
         public PowerUp powerUp;
         public PlayerShoot playerShoot;
         [SerializeField] private FadeManagerLoadingScreen fadeManagerLoadingScreen;
-        [DoNotSerialize] public HealthVendingMachineInteraction healthVendingMachineInteraction;
-		[DoNotSerialize] public PowerUpVendingMachineInteraction powerUpVendingMachineInteraction;
-        [DoNotSerialize] public string machineType; // Can be "playerPowerUp" or "health"
+        [NonSerialized] public HealthVendingMachineInteraction healthVendingMachineInteraction;
+		[NonSerialized] public PowerUpVendingMachineInteraction powerUpVendingMachineInteraction;
+        [NonSerialized] public string machineType; // Can be "playerPowerUp" or "health"
 
 		public void SetHitState()
         {
