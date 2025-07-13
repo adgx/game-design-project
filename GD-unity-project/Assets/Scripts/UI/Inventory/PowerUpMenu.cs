@@ -37,7 +37,7 @@ public class PowerUpMenu : MonoBehaviour {
 					spherePowerUpsRow.transform.GetChild(spherePowerUps).GetComponent<Button>().onClick.AddListener(() => ShowPowerUpDescription(puTemp));
 					
 					Image spherePowerUpIcon = spherePowerUpsRow.transform.GetChild(spherePowerUps).GetComponent<Image>();
-					spherePowerUpIcon.sprite = powerUpIcons.Find(p => p.iconId == puTemp + i.ToString()).icon;
+					spherePowerUpIcon.sprite = powerUpIcons.Find(p => p.iconId == puTemp.ToString() + i.ToString()).icon;
 					spherePowerUpIcon.color = Color.white;
 
 					spherePowerUps++;

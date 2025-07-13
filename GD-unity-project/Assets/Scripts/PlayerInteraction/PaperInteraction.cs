@@ -30,7 +30,7 @@ namespace PlayerInteraction
         public bool Interact(GameObject interactor)
         {
             PaperManager.Instance.ShowPaper(this.transform.position);
-			Destroy(gameObject);
+			gameObject.SetActive(false);
 			return true;
         }
     }
