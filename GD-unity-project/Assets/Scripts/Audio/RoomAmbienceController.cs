@@ -68,7 +68,11 @@ public class RoomAmbienceController : MonoBehaviour
     {
         foreach (var emitter in activeEmitters)
         {
-            if (emitter != null && !emitter.IsPlaying())
+            // Fai partire il suono solo se:
+            // 1. L'emitter esiste
+            // 2. Il GameObject a cui è attaccato è attivo nella scena
+            // 3. Non sta già suonando
+            if (emitter != null && emitter.gameObject.activeInHierarchy && !emitter.IsPlaying())
             {
                 emitter.Play();
             }

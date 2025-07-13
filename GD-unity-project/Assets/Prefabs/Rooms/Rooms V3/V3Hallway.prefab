@@ -5561,7 +5561,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6468963621349640749}
   - component: {fileID: 4292986959588430303}
-  - component: {fileID: 4367188063812300356}
+  - component: {fileID: 6270472129999572245}
   m_Layer: 0
   m_Name: V3Hallway
   m_TagString: Untagged
@@ -5630,7 +5630,7 @@ MonoBehaviour:
   _powerUpVendingMachinePrefab: {fileID: 9041225786181748388}
   _upgradeTerminalPrefab: {fileID: 4868234364984600936}
   _paperPrefab: {fileID: 3649753670404406957}
---- !u!114 &4367188063812300356
+--- !u!114 &6270472129999572245
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5667,6 +5667,30 @@ MonoBehaviour:
         Data3: 166545854
         Data4: 1583370833
       Path: event:/Ambience/Hallway/ElevatorNoise
+  - objectTag: HealthSnackDistributor
+    fmodEvent:
+      Guid:
+        Data1: 1484193312
+        Data2: 1244157275
+        Data3: 1979302808
+        Data4: -1684614068
+      Path: event:/Ambience/General/VendingMachineNoise
+  - objectTag: PowerUpSnackDistributor
+    fmodEvent:
+      Guid:
+        Data1: 1484193312
+        Data2: 1244157275
+        Data3: 1979302808
+        Data4: -1684614068
+      Path: event:/Ambience/General/VendingMachineNoise
+  - objectTag: SphereTerminal
+    fmodEvent:
+      Guid:
+        Data1: -175314623
+        Data2: 1255852906
+        Data3: 1178096001
+        Data4: 1697852409
+      Path: event:/Ambience/General/TerminalNoise
 --- !u!1 &4344926781501450477
 GameObject:
   m_ObjectHideFlags: 0

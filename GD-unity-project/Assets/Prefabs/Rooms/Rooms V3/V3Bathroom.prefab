@@ -692,7 +692,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5337260740105535007}
   - component: {fileID: 8753745212488098596}
-  - component: {fileID: 5862543215579209510}
+  - component: {fileID: 440237775219166791}
   m_Layer: 0
   m_Name: V3Bathroom
   m_TagString: Untagged
@@ -761,7 +761,7 @@ MonoBehaviour:
   _powerUpVendingMachinePrefab: {fileID: 0}
   _upgradeTerminalPrefab: {fileID: 0}
   _paperPrefab: {fileID: 0}
---- !u!114 &5862543215579209510
+--- !u!114 &440237775219166791
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -790,6 +790,30 @@ MonoBehaviour:
         Data3: 987327118
         Data4: -2100846542
       Path: event:/Ambience/Bathroom/FlushingWater
+  - objectTag: HealthSnackDistributor
+    fmodEvent:
+      Guid:
+        Data1: 1484193312
+        Data2: 1244157275
+        Data3: 1979302808
+        Data4: -1684614068
+      Path: event:/Ambience/General/VendingMachineNoise
+  - objectTag: PowerUpSnackDistributor
+    fmodEvent:
+      Guid:
+        Data1: 1484193312
+        Data2: 1244157275
+        Data3: 1979302808
+        Data4: -1684614068
+      Path: event:/Ambience/General/VendingMachineNoise
+  - objectTag: SphereTerminal
+    fmodEvent:
+      Guid:
+        Data1: -175314623
+        Data2: 1255852906
+        Data3: 1178096001
+        Data4: 1697852409
+      Path: event:/Ambience/General/TerminalNoise
 --- !u!1 &2854547184470649121
 GameObject:
   m_ObjectHideFlags: 0

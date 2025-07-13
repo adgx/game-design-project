@@ -6387,7 +6387,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4977402327728931212}
   - component: {fileID: 3387052329859460017}
-  - component: {fileID: 429389780706640977}
+  - component: {fileID: 1045930268712199835}
   m_Layer: 0
   m_Name: V2ServerRoom
   m_TagString: Untagged
@@ -6471,7 +6471,7 @@ MonoBehaviour:
   _powerUpVendingMachinePrefab: {fileID: 8429428749154104105}
   _upgradeTerminalPrefab: {fileID: 7962233153558062209}
   _paperPrefab: {fileID: 3311216181374165737}
---- !u!114 &429389780706640977
+--- !u!114 &1045930268712199835
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6500,6 +6500,30 @@ MonoBehaviour:
         Data3: 1648386715
         Data4: -700621535
       Path: event:/Ambience/Server room/ServerNoise
+  - objectTag: HealthSnackDistributor
+    fmodEvent:
+      Guid:
+        Data1: 1484193312
+        Data2: 1244157275
+        Data3: 1979302808
+        Data4: -1684614068
+      Path: event:/Ambience/General/VendingMachineNoise
+  - objectTag: PowerUpSnackDistributor
+    fmodEvent:
+      Guid:
+        Data1: 1484193312
+        Data2: 1244157275
+        Data3: 1979302808
+        Data4: -1684614068
+      Path: event:/Ambience/General/VendingMachineNoise
+  - objectTag: SphereTerminal
+    fmodEvent:
+      Guid:
+        Data1: -175314623
+        Data2: 1255852906
+        Data3: 1178096001
+        Data4: 1697852409
+      Path: event:/Ambience/General/TerminalNoise
 --- !u!1 &7385654115760586923
 GameObject:
   m_ObjectHideFlags: 0
