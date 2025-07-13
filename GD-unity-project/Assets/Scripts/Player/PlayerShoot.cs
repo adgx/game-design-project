@@ -26,10 +26,14 @@ public class PlayerShoot : MonoBehaviour
 
 	// Attack2
 	[SerializeField] private GameObject attackAreaPrefab;
+	[HideInInspector]
+	public GameObject attackAreaInstance;
+	public GameObject attackAreaVFXPrefab;
 	public int defaultCloseAttackDamage = 50;
 	public int closeAttackDamage = 50;
 	private float defaultDamageRadius = 2.5f;
-	private float damageRadius = 2.5f;
+	[HideInInspector]
+	public float damageRadius = 2f;
 
 	public bool cannotAttack = false;
 
@@ -126,7 +130,7 @@ public class PlayerShoot : MonoBehaviour
 				sphereMaterial.SetColor("_EmissionColor", Color.red * 2f);
 				break;
 			case 0:
-				sphereMaterial.SetColor("_EmissionColor", Color.red * 2f);
+				sphereMaterial.SetColor("_EmissionColor", Color.white * 2f);
 				break;
 			default:
 				break;
@@ -403,16 +407,15 @@ public class PlayerShoot : MonoBehaviour
 
 	async void SpawnAttackArea() {
 		
-		GameObject attackArea = Instantiate(attackAreaPrefab, transform.position, Quaternion.identity);
+		/*GameObject attackArea = Instantiate(attackAreaPrefab, transform.position, Quaternion.identity);
 		attackArea.transform.parent = transform;
 		attackArea.transform.localScale = new Vector3(2 * damageRadius, 0, 2 * damageRadius);
 		
 		CheckForEnemies();
-
+		*/
 		await Task.Delay(500);
-
-		Destroy(attackArea);
-
+		
+		//Destroy(attackArea);
 		rotateSphere.positionSphere(new Vector3(rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
 		await Task.Delay(300);
 

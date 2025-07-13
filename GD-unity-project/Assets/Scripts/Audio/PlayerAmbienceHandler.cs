@@ -1,5 +1,3 @@
-// In PlayerAmbienceHandler.cs
-
 using UnityEngine;
 using Utils;
 
@@ -29,23 +27,23 @@ public class PlayerAmbienceHandler : MonoBehaviour
     {
         var newRoomController = other.GetComponentInParent<RoomAmbienceController>();
 
-        // Se non è una stanza valida o è la stessa in cui siamo già, esci subito.
+        // If it is not a valid room or it is the same in which we are already, leave immediately
         if (newRoomController == null || newRoomController == currentRoomController)
         {
             return;
         }
 
-        // Spegni la vecchia stanza PRIMA di fare qualsiasi altra cosa.
+        // Turn off the old room BEFORE doing anything else
         if (currentRoomController != null)
         {
             currentRoomController.DeactivateAllSounds();
         }
 
-        // Aggiorna il riferimento e SOLO DOPO attiva i suoni nuovi.
+        // Update the reference and only after activate new sounds
         currentRoomController = newRoomController;
         currentRoomController.ActivateAmbience();
         
-        // Attiva l'allarme se necessario.
+        // Activate the alarm if necessary
         if (gameTimer != null && gameTimer.IsAlarmConditionActive)
         {
             currentRoomController.ActivateAlarm();
@@ -54,7 +52,7 @@ public class PlayerAmbienceHandler : MonoBehaviour
     
     private void HandleTimerLow()
     {
-        // Se siamo in una stanza, fai partire il suo allarme.
+        // If we are in a room, start his alarm
         if (currentRoomController != null)
         {
             currentRoomController.ActivateAlarm();

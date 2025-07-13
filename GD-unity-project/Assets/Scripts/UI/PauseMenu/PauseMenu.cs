@@ -1,12 +1,10 @@
 using System.Collections;
 using System.Threading.Tasks;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+using Animations;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -29,6 +27,9 @@ public class PauseMenu : MonoBehaviour
 	[SerializeField] private ButtonEffects buttonEffects;
 
 	private PlayerInput playerInput;
+	
+	// Audio management
+	private RickEvents rickEvents;
 
 	private bool pauseScreenOpen = false;
 
@@ -37,6 +38,9 @@ public class PauseMenu : MonoBehaviour
 
 	private void Start() {
 		playerInput = Player.Instance.GetComponent<PlayerInput>();
+		
+		// Audio management
+		rickEvents = Player.Instance.GetComponent<RickEvents>();
 
 		pauseScreenOpen = false;
 		screenContainer.SetActive(false);
@@ -89,6 +93,12 @@ public class PauseMenu : MonoBehaviour
 			}
 		}
 		else {
+			// Audio management: stops all Rick's looping sounds  
+			if (rickEvents != null)
+			{
+				rickEvents.StopAllLoopingSounds();
+			}
+			
 			pauseScreenOpen = true;
 			screenContainer.SetActive(true);
 			pauseMenu.SetActive(true);

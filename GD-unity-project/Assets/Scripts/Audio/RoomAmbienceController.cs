@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
 
-// Questa classe può stare nello stesso file o in uno separato.
+// This class can be in the same file or a separate
 [System.Serializable]
 public class AmbienceSoundDefinition
 {
@@ -18,18 +18,18 @@ public class RoomAmbienceController : MonoBehaviour
     private List<StudioEventEmitter> activeEmitters;
     private List<StudioEventEmitter> alarmEmitters;
 
-    // Quando la stanza viene creata
+    // When the room is created
     private void Awake()
     {
         InitializeRoomEmitters();
-        // Registra questa stanza al sistema centrale
+        // Register this room to the central system
         AmbienceSystem.Register(this);
     }
 
-    // Quando la stanza viene distrutta
+    // When the room is destroyed
     private void OnDestroy()
     {
-        // È fondamentale deregistrare la stanza per evitare riferimenti a oggetti distrutti
+        // It is essential to unregister the room to avoid references to destroyed objects
         AmbienceSystem.Unregister(this);
     }
 
@@ -45,7 +45,7 @@ public class RoomAmbienceController : MonoBehaviour
             {
                 if (child.CompareTag(definition.objectTag))
                 {
-                    // Assumendo che tu abbia un GamePlayAudioManager per creare gli emitter
+                    // Assuming you have a GamePlayAudioManager to create the emitter
                     var emitter = GamePlayAudioManager.instance.InitializeEventEmitter(definition.fmodEvent, child.gameObject);
                     if (emitter != null)
                     {
@@ -63,15 +63,15 @@ public class RoomAmbienceController : MonoBehaviour
         }
     }
 
-    // Attiva i suoni base (non l'allarme)
+    // Activate the base sounds (not the alarm)
     public void ActivateAmbience()
     {
         foreach (var emitter in activeEmitters)
         {
-            // Fai partire il suono solo se:
-            // 1. L'emitter esiste
-            // 2. Il GameObject a cui è attaccato è attivo nella scena
-            // 3. Non sta già suonando
+            // Play the sound only if:
+            // 1. The emitter exists
+            // 2. The attached GameObject is active in the scene
+            // 3. Not playing yet
             if (emitter != null && emitter.gameObject.activeInHierarchy && !emitter.IsPlaying())
             {
                 emitter.Play();
@@ -79,7 +79,7 @@ public class RoomAmbienceController : MonoBehaviour
         }
     }
 
-    // Spegne TUTTI i suoni di questa stanza IMMEDIATAMENTE
+    // Turn off all sounds in this room immediately
     public void DeactivateAllSounds()
     {
         foreach (var emitter in activeEmitters)
@@ -99,7 +99,7 @@ public class RoomAmbienceController : MonoBehaviour
         }
     }
     
-    // Attiva l'allarme
+    // Activate the alarm
     public void ActivateAlarm()
     {
         foreach (var alarm in alarmEmitters)

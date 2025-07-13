@@ -96,6 +96,12 @@ public class ParticleAttackController : MonoBehaviour
             return;
         }
         
+        // To avoid projectile disappearing after colliding with door's collider  
+        if (other.gameObject.layer == LayerMask.NameToLayer("Interactable") || other.gameObject.CompareTag("Sphere"))
+        {
+            return;
+        }
+        
         if (gameObject.CompareTag("SpitEnemyAttack"))
         {
             if (other.gameObject.CompareTag("PlayerProjectile"))

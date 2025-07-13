@@ -4,8 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-
-// Audio management
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Enemy.EnemyManager;
@@ -97,7 +95,7 @@ namespace Utils {
 				isRunning = false;
 
 				AnimationManager.Instance.Idle();
-				rickEvents.SetIdleState();
+				rickEvents.DisableRickState();
 				
 				// Ambient light management
 				GameEvents.current.TimerEnded(); 
@@ -174,6 +172,9 @@ namespace Utils {
 			if(!roomManager)
 				return;
 			
+			// Audio management: first, stop the player sounds immediately
+			rickEvents.StopAllLoopingSounds(); 
+			
 			// Audio management: clean the audio before starting the reset and resets the alarm logic state
 			ForceStopAllAmbientEvents();
 			IsAlarmConditionActive = false;
@@ -226,7 +227,7 @@ namespace Utils {
 				}
 				else
 				{
-					Debug.LogError("Impossibile trovare una descrizione valida per l'evento dell'allarme.");
+					Debug.LogError("Could not find a valid description for the alarm event.");
 				}
 			}
 		}
