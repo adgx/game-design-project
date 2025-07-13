@@ -108,6 +108,10 @@ namespace Animations
             shield.tag = "Shield";
             magneticShieldPrefab.gameObject.SetActive(true);
             shield.gameObject.SetActive(true);
+
+            // Audio management
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldActivation, transform.position);
+
             if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
             {
                 if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1)
@@ -159,7 +163,6 @@ namespace Animations
             // Audio management
             if (!powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
             {
-                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldActivation, transform.position);
                 //AnimationManager.Instance.RemoveDefenseVfx();
 
                 _ = ShieldDeactivationAfterDelay(0);
@@ -174,7 +177,6 @@ namespace Animations
             // Audio management
             if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
             {
-                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldActivation, transform.position);
                 if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1)
                 {
                     _ = ShieldDeactivationAfterDelay(0);
@@ -189,7 +191,6 @@ namespace Animations
             if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
             {
                 // Audio management
-                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldActivation, transform.position);
                 if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 2)
                 {
                     _ = ShieldDeactivationAfterDelay(0);
