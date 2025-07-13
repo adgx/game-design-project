@@ -30,10 +30,16 @@ namespace Animations
 		[NonSerialized] public PowerUpVendingMachineInteraction powerUpVendingMachineInteraction;
         [NonSerialized] public string machineType; // Can be "playerPowerUp" or "health"
 
-		public void SetHitState()
+        public void DisableRickState()
+        {
+            AnimationManager.Instance.rickState = RickStates.None;
+        }
+		
+        public void SetHitState()
         {
             AnimationManager.Instance.rickState = RickStates.Hit;
         }
+        
         public void SetIdleState()
         {
             AnimationManager.Instance.rickState = RickStates.Idle;
@@ -326,6 +332,20 @@ namespace Animations
 
             // Audio management
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldDeactivation, transform.position);
+        }
+        
+        // Audio management
+        public void StopAllLoopingSounds()
+        {
+            // Use STOP_MODE.IMMEDIATE to ensure they stop instantly, without waiting for the fade-out.
+            // This is crucial in a reset
+            rickLoadCloseAttackWithPowerUp1.stop(STOP_MODE.IMMEDIATE);
+            rickLoadDistanceAttackWithPowerUp1.stop(STOP_MODE.IMMEDIATE);
+            rickLoadCloseAttackWithPowerUp2.stop(STOP_MODE.IMMEDIATE);
+            rickLoadDistanceAttackWithPowerUp2.stop(STOP_MODE.IMMEDIATE);
+            rickWalkFootsteps.stop(STOP_MODE.IMMEDIATE);
+            rickRunFootsteps.stop(STOP_MODE.IMMEDIATE);
+            rickIdle.stop(STOP_MODE.IMMEDIATE);
         }
     }
 }

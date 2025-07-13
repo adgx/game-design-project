@@ -16,7 +16,7 @@ using FMOD.Studio;
 namespace Utils {
 	public class GameTimer : MonoBehaviour
 	{
-		private const float TimeLimit = 30f;
+		private const float TimeLimit = 15f;
 		public float currentTime;
 
 		public TMP_Text timerText;
@@ -97,7 +97,7 @@ namespace Utils {
 				isRunning = false;
 
 				AnimationManager.Instance.Idle();
-				rickEvents.SetIdleState();
+				rickEvents.DisableRickState();
 				
 				// Ambient light management
 				GameEvents.current.TimerEnded(); 
@@ -173,6 +173,9 @@ namespace Utils {
 		private void ResetRun() {
 			if(!roomManager)
 				return;
+			
+			// Audio management: first, stop the player sounds immediately
+			rickEvents.StopAllLoopingSounds(); 
 			
 			// Audio management: clean the audio before starting the reset and resets the alarm logic state
 			ForceStopAllAmbientEvents();
