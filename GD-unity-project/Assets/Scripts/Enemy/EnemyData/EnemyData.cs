@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Enemy.EnemyData
 {
     [CreateAssetMenu(fileName = "NewEnemyData", menuName = "EnemyData")]
-    public class EnemyData : ScriptableObject
+    public abstract class EnemyData : ScriptableObject
     {
         [Tooltip("The prefab for this enemy type.")]
         public GameObject enemyPrefab;
@@ -30,12 +30,8 @@ namespace Enemy.EnemyData
 		public float closeAttackDamageLoop1 = 10f;
 
 		// Determines the difficulty increase between different interactions
-		[SerializeField] private float difficultyMultiplier = 0.2f;
+		public float difficultyMultiplier = 0.2f;
 
-		public void setDifficulty() {
-			maxHealth = maxHealthLoop1 + (float)Math.Round(maxHealthLoop1 * difficultyMultiplier * (int)GameStatus.loopIteration);
-			distanceAttackDamage = distanceAttackDamageLoop1 + (float)Math.Round(distanceAttackDamageLoop1 * difficultyMultiplier) * (int)GameStatus.loopIteration;
-			closeAttackDamage = closeAttackDamageLoop1 + (float)Math.Round(closeAttackDamageLoop1 * difficultyMultiplier * (int)GameStatus.loopIteration);
-		}
+		public abstract void SetDifficulty();
 	}
 }

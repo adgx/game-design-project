@@ -18,7 +18,7 @@ namespace PlayerInteraction
         /// </summary>
         public string InteractionPrompt => $"Press E to use door";
 
-        public Collider InteractionZone => null;
+        public Collider InteractionZone => _interactionZone;
 
         public bool IsInteractable => !_isTraversing;
 
@@ -30,6 +30,11 @@ namespace PlayerInteraction
             "The world direction this door leads to (e.g., Vector3Int.forward for North). Inferred from name if left at zero.")]
         [SerializeField]
         private Vector3Int _leadsToWorldDirection;
+
+        [Header("Interaction Zone")]
+        [Tooltip("An optional trigger collider that defines the area the player must be in to use this.")]
+        [SerializeField]
+        private Collider _interactionZone;
 
         private RoomManager.RoomManager _roomManager;
         private Room _parentRoom;
@@ -61,7 +66,7 @@ namespace PlayerInteraction
             {
                 InferDirectionFromName();
             }
-		}
+        }
 
         /// <summary>
         /// Called when the player interacts with the door.
@@ -99,7 +104,8 @@ namespace PlayerInteraction
 
             if (_roomManager.DoesRoomExistAt(nextRoomGridIndex))
             {
-                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDoorOpen, interactor.transform.position);
+                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDoorOpen,
+                    interactor.transform.position);
 
                 FadeManager.Instance.FadeOutIn(() =>
                 {
@@ -126,7 +132,7 @@ namespace PlayerInteraction
         private void InferDirectionFromName()
         {
             string myNameLower = gameObject.name.ToLower();
-            
+
             if (myNameLower.Contains("north") || myNameLower.Contains("top"))
                 _leadsToWorldDirection = Vector3Int.forward;
             else if (myNameLower.Contains("south") || myNameLower.Contains("bottom"))

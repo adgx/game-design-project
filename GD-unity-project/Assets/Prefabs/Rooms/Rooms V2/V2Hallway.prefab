@@ -5508,6 +5508,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6468963621349640749}
   - component: {fileID: 4292986959588430303}
+  - component: {fileID: 7636707623314282831}
   m_Layer: 0
   m_Name: V2Hallway
   m_TagString: Untagged
@@ -5540,6 +5541,7 @@ Transform:
   - {fileID: 1517501792395465077}
   - {fileID: 5033326351784241751}
   - {fileID: 4094386083192920688}
+  - {fileID: 5880840177251765501}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4292986959588430303
@@ -5575,6 +5577,67 @@ MonoBehaviour:
   _powerUpVendingMachinePrefab: {fileID: 2150992200195087756}
   _upgradeTerminalPrefab: {fileID: 8590493364531067732}
   _paperPrefab: {fileID: 379297008834327391}
+--- !u!114 &7636707623314282831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4323597427231605597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 003547e1813a24741ab28b05f0b2e736, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundsToManage:
+  - objectTag: AlarmSpeaker
+    fmodEvent:
+      Guid:
+        Data1: 1373224865
+        Data2: 1258097855
+        Data3: -654289524
+        Data4: 410566001
+      Path: event:/Ambience/General/Alarm
+  - objectTag: FlickeringLED
+    fmodEvent:
+      Guid:
+        Data1: 28823743
+        Data2: 1225098834
+        Data3: 1945257915
+        Data4: 1039743675
+      Path: event:/Ambience/Hallway/FlickeringLED
+  - objectTag: Elevator
+    fmodEvent:
+      Guid:
+        Data1: 1356801504
+        Data2: 1243640970
+        Data3: 166545854
+        Data4: 1583370833
+      Path: event:/Ambience/Hallway/ElevatorNoise
+  - objectTag: HealthSnackDistributor
+    fmodEvent:
+      Guid:
+        Data1: 1484193312
+        Data2: 1244157275
+        Data3: 1979302808
+        Data4: -1684614068
+      Path: event:/Ambience/General/VendingMachineNoise
+  - objectTag: PowerUpSnackDistributor
+    fmodEvent:
+      Guid:
+        Data1: 1484193312
+        Data2: 1244157275
+        Data3: 1979302808
+        Data4: -1684614068
+      Path: event:/Ambience/General/VendingMachineNoise
+  - objectTag: SphereTerminal
+    fmodEvent:
+      Guid:
+        Data1: -175314623
+        Data2: 1255852906
+        Data3: 1178096001
+        Data4: 1697852409
+      Path: event:/Ambience/General/TerminalNoise
 --- !u!1 &4344926781501450477
 GameObject:
   m_ObjectHideFlags: 0
@@ -9199,6 +9262,59 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.0306089, y: 0.4234475, z: 0.6309961}
   m_Center: {x: 0.0065996083, y: -0.3534196, z: -0.000015497208}
+--- !u!1 &7769461935478145406
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5880840177251765501}
+  - component: {fileID: 7463468408561820503}
+  m_Layer: 9
+  m_Name: _AmbienceTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5880840177251765501
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7769461935478145406}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.99, y: 3.6, z: 0.97}
+  m_LocalScale: {x: 4.1937184, y: 6.275529, z: 12.374798}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6468963621349640749}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &7463468408561820503
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7769461935478145406}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7885499876474067965
 GameObject:
   m_ObjectHideFlags: 0

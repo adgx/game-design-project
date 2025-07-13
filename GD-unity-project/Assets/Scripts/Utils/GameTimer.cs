@@ -1,19 +1,20 @@
+using System;
 using Helper;
 using System.Collections;
-using Audio;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-
-// Audio management
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Enemy.EnemyManager;
 using System.Threading.Tasks;
 using Animations;
+using FMOD.Studio;
 
 namespace Utils {
-	public class GameTimer : MonoBehaviour {
-		private const float TimeLimit = 10f * 60f;
+	public class GameTimer : MonoBehaviour
+	{
+		private const float TimeLimit = 10 * 60f;
 		public float currentTime;
 
 		public TMP_Text timerText;
@@ -34,13 +35,17 @@ namespace Utils {
 
 		[SerializeField] private string respawnSceneName = "RespawnScene";
 		private bool sceneIsLoading = false;
+		
+		// Audio management
+		public static event Action OnTimerLow;
+		private bool lowTimeEventFired = false;
+		public bool IsAlarmConditionActive { get; private set; } = false;
+		[Header("FMOD Events")]
+		[SerializeField] private List<FMODUnity.EventReference> ambientEventsToForceStop;
 
 		private void OnDestroy() {
 			if(roomManager) {
 				roomManager.OnRunReady -= HandleRunReady;
-
-				// Audio management
-				roomManager.OnRoomFullyInstantiated -= AmbienceEmitters.Instance.InitializeAmbientEmitters;
 			}
 		}
 
@@ -48,9 +53,6 @@ namespace Utils {
 			GameStatus.loopIteration = GameStatus.LoopIteration.FIRST_ITERATION;
 			if(roomManager) {
 				roomManager.OnRunReady += HandleRunReady;
-
-				// Audio management
-				roomManager.OnRoomFullyInstantiated += AmbienceEmitters.Instance.InitializeAmbientEmitters;
 			}
 		}
 
@@ -78,27 +80,37 @@ namespace Utils {
 				return;
 			
 			currentTime -= Time.deltaTime;
+			
+			// Audio management
+			IsAlarmConditionActive = (isRunning && currentTime <= 10f);
+			
+			if (IsAlarmConditionActive && !lowTimeEventFired)
+			{
+				lowTimeEventFired = true;
+				OnTimerLow?.Invoke();
+			}
 
 			if(currentTime <= 0f) {
 				currentTime = 0f;
 				isRunning = false;
 
 				AnimationManager.Instance.Idle();
-				rickEvents.SetIdleState();
+				rickEvents.DisableRickState();
 				
 				// Ambient light management
 				GameEvents.current.TimerEnded(); 
 
 				if(GameStatus.loopIteration == GameStatus.LoopIteration.THIRD_ITERATION) {
 					GameStatus.gameEnded = true;
+					
+					// Audio management: clean the audio before changing scene
+					ForceStopAllAmbientEvents();
+					
 					FadeManager.Instance.FadeOutIn(() => {
 						StartCoroutine(LoadRespawnSceneAsync());
 					});
 				}
 				else {
-					// Audio management
-					AmbienceEmitters.Instance.StopAmbientEmitters();
-
 					switch(GameStatus.loopIteration) {
 						case GameStatus.LoopIteration.FIRST_ITERATION:
 							GameStatus.loopIteration = GameStatus.LoopIteration.SECOND_ITERATION;
@@ -118,14 +130,11 @@ namespace Utils {
 					ResetRun();
 				}
 
-				// Exit the Update for this frame, preventing sounds from being reactivated immediately afterward.
+				// Audio management: exit the Update for this frame, preventing sounds from being reactivated immediately afterward
 				return;
 			}
 
 			UpdateTimerUI();
-
-			// Audio management
-			AmbienceEmitters.Instance.PlayAmbientEmitters(currentTime);
 		}
 
 		private void HandleRunReady() {
@@ -133,7 +142,6 @@ namespace Utils {
 			isRunning = true;
 
 			// Audio management
-			AmbienceEmitters.Instance.InitializeAmbientEmitters();
 			GamePlayAudioManager.instance.SetMusicLoopIteration();
 		}
 		
@@ -163,6 +171,14 @@ namespace Utils {
 		private void ResetRun() {
 			if(!roomManager)
 				return;
+			
+			// Audio management: first, stop the player sounds immediately
+			rickEvents.StopAllLoopingSounds(); 
+			
+			// Audio management: clean the audio before starting the reset and resets the alarm logic state
+			ForceStopAllAmbientEvents();
+			IsAlarmConditionActive = false;
+			lowTimeEventFired = false;
 
 			FadeManager.Instance.FadeOutIn(() => {
 				roomManager.RegenerateRooms();
@@ -189,6 +205,31 @@ namespace Utils {
 				
 				isRunning = true;
 			});
+		}
+		
+		// Audio management
+		private void ForceStopAllAmbientEvents()
+		{
+			foreach (var eventRef in ambientEventsToForceStop)
+			{
+				if (eventRef.IsNull)
+				{
+					continue;
+				}
+			
+				EventDescription eventDescription = FMODUnity.RuntimeManager.GetEventDescription(eventRef);
+    
+				if (eventDescription.isValid())
+				{
+					// Release (stop and destroy) all instances of this event
+					var result = eventDescription.releaseAllInstances();
+					FMODUnity.RuntimeManager.StudioSystem.lookupPath(eventRef.Guid, out string path);
+				}
+				else
+				{
+					Debug.LogError("Could not find a valid description for the alarm event.");
+				}
+			}
 		}
 
 		private IEnumerator LoadRespawnSceneAsync() {

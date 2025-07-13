@@ -1,4 +1,6 @@
 using Animations;
+using System.Diagnostics;
+using Unity.VisualScripting.FullSerializer;
 
 public class IncognitoPatrolState : State
 {
@@ -96,19 +98,34 @@ public class IncognitoShortSpitAttackState : State
     }
     public override void Enter()
     {
-        if(!_incognito._alreadyAttacked) {
-            _incognito.anim.lunchShortSpitAnim();
-        }
+        _incognito.anim.lunchShortSpitAnim();
     }
 
     public override void Tik()
     {
-        _incognito.ShortSpitAttackPlayer();
+        _incognito.SpitAttackPlayer();
     }
 
     public override void Exit()
     {
     }
+}
+
+public class IncognitoLongSpitAttackState : State {
+	private Incognito _incognito;
+	public IncognitoLongSpitAttackState(string name, Incognito incognito) : base(name) {
+		_incognito = incognito;
+	}
+	public override void Enter() {
+		_incognito.anim.lunchLongSpitAnim();
+	}
+
+	public override void Tik() {
+		_incognito.SpitAttackPlayer();
+	}
+
+	public override void Exit() {
+	}
 }
 
 public class IncognitoReactFromFrontState : State {

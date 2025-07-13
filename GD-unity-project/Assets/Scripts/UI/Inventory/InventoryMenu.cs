@@ -1,10 +1,9 @@
 using System.Threading.Tasks;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Animations;
 
 public class InventoryMenu : MonoBehaviour {
 	[SerializeField] private GameObject screenContainer;
@@ -18,11 +17,17 @@ public class InventoryMenu : MonoBehaviour {
 	[SerializeField] private Sprite buttonNormalSprite;
 
 	private PlayerInput playerInput;
+	
+	// Audio management
+	private RickEvents rickEvents;
 
 	private bool inventoryScreenOpen = false;
 
 	private void Start() {
 		playerInput = Player.Instance.GetComponent<PlayerInput>();
+		
+		// Audio management
+		rickEvents = Player.Instance.GetComponent<RickEvents>();
 
 		inventoryScreenOpen = false;
 		screenContainer.SetActive(false);
@@ -71,6 +76,12 @@ public class InventoryMenu : MonoBehaviour {
 			powerUpMenuScript.CloseMenu();
 		}
 		else {
+			// Audio management: stops all Rick's looping sounds  
+			if (rickEvents != null)
+			{
+				rickEvents.StopAllLoopingSounds();
+			}
+
 			inventoryScreenOpen = true;
 			screenContainer.SetActive(true);
 			inventoryMenu.SetActive(true);

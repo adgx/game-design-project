@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Threading.Tasks;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+using Animations;
+using UnityEngine.Audio;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -20,6 +19,7 @@ public class PauseMenu : MonoBehaviour
 	[SerializeField] private GameObject pauseMenu;
 	[SerializeField] private GameObject confirmMenu;
 	[SerializeField] private VolumeMenu volumeMenuScript;
+	[SerializeField] private GameObject creditsMenu;
 
 	[SerializeField] private TextMeshProUGUI confirmMenuText;
 
@@ -29,6 +29,9 @@ public class PauseMenu : MonoBehaviour
 	[SerializeField] private ButtonEffects buttonEffects;
 
 	private PlayerInput playerInput;
+	
+	// Audio management
+	private RickEvents rickEvents;
 
 	private bool pauseScreenOpen = false;
 
@@ -37,11 +40,15 @@ public class PauseMenu : MonoBehaviour
 
 	private void Start() {
 		playerInput = Player.Instance.GetComponent<PlayerInput>();
+		
+		// Audio management
+		rickEvents = Player.Instance.GetComponent<RickEvents>();
 
 		pauseScreenOpen = false;
 		screenContainer.SetActive(false);
 		pauseMenu.SetActive(false);
 		confirmMenu.SetActive(false);
+		creditsMenu.SetActive(false);
 		volumeMenuScript.CloseVolumeMenu();
 
 		actionToConfirm = ActionToConfirm.QuitGame;
@@ -89,6 +96,12 @@ public class PauseMenu : MonoBehaviour
 			}
 		}
 		else {
+			// Audio management: stops all Rick's looping sounds  
+			if (rickEvents != null)
+			{
+				rickEvents.StopAllLoopingSounds();
+			}
+			
 			pauseScreenOpen = true;
 			screenContainer.SetActive(true);
 			pauseMenu.SetActive(true);
@@ -99,6 +112,7 @@ public class PauseMenu : MonoBehaviour
 	void BackToPause() {
 		volumeMenuScript.CloseVolumeMenu();
 		confirmMenu.SetActive(false);
+		creditsMenu.SetActive(false);
 
 		pauseMenu.SetActive(true);
 		if(!EventSystem.current.alreadySelecting)
@@ -129,6 +143,19 @@ public class PauseMenu : MonoBehaviour
 
 	public void BackToPauseButtonClick() {
 		BackToPause();
+	}
+	
+	public void CreditsButtonClick(GameObject button) {
+		buttonEffects.OnMouseExit(button);
+
+		pauseMenu.SetActive(false);
+		OpenCreditsMenu();
+	}
+
+	private void OpenCreditsMenu()
+	{
+		pauseMenu.SetActive(false);
+		creditsMenu.SetActive(true);
 	}
 
 	public void QuitGameButtonClick(GameObject button) {

@@ -154,10 +154,12 @@ public class Drake : MonoBehaviour, IEnemy
         _stateMachine.AddTransition(waitS, wonderS, () => !_alreadyAttacked);
         //swipingS
         _stateMachine.AddTransition(swipingS, wonderS, () => anim.EndSwiping == true);
-        //biteS
-        _stateMachine.AddTransition(biteS, wonderS, () => anim.EndBit);
-        //reactFromFronts
-        _stateMachine.AddTransition(_reactFromFrontS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
+		_stateMachine.AddTransition(swipingS, waitS, () => _alreadyAttacked);
+		//biteS
+		_stateMachine.AddTransition(biteS, wonderS, () => anim.EndBit);
+		//_stateMachine.AddTransition(biteS, waitS, () => _alreadyAttacked);
+		//reactFromFronts
+		_stateMachine.AddTransition(_reactFromFrontS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(_reactFromFrontS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(_reactFromFrontS, wonderS, () => _playerInSightRange && _playerInAttackRange);
         //denfese

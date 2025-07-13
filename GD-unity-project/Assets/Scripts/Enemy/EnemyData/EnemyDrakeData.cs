@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Enemy.EnemyData
@@ -12,5 +13,11 @@ namespace Enemy.EnemyData
         public float attackRange = 18f;
         public float distanceAttackDamageMultiplier = 1f;
         public float closeAttackDamageMultiplier = 1f;
-    }
+
+		public override void SetDifficulty() {
+			maxHealth = maxHealthLoop1 + (float)Math.Round(maxHealthLoop1 * difficultyMultiplier * (int)GameStatus.loopIteration);
+			distanceAttackDamage = distanceAttackDamageLoop1 + (float)Math.Round(distanceAttackDamageLoop1 * difficultyMultiplier) * (int)GameStatus.loopIteration;
+			closeAttackDamage = closeAttackDamageLoop1 + (float)Math.Round(closeAttackDamageLoop1 * difficultyMultiplier * (int)GameStatus.loopIteration);
+		}
+	}
 }

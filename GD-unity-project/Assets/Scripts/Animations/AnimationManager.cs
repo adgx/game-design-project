@@ -126,6 +126,11 @@ public class AnimationManager : MonoBehaviour
         randomIdleIsDone = true;
     }
 
+    public void DefenseToIdle()
+    { 
+        rickAC.SetTrigger("CloseDefense");
+    }
+
     public void Run()
     {
         activeRandomIdle = false;
@@ -173,11 +178,6 @@ public class AnimationManager : MonoBehaviour
     {
         rickAC.SetTrigger(endAreaAttackHash);
         rickState = RickStates.EndAreaAttack;
-    }
-
-    public void DefenseVFX(Vector3 pos)
-    {
-        shield = Instantiate(prefabSheildVFX, pos, Quaternion.identity);
     }
 
     public void RemoveDefenseVfx() {

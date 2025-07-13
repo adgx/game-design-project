@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEditor;
 using UnityEngine;
 
@@ -25,10 +26,11 @@ public class FiniteStateMachine<T>
         State nextState = GetNextState();
         if (nextState != null)
             SetState(nextState);
-        
+
         //Do the current tasks for the currentState
-        if (_currentState != null)
+        if(_currentState != null) {
             _currentState.Tik();
+        }
     }
 
     public void SetState(State state)
