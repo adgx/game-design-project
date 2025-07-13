@@ -7,7 +7,7 @@ using UnityEngine.VFX;
 
 public class ShieldTrigger : MonoBehaviour
 {
-    //private VisualEffect _shieldVFX;
+    private VisualEffect _shieldVFX;
     //private VFXSpawnerState _ss;
     //private float _amount;
     //private float _frequency;
@@ -15,10 +15,14 @@ public class ShieldTrigger : MonoBehaviour
     //private float _t = 4.712389f;
     //private float _time = 0;
 
+    void Awake()
+    {
+        _shieldVFX = GetComponent<VisualEffect>();
+    }
+
     void Start()
     {
         //_sc = GetComponent<SphereCollider>();
-        //_shieldVFX = GetComponent<VisualEffect>();
         //_ss = _shieldVFX.GetSpawnSystemInfo(Shader.PropertyToID(_shieldVFX.visualEffectAsset.name));
         //Debug.Log($"ID :{Shader.PropertyToID(_shieldVFX.visualEffectAsset.name)}, ss: {_ss}");
         //_amount = _shieldVFX.GetVector3(Shader.PropertyToID("VertexAmount")).x;
@@ -27,43 +31,52 @@ public class ShieldTrigger : MonoBehaviour
         //Debug.Log($"_freqeuncy: {_frequency}");
     }
 
-/*
-    void Update()
-    {
-        Debug.Log($"{_ss.totalTime}");
-        _time += Time.deltaTime;
-        _t += _frequency * _time % 4.712389f;
-
-        _t = Math.Clamp(_t, 4.712389f, 9.424778f);
-         Debug.Log($"_t: {_t}");
-        if (_t > 4.712389f && _t < 9.424778f)
+    /*
+        void Update()
         {
+            Debug.Log($"{_ss.totalTime}");
+            _time += Time.deltaTime;
+            _t += _frequency * _time % 4.712389f;
+
+            _t = Math.Clamp(_t, 4.712389f, 9.424778f);
+             Debug.Log($"_t: {_t}");
+            if (_t > 4.712389f && _t < 9.424778f)
+            {
 
 
-            _sc.radius += (float)Math.Sin(_t);
-        }       
-    }
-*/
+                _sc.radius += (float)Math.Sin(_t);
+            }       
+        }
+    */
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag.Contains("EnemyAttack")) {
+        if (other.tag.Contains("EnemyAttack"))
+        {
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldHit, transform.position);
             Destroy(other.gameObject);
         }
-        else {
-            switch(other.tag) {
+        else
+        {
+            switch (other.tag)
+            {
                 case "EnemyDrake":
                     other.GetComponent<Drake>().TakeDamage(0, "c");
                     break;
                 case "EnemyIncognito":
-					other.GetComponent<Incognito>().TakeDamage(0, "c");
-					break;
+                    other.GetComponent<Incognito>().TakeDamage(0, "c");
+                    break;
                 case "EnemyMaynard":
-					other.GetComponent<Maynard>().TakeDamage(0, "c");
-					break;
+                    other.GetComponent<Maynard>().TakeDamage(0, "c");
+                    break;
                 default:
                     break;
             }
         }
+    }
+
+    public void SetLifeTime(float timeLife)
+    { 
+        if (_shieldVFX.HasFloat("TimeLife"))
+                _shieldVFX.SetFloat("TimeLife", timeLife);
     }
 }

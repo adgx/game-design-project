@@ -19,6 +19,10 @@ namespace Animations
         private EventInstance rickRunFootsteps;
         private EventInstance rickIdle;
 
+        // Defense
+	    [SerializeField] private GameObject magneticShieldPrefab;
+        private GameObject shield;
+
         // This flag must be set to 'true' by the input script when the attack key is pressed,
         // and to 'false' when released
         public bool ShouldPlayChargeSound { get; set; } = false;
@@ -97,11 +101,36 @@ namespace Animations
             playerShoot.FireDistanceAttack();
         }
 
+        public void DefenseVFX(Vector3 pos)
+        {
+            magneticShieldPrefab.gameObject.SetActive(false);
+            GameObject shield = Instantiate(magneticShieldPrefab, pos, Quaternion.identity);
+            shield.tag = "Shield";
+            magneticShieldPrefab.gameObject.SetActive(true);
+            shield.gameObject.SetActive(true);
+            if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
+            {
+                if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1)
+                {
+                    shield.GetComponent<ShieldTrigger>().SetLifeTime(3f);
+                }
+                else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 2)
+                {
+                    shield.GetComponent<ShieldTrigger>().SetLifeTime(3.8f);
+                }
+            }
+            else
+            {
+                shield.GetComponent<ShieldTrigger>().SetLifeTime(2f);
+            }
+            
+        }
+
         public void ShieldActivation()
         {
-            AnimationManager.Instance.DefenseVFX(transform.position);
+            DefenseVFX(transform.position);
 
-            // Audio management
+            /* Audio management
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldActivation, transform.position);
 
             if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
@@ -116,12 +145,67 @@ namespace Animations
                     _ = ShieldDeactivationAfterDelay(10000);
                 }
             }
+
+            else
+            {
+                Debug.Log("PowerUp 0");
+                _ = ShieldDeactivationAfterDelay(3000);
+            }
+            */
         }
 
-        public void ShieldDeactivation()
+        public void ShieldDeactivation1()
         {
-            AnimationManager.Instance.RemoveDefenseVfx();
-            playerShoot.CloseShield();
+            // Audio management
+            if (!powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
+            {
+                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldActivation, transform.position);
+                //AnimationManager.Instance.RemoveDefenseVfx();
+
+                _ = ShieldDeactivationAfterDelay(0);
+                playerShoot.CloseShield();
+                ShieldDestory();
+            }
+        }
+
+        
+        public void ShieldDeactivation2()
+        {
+            // Audio management
+            if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
+            {
+                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldActivation, transform.position);
+                if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1)
+                {
+                    _ = ShieldDeactivationAfterDelay(0);
+                    playerShoot.CloseShield();
+                    ShieldDestory();
+                }
+            }
+        }
+
+        public void ShieldDeactivation3()
+        {
+            if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
+            {
+                // Audio management
+                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldActivation, transform.position);
+                if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 2)
+                {
+                    _ = ShieldDeactivationAfterDelay(0);
+                    playerShoot.CloseShield();
+                    ShieldDestory();
+                }
+            }
+        }
+
+        public void ShieldDestory()
+        {
+            if (shield != null)
+            {
+                Destroy(shield);
+            }
+            AnimationManager.Instance.DefenseToIdle();
         }
 
         public void DeathForwardGrunt()
