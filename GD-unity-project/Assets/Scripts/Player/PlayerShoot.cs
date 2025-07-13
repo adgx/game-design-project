@@ -126,7 +126,7 @@ public class PlayerShoot : MonoBehaviour
 				sphereMaterial.SetColor("_EmissionColor", Color.red * 2f);
 				break;
 			case 0:
-				sphereMaterial.SetColor("_EmissionColor", Color.red * 2f);
+				sphereMaterial.SetColor("_EmissionColor", Color.white * 2f);
 				break;
 			default:
 				break;
