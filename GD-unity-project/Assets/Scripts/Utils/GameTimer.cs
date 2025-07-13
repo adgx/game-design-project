@@ -1,6 +1,7 @@
 using System;
 using Helper;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ using FMOD.Studio;
 namespace Utils {
 	public class GameTimer : MonoBehaviour
 	{
-		private const float TimeLimit = 10 * 60f;
+		private const float TimeLimit = 1 * 60f;
 		public float currentTime;
 
 		public TMP_Text timerText;
@@ -42,7 +43,7 @@ namespace Utils {
 		private bool lowTimeEventFired = false;
 		public bool IsAlarmConditionActive { get; private set; } = false;
 		[Header("FMOD Events")]
-		[SerializeField] private FMODUnity.EventReference alarmEventReference;
+		[SerializeField] private List<FMODUnity.EventReference> ambientEventsToForceStop;
 
 		private void OnDestroy() {
 			if(roomManager) {
@@ -105,7 +106,7 @@ namespace Utils {
 					GameStatus.gameEnded = true;
 					
 					// Audio management: clean the audio before changing scene
-					StopAllAlarmInstances();
+					ForceStopAllAmbientEvents();
 					
 					FadeManager.Instance.FadeOutIn(() => {
 						StartCoroutine(LoadRespawnSceneAsync());
@@ -174,7 +175,7 @@ namespace Utils {
 				return;
 			
 			// Audio management: clean the audio before starting the reset and resets the alarm logic state
-			StopAllAlarmInstances();
+			ForceStopAllAmbientEvents();
 			IsAlarmConditionActive = false;
 			lowTimeEventFired = false;
 
@@ -206,25 +207,28 @@ namespace Utils {
 		}
 		
 		// Audio management
-		private void StopAllAlarmInstances()
+		private void ForceStopAllAmbientEvents()
 		{
-			if (alarmEventReference.IsNull)
+			foreach (var eventRef in ambientEventsToForceStop)
 			{
-				Debug.LogError("GAME TIMER: Riferimento all'evento dell'allarme non impostato nell'Inspector!");
-				return;
-			}
+				if (eventRef.IsNull)
+				{
+					continue;
+				}
 			
-			EventDescription eventDescription = FMODUnity.RuntimeManager.GetEventDescription(alarmEventReference);
+				EventDescription eventDescription = FMODUnity.RuntimeManager.GetEventDescription(eventRef);
     
-			if (eventDescription.isValid())
-			{
-				// Release (stop and destroy) all instances of this event
-				var result = eventDescription.releaseAllInstances();
-				Debug.LogWarning($"SPEGNIMENTO FORZATO ALLARME. Risultato: {result}");
-			}
-			else
-			{
-				Debug.LogError("Impossibile trovare una descrizione valida per l'evento dell'allarme.");
+				if (eventDescription.isValid())
+				{
+					// Release (stop and destroy) all instances of this event
+					var result = eventDescription.releaseAllInstances();
+					FMODUnity.RuntimeManager.StudioSystem.lookupPath(eventRef.Guid, out string path);
+					Debug.Log($"Spegnimento forzato di '{path}'. Risultato: {result}");
+				}
+				else
+				{
+					Debug.LogError("Impossibile trovare una descrizione valida per l'evento dell'allarme.");
+				}
 			}
 		}
 

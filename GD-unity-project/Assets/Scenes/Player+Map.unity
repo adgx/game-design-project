@@ -2567,13 +2567,61 @@ MonoBehaviour:
   roomManager: {fileID: 1738691463}
   enemyManager: {fileID: 1738691472}
   respawnSceneName: RespawnScene
-  alarmEventReference:
-    Guid:
+  ambientEventsToForceStop:
+  - Guid:
       Data1: 1373224865
       Data2: 1258097855
       Data3: -654289524
       Data4: 410566001
     Path: event:/Ambience/General/Alarm
+  - Guid:
+      Data1: -175314623
+      Data2: 1255852906
+      Data3: 1178096001
+      Data4: 1697852409
+    Path: event:/Ambience/General/TerminalNoise
+  - Guid:
+      Data1: 1484193312
+      Data2: 1244157275
+      Data3: 1979302808
+      Data4: -1684614068
+    Path: event:/Ambience/General/VendingMachineNoise
+  - Guid:
+      Data1: -283890271
+      Data2: 1141973038
+      Data3: 987327118
+      Data4: -2100846542
+    Path: event:/Ambience/Bathroom/FlushingWater
+  - Guid:
+      Data1: 1356801504
+      Data2: 1243640970
+      Data3: 166545854
+      Data4: 1583370833
+    Path: event:/Ambience/Hallway/ElevatorNoise
+  - Guid:
+      Data1: 28823743
+      Data2: 1225098834
+      Data3: 1945257915
+      Data4: 1039743675
+    Path: event:/Ambience/Hallway/FlickeringLED
+  - Guid:
+      Data1: -2014649865
+      Data2: 1292488745
+      Data3: 1648386715
+      Data4: -700621535
+    Path: event:/Ambience/Server room/ServerNoise
+  - Guid:
+      Data1: 1227867096
+      Data2: 1232235182
+      Data3: 1331899567
+      Data4: 1296162209
+    Path: event:/Ambience/Staff canteen/RefrigeratorNoise
+  - Guid:
+      Data1: -849333374
+      Data2: 1300067871
+      Data3: 1301444737
+      Data4: 1296470915
+    Path: event:/Ambience/Storage room/VentilationNoise
 --- !u!114 &1738691471
 MonoBehaviour:
   m_ObjectHideFlags: 0

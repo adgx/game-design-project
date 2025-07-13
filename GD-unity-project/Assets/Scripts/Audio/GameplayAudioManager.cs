@@ -98,15 +98,22 @@ public class GamePlayAudioManager : MonoBehaviour
             return null;
         }
 
+        // Check if an emitter already exists
         StudioEventEmitter emitter = emitterGameObject.GetComponent<StudioEventEmitter>();
+
+        // If it does not exist, we create it
         if (emitter == null)
         {
-            Debug.LogError($"InitializeEventEmitter failed: No StudioEventEmitter found on {emitterGameObject.name}.");
-            return null;
+            emitter = emitterGameObject.AddComponent<StudioEventEmitter>();
         }
-
+    
+        // Now that we are sure it exists, let’s configure it
         emitter.EventReference = eventReference;
-        eventEmitters.Add(emitter);
+    
+        // We disable the auto-play options of FMOD to have total control
+        emitter.PlayEvent = EmitterGameEvent.None;
+        emitter.StopEvent = EmitterGameEvent.None;
+
         return emitter;
     }
     
@@ -122,9 +129,13 @@ public class GamePlayAudioManager : MonoBehaviour
         // Stop all of the event emitters, because if we don't they may hang around in other scenes
         foreach (StudioEventEmitter emitter in eventEmitters)
         {
-            if(emitter.IsActive)
+            if(emitter != null && emitter.IsActive)
                 emitter.Stop();
         }
+        
+        // Clear lists for next boot
+        eventInstances.Clear();
+        eventEmitters.Clear();
     }
 
     private void OnDestroy()
