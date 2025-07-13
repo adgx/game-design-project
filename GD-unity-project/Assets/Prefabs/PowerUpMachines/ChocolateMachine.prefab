@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1488652824457848799}
   - component: {fileID: 551634403691498597}
   - component: {fileID: 6422543694316419350}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: HealthSnackDistributor
   m_TagString: HealthSnackDistributor
   m_Icon: {fileID: 0}
@@ -167,6 +167,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 058251f06555f413a8a908ffaabf6c1d, type: 3}
       propertyPath: m_Name
       value: ChocolateMachine
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 058251f06555f413a8a908ffaabf6c1d, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
