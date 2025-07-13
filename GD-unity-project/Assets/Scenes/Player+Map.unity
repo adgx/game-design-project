@@ -2346,6 +2346,14 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 7466109011567372119, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7466109011567372119, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_TagString
+      value: Sphere
+      objectReference: {fileID: 0}
     - target: {fileID: 7942380145102555645, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -3373,6 +3381,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 361144720}
     - target: {fileID: 1658623078756845969, guid: e717b62fa6b8eb34a907e7d7e771bfd9, type: 3}
+      propertyPath: rickEvents
+      value: 
+      objectReference: {fileID: 972097730}
+    - target: {fileID: 1658623078756845969, guid: e717b62fa6b8eb34a907e7d7e771bfd9, type: 3}
       propertyPath: confirmMenu
       value: 
       objectReference: {fileID: 361144719}
@@ -3439,7 +3451,7 @@ PrefabInstance:
     - target: {fileID: 8774698924411829510, guid: e717b62fa6b8eb34a907e7d7e771bfd9, type: 3}
       propertyPath: powerUpScript
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 972097725}
     - target: {fileID: 8774698924411829510, guid: e717b62fa6b8eb34a907e7d7e771bfd9, type: 3}
       propertyPath: playerPowerUpsRow
       value: 
