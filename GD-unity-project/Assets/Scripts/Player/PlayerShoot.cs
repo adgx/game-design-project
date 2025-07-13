@@ -26,6 +26,7 @@ public class PlayerShoot : MonoBehaviour
 
 	// Attack2
 	[SerializeField] private GameObject attackAreaPrefab;
+	public GameObject attackAreaVFXPrefab;
 	public int defaultCloseAttackDamage = 50;
 	public int closeAttackDamage = 50;
 	private float defaultDamageRadius = 2.5f;

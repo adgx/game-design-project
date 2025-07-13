@@ -17,7 +17,7 @@ namespace Animations
         private EventInstance rickWalkFootsteps;
         private EventInstance rickRunFootsteps;
         private EventInstance rickIdle;
-        
+
         // This flag must be set to 'true' by the input script when the attack key is pressed,
         // and to 'false' when released
         public bool ShouldPlayChargeSound { get; set; } = false;
@@ -26,10 +26,10 @@ namespace Animations
         public PlayerShoot playerShoot;
         [SerializeField] private FadeManagerLoadingScreen fadeManagerLoadingScreen;
         [DoNotSerialize] public HealthVendingMachineInteraction healthVendingMachineInteraction;
-		[DoNotSerialize] public PowerUpVendingMachineInteraction powerUpVendingMachineInteraction;
+        [DoNotSerialize] public PowerUpVendingMachineInteraction powerUpVendingMachineInteraction;
         [DoNotSerialize] public string machineType; // Can be "playerPowerUp" or "health"
 
-		public void SetHitState()
+        public void SetHitState()
         {
             AnimationManager.Instance.rickState = RickStates.Hit;
         }
@@ -38,7 +38,7 @@ namespace Animations
             AnimationManager.Instance.rickState = RickStates.Idle;
             playerShoot.FreePlayer();
         }
-    
+
         public void SetHitSpitState()
         {
             AnimationManager.Instance.rickState = RickStates.HitSpit;
@@ -76,7 +76,7 @@ namespace Animations
             playerShoot.FireCloseAttack();
         }
 
-		public void DistanceAttackLoad()
+        public void DistanceAttackLoad()
         {
             // Audio management
             AnimationManager.Instance.rickState = RickStates.LoadingDistanceAttack;
@@ -111,9 +111,10 @@ namespace Animations
             }
         }
 
-        public void ShieldDeactivation() {
+        public void ShieldDeactivation()
+        {
             AnimationManager.Instance.RemoveDefenseVfx();
-			playerShoot.CloseShield();
+            playerShoot.CloseShield();
         }
 
         public void DeathForwardGrunt()
@@ -121,8 +122,8 @@ namespace Animations
             // Audio management
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardGrunt, transform.position);
 
-			playerShoot.SetLayerToZero();
-		}
+            playerShoot.SetLayerToZero();
+        }
 
         public void DeathForwardThud1()
         {
@@ -150,15 +151,17 @@ namespace Animations
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieBackwardThud, transform.position);
         }
 
-        public void PlayDeathAnimation() {
+        public void PlayDeathAnimation()
+        {
             playerShoot.DeathAnimation(1, 1);
         }
 
-        public void DeathAnimationEnd() {
+        public void DeathAnimationEnd()
+        {
             playerShoot.LoadRespawnScene();
         }
 
-		public void Drink()
+        public void Drink()
         {
             // Audio management
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDrink, transform.position);
@@ -170,25 +173,28 @@ namespace Animations
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChips, transform.position);
         }
 
-		public void EndPowerUp() {
-			powerUpVendingMachineInteraction.TerminatePlayerPowerUp();
-		}
+        public void EndPowerUp()
+        {
+            powerUpVendingMachineInteraction.TerminatePlayerPowerUp();
+        }
 
-		public void EatChocolate()
+        public void EatChocolate()
         {
             // Audio management
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChocolate, transform.position);
         }
 
-        public void EndHealthRecovery() {
+        public void EndHealthRecovery()
+        {
             healthVendingMachineInteraction.TerminateHealthRecovery();
         }
 
-		public void FreePlayerAfterAnimation() {
-			playerShoot.FreePlayer();
-		}
+        public void FreePlayerAfterAnimation()
+        {
+            playerShoot.FreePlayer();
+        }
 
-		public void Hit()
+        public void Hit()
         {
             // Audio management
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, transform.position);
@@ -211,13 +217,15 @@ namespace Animations
             // Audio management
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineItemPickUp, transform.position);
 
-            if(machineType == "health")
+            if (machineType == "health")
                 healthVendingMachineInteraction.PlaceSpecialSnackInHand();
-            else {
-                if(machineType == "playerPowerUp") {
+            else
+            {
+                if (machineType == "playerPowerUp")
+                {
                     powerUpVendingMachineInteraction.PlaceItemInHand();
                 }
-			}
+            }
         }
 
         public void WakeUp()
@@ -225,8 +233,8 @@ namespace Animations
             // Audio management
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerWakeUp, transform.position);
 
-			fadeManagerLoadingScreen.Hide();
-		}
+            fadeManagerLoadingScreen.Hide();
+        }
 
         // Audio management
         private void Start()
@@ -269,9 +277,9 @@ namespace Animations
             rickWalkFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             rickRunFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             rickIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-            
+
             RickStates currentState = AnimationManager.Instance.rickState;
-            
+
             // Condition for close-loading audio:
             // Must be in the correct state and the isLoadingSoundPlaying flag must be true
             bool shouldPlayCloseLoad = currentState == RickStates.LoadingCloseAttack && ShouldPlayChargeSound;
@@ -299,7 +307,7 @@ namespace Animations
         private void HandleLoopingSound(EventInstance instance, bool shouldBePlaying)
         {
             instance.getPlaybackState(out PLAYBACK_STATE playbackState);
-    
+
             if (shouldBePlaying)
             {
                 if (playbackState == PLAYBACK_STATE.STOPPED)
@@ -326,5 +334,15 @@ namespace Animations
             // Audio management
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldDeactivation, transform.position);
         }
+
+        public void SpwawnAreaAttack()
+        {
+            playerShoot.attackAreaVFXPrefab.gameObject.SetActive(false);
+            GameObject attackArea = Instantiate(playerShoot.attackAreaVFXPrefab, transform.position, Quaternion.identity);
+		    attackArea.SetActive(true);
+		    attackArea.gameObject.SetActive(true);
+        }
     }
+    
+    
 }
