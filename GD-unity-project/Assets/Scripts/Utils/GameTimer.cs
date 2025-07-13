@@ -16,7 +16,7 @@ using FMOD.Studio;
 namespace Utils {
 	public class GameTimer : MonoBehaviour
 	{
-		private const float TimeLimit = 10 * 60f;
+		private const float TimeLimit = 30f;
 		public float currentTime;
 
 		public TMP_Text timerText;
@@ -226,7 +226,7 @@ namespace Utils {
 				}
 				else
 				{
-					Debug.LogError("Impossibile trovare una descrizione valida per l'evento dell'allarme.");
+					Debug.LogError("Could not find a valid description for the alarm event.");
 				}
 			}
 		}
