@@ -35,8 +35,6 @@ public class PlayerAmbienceHandler : MonoBehaviour
             return;
         }
 
-        Debug.Log($"Cambiando stanza da '{(currentRoomController != null ? currentRoomController.name : "NULL")}' a '{newRoomController.name}'");
-
         // Spegni la vecchia stanza PRIMA di fare qualsiasi altra cosa.
         if (currentRoomController != null)
         {

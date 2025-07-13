@@ -111,10 +111,10 @@ public class PlayerShoot : MonoBehaviour
 		switch (stamina)
 		{
 			case 5:
-				sphereMaterial.SetColor("_EmissionColor", Color.green * 2f);
+				sphereMaterial.SetColor("_EmissionColor", new Color(0, 1, 1) * 2f);
 				break;
 			case 4:
-				sphereMaterial.SetColor("_EmissionColor", new Color(0, 1, 1) * 2f);
+				sphereMaterial.SetColor("_EmissionColor", Color.green * 2f);
 				break;
 			case 3:
 				sphereMaterial.SetColor("_EmissionColor", Color.yellow * 2f);

@@ -30,7 +30,6 @@ public class ParticleAttackController : MonoBehaviour
 
         if (gameObject.CompareTag("PlayerProjectile"))
         {
-            Debug.Log($"PlayerProjectile: {targetPos.position}");
             transform.LookAt(targetPos.position + targetPos.forward);
         }
         else if (gameObject.CompareTag("SpitEnemyAttack"))
@@ -92,12 +91,11 @@ public class ParticleAttackController : MonoBehaviour
     {
         // Audio management: avoid the destruction of the projectile if the other collider is the
         // box collider used for handling ambience sounds
-        if (other.gameObject.layer == LayerMask.NameToLayer("Room"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Room") || other.gameObject.CompareTag("Sphere"))
         {
             return;
         }
         
-        Debug.Log("Triggered");
         if (gameObject.CompareTag("SpitEnemyAttack"))
         {
             if (other.gameObject.CompareTag("PlayerProjectile"))
@@ -111,13 +109,11 @@ public class ParticleAttackController : MonoBehaviour
             Debug.Log($"{gameObject.tag} collided with:{other.gameObject.tag}");
             if (other.gameObject.tag.Contains("Enemy") && !other.gameObject.tag.Contains("EnemyAttack"))
             {
-                Debug.Log("Attacked");
                 other.gameObject.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(playerBulletDamage, "d");
                 Destroy(gameObject);
             }
             else
             {
-                Debug.Log("Destroy");
                 Destroy(gameObject);
             }
         }  

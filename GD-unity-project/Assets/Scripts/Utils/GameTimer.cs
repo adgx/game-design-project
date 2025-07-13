@@ -16,7 +16,7 @@ using FMOD.Studio;
 namespace Utils {
 	public class GameTimer : MonoBehaviour
 	{
-		private const float TimeLimit = 1 * 60f;
+		private const float TimeLimit = 10 * 60f;
 		public float currentTime;
 
 		public TMP_Text timerText;
@@ -223,7 +223,6 @@ namespace Utils {
 					// Release (stop and destroy) all instances of this event
 					var result = eventDescription.releaseAllInstances();
 					FMODUnity.RuntimeManager.StudioSystem.lookupPath(eventRef.Guid, out string path);
-					Debug.Log($"Spegnimento forzato di '{path}'. Risultato: {result}");
 				}
 				else
 				{
