@@ -2054,6 +2054,59 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &908820300865022430
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 60884491193034017}
+  - component: {fileID: 3399012230791470207}
+  m_Layer: 9
+  m_Name: _AmbienceTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &60884491193034017
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 908820300865022430}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.99, z: 0.07000017}
+  m_LocalScale: {x: 33.098778, y: 5.3021398, z: 33.36119}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4611792544535434008}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3399012230791470207
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 908820300865022430}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &935234291780062920
 GameObject:
   m_ObjectHideFlags: 0
@@ -21551,6 +21604,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4611792544535434008}
   - component: {fileID: 3352496692707539225}
+  - component: {fileID: 5315567764515939460}
   m_Layer: 0
   m_Name: V2StorageRoom 1
   m_TagString: Untagged
@@ -21594,6 +21648,7 @@ Transform:
   - {fileID: 5585691506216488392}
   - {fileID: 5731835130241965442}
   - {fileID: 7625535950829996586}
+  - {fileID: 60884491193034017}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3352496692707539225
@@ -21639,6 +21694,59 @@ MonoBehaviour:
   _powerUpVendingMachinePrefab: {fileID: 7649440844591333842}
   _upgradeTerminalPrefab: {fileID: 5917522191162241714}
   _paperPrefab: {fileID: 4587377213842518091}
+--- !u!114 &5315567764515939460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7999259401534772710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 003547e1813a24741ab28b05f0b2e736, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundsToManage:
+  - objectTag: AlarmSpeaker
+    fmodEvent:
+      Guid:
+        Data1: 1373224865
+        Data2: 1258097855
+        Data3: -654289524
+        Data4: 410566001
+      Path: event:/Ambience/General/Alarm
+  - objectTag: Ventilation
+    fmodEvent:
+      Guid:
+        Data1: -849333374
+        Data2: 1300067871
+        Data3: 1301444737
+        Data4: 1296470915
+      Path: event:/Ambience/Storage room/VentilationNoise
+  - objectTag: HealthSnackDistributor
+    fmodEvent:
+      Guid:
+        Data1: 1484193312
+        Data2: 1244157275
+        Data3: 1979302808
+        Data4: -1684614068
+      Path: event:/Ambience/General/VendingMachineNoise
+  - objectTag: PowerUpSnackDistributor
+    fmodEvent:
+      Guid:
+        Data1: 1484193312
+        Data2: 1244157275
+        Data3: 1979302808
+        Data4: -1684614068
+      Path: event:/Ambience/General/VendingMachineNoise
+  - objectTag: SphereTerminal
+    fmodEvent:
+      Guid:
+        Data1: -175314623
+        Data2: 1255852906
+        Data3: 1178096001
+        Data4: 1697852409
+      Path: event:/Ambience/General/TerminalNoise
 --- !u!1 &8017773276065395897
 GameObject:
   m_ObjectHideFlags: 0

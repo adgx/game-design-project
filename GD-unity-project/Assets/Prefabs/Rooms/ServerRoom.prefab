@@ -6156,6 +6156,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4977402327728931212}
   - component: {fileID: 3387052329859460017}
+  - component: {fileID: 6147985533109276447}
   m_Layer: 0
   m_Name: ServerRoom
   m_TagString: Untagged
@@ -6192,6 +6193,7 @@ Transform:
   - {fileID: 4780174928830970866}
   - {fileID: 4183781743665733132}
   - {fileID: 342016637333754172}
+  - {fileID: 1114253344007251582}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3387052329859460017
@@ -6237,6 +6239,59 @@ MonoBehaviour:
   _powerUpVendingMachinePrefab: {fileID: 1399941299152748138}
   _upgradeTerminalPrefab: {fileID: 1504737002086612421}
   _paperPrefab: {fileID: 1622338693168449796}
+--- !u!114 &6147985533109276447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7322676706815848639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 003547e1813a24741ab28b05f0b2e736, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundsToManage:
+  - objectTag: AlarmSpeaker
+    fmodEvent:
+      Guid:
+        Data1: 1373224865
+        Data2: 1258097855
+        Data3: -654289524
+        Data4: 410566001
+      Path: event:/Ambience/General/Alarm
+  - objectTag: Server
+    fmodEvent:
+      Guid:
+        Data1: -2014649865
+        Data2: 1292488745
+        Data3: 1648386715
+        Data4: -700621535
+      Path: event:/Ambience/Server room/ServerNoise
+  - objectTag: HealthSnackDistributor
+    fmodEvent:
+      Guid:
+        Data1: 1484193312
+        Data2: 1244157275
+        Data3: 1979302808
+        Data4: -1684614068
+      Path: event:/Ambience/General/VendingMachineNoise
+  - objectTag: PowerUpSnackDistributor
+    fmodEvent:
+      Guid:
+        Data1: 1484193312
+        Data2: 1244157275
+        Data3: 1979302808
+        Data4: -1684614068
+      Path: event:/Ambience/General/VendingMachineNoise
+  - objectTag: SphereTerminal
+    fmodEvent:
+      Guid:
+        Data1: -175314623
+        Data2: 1255852906
+        Data3: 1178096001
+        Data4: 1697852409
+      Path: event:/Ambience/General/TerminalNoise
 --- !u!1 &7385654115760586923
 GameObject:
   m_ObjectHideFlags: 0
@@ -7500,6 +7555,59 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.78583133, y: 0.4234475, z: 0.9406627}
   m_Center: {x: -0.3929065, y: -0.21172422, z: 6.656095e-22}
+--- !u!1 &8110108136809916282
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1114253344007251582}
+  - component: {fileID: 5069550480100719507}
+  m_Layer: 9
+  m_Name: _AmbienceTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1114253344007251582
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8110108136809916282}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.01, y: 3.5, z: 1.05}
+  m_LocalScale: {x: 8.3376, y: 6.3125, z: 8.327812}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4977402327728931212}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &5069550480100719507
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8110108136809916282}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8253432895088104485
 GameObject:
   m_ObjectHideFlags: 0

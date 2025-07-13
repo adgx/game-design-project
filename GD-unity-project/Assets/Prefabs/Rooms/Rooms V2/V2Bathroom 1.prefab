@@ -692,6 +692,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5337260740105535007}
   - component: {fileID: 8753745212488098596}
+  - component: {fileID: 653833075866959445}
   m_Layer: 0
   m_Name: V2Bathroom 1
   m_TagString: Untagged
@@ -732,6 +733,7 @@ Transform:
   - {fileID: 3121583257304252327}
   - {fileID: 3399077886616715353}
   - {fileID: 6497669553591224795}
+  - {fileID: 5963562050172840197}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8753745212488098596
@@ -759,6 +761,59 @@ MonoBehaviour:
   _powerUpVendingMachinePrefab: {fileID: 0}
   _upgradeTerminalPrefab: {fileID: 0}
   _paperPrefab: {fileID: 0}
+--- !u!114 &653833075866959445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2360249369967940935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 003547e1813a24741ab28b05f0b2e736, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundsToManage:
+  - objectTag: AlarmSpeaker
+    fmodEvent:
+      Guid:
+        Data1: 1373224865
+        Data2: 1258097855
+        Data3: -654289524
+        Data4: 410566001
+      Path: event:/Ambience/General/Alarm
+  - objectTag: FlushingWC
+    fmodEvent:
+      Guid:
+        Data1: -283890271
+        Data2: 1141973038
+        Data3: 987327118
+        Data4: -2100846542
+      Path: event:/Ambience/Bathroom/FlushingWater
+  - objectTag: HealthSnackDistributor
+    fmodEvent:
+      Guid:
+        Data1: 1484193312
+        Data2: 1244157275
+        Data3: 1979302808
+        Data4: -1684614068
+      Path: event:/Ambience/General/VendingMachineNoise
+  - objectTag: PowerUpSnackDistributor
+    fmodEvent:
+      Guid:
+        Data1: 1484193312
+        Data2: 1244157275
+        Data3: 1979302808
+        Data4: -1684614068
+      Path: event:/Ambience/General/VendingMachineNoise
+  - objectTag: SphereTerminal
+    fmodEvent:
+      Guid:
+        Data1: -175314623
+        Data2: 1255852906
+        Data3: 1178096001
+        Data4: 1697852409
+      Path: event:/Ambience/General/TerminalNoise
 --- !u!1 &2756924692045529602
 GameObject:
   m_ObjectHideFlags: 0
@@ -1464,6 +1519,59 @@ Transform:
   - {fileID: 7590300882084718737}
   m_Father: {fileID: 5337260740105535007}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5040698563737178236
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5963562050172840197}
+  - component: {fileID: 5200300728751916760}
+  m_Layer: 9
+  m_Name: _AmbienceTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5963562050172840197
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5040698563737178236}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.51, y: 3.52, z: 3.42}
+  m_LocalScale: {x: 15.8348465, y: 4.1921287, z: 20.462685}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5337260740105535007}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &5200300728751916760
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5040698563737178236}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5349059384575416655
 GameObject:
   m_ObjectHideFlags: 0

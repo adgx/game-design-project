@@ -90,6 +90,13 @@ public class ParticleAttackController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        // Audio management: avoid the destruction of the projectile if the other collider is the
+        // box collider used for handling ambience sounds
+        if (other.gameObject.layer == LayerMask.NameToLayer("Room"))
+        {
+            return;
+        }
+        
         Debug.Log("Triggered");
         if (gameObject.CompareTag("SpitEnemyAttack"))
         {

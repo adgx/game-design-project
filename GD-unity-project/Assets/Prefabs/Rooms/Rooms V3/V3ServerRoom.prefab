@@ -983,6 +983,59 @@ Transform:
   - {fileID: 925412333393078451}
   m_Father: {fileID: 4780174928830970866}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1614915759496097340
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2870476338576537373}
+  - component: {fileID: 2209721362977322020}
+  m_Layer: 9
+  m_Name: _AmbienceTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2870476338576537373
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1614915759496097340}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1, y: 3.47, z: 0.99}
+  m_LocalScale: {x: 8.823125, y: 6.391823, z: 8.092629}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4977402327728931212}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2209721362977322020
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1614915759496097340}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1618852598408260303
 GameObject:
   m_ObjectHideFlags: 0
@@ -6407,6 +6460,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4977402327728931212}
   - component: {fileID: 3387052329859460017}
+  - component: {fileID: 7209676912337289431}
   m_Layer: 0
   m_Name: V3ServerRoom
   m_TagString: Untagged
@@ -6445,6 +6499,7 @@ Transform:
   - {fileID: 4780174928830970866}
   - {fileID: 4183781743665733132}
   - {fileID: 3773362597429704494}
+  - {fileID: 2870476338576537373}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3387052329859460017
@@ -6490,6 +6545,59 @@ MonoBehaviour:
   _powerUpVendingMachinePrefab: {fileID: 6928970474715373967}
   _upgradeTerminalPrefab: {fileID: 7587463102721923578}
   _paperPrefab: {fileID: 5040424888119754864}
+--- !u!114 &7209676912337289431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7322676706815848639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 003547e1813a24741ab28b05f0b2e736, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundsToManage:
+  - objectTag: AlarmSpeaker
+    fmodEvent:
+      Guid:
+        Data1: 1373224865
+        Data2: 1258097855
+        Data3: -654289524
+        Data4: 410566001
+      Path: event:/Ambience/General/Alarm
+  - objectTag: Server
+    fmodEvent:
+      Guid:
+        Data1: -2014649865
+        Data2: 1292488745
+        Data3: 1648386715
+        Data4: -700621535
+      Path: event:/Ambience/Server room/ServerNoise
+  - objectTag: HealthSnackDistributor
+    fmodEvent:
+      Guid:
+        Data1: 1484193312
+        Data2: 1244157275
+        Data3: 1979302808
+        Data4: -1684614068
+      Path: event:/Ambience/General/VendingMachineNoise
+  - objectTag: PowerUpSnackDistributor
+    fmodEvent:
+      Guid:
+        Data1: 1484193312
+        Data2: 1244157275
+        Data3: 1979302808
+        Data4: -1684614068
+      Path: event:/Ambience/General/VendingMachineNoise
+  - objectTag: SphereTerminal
+    fmodEvent:
+      Guid:
+        Data1: -175314623
+        Data2: 1255852906
+        Data3: 1178096001
+        Data4: 1697852409
+      Path: event:/Ambience/General/TerminalNoise
 --- !u!1 &7356957676698301700
 GameObject:
   m_ObjectHideFlags: 0
