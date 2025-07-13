@@ -64858,7 +64858,7 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0
-    functionName: 
+    functionName: StartIncreaseSizeAreaAttack
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
@@ -64866,6 +64866,13 @@ AnimationClip:
     messageOptions: 0
   - time: 0.13333334
     functionName: CloseAttackShoot
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 1.1
+    functionName: DestroyAreaAttack
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

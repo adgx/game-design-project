@@ -26,11 +26,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3868279143118854978, guid: 4b8e23b4f88610e48bd70a6b8a03d4de, type: 3}
       propertyPath: m_Name
-      value: Orbit Variant
+      value: AreaAttackVFX
       objectReference: {fileID: 0}
     - target: {fileID: 3868279143118854978, guid: 4b8e23b4f88610e48bd70a6b8a03d4de, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6850917358115673410, guid: 4b8e23b4f88610e48bd70a6b8a03d4de, type: 3}
       propertyPath: m_LocalPosition.x
@@ -79,5 +79,26 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3868279143118854978, guid: 4b8e23b4f88610e48bd70a6b8a03d4de, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -4234642591693114381}
   m_SourcePrefab: {fileID: 100100000, guid: 4b8e23b4f88610e48bd70a6b8a03d4de, type: 3}
+--- !u!1 &2067102190422821462 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3868279143118854978, guid: 4b8e23b4f88610e48bd70a6b8a03d4de, type: 3}
+  m_PrefabInstance: {fileID: 2954696843087532308}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-4234642591693114381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2067102190422821462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b50318bd5f3004c4887c819a9f79effd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startSize: 0.5

@@ -338,9 +338,29 @@ namespace Animations
         public void SpwawnAreaAttack()
         {
             playerShoot.attackAreaVFXPrefab.gameObject.SetActive(false);
-            GameObject attackArea = Instantiate(playerShoot.attackAreaVFXPrefab, transform.position, Quaternion.identity);
-		    attackArea.SetActive(true);
-		    attackArea.gameObject.SetActive(true);
+            playerShoot.attackAreaInstance = Instantiate(playerShoot.attackAreaVFXPrefab, transform.position, Quaternion.identity);
+            playerShoot.attackAreaInstance.SetActive(true);
+            playerShoot.attackAreaVFXPrefab.gameObject.SetActive(true);
+        }
+
+        public void StartIncreaseSizeAreaAttack()
+        {
+            if (playerShoot.attackAreaInstance != null)
+            {
+                AreaAttackController AAC = playerShoot.attackAreaInstance.GetComponent<AreaAttackController>();
+                if (AAC != null)
+                    AAC.SetDestSize(playerShoot.damageRadius);
+                else Debug.Log("AAC=null");
+            }
+        }
+
+        public void DestroyAreaAttack()
+        {
+            Debug.Log("Destroy Areattack");
+            if (playerShoot.attackAreaInstance != null)
+            {
+                Destroy(playerShoot.attackAreaInstance);
+            }
         }
     }
     
