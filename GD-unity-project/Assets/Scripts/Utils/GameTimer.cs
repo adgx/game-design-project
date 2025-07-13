@@ -4,8 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-
-// Audio management
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Enemy.EnemyManager;
@@ -16,7 +14,7 @@ using FMOD.Studio;
 namespace Utils {
 	public class GameTimer : MonoBehaviour
 	{
-		private const float TimeLimit = 15f;
+		private const float TimeLimit = 10 * 60f;
 		public float currentTime;
 
 		public TMP_Text timerText;
