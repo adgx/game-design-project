@@ -34,8 +34,6 @@ public class PowerUpMenu : MonoBehaviour {
 			{
 				for (int i = 1; i <= level; i++)
 				{
-					print(powerUpIcons.Find(p => p.iconId == puTemp.ToString() + i.ToString()));
-					print(puTemp.ToString() + i.ToString());
 					spherePowerUpsRow.transform.GetChild(spherePowerUps).GetComponent<Button>().onClick.AddListener(() => ShowPowerUpDescription(puTemp));
 					
 					Image spherePowerUpIcon = spherePowerUpsRow.transform.GetChild(spherePowerUps).GetComponent<Image>();
