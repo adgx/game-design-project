@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 873815865274431765}
   - component: {fileID: 5971152003320385667}
   - component: {fileID: 4105189323649704199}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: PowerUpSnackDistributor
   m_TagString: PowerUpSnackDistributor
   m_Icon: {fileID: 0}
@@ -168,6 +168,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 058251f06555f413a8a908ffaabf6c1d, type: 3}
       propertyPath: m_Name
       value: SnackMachine
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 058251f06555f413a8a908ffaabf6c1d, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
