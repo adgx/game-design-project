@@ -49,8 +49,6 @@ public class PlayerShoot : MonoBehaviour
 	private bool attacking = false;
 	private int attackStamina = 0;
 	
-	// Defense
-	[SerializeField] private GameObject magneticShieldPrefab;
 	GameObject magneticShield;
 	public bool magneticShieldOpen = false;
 	
