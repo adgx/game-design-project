@@ -35,7 +35,7 @@ public class PlayerShoot : MonoBehaviour
 	private float defaultDamageRadius = 2.5f;
 	[HideInInspector]
 	public float damageRadius = 2f;
-	private int chargedCloseAttackDamage;
+	public int chargedCloseAttackDamage;
 	
 	public bool cannotAttack = false;
 
@@ -409,14 +409,6 @@ public class PlayerShoot : MonoBehaviour
 	}
 
 	async void SpawnAttackArea() {
-		
-		/*
-		GameObject attackArea = Instantiate(attackAreaPrefab, transform.position, Quaternion.identity);
-		attackArea.transform.parent = transform;
-		attackArea.transform.localScale = new Vector3(2 * damageRadius, 0, 2 * damageRadius);
-		*/
-		CheckForEnemies();
-		
 		await Task.Delay(500);
 		
 		//Destroy(attackArea);
@@ -428,17 +420,6 @@ public class PlayerShoot : MonoBehaviour
 		damageRadius = defaultDamageRadius;
 		
 		ResetAttack();
-	}
-
-	// Checks if there are enemies in the attack area and, if so, damages them
-	void CheckForEnemies() {
-		Collider[] colliders = Physics.OverlapSphere(transform.position, damageRadius);
-		foreach(Collider c in colliders) {
-			// Checks if the collider is an enemy
-			if(c.transform.tag.Contains("Enemy") && !c.transform.tag.Contains("EnemyAttack")) {
-				c.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(chargedCloseAttackDamage, "c");
-			}
-		}
 	}
 
 	public void ResetAttack() {
@@ -596,16 +577,16 @@ public class PlayerShoot : MonoBehaviour
 	}
 	private IEnumerator LoadRespawnSceneAsync() {
 
-		// Inizia il caricamento asincrono della scena
+		// Asynchronous loading of scene starts
 		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(respawnSceneName);
 		asyncLoad.allowSceneActivation = false;
 
-		// Attendi finch� la scena � quasi pronta (>= 0.9)
+		// Wait until the scene is almost ready (>= 0.9)
 		while(asyncLoad.progress < 0.9f) {
 			yield return null;
 		}
 
-		// Ora attiva effettivamente la scena
+		// Now actually activates the scene
 		asyncLoad.allowSceneActivation = true;
 	}
 

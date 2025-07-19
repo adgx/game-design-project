@@ -420,6 +420,17 @@ namespace Animations
         {
             playerShoot.attackAreaVFXPrefab.gameObject.SetActive(false);
             playerShoot.attackAreaInstance = Instantiate(playerShoot.attackAreaVFXPrefab, transform.position, Quaternion.identity);
+            
+            AreaAttackController areaController = playerShoot.attackAreaInstance.GetComponent<AreaAttackController>();
+            if (areaController != null)
+            {
+                areaController.Initialize(playerShoot.chargedCloseAttackDamage);
+            }
+            else
+            {
+                Debug.LogError("Il prefab dell'area di attacco non ha un componente AreaAttackController!");
+            }
+            
             playerShoot.attackAreaInstance.SetActive(true);
             playerShoot.attackAreaVFXPrefab.gameObject.SetActive(true);
         }
