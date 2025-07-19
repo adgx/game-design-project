@@ -326,7 +326,7 @@ public class PlayerShoot : MonoBehaviour
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
 		rotateSphere.positionSphere(new Vector3(0, 1.8f, 0), RotateSphere.Animation.Linear);
-		player.isFrozen = true;
+		FreezePlayer();
 		AnimationManager.Instance.AreaAttack();
 		
 		await Task.Delay(50);
@@ -484,15 +484,24 @@ public class PlayerShoot : MonoBehaviour
 			// launch defense animation
 			AnimationManager.Instance.Defense();
 			magneticShieldOpen = true;
-			player.isFrozen = true;
+			FreezePlayer();
 		}
 		
 		isShieldCoroutineRunning = false;
 	}
 
 	public void CloseShield() {
-		player.isFrozen = false;
 		magneticShieldOpen = false;
+	}
+
+	public void FreezePlayer()
+	{
+		player.isFrozen = true;
+	}
+
+	public void UnfreezePlayer()
+	{
+		player.isFrozen = false;
 	}
 
 	public void TakeDamage(float damage, DamageTypes damageType, int x, int z) {

@@ -131,47 +131,34 @@ namespace Animations
 
         public void ShieldActivation()
         {
-            DefenseVFX(transform.position); 
+            // Activate the shield
+            DefenseVFX(transform.position);
+            
+            // Let the player free to move during the usage of the shield
+            playerShoot.UnfreezePlayer();
+            AnimationManager.Instance.DefenseToIdle();
+            
+            // Deactivate the shield
+            ShieldDeactivation();
         }
 
-        public void ShieldDeactivation1()
+        private void ShieldDeactivation()
         {
             // Audio management
             if (!powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
             {
-                // AnimationManager.Instance.RemoveDefenseVfx();
-                
-                _ = ShieldDeactivationAfterDelay(0);
-                playerShoot.CloseShield();
-                ShieldDestroy();
+                _ = ShieldDeactivationAfterDelay(2500);
             }
-        }
-
-        
-        public void ShieldDeactivation2()
-        {
-            // Audio management
-            if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
+            else
             {
                 if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1)
                 {
-                    _ = ShieldDeactivationAfterDelay(0);
-                    playerShoot.CloseShield();
-                    ShieldDestroy();
+                    _ = ShieldDeactivationAfterDelay(3500);
                 }
-            }
-        }
 
-        public void ShieldDeactivation3()
-        {
-            if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
-            {
-                // Audio management
-                if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 2)
+                else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 2)
                 {
-                    _ = ShieldDeactivationAfterDelay(0);
-                    playerShoot.CloseShield();
-                    ShieldDestroy();
+                    _ = ShieldDeactivationAfterDelay(4500);
                 }
             }
         }
@@ -182,7 +169,6 @@ namespace Animations
             {
                 Destroy(shield);
             }
-            AnimationManager.Instance.DefenseToIdle();
         }
 
         public void DeathForwardGrunt()
@@ -391,8 +377,7 @@ namespace Animations
                 }
             }
         }
-
-        // Audio management
+        
         private async Task ShieldDeactivationAfterDelay(int delayMs)
         {
             await Task.Delay(delayMs);
@@ -401,6 +386,9 @@ namespace Animations
 
             // Audio management
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldDeactivation, transform.position);
+            
+            playerShoot.CloseShield();
+            ShieldDestroy();
         }
         
         // Audio management
