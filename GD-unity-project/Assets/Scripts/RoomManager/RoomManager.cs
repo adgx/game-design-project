@@ -146,7 +146,7 @@ namespace RoomManager
 
         private void Start()
         {
-            GenerateLayout();
+            _ = GenerateLayout();
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace RoomManager
         /// </summary>
         public void RegenerateRooms()
         {
-            GenerateLayout();
+            _ = GenerateLayout();
         }
 
         /// <summary>
@@ -449,7 +449,7 @@ namespace RoomManager
         /// <summary>
         /// Loads a new room and spawns the player inside it.
         /// </summary>
-        public async void TraverseRoom(Vector3Int newRoomIndex, Vector3Int entryDirection)
+        public void TraverseRoom(Vector3Int newRoomIndex, Vector3Int entryDirection)
         {
             if (!_isLayoutGenerated || !DoesRoomExistAt(newRoomIndex))
             {

@@ -82,7 +82,13 @@ namespace Animations
         {
             // Audio management
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerCloseAttackShoot, transform.position);
-
+            
+            AreaAttackController areaController = playerShoot.attackAreaInstance.GetComponent<AreaAttackController>();
+            if (areaController != null)
+            {
+                areaController.Initialize(playerShoot.chargedCloseAttackDamage);
+            }
+            
             playerShoot.FireCloseAttack();
         }
 
@@ -416,21 +422,10 @@ namespace Animations
             rickIdle.stop(STOP_MODE.IMMEDIATE);
         }
 
-        public void SpwawnAreaAttack()
+        public void SpawnAreaAttack()
         {
             playerShoot.attackAreaVFXPrefab.gameObject.SetActive(false);
             playerShoot.attackAreaInstance = Instantiate(playerShoot.attackAreaVFXPrefab, transform.position, Quaternion.identity);
-            
-            AreaAttackController areaController = playerShoot.attackAreaInstance.GetComponent<AreaAttackController>();
-            if (areaController != null)
-            {
-                areaController.Initialize(playerShoot.chargedCloseAttackDamage);
-            }
-            else
-            {
-                Debug.LogError("Il prefab dell'area di attacco non ha un componente AreaAttackController!");
-            }
-            
             playerShoot.attackAreaInstance.SetActive(true);
             playerShoot.attackAreaVFXPrefab.gameObject.SetActive(true);
         }
@@ -448,11 +443,13 @@ namespace Animations
 
         public void DestroyAreaAttack()
         {
-            Debug.Log("Destroy Areattack");
+            Debug.Log("Destroy AreaAttack");
             if (playerShoot.attackAreaInstance != null)
             {
                 Destroy(playerShoot.attackAreaInstance);
             }
+            
+            playerShoot.ResetCloseAttackValues();
         }
     }
     

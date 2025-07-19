@@ -367,6 +367,9 @@ public class PlayerShoot : MonoBehaviour
 
 			closeAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
 
+			chargedCloseAttackDamage = defaultCloseAttackDamage;
+			damageRadius = defaultDamageRadius;
+			
 			if (attackStamina > 1)
 			{
 				chargedCloseAttackDamage += (attackStamina - 1) * 20;
@@ -404,21 +407,23 @@ public class PlayerShoot : MonoBehaviour
 		}
 
 		closeAttackLoadingBar.fillAmount = 0;
-
-		SpawnAttackArea();
 	}
-
-	async void SpawnAttackArea() {
-		await Task.Delay(500);
-		
-		//Destroy(attackArea);
-		rotateSphere.positionSphere(new Vector3(rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
-		await Task.Delay(300);
-
-		// Set values back to default
+	
+	public async void ResetCloseAttackValues()
+	{
+		// Resetta i valori solo DOPO che l'attacco è terminato
+		Debug.Log($"Resetting damage from {chargedCloseAttackDamage} to {defaultCloseAttackDamage}");
 		chargedCloseAttackDamage = defaultCloseAttackDamage;
 		damageRadius = defaultDamageRadius;
-		
+    
+		// Riporta la sfera nella sua posizione di default
+		// 1. Avvia l'animazione di ritorno della sfera
+		rotateSphere.positionSphere(new Vector3(rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
+
+		// 2. Attendi che l'animazione abbia avuto il tempo di completarsi (es. 300ms)
+		await Task.Delay(300);
+
+		// 3. SOLO ORA, ripristina la rotazione libera e i flag di stato
 		ResetAttack();
 	}
 
@@ -426,21 +431,6 @@ public class PlayerShoot : MonoBehaviour
 		loadingAttack = false;
 		attacking = false;
 		rotateSphere.isRotating = true;
-	}
-
-	async Task<bool> WaitUntilOrTimeout(Func<bool> condition, int timeoutMs, int checkIntervalMs = 25)
-	{
-		var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-
-		while (stopwatch.ElapsedMilliseconds < timeoutMs)
-		{
-			if (condition())
-				return true;
-
-			await Task.Delay(checkIntervalMs);
-		}
-
-		return false; // Timeout scaduto
 	}
 
 	private void SpawnMagneticShield() {

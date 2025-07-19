@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Audio;
 using UnityEngine;
@@ -90,6 +91,7 @@ public class GamePlayAudioManager : MonoBehaviour
         return eventInstance;
     }
     
+    [Obsolete("Obsolete")]
     public StudioEventEmitter InitializeEventEmitter(EventReference eventReference, GameObject emitterGameObject)
     {
         if (emitterGameObject == null)

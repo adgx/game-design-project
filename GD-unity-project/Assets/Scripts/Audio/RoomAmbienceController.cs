@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
@@ -19,6 +20,7 @@ public class RoomAmbienceController : MonoBehaviour
     private List<StudioEventEmitter> alarmEmitters;
 
     // When the room is created
+    [Obsolete("Obsolete")]
     private void Awake()
     {
         InitializeRoomEmitters();
@@ -33,6 +35,7 @@ public class RoomAmbienceController : MonoBehaviour
         AmbienceSystem.Unregister(this);
     }
 
+    [Obsolete("Obsolete")]
     private void InitializeRoomEmitters()
     {
         activeEmitters = new List<StudioEventEmitter>();

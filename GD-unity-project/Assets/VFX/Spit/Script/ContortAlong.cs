@@ -9,7 +9,6 @@ namespace SplineMesh {
     [RequireComponent(typeof(Spline))]
     public class ContortAlong : MonoBehaviour {
         private Spline spline;
-        private float rate = 0;
         //deform the mesh for a specific spline's range
         public MeshBender meshBender;
 

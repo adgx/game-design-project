@@ -24,8 +24,8 @@ public class Drake : MonoBehaviour, IEnemy
     private Transform _playerTransform;
     private float _health;
     //player health debug
-    private float _playerHDG = 50f;
-    private float _playerDRDG = 0.2f;
+    // private float _playerHDG = 50f;
+    // private float _playerDRDG = 0.2f;
     private string enemyName;
 
     //Idle

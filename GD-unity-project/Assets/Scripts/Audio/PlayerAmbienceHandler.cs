@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Utils;
 
@@ -6,6 +7,7 @@ public class PlayerAmbienceHandler : MonoBehaviour
     private RoomAmbienceController currentRoomController;
     private GameTimer gameTimer;
     
+    [Obsolete("Obsolete")]
     private void Start()
     {
         gameTimer = FindObjectOfType<GameTimer>();
