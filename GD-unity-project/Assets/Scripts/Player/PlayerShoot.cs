@@ -77,8 +77,10 @@ public class PlayerShoot : MonoBehaviour
 
 	[SerializeField] private string respawnSceneName = "RespawnScene";
 	[SerializeField] private GameTimer gameTimer;
-
-	public enum DamageTypes {
+	private bool _debug = true;
+	
+	public enum DamageTypes
+	{
 		Spit,
 		MaynardDistanceAttack,
 		CloseAttack,
@@ -100,7 +102,8 @@ public class PlayerShoot : MonoBehaviour
 
 	private void Start()
 	{
-		healthBar.SetMaxHealth(health);
+		if(!_debug)
+			healthBar.SetMaxHealth(health);
 		player = GetComponent<Player>();
 
 		
