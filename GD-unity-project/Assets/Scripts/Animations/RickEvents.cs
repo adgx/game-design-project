@@ -100,12 +100,11 @@ namespace Animations
             playerShoot.FireDistanceAttack();
         }
 
-        public void DefenseVFX(Vector3 pos)
+        public void DefenseVFX()
         {
-            magneticShieldPrefab.gameObject.SetActive(false);
-            shield = Instantiate(magneticShieldPrefab, pos, Quaternion.identity);
+            shield = Instantiate(magneticShieldPrefab, transform.position, Quaternion.identity, transform);
             shield.tag = "Shield";
-            magneticShieldPrefab.gameObject.SetActive(true);
+            shield.gameObject.SetActive(true);
             shield.gameObject.SetActive(true);
 
             // Audio management
@@ -132,11 +131,10 @@ namespace Animations
         public void ShieldActivation()
         {
             // Activate the shield
-            DefenseVFX(transform.position);
+            DefenseVFX();
             
             // Let the player free to move during the usage of the shield
-            playerShoot.UnfreezePlayer();
-            AnimationManager.Instance.DefenseToIdle();
+            _ = UnfreezePlayerAfterDelay(500);
             
             // Deactivate the shield
             ShieldDeactivation();
@@ -378,15 +376,28 @@ namespace Animations
             }
         }
         
-        private async Task ShieldDeactivationAfterDelay(int delayMs)
+        private async Task UnfreezePlayerAfterDelay(int delayMs)
         {
             await Task.Delay(delayMs);
-
-            Debug.Log("ShieldDeactivation");
+            playerShoot.UnfreezePlayer();
+            AnimationManager.Instance.DefenseToIdle();
+        }
+        
+        private async Task ShieldDeactivationAfterDelay(int delayMs)
+        {
+            // The delay is split in two parts: for synchronization reasons, the first one goes
+            // before the clip audio, while the second after that. 
+            
+            // First part of the delay
+            await Task.Delay(delayMs - 1000);
 
             // Audio management
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldDeactivation, transform.position);
             
+            // Second part of the delay
+            await Task.Delay(1000);
+            
+            // Deactivation and destruction of the shield
             playerShoot.CloseShield();
             ShieldDestroy();
         }
