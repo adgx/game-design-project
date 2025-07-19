@@ -69,7 +69,12 @@ public class PowerUp : MonoBehaviour
         playerPowerUps.Add(PlayerPowerUpTypes.DamageReduction);
         playerPowerUps.Add(PlayerPowerUpTypes.DamageReduction);
         playerPowerUps.Add(PlayerPowerUpTypes.DamageReduction);
-	}
+        
+        // TODO: debug code
+        powerUpsObtained[SpherePowerUpTypes.DefensePowerUp] = 2;
+        powerUpsObtained[SpherePowerUpTypes.DistanceAttackPowerUp] = 2;
+        powerUpsObtained[SpherePowerUpTypes.CloseAttackPowerUp] = 2;
+    }
 
     public void ObtainPowerUp(object powerUp)
     {

@@ -131,30 +131,7 @@ namespace Animations
 
         public void ShieldActivation()
         {
-            DefenseVFX(transform.position);
-
-            /* Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldActivation, transform.position);
-
-            if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
-            {
-                if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1)
-                {
-                    _ = ShieldDeactivationAfterDelay(5000);
-                }
-
-                else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 2)
-                {
-                    _ = ShieldDeactivationAfterDelay(10000);
-                }
-            }
-
-            else
-            {
-                Debug.Log("PowerUp 0");
-                _ = ShieldDeactivationAfterDelay(3000);
-            }
-            */
+            DefenseVFX(transform.position); 
         }
 
         public void ShieldDeactivation1()
@@ -162,8 +139,8 @@ namespace Animations
             // Audio management
             if (!powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
             {
-                //AnimationManager.Instance.RemoveDefenseVfx();
-
+                // AnimationManager.Instance.RemoveDefenseVfx();
+                
                 _ = ShieldDeactivationAfterDelay(0);
                 playerShoot.CloseShield();
                 ShieldDestroy();

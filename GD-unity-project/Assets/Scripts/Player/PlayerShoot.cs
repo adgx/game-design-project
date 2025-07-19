@@ -23,6 +23,7 @@ public class PlayerShoot : MonoBehaviour
 	// The point in which the bullet spawns
 	[SerializeField] private Transform bulletSpawnTransform;
 	[SerializeField] private GameObject bulletPrefab;
+	private float chargedBulletDamage;
 
 	// Attack2
 	[SerializeField] private GameObject attackAreaPrefab;
@@ -34,7 +35,8 @@ public class PlayerShoot : MonoBehaviour
 	private float defaultDamageRadius = 2.5f;
 	[HideInInspector]
 	public float damageRadius = 2f;
-
+	private int chargedCloseAttackDamage;
+	
 	public bool cannotAttack = false;
 
 	// The player has 2 attacks he can choose. He can change them by using the mouse scroll wheel or the back buttons on the controller
@@ -257,11 +259,12 @@ public class PlayerShoot : MonoBehaviour
 			ChangeSphereColor(attackStamina);
 
 			distanceAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
+			
+			chargedBulletDamage = getCollisions.initialPlayerBulletDamage;
 
 			if (attackStamina > 1) {
-				getCollisions.playerBulletDamage += 10;
-			}
-			
+				chargedBulletDamage += (attackStamina - 1) * 10;
+			}			
 			await Task.Delay(500);
 		}
 		
@@ -289,7 +292,7 @@ public class PlayerShoot : MonoBehaviour
 		GameObject bullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity);
 		bullet.tag = "PlayerProjectile";
 		ParticleAttackController PAC = bullet.GetComponent<ParticleAttackController>();
-		PAC.playerBulletDamage = PAC.initialPlayerBulletDamage;
+		PAC.playerBulletDamage = chargedBulletDamage;
 		PAC.targetPos = bulletSpawnTransform;
 		bullet.SetActive(true);
 		bulletPrefab.gameObject.SetActive(true);
@@ -313,6 +316,9 @@ public class PlayerShoot : MonoBehaviour
 		distanceAttackLoadingBar.fillAmount = 0;
 
 		await Task.Delay(500);
+		
+		// Set values back to default
+		chargedBulletDamage = getCollisions.initialPlayerBulletDamage;
 		ResetAttack();
 	}
 	
@@ -352,15 +358,19 @@ public class PlayerShoot : MonoBehaviour
 			rickEvents.ShouldPlayChargeSound = true;
 		}
 		
+		chargedCloseAttackDamage = defaultCloseAttackDamage;
+		damageRadius = defaultDamageRadius;
+		
 		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp) && loadingAttack) {
 			attackStamina++;
 			ChangeSphereColor(attackStamina);
 
 			closeAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
 
-			if (attackStamina > 1) {
-				damageRadius += 1f;
-				closeAttackDamage += 20;
+			if (attackStamina > 1)
+			{
+				chargedCloseAttackDamage += (attackStamina - 1) * 20;
+				damageRadius += (attackStamina - 1) * 1f;
 			}
 			
 			await Task.Delay(500);
@@ -400,12 +410,13 @@ public class PlayerShoot : MonoBehaviour
 
 	async void SpawnAttackArea() {
 		
-		/*GameObject attackArea = Instantiate(attackAreaPrefab, transform.position, Quaternion.identity);
+		/*
+		GameObject attackArea = Instantiate(attackAreaPrefab, transform.position, Quaternion.identity);
 		attackArea.transform.parent = transform;
 		attackArea.transform.localScale = new Vector3(2 * damageRadius, 0, 2 * damageRadius);
-		
-		CheckForEnemies();
 		*/
+		CheckForEnemies();
+		
 		await Task.Delay(500);
 		
 		//Destroy(attackArea);
@@ -413,7 +424,7 @@ public class PlayerShoot : MonoBehaviour
 		await Task.Delay(300);
 
 		// Set values back to default
-		closeAttackDamage = defaultCloseAttackDamage;
+		chargedCloseAttackDamage = defaultCloseAttackDamage;
 		damageRadius = defaultDamageRadius;
 		
 		ResetAttack();
@@ -425,7 +436,7 @@ public class PlayerShoot : MonoBehaviour
 		foreach(Collider c in colliders) {
 			// Checks if the collider is an enemy
 			if(c.transform.tag.Contains("Enemy") && !c.transform.tag.Contains("EnemyAttack")) {
-				c.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(closeAttackDamage, "c");
+				c.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(chargedCloseAttackDamage, "c");
 			}
 		}
 	}
