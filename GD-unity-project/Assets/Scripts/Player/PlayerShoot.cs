@@ -102,10 +102,7 @@ public class PlayerShoot : MonoBehaviour
 	{
 		healthBar.SetMaxHealth(health);
 		player = GetComponent<Player>();
-
-		
 		ChangeSphereColor(maxSphereStamina);
-		
 	}
 
 	void ChangeSphereColor(int stamina)
@@ -132,10 +129,8 @@ public class PlayerShoot : MonoBehaviour
 				break;
 			default:
 				break;
-
 		}
 		sphereMaterial.EnableKeyword("_EMISSION");
-		
 	}
 
 	public void DisableAttacks(bool value)
@@ -474,8 +469,8 @@ public class PlayerShoot : MonoBehaviour
 		
 		if(!magneticShieldOpen) 
 		{ 
-			// to modify for the instantiate the vfx and lunch the animation character
-			//luch defense animation
+			// To modify for the instantiation of the vfx and launch the animation character
+			// launch defense animation
 			AnimationManager.Instance.Defense();
 			magneticShieldOpen = true;
 			player.isFrozen = true;

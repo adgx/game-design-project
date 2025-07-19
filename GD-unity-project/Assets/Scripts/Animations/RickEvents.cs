@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Audio;
 using FMOD.Studio;
 using PlayerInteraction;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Animations
@@ -104,7 +103,7 @@ namespace Animations
         public void DefenseVFX(Vector3 pos)
         {
             magneticShieldPrefab.gameObject.SetActive(false);
-            GameObject shield = Instantiate(magneticShieldPrefab, pos, Quaternion.identity);
+            shield = Instantiate(magneticShieldPrefab, pos, Quaternion.identity);
             shield.tag = "Shield";
             magneticShieldPrefab.gameObject.SetActive(true);
             shield.gameObject.SetActive(true);
@@ -167,7 +166,7 @@ namespace Animations
 
                 _ = ShieldDeactivationAfterDelay(0);
                 playerShoot.CloseShield();
-                ShieldDestory();
+                ShieldDestroy();
             }
         }
 
@@ -181,7 +180,7 @@ namespace Animations
                 {
                     _ = ShieldDeactivationAfterDelay(0);
                     playerShoot.CloseShield();
-                    ShieldDestory();
+                    ShieldDestroy();
                 }
             }
         }
@@ -195,12 +194,12 @@ namespace Animations
                 {
                     _ = ShieldDeactivationAfterDelay(0);
                     playerShoot.CloseShield();
-                    ShieldDestory();
+                    ShieldDestroy();
                 }
             }
         }
 
-        public void ShieldDestory()
+        public void ShieldDestroy()
         {
             if (shield != null)
             {

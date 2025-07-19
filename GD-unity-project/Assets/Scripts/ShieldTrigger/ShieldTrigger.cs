@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using Animations;
 using Audio;
 using UnityEngine;
 using UnityEngine.VFX;
