@@ -173,7 +173,7 @@ public class Maynard : MonoBehaviour, IEnemy
     void Update()
     {
 		// Maybe not a great idea to have this check here, but I don't know where to put it
-		if(!playerShoot.magneticShieldOpen)
+		if(!playerShoot.shieldIsActive)
 			_closeAttackRange = 1;
 		else
 			_closeAttackRange = 2;
@@ -369,7 +369,7 @@ public class Maynard : MonoBehaviour, IEnemy
 
     public void CheckCloseAttackDamage()
     {
-        if (Physics.CheckSphere(transform.position, 2f, _whatIsPlayer) && !playerShoot.magneticShieldOpen)
+        if (Physics.CheckSphere(transform.position, 2f, _whatIsPlayer) && !playerShoot.shieldIsActive)
         {
             playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, 5, 5);
         }

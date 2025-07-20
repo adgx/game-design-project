@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Helper;
+using UnityEngine.Serialization;
 using Utils;
 
 public class PlayerShoot : MonoBehaviour
@@ -52,7 +53,7 @@ public class PlayerShoot : MonoBehaviour
 	private int attackStamina = 0;
 	
 	GameObject magneticShield;
-	public bool magneticShieldOpen = false;
+	[FormerlySerializedAs("magneticShieldOpen")] public bool shieldIsActive = false;
 	
 	// Health
 	public float maxHealth = 120;
@@ -96,7 +97,6 @@ public class PlayerShoot : MonoBehaviour
         else if (Instance != this)
         {
             Destroy(gameObject);
-            return;
         }
     }
 
@@ -449,20 +449,20 @@ public class PlayerShoot : MonoBehaviour
 		
 		isShieldCoroutineRunning = true;
 		
-		if(!magneticShieldOpen) 
+		if(!shieldIsActive) 
 		{ 
 			// To modify for the instantiation of the vfx and launch the animation character
 			// launch defense animation
 			AnimationManager.Instance.Defense();
-			magneticShieldOpen = true;
+			SetShieldIsActive(true);
 			FreezePlayer();
 		}
 		
 		isShieldCoroutineRunning = false;
 	}
 
-	public void CloseShield() {
-		magneticShieldOpen = false;
+	public void SetShieldIsActive(bool value) {
+		shieldIsActive = value;
 	}
 
 	public void FreezePlayer()
@@ -598,7 +598,7 @@ public class PlayerShoot : MonoBehaviour
 				//  && AnimationManager.Instance.rickState == RickStates.Idle
 				if(Input.GetButtonDown("Fire1"))
 				{
-					if (!magneticShield && CheckStamina(1) && !attacking)
+					if (!shieldIsActive && CheckStamina(1) && !attacking)
 					{
 						loadingAttack = true;
 						attacking = true;
@@ -619,7 +619,7 @@ public class PlayerShoot : MonoBehaviour
 
 				if (Input.GetButtonUp("Fire1"))
 				{
-					if (!magneticShield && CheckStamina(1) && loadingAttack)
+					if (!shieldIsActive && CheckStamina(1) && loadingAttack)
 					{
 						switch (attackNumber)
 						{

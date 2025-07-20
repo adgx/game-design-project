@@ -5,12 +5,12 @@ using UnityEngine.VFX;
 public class ShieldTrigger : MonoBehaviour
 {
     private VisualEffect _shieldVFX;
-    //private VFXSpawnerState _ss;
-    //private float _amount;
-    //private float _frequency;
-    //private SphereCollider _sc;
-    //private float _t = 4.712389f;
-    //private float _time = 0;
+    // private VFXSpawnerState _ss;
+    // private float _amount;
+    // private float _frequency;
+    // private SphereCollider _sc;
+    // private float _t = 4.712389f;
+    // private float _time = 0;
 
     void Awake()
     {

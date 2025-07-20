@@ -111,7 +111,6 @@ namespace Animations
             shield = Instantiate(magneticShieldPrefab, transform.position, Quaternion.identity, transform);
             shield.tag = "Shield";
             shield.gameObject.SetActive(true);
-            shield.gameObject.SetActive(true);
 
             // Audio management
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldActivation, transform.position);
@@ -120,16 +119,16 @@ namespace Animations
             {
                 if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1)
                 {
-                    shield.GetComponent<ShieldTrigger>().SetLifeTime(3f);
+                    shield.GetComponent<ShieldTrigger>().SetLifeTime(3.5f);
                 }
                 else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 2)
                 {
-                    shield.GetComponent<ShieldTrigger>().SetLifeTime(3.8f);
+                    shield.GetComponent<ShieldTrigger>().SetLifeTime(4.5f);
                 }
             }
             else
             {
-                shield.GetComponent<ShieldTrigger>().SetLifeTime(2f);
+                shield.GetComponent<ShieldTrigger>().SetLifeTime(2.5f);
             }
             
         }
@@ -151,18 +150,18 @@ namespace Animations
             // Audio management
             if (!powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
             {
-                _ = ShieldDeactivationAfterDelay(2500);
+                _ = ShieldDestructionAfterDelay(2500);
             }
             else
             {
                 if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1)
                 {
-                    _ = ShieldDeactivationAfterDelay(3500);
+                    _ = ShieldDestructionAfterDelay(3500);
                 }
 
                 else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 2)
                 {
-                    _ = ShieldDeactivationAfterDelay(4500);
+                    _ = ShieldDestructionAfterDelay(4500);
                 }
             }
         }
@@ -171,7 +170,22 @@ namespace Animations
         {
             if (shield != null)
             {
+                // Disable the entire GameObject instantly. This removes it from both view and all physical
+                // systems, including that of particles
+                shield.SetActive(false);
+        
+                // Queue ultimate destruction to free memory. This will happen at the end of the frame,
+                // but it doesn’t matter anymore because the object is already inactive
                 Destroy(shield);
+                
+                // Explicitly sets the variable to null, allowing the creation of a new shield
+                shield = null; 
+                
+                // Notify PlayerShoot that the shield is no longer active
+                if (playerShoot != null)
+                {
+                    playerShoot.SetShieldIsActive(false);
+                }
             }
         }
 
@@ -389,7 +403,7 @@ namespace Animations
             AnimationManager.Instance.DefenseToIdle();
         }
         
-        private async Task ShieldDeactivationAfterDelay(int delayMs)
+        private async Task ShieldDestructionAfterDelay(int delayMs)
         {
             // The delay is split in two parts: for synchronization reasons, the first one goes
             // before the clip audio, while the second after that. 
@@ -403,8 +417,7 @@ namespace Animations
             // Second part of the delay
             await Task.Delay(1000);
             
-            // Deactivation and destruction of the shield
-            playerShoot.CloseShield();
+            // Destroy the shield
             ShieldDestroy();
         }
         
