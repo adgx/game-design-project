@@ -32,8 +32,7 @@ public class PlayerShoot : MonoBehaviour
 	public GameObject attackAreaInstance;
 	public GameObject attackAreaVFXPrefab;
 	public int defaultCloseAttackDamage = 50;
-	public int closeAttackDamage = 50;
-	private float defaultDamageRadius = 2.5f;
+	private readonly float defaultDamageRadius = 2.5f;
 	[HideInInspector]
 	public float damageRadius = 2f;
 	public int chargedCloseAttackDamage;
@@ -449,9 +448,10 @@ public class PlayerShoot : MonoBehaviour
 		
 		if(!shieldIsActive) 
 		{ 
-			// To modify for the instantiation of the vfx and launch the animation character
-			// launch defense animation
+			// Decrease sphere's stamina and disable player's attacks until the shield is closed  
 			DecreaseStamina(1);
+			
+			// To modify for the instantiation of the vfx and launch defense animation
 			AnimationManager.Instance.Defense();
 			SetShieldIsActive(true);
 			FreezePlayer();
