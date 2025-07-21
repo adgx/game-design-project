@@ -175,7 +175,7 @@ public class PlayerShoot : MonoBehaviour
 		increasingStamina = false;
 	}
 
-	void setSelectedAttackImage() {
+	private void SetSelectedAttackImage() {
 		if(attackNumber == 1) {
 			// Distance attack selected
 			distanceAttackImage.transform.localScale = new Vector3(1, 1, 1);
@@ -207,13 +207,13 @@ public class PlayerShoot : MonoBehaviour
 			attackNumber = 2;
 		}
 
-		setSelectedAttackImage();
+		SetSelectedAttackImage();
 	}
 
 	void SetAttack(int n) {
 		attackNumber = n;
 
-		setSelectedAttackImage();
+		SetSelectedAttackImage();
 	}
 	
 	async void LoadDistanceAttack() {
@@ -410,19 +410,17 @@ public class PlayerShoot : MonoBehaviour
 	
 	public async void ResetCloseAttackValues()
 	{
-		// Resetta i valori solo DOPO che l'attacco è terminato
-		Debug.Log($"Resetting damage from {chargedCloseAttackDamage} to {defaultCloseAttackDamage}");
+		// Resets the values only after the attack is over
 		chargedCloseAttackDamage = defaultCloseAttackDamage;
 		damageRadius = defaultDamageRadius;
     
-		// Riporta la sfera nella sua posizione di default
-		// 1. Avvia l'animazione di ritorno della sfera
+		// Returns the sphere to its default position
 		rotateSphere.positionSphere(new Vector3(rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
 
-		// 2. Attendi che l'animazione abbia avuto il tempo di completarsi (es. 300ms)
+		// Wait for the ball return animation to have had time to complete
 		await Task.Delay(300);
 
-		// 3. SOLO ORA, ripristina la rotazione libera e i flag di stato
+		// Restore free spin and status flags
 		ResetAttack();
 	}
 
@@ -568,15 +566,19 @@ public class PlayerShoot : MonoBehaviour
 
 		// Asynchronous loading of scene starts
 		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(respawnSceneName);
-		asyncLoad.allowSceneActivation = false;
+		if (asyncLoad != null)
+		{
+			asyncLoad.allowSceneActivation = false;
 
-		// Wait until the scene is almost ready (>= 0.9)
-		while(asyncLoad.progress < 0.9f) {
-			yield return null;
+			// Wait until the scene is almost ready (>= 0.9)
+			while (asyncLoad.progress < 0.9f)
+			{
+				yield return null;
+			}
+
+			// Now actually activates the scene
+			asyncLoad.allowSceneActivation = true;
 		}
-
-		// Now actually activates the scene
-		asyncLoad.allowSceneActivation = true;
 	}
 
 	public void RecoverHealth(float amount) {

@@ -67,7 +67,6 @@ public class ParticleAttackController : MonoBehaviour
     {
         List<ParticleCollisionEvent> ce = new();
         _attackPS.GetCollisionEvents(other, ce);
-        Debug.Log($"Collision Detected :{other.gameObject.tag}");
         if (gameObject.CompareTag("SpitEnemyAttack"))
         {
             if (other.CompareTag("Player"))
@@ -78,7 +77,6 @@ public class ParticleAttackController : MonoBehaviour
             }
             else if (other.CompareTag("Shield"))
             {
-                Debug.Log("Shield");
                 GamePlayAudioManager.instance.PlayOneShot(Audio.FMODEvents.Instance.PlayerShieldHit, transform.position);
                 Destroy(gameObject);
             }
@@ -112,7 +110,6 @@ public class ParticleAttackController : MonoBehaviour
         
         if (gameObject.CompareTag("PlayerProjectile"))
         {
-            Debug.Log($"{gameObject.tag} collided with:{other.gameObject.tag}");
             if (other.gameObject.tag.Contains("Enemy") && !other.gameObject.tag.Contains("EnemyAttack"))
             {
                 other.gameObject.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(playerBulletDamage, "d");

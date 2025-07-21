@@ -139,7 +139,7 @@ namespace Animations
             DefenseVFX();
             
             // Let the player free to move during the usage of the shield
-            _ = UnfreezePlayerAfterDelay(500);
+            _ = UnfreezePlayerAfterDelay(700);
             
             // Deactivate the shield
             ShieldDeactivation();
@@ -398,9 +398,9 @@ namespace Animations
         
         private async Task UnfreezePlayerAfterDelay(int delayMs)
         {
+            AnimationManager.Instance.DefenseToIdle();
             await Task.Delay(delayMs);
             playerShoot.UnfreezePlayer();
-            AnimationManager.Instance.DefenseToIdle();
         }
         
         private async Task ShieldDestructionAfterDelay(int delayMs)
@@ -450,13 +450,11 @@ namespace Animations
                 AreaAttackController AAC = playerShoot.attackAreaInstance.GetComponent<AreaAttackController>();
                 if (AAC != null)
                     AAC.SetDestSize(playerShoot.damageRadius);
-                else Debug.Log("AAC=null");
             }
         }
 
         public void DestroyAreaAttack()
         {
-            Debug.Log("Destroy AreaAttack");
             if (playerShoot.attackAreaInstance != null)
             {
                 Destroy(playerShoot.attackAreaInstance);

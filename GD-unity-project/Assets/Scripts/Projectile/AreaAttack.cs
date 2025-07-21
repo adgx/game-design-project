@@ -44,7 +44,6 @@ public class AreaAttackController : MonoBehaviour
             if (_areaVFX.HasFloat("Rate"))
             {
                 _areaVFX.SetFloat("Rate", ratio);
-                Debug.Log($"Rate: {_areaVFX.GetFloat("Rate")}");
             }
             _t += Time.deltaTime;
         }
