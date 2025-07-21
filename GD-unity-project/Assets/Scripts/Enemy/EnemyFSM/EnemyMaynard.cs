@@ -225,11 +225,14 @@ public class Maynard : MonoBehaviour, IEnemy
         _distanceAttackDamage = maynardData.distanceAttackDamage;
     }
 
-    public void TakeDamage(float damage, string attackType)
+    public void TakeDamage(float damage, string attackType, bool isShield)
     {
         _health -= damage * (attackType == "c" ? _closeAttackDamageMultiplier : _distanceAttackDamageMultiplier);
 
-        StartCoroutine(ChangeColor(Color.red, 0.8f, 0));
+        if (!isShield)
+        {
+            StartCoroutine(ChangeColor(Color.red, 0.8f, 0));   
+        }
 
         if (_health <= 0)
         {

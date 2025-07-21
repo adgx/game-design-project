@@ -63,7 +63,7 @@ public class AreaAttackController : MonoBehaviour
     public void OnTriggerEnter(Collider other)
     {
         if(other.tag.Contains("Enemy") && !other.tag.Contains("EnemyAttack")) {
-				other.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(_closeAttackDamage, "c");
+				other.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(_closeAttackDamage, "c", false);
         }   
     }
 

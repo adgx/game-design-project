@@ -13,7 +13,7 @@ public class GetCollisions : MonoBehaviour
 				Destroy(contact.thisCollider.gameObject);
 
                 if(contact.thisCollider.CompareTag("PlayerProjectile") && contact.otherCollider.tag.Contains("Enemy") && !contact.otherCollider.tag.Contains("EnemyAttack")) {
-                    contact.otherCollider.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(playerBulletDamage, "d");
+                    contact.otherCollider.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(playerBulletDamage, "d", false);
                 }
                 else {
                     if(contact.thisCollider.tag.Contains("EnemyAttack") && contact.otherCollider.CompareTag("Player")) {

@@ -175,12 +175,16 @@ namespace Enemy.EnemyData.EnemyMovement
             }
         }
 
-        public void TakeDamage(float damage, string attackType)
+        public void TakeDamage(float damage, string attackType, bool isShield)
         {
             health -= damage * (attackType == "c" ? closeAttackDamageMultiplier : distanceAttackDamageMultiplier);
 
             if((attackType == "c" && closeAttackDamageMultiplier != 0) || (attackType == "d" && distanceAttackDamageMultiplier != 0)) {
-                StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
+
+                if (!isShield)
+                {
+                    StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));   
+                }
 
                 if(health <= 0)
                     Invoke(nameof(DestroyEnemy), 0.05f);

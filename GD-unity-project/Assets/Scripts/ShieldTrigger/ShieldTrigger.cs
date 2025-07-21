@@ -57,13 +57,13 @@ public class ShieldTrigger : MonoBehaviour
             switch (other.tag)
             {
                 case "EnemyDrake":
-                    other.GetComponent<Drake>().TakeDamage(0, "c");
+                    other.GetComponent<Drake>().TakeDamage(0, "c", true);
                     break;
                 case "EnemyIncognito":
-                    other.GetComponent<Incognito>().TakeDamage(0, "c");
+                    other.GetComponent<Incognito>().TakeDamage(0, "c", true);
                     break;
                 case "EnemyMaynard":
-                    other.GetComponent<Maynard>().TakeDamage(0, "c");
+                    other.GetComponent<Maynard>().TakeDamage(0, "c", true);
                     break;
                 default:
                     break;

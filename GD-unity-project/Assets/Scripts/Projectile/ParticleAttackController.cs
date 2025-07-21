@@ -112,7 +112,7 @@ public class ParticleAttackController : MonoBehaviour
         {
             if (other.gameObject.tag.Contains("Enemy") && !other.gameObject.tag.Contains("EnemyAttack"))
             {
-                other.gameObject.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(playerBulletDamage, "d");
+                other.gameObject.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(playerBulletDamage, "d", false);
                 Destroy(gameObject);
             }
             else
