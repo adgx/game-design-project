@@ -102,8 +102,8 @@ namespace PlayerInteraction
             _isHealthVendingMachineHacked = false;
 
             AnimationManager.Instance.EatSnack();
-			_rickEvents.healthVendingMachineInteraction = this;
-            _rickEvents.machineType = "health";
+			_rickEvents.HealthVendingMachineInteraction = this;
+            _rickEvents.MachineType = "health";
         }
 
         public void PlaceSpecialSnackInHand()

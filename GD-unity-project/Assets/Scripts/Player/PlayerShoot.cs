@@ -438,8 +438,6 @@ public class PlayerShoot : MonoBehaviour
 			return; // Exits the function if the shield cannot be activated
 		}
 		
-		DecreaseStamina(1);
-		
 		// Without this check, if the button for activating/deactivating the shield is pushed and released more than once in a very fast way, then
 		// the function is called multiple times, creating a race condition among multiple concurrent instances of it (buggy code)
 		if (isShieldCoroutineRunning)
@@ -453,6 +451,7 @@ public class PlayerShoot : MonoBehaviour
 		{ 
 			// To modify for the instantiation of the vfx and launch the animation character
 			// launch defense animation
+			DecreaseStamina(1);
 			AnimationManager.Instance.Defense();
 			SetShieldIsActive(true);
 			FreezePlayer();

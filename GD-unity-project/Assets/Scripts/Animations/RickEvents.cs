@@ -29,9 +29,9 @@ namespace Animations
         public PowerUp powerUp;
         public PlayerShoot playerShoot;
         [SerializeField] private FadeManagerLoadingScreen fadeManagerLoadingScreen;
-        [NonSerialized] public HealthVendingMachineInteraction healthVendingMachineInteraction;
-		[NonSerialized] public PowerUpVendingMachineInteraction powerUpVendingMachineInteraction;
-        [NonSerialized] public string machineType; // Can be "playerPowerUp" or "health"
+        [NonSerialized] public HealthVendingMachineInteraction HealthVendingMachineInteraction;
+		[NonSerialized] public PowerUpVendingMachineInteraction PowerUpVendingMachineInteraction;
+        [NonSerialized] public string MachineType; // Can be "playerPowerUp" or "health"
 
         public void DisableRickState()
         {
@@ -106,7 +106,7 @@ namespace Animations
             playerShoot.FireDistanceAttack();
         }
 
-        public void DefenseVFX()
+        private void DefenseVFX()
         {
             shield = Instantiate(magneticShieldPrefab, transform.position, Quaternion.identity, transform);
             shield.tag = "Shield";
@@ -166,7 +166,7 @@ namespace Animations
             }
         }
 
-        public void ShieldDestroy()
+        private void ShieldDestroy()
         {
             if (shield != null)
             {
@@ -175,7 +175,7 @@ namespace Animations
                 shield.SetActive(false);
         
                 // Queue ultimate destruction to free memory. This will happen at the end of the frame,
-                // but it doesn’t matter anymore because the object is already inactive
+                // but it does not matter anymore because the object is already inactive
                 Destroy(shield);
                 
                 // Explicitly sets the variable to null, allowing the creation of a new shield
@@ -247,7 +247,7 @@ namespace Animations
 
         public void EndPowerUp()
         {
-            powerUpVendingMachineInteraction.TerminatePlayerPowerUp();
+            PowerUpVendingMachineInteraction.TerminatePlayerPowerUp();
         }
 
         public void EatChocolate()
@@ -258,7 +258,7 @@ namespace Animations
 
         public void EndHealthRecovery()
         {
-            healthVendingMachineInteraction.TerminateHealthRecovery();
+            HealthVendingMachineInteraction.TerminateHealthRecovery();
         }
 
         public void FreePlayerAfterAnimation()
@@ -289,13 +289,13 @@ namespace Animations
             // Audio management
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineItemPickUp, transform.position);
 
-            if (machineType == "health")
-                healthVendingMachineInteraction.PlaceSpecialSnackInHand();
+            if (MachineType == "health")
+                HealthVendingMachineInteraction.PlaceSpecialSnackInHand();
             else
             {
-                if (machineType == "playerPowerUp")
+                if (MachineType == "playerPowerUp")
                 {
-                    powerUpVendingMachineInteraction.PlaceItemInHand();
+                    PowerUpVendingMachineInteraction.PlaceItemInHand();
                 }
             }
         }
