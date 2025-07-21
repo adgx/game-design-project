@@ -155,7 +155,6 @@ public class AnimationManager : MonoBehaviour
     {
         if (rickState != RickStates.Idle)
         {
-            activeRandomIdle = true;
             rickAC.SetTrigger(idleTriggerHash);
             rickState = RickStates.Idle;
         }
