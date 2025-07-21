@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using Animations;
 using Audio;
 using UnityEngine;
 using UnityEngine.VFX;
@@ -8,12 +5,12 @@ using UnityEngine.VFX;
 public class ShieldTrigger : MonoBehaviour
 {
     private VisualEffect _shieldVFX;
-    //private VFXSpawnerState _ss;
-    //private float _amount;
-    //private float _frequency;
-    //private SphereCollider _sc;
-    //private float _t = 4.712389f;
-    //private float _time = 0;
+    // private VFXSpawnerState _ss;
+    // private float _amount;
+    // private float _frequency;
+    // private SphereCollider _sc;
+    // private float _t = 4.712389f;
+    // private float _time = 0;
 
     void Awake()
     {
@@ -60,13 +57,13 @@ public class ShieldTrigger : MonoBehaviour
             switch (other.tag)
             {
                 case "EnemyDrake":
-                    other.GetComponent<Drake>().TakeDamage(0, "c");
+                    other.GetComponent<Drake>().TakeDamage(0, "c", true);
                     break;
                 case "EnemyIncognito":
-                    other.GetComponent<Incognito>().TakeDamage(0, "c");
+                    other.GetComponent<Incognito>().TakeDamage(0, "c", true);
                     break;
                 case "EnemyMaynard":
-                    other.GetComponent<Maynard>().TakeDamage(0, "c");
+                    other.GetComponent<Maynard>().TakeDamage(0, "c", true);
                     break;
                 default:
                     break;

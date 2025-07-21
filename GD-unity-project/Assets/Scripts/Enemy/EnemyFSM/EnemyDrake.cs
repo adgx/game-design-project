@@ -24,8 +24,8 @@ public class Drake : MonoBehaviour, IEnemy
     private Transform _playerTransform;
     private float _health;
     //player health debug
-    private float _playerHDG = 50f;
-    private float _playerDRDG = 0.2f;
+    // private float _playerHDG = 50f;
+    // private float _playerDRDG = 0.2f;
     private string enemyName;
 
     //Idle
@@ -174,7 +174,7 @@ public class Drake : MonoBehaviour, IEnemy
     void Update()
     {
         // Maybe not a great idea to have this check here, but I don't know where to put it
-        if(!playerShoot.magneticShieldOpen) 
+        if(!playerShoot.shieldIsActive) 
             _attackRange = 1;
         else
             _attackRange = 2;
@@ -224,13 +224,16 @@ public class Drake : MonoBehaviour, IEnemy
 
     }
 
-    public void TakeDamage(float damage, string attackType)
+    public void TakeDamage(float damage, string attackType, bool isShield)
     {
         _health -= damage * (attackType == "c" ? _closeAttackDamageMultiplier : _distanceAttackDamageMultiplier);
 
         if (attackType == "c")
         {
-            StartCoroutine(ChangeColor(Color.red, 0.8f, 0));
+            if (!isShield)
+            {
+                StartCoroutine(ChangeColor(Color.red, 0.8f, 0));   
+            }
 
             if (_health <= 0)
             {
@@ -356,7 +359,7 @@ public class Drake : MonoBehaviour, IEnemy
     {
         if (!_debug)
         {
-            if (Physics.CheckSphere(transform.position, 2f, whatIsPlayer) && !playerShoot.magneticShieldOpen)
+            if (Physics.CheckSphere(transform.position, 2f, whatIsPlayer) && !playerShoot.shieldIsActive)
             {
                 playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, 5, 5);
             }
@@ -365,7 +368,7 @@ public class Drake : MonoBehaviour, IEnemy
 
     public void CheckBiteAttackDamage()
     {
-        if (Physics.CheckSphere(transform.position, 2f, whatIsPlayer) && !playerShoot.magneticShieldOpen)
+        if (Physics.CheckSphere(transform.position, 2f, whatIsPlayer) && !playerShoot.shieldIsActive)
         {
             playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.DrakeBiteAttack, 5, 5);
         }

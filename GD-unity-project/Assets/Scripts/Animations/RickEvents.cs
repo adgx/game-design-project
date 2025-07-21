@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Audio;
 using FMOD.Studio;
 using PlayerInteraction;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Animations
@@ -32,9 +31,9 @@ namespace Animations
         public PowerUp powerUp;
         public PlayerShoot playerShoot;
         [SerializeField] private FadeManagerLoadingScreen fadeManagerLoadingScreen;
-        [NonSerialized] public HealthVendingMachineInteraction healthVendingMachineInteraction;
-        [NonSerialized] public PowerUpVendingMachineInteraction powerUpVendingMachineInteraction;
-        [NonSerialized] public string machineType; // Can be "playerPowerUp" or "health"
+        [NonSerialized] public HealthVendingMachineInteraction HealthVendingMachineInteraction;
+		[NonSerialized] public PowerUpVendingMachineInteraction PowerUpVendingMachineInteraction;
+        [NonSerialized] public string MachineType; // Can be "playerPowerUp" or "health"
 
         public void DisableRickState()
         {
@@ -85,7 +84,13 @@ namespace Animations
         {
             // Audio management
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerCloseAttackShoot, transform.position);
-
+            
+            AreaAttackController areaController = playerShoot.attackAreaInstance.GetComponent<AreaAttackController>();
+            if (areaController != null)
+            {
+                areaController.Initialize(playerShoot.chargedCloseAttackDamage);
+            }
+            
             playerShoot.FireCloseAttack();
         }
 
@@ -103,111 +108,87 @@ namespace Animations
             playerShoot.FireDistanceAttack();
         }
 
-        public void DefenseVFX(Vector3 pos)
+        private void DefenseVFX()
         {
-            magneticShieldPrefab.gameObject.SetActive(false);
-            GameObject shield = Instantiate(magneticShieldPrefab, pos, Quaternion.identity);
+            shield = Instantiate(magneticShieldPrefab, transform.position, Quaternion.identity, transform);
             shield.tag = "Shield";
-            magneticShieldPrefab.gameObject.SetActive(true);
             shield.gameObject.SetActive(true);
-            if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
-            {
-                if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1)
-                {
-                    shield.GetComponent<ShieldTrigger>().SetLifeTime(3f);
-                }
-                else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 2)
-                {
-                    shield.GetComponent<ShieldTrigger>().SetLifeTime(3.8f);
-                }
-            }
-            else
-            {
-                shield.GetComponent<ShieldTrigger>().SetLifeTime(2f);
-            }
 
-        }
-
-        public void ShieldActivation()
-        {
-            DefenseVFX(transform.position);
-
-            /* Audio management
+            // Audio management
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldActivation, transform.position);
 
             if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
             {
                 if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1)
                 {
-                    _ = ShieldDeactivationAfterDelay(5000);
+                    shield.GetComponent<ShieldTrigger>().SetLifeTime(3.5f);
                 }
-
                 else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 2)
                 {
-                    _ = ShieldDeactivationAfterDelay(10000);
+                    shield.GetComponent<ShieldTrigger>().SetLifeTime(4.5f);
                 }
             }
-
             else
             {
-                Debug.Log("PowerUp 0");
-                _ = ShieldDeactivationAfterDelay(3000);
+                shield.GetComponent<ShieldTrigger>().SetLifeTime(2.5f);
             }
-            */
+
         }
 
-        public void ShieldDeactivation1()
+        public void ShieldActivation()
+        {
+            // Activate the shield
+            DefenseVFX();
+            
+            // Let the player free to move during the usage of the shield
+            _ = UnfreezePlayerAfterDelay(700);
+            
+            // Deactivate the shield
+            ShieldDeactivation();
+        }
+
+        private void ShieldDeactivation()
         {
             // Audio management
             if (!powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
             {
-                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldActivation, transform.position);
-                //AnimationManager.Instance.RemoveDefenseVfx();
-
-                _ = ShieldDeactivationAfterDelay(0);
-                playerShoot.CloseShield();
-                ShieldDestory();
+                _ = ShieldDestructionAfterDelay(2500);
             }
-        }
-
-
-        public void ShieldDeactivation2()
-        {
-            // Audio management
-            if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
+            else
             {
-                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldActivation, transform.position);
                 if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1)
                 {
-                    _ = ShieldDeactivationAfterDelay(0);
-                    playerShoot.CloseShield();
-                    ShieldDestory();
+                    _ = ShieldDestructionAfterDelay(3500);
                 }
-            }
-        }
 
-        public void ShieldDeactivation3()
-        {
-            if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
-            {
-                // Audio management
-                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldActivation, transform.position);
-                if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 2)
+                else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 2)
                 {
-                    _ = ShieldDeactivationAfterDelay(0);
-                    playerShoot.CloseShield();
-                    ShieldDestory();
+                    _ = ShieldDestructionAfterDelay(4500);
                 }
             }
         }
 
-        public void ShieldDestory()
+        private void ShieldDestroy()
         {
             if (shield != null)
             {
+                // Disable the entire GameObject instantly. This removes it from both view and all physical
+                // systems, including that of particles
+                shield.SetActive(false);
+        
+                // Queue ultimate destruction to free memory. This will happen at the end of the frame,
+                // but it does not matter anymore because the object is already inactive
                 Destroy(shield);
+                
+                // Explicitly sets the variable to null, allowing the creation of a new shield
+                shield = null; 
+                
+                // Notify PlayerShoot that the shield is no longer active
+                if (playerShoot != null)
+                {
+                    playerShoot.SetShieldIsActive(false);
+                }
             }
-            AnimationManager.Instance.DefenseToIdle();
         }
 
         public void DeathForwardGrunt()
@@ -268,7 +249,7 @@ namespace Animations
 
         public void EndPowerUp()
         {
-            powerUpVendingMachineInteraction.TerminatePlayerPowerUp();
+            PowerUpVendingMachineInteraction.TerminatePlayerPowerUp();
         }
 
         public void EatChocolate()
@@ -279,7 +260,7 @@ namespace Animations
 
         public void EndHealthRecovery()
         {
-            healthVendingMachineInteraction.TerminateHealthRecovery();
+            HealthVendingMachineInteraction.TerminateHealthRecovery();
         }
 
         public void FreePlayerAfterAnimation()
@@ -310,13 +291,13 @@ namespace Animations
             // Audio management
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineItemPickUp, transform.position);
 
-            if (machineType == "health")
-                healthVendingMachineInteraction.PlaceSpecialSnackInHand();
+            if (MachineType == "health")
+                HealthVendingMachineInteraction.PlaceSpecialSnackInHand();
             else
             {
-                if (machineType == "playerPowerUp")
+                if (MachineType == "playerPowerUp")
                 {
-                    powerUpVendingMachineInteraction.PlaceItemInHand();
+                    PowerUpVendingMachineInteraction.PlaceItemInHand();
                 }
             }
         }
@@ -416,16 +397,30 @@ namespace Animations
                 }
             }
         }
-
-        // Audio management
-        private async Task ShieldDeactivationAfterDelay(int delayMs)
+        
+        private async Task UnfreezePlayerAfterDelay(int delayMs)
         {
+            AnimationManager.Instance.DefenseToIdle();
             await Task.Delay(delayMs);
-
-            Debug.Log("ShieldDeactivation");
+            playerShoot.UnfreezePlayer();
+        }
+        
+        private async Task ShieldDestructionAfterDelay(int delayMs)
+        {
+            // The delay is split in two parts: for synchronization reasons, the first one goes
+            // before the clip audio, while the second after that. 
+            
+            // First part of the delay
+            await Task.Delay(delayMs - 1000);
 
             // Audio management
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldDeactivation, transform.position);
+            
+            // Second part of the delay
+            await Task.Delay(1000);
+            
+            // Destroy the shield
+            ShieldDestroy();
         }
 
         // Audio management
@@ -442,7 +437,7 @@ namespace Animations
             rickIdle.stop(STOP_MODE.IMMEDIATE);
         }
 
-        public void SpwawnAreaAttack()
+        public void SpawnAreaAttack()
         {
             playerShoot.attackAreaVFXPrefab.gameObject.SetActive(false);
             playerShoot.attackAreaInstance = Instantiate(playerShoot.attackAreaVFXPrefab, transform.position, Quaternion.identity);
@@ -457,17 +452,17 @@ namespace Animations
                 AreaAttackController AAC = playerShoot.attackAreaInstance.GetComponent<AreaAttackController>();
                 if (AAC != null)
                     AAC.SetDestSize(playerShoot.damageRadius);
-                else Debug.Log("AAC=null");
             }
         }
 
         public void DestroyAreaAttack()
         {
-            Debug.Log("Destroy Areattack");
             if (playerShoot.attackAreaInstance != null)
             {
                 Destroy(playerShoot.attackAreaInstance);
             }
+            
+            playerShoot.ResetCloseAttackValues();
         }
     }
     

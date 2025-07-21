@@ -53,8 +53,6 @@ public class AnimationManager : MonoBehaviour
     public RickStates rickState;
     //for switch from animation to another for the idle
     private bool randomIdleIsDone = true;
-    private bool activeRandomIdle = true;
-    private bool justIdle = true;
     //sheildVFX  gameObj
     [SerializeField] GameObject prefabSheildVFX;
     private GameObject shield;
@@ -139,10 +137,8 @@ public class AnimationManager : MonoBehaviour
 
     public void Run()
     {
-        activeRandomIdle = false;
         rickAC.SetTrigger(runTriggerHash);
         rickState = RickStates.Run;
-
     }
     public void Defense()
     {

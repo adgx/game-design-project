@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using Animations;
+using UnityEngine.Audio;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class PauseMenu : MonoBehaviour
 	[SerializeField] private GameObject pauseMenu;
 	[SerializeField] private GameObject confirmMenu;
 	[SerializeField] private VolumeMenu volumeMenuScript;
+	[SerializeField] private GameObject creditsMenu;
 
 	[SerializeField] private TextMeshProUGUI confirmMenuText;
 
@@ -46,6 +48,7 @@ public class PauseMenu : MonoBehaviour
 		screenContainer.SetActive(false);
 		pauseMenu.SetActive(false);
 		confirmMenu.SetActive(false);
+		creditsMenu.SetActive(false);
 		volumeMenuScript.CloseVolumeMenu();
 
 		actionToConfirm = ActionToConfirm.QuitGame;
@@ -109,6 +112,7 @@ public class PauseMenu : MonoBehaviour
 	void BackToPause() {
 		volumeMenuScript.CloseVolumeMenu();
 		confirmMenu.SetActive(false);
+		creditsMenu.SetActive(false);
 
 		pauseMenu.SetActive(true);
 		if(!EventSystem.current.alreadySelecting)
@@ -140,6 +144,19 @@ public class PauseMenu : MonoBehaviour
 	public void BackToPauseButtonClick() {
 		BackToPause();
 	}
+	
+	public void CreditsButtonClick(GameObject button) {
+		buttonEffects.OnMouseExit(button);
+
+		pauseMenu.SetActive(false);
+		OpenCreditsMenu();
+	}
+
+	private void OpenCreditsMenu()
+	{
+		pauseMenu.SetActive(false);
+		creditsMenu.SetActive(true);
+	}
 
 	public void QuitGameButtonClick(GameObject button) {
 		buttonEffects.OnMouseExit(button);
@@ -161,11 +178,10 @@ public class PauseMenu : MonoBehaviour
 		EventSystem.current.SetSelectedGameObject(noButton);
 	}
 
-	public async void YesButtonClick(GameObject button) {
+	public void YesButtonClick(GameObject button) {
 		buttonEffects.OnMouseExit(button);
 
 		if(actionToConfirm == ActionToConfirm.StartNewGame) {
-			print("Ciao");
 			Destroy(GameObject.Find("RoomManager"));
 			StartCoroutine(LoadGameplaySceneAsync());
 		}

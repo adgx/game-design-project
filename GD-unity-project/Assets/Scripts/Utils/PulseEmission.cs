@@ -15,10 +15,9 @@ public class PulseEmission : MonoBehaviour
 
     [SerializeField] private LayerMask whatIsPlayer;
 
-    private Renderer renderer;
+    private new Renderer renderer;
     private List<Material> materials = new List<Material>();
     private List<Color> initialColors = new List<Color>();
-    private bool pulse = false;
 
     private const string EMISSIVE_COLOR_NAME = "_EmissionColor";
 	private const string EMISSIVE_KEYWORD = "_EMISSION";

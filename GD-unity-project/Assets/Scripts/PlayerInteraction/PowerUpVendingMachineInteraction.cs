@@ -132,8 +132,8 @@ namespace PlayerInteraction
 				itemToPick = ItemToPick.Drink;
             }
 
-            _rickEvents.powerUpVendingMachineInteraction = this;
-            _rickEvents.machineType = "playerPowerUp";
+            _rickEvents.PowerUpVendingMachineInteraction = this;
+            _rickEvents.MachineType = "playerPowerUp";
         }
 
 		public void PlaceItemInHand() {

@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Helper;
+using UnityEngine.Serialization;
 using Utils;
 
 public class PlayerShoot : MonoBehaviour
@@ -23,6 +24,7 @@ public class PlayerShoot : MonoBehaviour
 	// The point in which the bullet spawns
 	[SerializeField] private Transform bulletSpawnTransform;
 	[SerializeField] private GameObject bulletPrefab;
+	private float chargedBulletDamage;
 
 	// Attack2
 	[SerializeField] private GameObject attackAreaPrefab;
@@ -30,11 +32,11 @@ public class PlayerShoot : MonoBehaviour
 	public GameObject attackAreaInstance;
 	public GameObject attackAreaVFXPrefab;
 	public int defaultCloseAttackDamage = 50;
-	public int closeAttackDamage = 50;
-	private float defaultDamageRadius = 2.5f;
+	private readonly float defaultDamageRadius = 2.5f;
 	[HideInInspector]
 	public float damageRadius = 2f;
-
+	public int chargedCloseAttackDamage;
+	
 	public bool cannotAttack = false;
 
 	// The player has 2 attacks he can choose. He can change them by using the mouse scroll wheel or the back buttons on the controller
@@ -50,7 +52,7 @@ public class PlayerShoot : MonoBehaviour
 	private int attackStamina = 0;
 	
 	GameObject magneticShield;
-	public bool magneticShieldOpen = false;
+	[FormerlySerializedAs("magneticShieldOpen")] public bool shieldIsActive = false;
 	
 	// Health
 	public float maxHealth = 120;
@@ -96,7 +98,6 @@ public class PlayerShoot : MonoBehaviour
         else if (Instance != this)
         {
             Destroy(gameObject);
-            return;
         }
     }
 
@@ -105,10 +106,7 @@ public class PlayerShoot : MonoBehaviour
 		if(!_debug)
 			healthBar.SetMaxHealth(health);
 		player = GetComponent<Player>();
-
-		
 		ChangeSphereColor(maxSphereStamina);
-		
 	}
 
 	void ChangeSphereColor(int stamina)
@@ -135,10 +133,8 @@ public class PlayerShoot : MonoBehaviour
 				break;
 			default:
 				break;
-
 		}
 		sphereMaterial.EnableKeyword("_EMISSION");
-		
 	}
 
 	public void DisableAttacks(bool value)
@@ -182,7 +178,7 @@ public class PlayerShoot : MonoBehaviour
 		increasingStamina = false;
 	}
 
-	void setSelectedAttackImage() {
+	private void SetSelectedAttackImage() {
 		if(attackNumber == 1) {
 			// Distance attack selected
 			distanceAttackImage.transform.localScale = new Vector3(1, 1, 1);
@@ -214,13 +210,13 @@ public class PlayerShoot : MonoBehaviour
 			attackNumber = 2;
 		}
 
-		setSelectedAttackImage();
+		SetSelectedAttackImage();
 	}
 
 	void SetAttack(int n) {
 		attackNumber = n;
 
-		setSelectedAttackImage();
+		SetSelectedAttackImage();
 	}
 	
 	async void LoadDistanceAttack() {
@@ -265,11 +261,12 @@ public class PlayerShoot : MonoBehaviour
 			ChangeSphereColor(attackStamina);
 
 			distanceAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
+			
+			chargedBulletDamage = getCollisions.initialPlayerBulletDamage;
 
 			if (attackStamina > 1) {
-				getCollisions.playerBulletDamage += 10;
-			}
-			
+				chargedBulletDamage += (attackStamina - 1) * 10;
+			}			
 			await Task.Delay(500);
 		}
 		
@@ -297,7 +294,7 @@ public class PlayerShoot : MonoBehaviour
 		GameObject bullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity);
 		bullet.tag = "PlayerProjectile";
 		ParticleAttackController PAC = bullet.GetComponent<ParticleAttackController>();
-		PAC.playerBulletDamage = PAC.initialPlayerBulletDamage;
+		PAC.playerBulletDamage = chargedBulletDamage;
 		PAC.targetPos = bulletSpawnTransform;
 		bullet.SetActive(true);
 		bulletPrefab.gameObject.SetActive(true);
@@ -321,6 +318,9 @@ public class PlayerShoot : MonoBehaviour
 		distanceAttackLoadingBar.fillAmount = 0;
 
 		await Task.Delay(500);
+		
+		// Set values back to default
+		chargedBulletDamage = getCollisions.initialPlayerBulletDamage;
 		ResetAttack();
 	}
 	
@@ -328,7 +328,7 @@ public class PlayerShoot : MonoBehaviour
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
 		rotateSphere.positionSphere(new Vector3(0, 1.8f, 0), RotateSphere.Animation.Linear);
-		player.isFrozen = true;
+		FreezePlayer();
 		AnimationManager.Instance.AreaAttack();
 		
 		await Task.Delay(50);
@@ -360,15 +360,22 @@ public class PlayerShoot : MonoBehaviour
 			rickEvents.ShouldPlayChargeSound = true;
 		}
 		
+		chargedCloseAttackDamage = defaultCloseAttackDamage;
+		damageRadius = defaultDamageRadius;
+		
 		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp) && loadingAttack) {
 			attackStamina++;
 			ChangeSphereColor(attackStamina);
 
 			closeAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
 
-			if (attackStamina > 1) {
-				damageRadius += 1f;
-				closeAttackDamage += 20;
+			chargedCloseAttackDamage = defaultCloseAttackDamage;
+			damageRadius = defaultDamageRadius;
+			
+			if (attackStamina > 1)
+			{
+				chargedCloseAttackDamage += (attackStamina - 1) * 20;
+				damageRadius += (attackStamina - 1) * 1f;
 			}
 			
 			await Task.Delay(500);
@@ -402,40 +409,22 @@ public class PlayerShoot : MonoBehaviour
 		}
 
 		closeAttackLoadingBar.fillAmount = 0;
-
-		SpawnAttackArea();
 	}
-
-	async void SpawnAttackArea() {
-		
-		/*GameObject attackArea = Instantiate(attackAreaPrefab, transform.position, Quaternion.identity);
-		attackArea.transform.parent = transform;
-		attackArea.transform.localScale = new Vector3(2 * damageRadius, 0, 2 * damageRadius);
-		
-		CheckForEnemies();
-		*/
-		await Task.Delay(500);
-		
-		//Destroy(attackArea);
+	
+	public async void ResetCloseAttackValues()
+	{
+		// Resets the values only after the attack is over
+		chargedCloseAttackDamage = defaultCloseAttackDamage;
+		damageRadius = defaultDamageRadius;
+    
+		// Returns the sphere to its default position
 		rotateSphere.positionSphere(new Vector3(rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
+
+		// Wait for the ball return animation to have had time to complete
 		await Task.Delay(300);
 
-		// Set values back to default
-		closeAttackDamage = defaultCloseAttackDamage;
-		damageRadius = defaultDamageRadius;
-		
+		// Restore free spin and status flags
 		ResetAttack();
-	}
-
-	// Checks if there are enemies in the attack area and, if so, damages them
-	void CheckForEnemies() {
-		Collider[] colliders = Physics.OverlapSphere(transform.position, damageRadius);
-		foreach(Collider c in colliders) {
-			// Checks if the collider is an enemy
-			if(c.transform.tag.Contains("Enemy") && !c.transform.tag.Contains("EnemyAttack")) {
-				c.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(closeAttackDamage, "c");
-			}
-		}
 	}
 
 	public void ResetAttack() {
@@ -444,27 +433,10 @@ public class PlayerShoot : MonoBehaviour
 		rotateSphere.isRotating = true;
 	}
 
-	async Task<bool> WaitUntilOrTimeout(Func<bool> condition, int timeoutMs, int checkIntervalMs = 25)
-	{
-		var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-
-		while (stopwatch.ElapsedMilliseconds < timeoutMs)
-		{
-			if (condition())
-				return true;
-
-			await Task.Delay(checkIntervalMs);
-		}
-
-		return false; // Timeout scaduto
-	}
-
 	private void SpawnMagneticShield() {
 		if (!CheckStamina(1)) {
 			return; // Exits the function if the shield cannot be activated
 		}
-		
-		DecreaseStamina(1);
 		
 		// Without this check, if the button for activating/deactivating the shield is pushed and released more than once in a very fast way, then
 		// the function is called multiple times, creating a race condition among multiple concurrent instances of it (buggy code)
@@ -475,21 +447,32 @@ public class PlayerShoot : MonoBehaviour
 		
 		isShieldCoroutineRunning = true;
 		
-		if(!magneticShieldOpen) 
+		if(!shieldIsActive) 
 		{ 
-			// to modify for the instantiate the vfx and lunch the animation character
-			//luch defense animation
+			// Decrease sphere's stamina and disable player's attacks until the shield is closed  
+			DecreaseStamina(1);
+			
+			// To modify for the instantiation of the vfx and launch defense animation
 			AnimationManager.Instance.Defense();
-			magneticShieldOpen = true;
-			player.isFrozen = true;
+			SetShieldIsActive(true);
+			FreezePlayer();
 		}
 		
 		isShieldCoroutineRunning = false;
 	}
 
-	public void CloseShield() {
+	public void SetShieldIsActive(bool value) {
+		shieldIsActive = value;
+	}
+
+	public void FreezePlayer()
+	{
+		player.isFrozen = true;
+	}
+
+	public void UnfreezePlayer()
+	{
 		player.isFrozen = false;
-		magneticShieldOpen = false;
 	}
 
 	public void TakeDamage(float damage, DamageTypes damageType, int x, int z) {
@@ -584,17 +567,21 @@ public class PlayerShoot : MonoBehaviour
 	}
 	private IEnumerator LoadRespawnSceneAsync() {
 
-		// Inizia il caricamento asincrono della scena
+		// Asynchronous loading of scene starts
 		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(respawnSceneName);
-		asyncLoad.allowSceneActivation = false;
+		if (asyncLoad != null)
+		{
+			asyncLoad.allowSceneActivation = false;
 
-		// Attendi finch� la scena � quasi pronta (>= 0.9)
-		while(asyncLoad.progress < 0.9f) {
-			yield return null;
+			// Wait until the scene is almost ready (>= 0.9)
+			while (asyncLoad.progress < 0.9f)
+			{
+				yield return null;
+			}
+
+			// Now actually activates the scene
+			asyncLoad.allowSceneActivation = true;
 		}
-
-		// Ora attiva effettivamente la scena
-		asyncLoad.allowSceneActivation = true;
 	}
 
 	public void RecoverHealth(float amount) {
@@ -615,7 +602,7 @@ public class PlayerShoot : MonoBehaviour
 				//  && AnimationManager.Instance.rickState == RickStates.Idle
 				if(Input.GetButtonDown("Fire1"))
 				{
-					if (!magneticShield && CheckStamina(1) && !attacking)
+					if (!shieldIsActive && CheckStamina(1) && !attacking)
 					{
 						loadingAttack = true;
 						attacking = true;
@@ -636,7 +623,7 @@ public class PlayerShoot : MonoBehaviour
 
 				if (Input.GetButtonUp("Fire1"))
 				{
-					if (!magneticShield && CheckStamina(1) && loadingAttack)
+					if (!shieldIsActive && CheckStamina(1) && loadingAttack)
 					{
 						switch (attackNumber)
 						{

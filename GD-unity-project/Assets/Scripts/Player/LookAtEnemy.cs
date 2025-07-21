@@ -1,5 +1,3 @@
-using FMOD;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class LookAtEnemy : MonoBehaviour
