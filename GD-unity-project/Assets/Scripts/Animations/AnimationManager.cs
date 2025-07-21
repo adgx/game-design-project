@@ -29,6 +29,7 @@ public enum RickStates
 public class AnimationManager : MonoBehaviour
 {
     [SerializeField] private Animator rickAC;
+    [SerializeField] private Player _player;
     [SerializeField] private byte NUM_IDLE_ANIMATIONS = 2;
     [SerializeField] private int WAIT_IDLE_TIME = 2;
     private int idleTriggerHash;
@@ -75,6 +76,11 @@ public class AnimationManager : MonoBehaviour
 
     private void Start()
     {
+        if (_player == null)
+        {
+            Debug.Log("None Player reference");
+        }
+
         if (rickAC == null)
         {
             Debug.LogWarning("None Animation Controller insert on inspector");
@@ -127,7 +133,7 @@ public class AnimationManager : MonoBehaviour
     }
 
     public void DefenseToIdle()
-    { 
+    {
         rickAC.SetTrigger("CloseDefense");
     }
 
@@ -151,9 +157,12 @@ public class AnimationManager : MonoBehaviour
 
     public void Idle()
     {
-        activeRandomIdle = true;
-        rickAC.SetTrigger(idleTriggerHash);
-        rickState = RickStates.Idle;
+        if (rickState != RickStates.Idle)
+        {
+            activeRandomIdle = true;
+            rickAC.SetTrigger(idleTriggerHash);
+            rickState = RickStates.Idle;
+        }
     }
 
     public void Attack()
@@ -180,23 +189,24 @@ public class AnimationManager : MonoBehaviour
         rickState = RickStates.EndAreaAttack;
     }
 
-    public void RemoveDefenseVfx() {
+    public void RemoveDefenseVfx()
+    {
         Destroy(shield);
     }
-    
+
     public void Hit(int x, int z)
     {
         rickAC.SetInteger("DirHitX", x);
-		rickAC.SetInteger("DirHitZ", z);
+        rickAC.SetInteger("DirHitZ", z);
 
         rickAC.SetTrigger(hitHash);
         rickState = RickStates.Hit;
     }
-    
+
     public void HitSpit(int x, int z)
     {
-		rickAC.SetInteger("DirHitX", x);
-		rickAC.SetInteger("DirHitZ", z);
+        rickAC.SetInteger("DirHitX", x);
+        rickAC.SetInteger("DirHitZ", z);
 
         rickAC.SetTrigger(hitSpitHash);
         rickState = RickStates.HitSpit;
@@ -226,10 +236,10 @@ public class AnimationManager : MonoBehaviour
         rickState = RickStates.EatChips;
     }
 
-	public void Death(int x, int z)
+    public void Death(int x, int z)
     {
-		rickAC.SetInteger("DirHitX", x);
-		rickAC.SetInteger("DirHitZ", z);
+        rickAC.SetInteger("DirHitX", x);
+        rickAC.SetInteger("DirHitZ", z);
 
         rickAC.SetTrigger(deathHash);
         rickState = RickStates.Death;
@@ -240,6 +250,4 @@ public class AnimationManager : MonoBehaviour
         rickAC.SetTrigger(standUpHash);
         rickState = RickStates.StandUp;
     }
-
-    
 }

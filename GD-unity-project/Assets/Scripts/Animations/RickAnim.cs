@@ -7,6 +7,7 @@ public class RickAnim : MonoBehaviour
 {
     //Rick stuff
     [SerializeField] private Animator rickAC;
+    [SerializeField] private Player _player;
     [SerializeField] private byte NUM_IDLE_ANIMATIONS = 2;
     [SerializeField] private float WAIT_IDLE_TIME = 10f;
     private bool randomIdleIsDone = true;
@@ -20,6 +21,7 @@ public class RickAnim : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+  
         if (rickAC == null)
         {
             Debug.LogWarning("None Animation Controller insert on inspector");

@@ -32,7 +32,7 @@ using UnityEngine;
 		public bool isFrozen;
 		
 		// Audio management
-		private PlayerShoot playerShoot;
+	private PlayerShoot playerShoot;
 		private EventInstance sphere;
 		private EventInstance sphereRotation;
 		[SerializeField] private GameObject rotatingSphere;
@@ -69,21 +69,21 @@ using UnityEngine;
             float speedOffset = 0.1f;
 			float inputMagnitude = move.magnitude;
 
-		//accelerate or decelerate
-		if (currentHorizontalSpeed < targetSpeed - speedOffset ||
-			currentHorizontalSpeed > targetSpeed + speedOffset)
-		{
-			if (inputMagnitude > 0.01)
-				speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.fixedDeltaTime * speedChangeRate);
-			else
-			{ 
-				speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.fixedDeltaTime * speedChangeRate*2);
+			//accelerate or decelerate
+			if (currentHorizontalSpeed < targetSpeed - speedOffset ||
+				currentHorizontalSpeed > targetSpeed + speedOffset)
+			{
+				if (inputMagnitude > 0.01)
+					speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.fixedDeltaTime * speedChangeRate);
+				else
+				{ 
+					speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.fixedDeltaTime * speedChangeRate*2);
+				}
 			}
-		}
-		else
-		{
-			speed = targetSpeed;
-		}
+			else
+			{
+				speed = targetSpeed;
+			}
 
 
 			Vector3 direction = input.Vertical * (new Vector3(mainCamera.transform.forward.x, 0f, mainCamera.transform.forward.z)) + input.Horizontal * (new Vector3(mainCamera.transform.right.x, 0f, mainCamera.transform.right.z));

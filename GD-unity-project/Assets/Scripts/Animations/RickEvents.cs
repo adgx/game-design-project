@@ -19,8 +19,10 @@ namespace Animations
         private EventInstance rickRunFootsteps;
         private EventInstance rickIdle;
 
+        //Player
+        [SerializeField] private Player _player;
         // Defense
-	    [SerializeField] private GameObject magneticShieldPrefab;
+        [SerializeField] private GameObject magneticShieldPrefab;
         private GameObject shield;
 
         // This flag must be set to 'true' by the input script when the attack key is pressed,
@@ -31,19 +33,19 @@ namespace Animations
         public PlayerShoot playerShoot;
         [SerializeField] private FadeManagerLoadingScreen fadeManagerLoadingScreen;
         [NonSerialized] public HealthVendingMachineInteraction healthVendingMachineInteraction;
-		[NonSerialized] public PowerUpVendingMachineInteraction powerUpVendingMachineInteraction;
+        [NonSerialized] public PowerUpVendingMachineInteraction powerUpVendingMachineInteraction;
         [NonSerialized] public string machineType; // Can be "playerPowerUp" or "health"
 
         public void DisableRickState()
         {
             AnimationManager.Instance.rickState = RickStates.None;
         }
-		
+
         public void SetHitState()
         {
             AnimationManager.Instance.rickState = RickStates.Hit;
         }
-        
+
         public void SetIdleState()
         {
             AnimationManager.Instance.rickState = RickStates.Idle;
@@ -123,7 +125,7 @@ namespace Animations
             {
                 shield.GetComponent<ShieldTrigger>().SetLifeTime(2f);
             }
-            
+
         }
 
         public void ShieldActivation()
@@ -168,7 +170,7 @@ namespace Animations
             }
         }
 
-        
+
         public void ShieldDeactivation2()
         {
             // Audio management
@@ -425,7 +427,7 @@ namespace Animations
             // Audio management
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldDeactivation, transform.position);
         }
-        
+
         // Audio management
         public void StopAllLoopingSounds()
         {
