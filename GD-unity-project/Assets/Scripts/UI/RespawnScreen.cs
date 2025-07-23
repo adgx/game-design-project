@@ -10,8 +10,6 @@ public class RespawnScreen : MonoBehaviour
 	[SerializeField] private CanvasGroup respawnScreenCanvas;
 
 	[SerializeField] private string gameplaySceneName = "Player+Map";
-
-	[SerializeField] private GameObject deathMessageContainer;
 	[SerializeField] private GameObject confirmMenu;
 
 	[SerializeField] private GameObject GameEndMessageContainer;
@@ -75,8 +73,14 @@ public class RespawnScreen : MonoBehaviour
 
 	void BackToPause() {
 		confirmMenu.SetActive(false);
-
-		deathMessageContainer.SetActive(true);
+		if (GameStatus.gameEnded)
+		{
+			GameEndMessageContainer.SetActive(true);
+		}
+		else
+		{
+			DiedMessageContainer.SetActive(true);
+		}
 		if(!EventSystem.current.alreadySelecting)
 			EventSystem.current.SetSelectedGameObject(firstSelected);
 	}
@@ -91,7 +95,16 @@ public class RespawnScreen : MonoBehaviour
 	}
 
 	public void QuitGameClicked() {
-		deathMessageContainer.SetActive(false);
+		if (GameStatus.gameEnded)
+		{
+			Debug.LogWarning("GAME ENDED");
+			GameEndMessageContainer.SetActive(false);
+		}
+		else
+		{
+			Debug.LogWarning("GAME NOT ENDED");
+			DiedMessageContainer.SetActive(false);
+		}
 		confirmMenu.SetActive(true);
 		EventSystem.current.SetSelectedGameObject(noButton);
 	}

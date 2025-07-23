@@ -142,11 +142,11 @@ PrefabInstance:
     - target: {fileID: 303717826573923327, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 113882537}
+      objectReference: {fileID: 1057321066}
     - target: {fileID: 303717826573923327, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
-      objectReference: {fileID: 1057321066}
+      objectReference: {fileID: 113882537}
     - target: {fileID: 303717826573923327, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -157,19 +157,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 303717826573923327, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: NoClicked
-      objectReference: {fileID: 0}
-    - target: {fileID: 303717826573923327, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
       value: PlayNegativeSelectionSound
       objectReference: {fileID: 0}
     - target: {fileID: 303717826573923327, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: NoClicked
+      objectReference: {fileID: 0}
+    - target: {fileID: 303717826573923327, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: DeathScreen, Assembly-CSharp
+      value: Audio.UIAudioManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 303717826573923327, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
-      value: Audio.UIAudioManager, Assembly-CSharp
+      value: DeathScreen, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 303717826573923327, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -575,10 +575,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7714476112326846617, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7714476112326846617, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7714476112326846617, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7714476112326846617, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
@@ -586,7 +590,15 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 86298101}
     - target: {fileID: 7714476112326846617, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 113882537}
+    - target: {fileID: 7714476112326846617, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7714476112326846617, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7714476112326846617, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
@@ -594,11 +606,23 @@ PrefabInstance:
       value: PlayPositiveSelectionSound
       objectReference: {fileID: 0}
     - target: {fileID: 7714476112326846617, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: QuitGameClicked
+      objectReference: {fileID: 0}
+    - target: {fileID: 7714476112326846617, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: Audio.UIAudioManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7714476112326846617, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: RespawnScreen, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7714476112326846617, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 7714476112326846617, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8963934581998250319, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
@@ -774,12 +798,11 @@ MonoBehaviour:
   respawnScreenContainer: {fileID: 1683795021}
   respawnScreenCanvas: {fileID: 1683795023}
   gameplaySceneName: Player+Map
-  deathMessageContainer: {fileID: 86298097}
   confirmMenu: {fileID: 86298096}
   GameEndMessageContainer: {fileID: 86298097}
   DiedMessageContainer: {fileID: 989073467}
   firstSelected: {fileID: 630834353}
-  noButton: {fileID: 86298095}
+  noButton: {fileID: 0}
 --- !u!4 &113882538
 Transform:
   m_ObjectHideFlags: 0

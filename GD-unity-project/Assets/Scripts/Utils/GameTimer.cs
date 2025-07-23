@@ -14,7 +14,7 @@ using FMOD.Studio;
 namespace Utils {
 	public class GameTimer : MonoBehaviour
 	{
-		private const float TimeLimit = 2 * 60f;
+		private const float TimeLimit = 15f; // 2 * 60f;
 		public float currentTime;
 
 		public TMP_Text timerText;
