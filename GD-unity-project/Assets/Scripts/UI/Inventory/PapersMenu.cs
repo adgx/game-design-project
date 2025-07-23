@@ -1,11 +1,11 @@
 using System;
-using System.Threading.Tasks;
 using CollectablePapers;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Audio;
 
+[Obsolete("Obsolete")]
 public class PapersMenu : MonoBehaviour
 {
     [Header("Components")] [SerializeField]
@@ -14,6 +14,9 @@ public class PapersMenu : MonoBehaviour
     [SerializeField] private TextMeshProUGUI paperText;
     [SerializeField] private GameObject paperScrollContent;
     [SerializeField] private GameObject paperButton;
+    
+    // Audio management
+    [SerializeField] private UIAudioManager uiAudioManager;
 
     public void OpenMenu()
     {
@@ -52,6 +55,9 @@ public class PapersMenu : MonoBehaviour
     {
         if (PaperManager.Instance.TryGetPaperContent(index, out string content))
         {
+            // Audio management
+            uiAudioManager.PlayPositiveSelectionSound();
+            
             paperText.text = content;
         }
         else
