@@ -23,5 +23,10 @@ namespace Audio
         {       
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PauseMenuNegativeSelection, transform.position);
         }
+
+        public void PlayVolumeControlSliderSound()
+        {
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.VolumeControlSlider, transform.position);
+        }
     }
 }
