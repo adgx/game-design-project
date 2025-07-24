@@ -24,9 +24,24 @@ namespace Audio
             GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PauseMenuNegativeSelection, transform.position);
         }
 
-        public void PlayVolumeControlSliderSound()
+        public void PlayMasterVolumeControlSliderSound()
         {
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.VolumeControlSlider, transform.position);
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MasterVolumeControlSlider, transform.position);
+        }
+        
+        public void PlayMusicVolumeControlSliderSound()
+        {
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.MusicVolumeControlSlider, transform.position);
+        }
+        
+        public void PlayAmbienceVolumeControlSliderSound()
+        {
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.AmbienceVolumeControlSlider, transform.position);
+        }
+        
+        public void PlaySfxVolumeControlSliderSound()
+        {
+            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.SfxVolumeControlSlider, transform.position);
         }
     }
 }

@@ -95,8 +95,11 @@ namespace Audio
         [field: SerializeField] public EventReference PauseMenuClose { get; private set; }
         [field: SerializeField] public EventReference PauseMenuPositiveSelection { get; private set; }
         [field: SerializeField] public EventReference PauseMenuNegativeSelection { get; private set; }
-        [field: SerializeField] public EventReference VolumeControlSlider { get; private set; }
-    
+        [field: SerializeField] public EventReference MasterVolumeControlSlider { get; private set; }
+        [field: SerializeField] public EventReference MusicVolumeControlSlider { get; private set; }
+        [field: SerializeField] public EventReference AmbienceVolumeControlSlider { get; private set; }
+        [field: SerializeField] public EventReference SfxVolumeControlSlider { get; private set; }
+        
         [field: Header("Ambience")]
         [field: SerializeField] public EventReference Alarm { get; private set;  }
         [field: SerializeField] public EventReference ServerNoise { get; private set;  }
