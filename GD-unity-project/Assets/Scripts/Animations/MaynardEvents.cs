@@ -10,17 +10,20 @@ namespace Animations
         private EventInstance maynardFootsteps;
         private EventInstance maynardIdle;
         
-        private MaynardAnimation _maynardAnim;
+        private MaynardAnimation maynardAnim;
         private Maynard maynard;
 
         private void Start()
         {
-            _maynardAnim = maynard.anim;
+            maynardAnim = maynard.anim;
         }
         
         private void Awake()
         {
             maynard = GetComponent<Maynard>();
+            
+            // Audio management: record this script to the central manager
+            MaynardAudioManager.Instance.Register(this);
             
             // Audio management
             maynardFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.MaynardFootsteps);
@@ -38,7 +41,13 @@ namespace Animations
         
         private void OnDestroy()
         {
-            // Stop events immediately to prevent the sound from continuing after destruction
+            // Audio management: de-register this script from the manager to avoid errors
+            if (MaynardAudioManager.Instance != null)
+            {
+                MaynardAudioManager.Instance.Unregister(this);
+            }
+            
+            // Audio management: stop events immediately to prevent the sound from continuing after destruction
             // and releases the resources used by the instances
             if (GamePlayAudioManager.instance != null)
             {
@@ -57,7 +66,7 @@ namespace Animations
         
         public void EndScream()
         {
-            _maynardAnim.EndScream = true;
+            maynardAnim.EndScream = true;
         }
 
         public void MutantRoaring()
@@ -79,7 +88,7 @@ namespace Animations
         
         public void EndCloseAttack()
         {
-            _maynardAnim.EndCloseAttack=true;
+            maynardAnim.EndCloseAttack=true;
         }
 
         public void FallScream()
@@ -180,6 +189,26 @@ namespace Animations
         public void StopIdleSound()
         {
             maynardIdle.stop(STOP_MODE.ALLOWFADEOUT);
+        }
+        
+        // Audio management
+        public void PauseLoopingSounds()
+        {
+            if(maynardFootsteps.isValid())
+                maynardFootsteps.setPaused(true);
+            
+            if(maynardIdle.isValid())
+                maynardIdle.setPaused(true);
+        }
+
+        // Audio management
+        public void ResumeLoopingSounds()
+        {
+            if(maynardFootsteps.isValid())
+                maynardFootsteps.setPaused(false);
+            
+            if(maynardIdle.isValid())
+                maynardIdle.setPaused(false);
         }
     }
 }

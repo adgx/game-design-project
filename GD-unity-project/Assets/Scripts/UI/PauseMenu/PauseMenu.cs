@@ -85,6 +85,15 @@ public class PauseMenu : MonoBehaviour
 			
 			// Pause ambient sounds
 			GamePlayAudioManager.instance.PauseAmbience();
+			
+			// Pause the sounds of all Incognitos
+			IncognitoAudioManager.Instance.PauseAllIncognitoSounds();
+			
+			// Pause the sounds of all Maynards
+			MaynardAudioManager.Instance.PauseAllMaynardSounds();
+			
+			// Pause the sounds of all Drakes
+			DrakeAudioManager.Instance.PauseAllDrakeSounds();
 		}
 		else {
 			// Resume the game
@@ -101,6 +110,15 @@ public class PauseMenu : MonoBehaviour
 			
 			// Resume ambient sounds
 			GamePlayAudioManager.instance.ResumeAmbience();
+			
+			// Resume the sounds of all Incognito
+			IncognitoAudioManager.Instance.ResumeAllIncognitoSounds();
+			
+			// Resume the sounds of all Maynards
+			MaynardAudioManager.Instance.ResumeAllMaynardSounds();
+			
+			// Resume the sounds of all the Drakes
+			DrakeAudioManager.Instance.ResumeAllDrakeSounds();
 		}
 
 		GameStatus.gamePaused = paused;

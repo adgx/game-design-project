@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 using Enemy.EnemyManager;
 using System.Threading.Tasks;
 using Animations;
+using Audio;
 using FMOD.Studio;
 
 namespace Utils {

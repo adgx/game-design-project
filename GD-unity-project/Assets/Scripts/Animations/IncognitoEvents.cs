@@ -22,6 +22,9 @@ namespace Animations
         {
             incognito = GetComponent<Incognito>();
 
+            // Audio management: record this script to the central manager
+            IncognitoAudioManager.Instance.Register(this);
+            
             // Audio management
             incognitoFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.IncognitoFootsteps);
             incognitoFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
@@ -38,7 +41,13 @@ namespace Animations
         
         private void OnDestroy()
         {
-            // Stop events immediately to prevent the sound from continuing after destruction
+            // Audio management: de-register this script from the manager
+            if (IncognitoAudioManager.Instance != null)
+            {
+                IncognitoAudioManager.Instance.Unregister(this);
+            }
+            
+            // Audio management: stop events immediately to prevent the sound from continuing after destruction
             // and releases the resources used by the instances
             if (GamePlayAudioManager.instance != null)
             {
@@ -188,6 +197,26 @@ namespace Animations
         public void StopIdleSound()
         {
             incognitoIdle.stop(STOP_MODE.ALLOWFADEOUT);
+        }
+        
+        // Audio management
+        public void PauseLoopingSounds()
+        {
+            if(incognitoFootsteps.isValid())
+                incognitoFootsteps.setPaused(true);
+            
+            if(incognitoIdle.isValid())
+                incognitoIdle.setPaused(true);
+        }
+
+        // Audio management
+        public void ResumeLoopingSounds()
+        {
+            if(incognitoFootsteps.isValid())
+                incognitoFootsteps.setPaused(false);
+            
+            if(incognitoIdle.isValid())
+                incognitoIdle.setPaused(false);
         }
     }
 }
