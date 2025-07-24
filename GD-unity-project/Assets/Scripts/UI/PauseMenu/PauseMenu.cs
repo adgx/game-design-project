@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Threading.Tasks;
 using TMPro;
@@ -7,9 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using Animations;
 using Audio;
-using UnityEngine.Audio;
 
-[Obsolete("Obsolete")]
 public class PauseMenu : MonoBehaviour
 {
 	private enum ActionToConfirm {

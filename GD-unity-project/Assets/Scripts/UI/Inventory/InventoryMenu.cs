@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -7,7 +6,6 @@ using UnityEngine.UI;
 using Animations;
 using Audio;
 
-[Obsolete("Obsolete")]
 public class InventoryMenu : MonoBehaviour {
 	[SerializeField] private GameObject screenContainer;
 	[SerializeField] private GameObject inventoryMenu;

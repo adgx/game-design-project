@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UI.Inventory.PowerUpIcons;
@@ -8,7 +7,6 @@ using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Audio;
 
-[Obsolete("Obsolete")]
 public class PowerUpMenu : MonoBehaviour {
 	[Header("Components")]
 	[SerializeField] private GameObject powerUpMenu;

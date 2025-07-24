@@ -1,11 +1,9 @@
-using System;
 using CollectablePapers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Audio;
 
-[Obsolete("Obsolete")]
 public class PapersMenu : MonoBehaviour
 {
     [Header("Components")] [SerializeField]
