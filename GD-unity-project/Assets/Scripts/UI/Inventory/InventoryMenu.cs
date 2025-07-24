@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Animations;
+using Audio;
 
 [Obsolete("Obsolete")]
 public class InventoryMenu : MonoBehaviour {
@@ -21,6 +22,7 @@ public class InventoryMenu : MonoBehaviour {
 	private PlayerInput playerInput;
 	
 	// Audio management
+	[SerializeField] private UIAudioManager uiAudioManager;
 	private RickEvents rickEvents;
 
 	private bool inventoryScreenOpen = false;
@@ -74,6 +76,10 @@ public class InventoryMenu : MonoBehaviour {
 			inventoryScreenOpen = false;
 			screenContainer.SetActive(false);
 			inventoryMenu.SetActive(false);
+			
+			// Audio management: play close inventory sound
+			uiAudioManager.PlayCloseSound();
+			
 			papersMenuScript.CloseMenu();
 			powerUpMenuScript.CloseMenu();
 		}
@@ -83,7 +89,11 @@ public class InventoryMenu : MonoBehaviour {
 			{
 				rickEvents.StopAllLoopingSounds();
 			}
+			
+			// Audio management: play open inventory sound
+			uiAudioManager.PlayOpenSound();
 
+			
 			inventoryScreenOpen = true;
 			screenContainer.SetActive(true);
 			inventoryMenu.SetActive(true);

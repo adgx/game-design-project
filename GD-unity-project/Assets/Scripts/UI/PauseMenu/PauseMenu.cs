@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Threading.Tasks;
 using TMPro;
@@ -5,8 +6,10 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using Animations;
+using Audio;
 using UnityEngine.Audio;
 
+[Obsolete("Obsolete")]
 public class PauseMenu : MonoBehaviour
 {
 	private enum ActionToConfirm {
@@ -31,6 +34,7 @@ public class PauseMenu : MonoBehaviour
 	private PlayerInput playerInput;
 	
 	// Audio management
+	[SerializeField] private UIAudioManager uiAudioManager;
 	private RickEvents rickEvents;
 
 	private bool pauseScreenOpen = false;
@@ -90,6 +94,10 @@ public class PauseMenu : MonoBehaviour
 	void TogglePauseMenu() {
 		if(screenContainer.activeInHierarchy) {
 			pauseScreenOpen = false;
+			
+			// Audio management: play close menu sound
+			uiAudioManager.PlayCloseSound();
+			
 			screenContainer.SetActive(false);
 			foreach(Transform child in screenContainer.transform) {
 				child.gameObject.SetActive(false);
@@ -103,6 +111,10 @@ public class PauseMenu : MonoBehaviour
 			}
 			
 			pauseScreenOpen = true;
+			
+			// Audio management: play open menu sound
+			uiAudioManager.PlayOpenSound();
+			
 			screenContainer.SetActive(true);
 			pauseMenu.SetActive(true);
 			EventSystem.current.SetSelectedGameObject(firstSelected);
