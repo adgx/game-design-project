@@ -97,12 +97,10 @@ public class RespawnScreen : MonoBehaviour
 	public void QuitGameClicked() {
 		if (GameStatus.gameEnded)
 		{
-			Debug.LogWarning("GAME ENDED");
 			GameEndMessageContainer.SetActive(false);
 		}
 		else
 		{
-			Debug.LogWarning("GAME NOT ENDED");
 			DiedMessageContainer.SetActive(false);
 		}
 		confirmMenu.SetActive(true);
