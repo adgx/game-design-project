@@ -158,4 +158,48 @@ public class GamePlayAudioManager : MonoBehaviour
             eventInstances.Remove(eventInstance);
         }
     }
+    
+    /// <summary>
+    /// Pause background music.
+    /// </summary>
+    public void PauseMusic()
+    {
+        if (musicEventInstance.isValid())
+        {
+            musicEventInstance.setPaused(true);
+        }
+    }
+
+    /// <summary>
+    /// Background music resumes playback.
+    /// </summary>
+    public void ResumeMusic()
+    {
+        if (musicEventInstance.isValid())
+        {
+            musicEventInstance.setPaused(false);
+        }
+    }
+    
+    /// <summary>
+    /// Pauses all sounds that pass through the Ambience bus.
+    /// </summary>
+    public void PauseAmbience()
+    {
+        if (ambienceBus.isValid())
+        {
+            ambienceBus.setPaused(true);
+        }
+    }
+
+    /// <summary>
+    /// Resumes playback of all sounds in the Ambience bus.
+    /// </summary>
+    public void ResumeAmbience()
+    {
+        if (ambienceBus.isValid())
+        {
+            ambienceBus.setPaused(false);
+        }
+    }
 }

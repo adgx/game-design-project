@@ -157,6 +157,31 @@ using UnityEngine;
 				if (rotationPlaybackState != PLAYBACK_STATE.STOPPED)
 					sphereRotation.stop(STOP_MODE.ALLOWFADEOUT);
 			}
+		}
+		
+		/// <summary>
+		/// Pauses the ball's spinning sound if it is playing.
+		/// </summary>
+		public void PauseSphereRotationSound()
+		{
+			// Check if the instance is valid before using it
+			if (sphereRotation.isValid())
+			{
+				// Pause event. The event will remember its location
+				sphereRotation.setPaused(true);
+			}
+		}
 
+		/// <summary>
+		/// Reparts playback of the spinning sound of the sphere from where it was interrupted.
+		/// </summary>
+		public void ResumeSphereRotationSound()
+		{
+			// Check if the instance is valid before using it
+			if (sphereRotation.isValid())
+			{
+				// The event resumes
+				sphereRotation.setPaused(false);
+			}
 		}
 	}

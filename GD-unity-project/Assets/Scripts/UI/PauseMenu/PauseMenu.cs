@@ -76,6 +76,15 @@ public class PauseMenu : MonoBehaviour
 			// Setting timeScale to 0 pauses the game
 			Time.timeScale = 0f;
 			Cursor.lockState = CursorLockMode.None;
+			
+			// Pause the sound of the sphere
+			Player.Instance.PauseSphereRotationSound(); 
+			
+			// Pause the music
+			GamePlayAudioManager.instance.PauseMusic();
+			
+			// Pause ambient sounds
+			GamePlayAudioManager.instance.PauseAmbience();
 		}
 		else {
 			// Resume the game
@@ -83,6 +92,15 @@ public class PauseMenu : MonoBehaviour
 			await Task.Delay(100);
 			EventSystem.current.SetSelectedGameObject(null);
 			Cursor.lockState = CursorLockMode.Locked;
+			
+			// Resume the sound of the sphere
+			Player.Instance.ResumeSphereRotationSound();
+			
+			// Resume Music
+			GamePlayAudioManager.instance.ResumeMusic();
+			
+			// Resume ambient sounds
+			GamePlayAudioManager.instance.ResumeAmbience();
 		}
 
 		GameStatus.gamePaused = paused;
