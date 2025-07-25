@@ -39,6 +39,7 @@ public class PlayerShoot : MonoBehaviour
 	public int chargedCloseAttackDamage;
 	
 	public bool cannotAttack = false;
+	private bool isDying = false;
 
 	// The player has 2 attacks he can choose. He can change them by using the mouse scroll wheel or the back buttons on the controller
 	private int attackNumber = 1;
@@ -474,7 +475,14 @@ public class PlayerShoot : MonoBehaviour
 	}
 
 	public void TakeDamage(float damage, DamageTypes damageType, int x, int z) {
-     	health -= damage * damageReduction;
+		if (isDying)
+		{
+			return; // If the player is already dying, ignore any further damage
+		}
+		
+		health -= damage * damageReduction;
+		if (health < 0) health = 0; // To prevent health from going below zero in the UI
+		
      	healthBar.SetHealth(health);
      
      	StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
@@ -493,6 +501,7 @@ public class PlayerShoot : MonoBehaviour
 		}
 		else
      	{
+	        isDying = true;
 	        DisableAttacks(true);
 	        player.FreezeMovement(true);
 			gameTimer.isRunning = false;
