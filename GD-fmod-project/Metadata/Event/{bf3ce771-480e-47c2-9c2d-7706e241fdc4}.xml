@@ -125,7 +125,14 @@
 	</object>
 	<object class="MixerBusFader" id="{8bd8fddb-aa79-49fe-b3c2-001f98fcb415}" />
 	<object class="MixerBusFader" id="{8b39e7ad-45fd-4a63-bfdf-e54e67882850}" />
-	<object class="SpatialiserEffect" id="{e43fdd15-35bc-4084-9060-f315dae66e61}" />
+	<object class="SpatialiserEffect" id="{e43fdd15-35bc-4084-9060-f315dae66e61}">
+		<property name="maximumDistance">
+			<value>30</value>
+		</property>
+		<property name="overrideRange">
+			<value>true</value>
+		</property>
+	</object>
 	<object class="Automator" id="{556e51fb-5ca2-4fa8-b890-4c83a49726a7}">
 		<property name="nameOfPropertyBeingAutomated">
 			<value>volume</value>
