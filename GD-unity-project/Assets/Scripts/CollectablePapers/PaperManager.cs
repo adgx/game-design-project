@@ -102,6 +102,7 @@ namespace CollectablePapers
 				_paperText.SetText(messageContent + "\n\n<color=#806d06>[Press E to Close]</color>");
                 _paperTextContainer.SetActive(true);
 
+                // Audio management
 				GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerPaperInteraction, paperPosition);
             }
             else
