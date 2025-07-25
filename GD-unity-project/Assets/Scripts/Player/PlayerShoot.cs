@@ -477,8 +477,14 @@ public class PlayerShoot : MonoBehaviour
      	healthBar.SetHealth(health);
      
      	StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
-
+        
 		if(health > 0) {
+			// Audio management: he notifies RickEvents that damage has occurred and that he must handle the sound
+			if (rickEvents != null)
+			{
+				rickEvents.RequestHitSound(damageType);
+			}
+			
 			HitAnimation(damageType, 0, 1);
 		}
 		else

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Threading.Tasks;
 using Audio;
 using FMOD.Studio;
@@ -17,6 +18,7 @@ namespace Animations
         private EventInstance rickWalkFootsteps;
         private EventInstance rickRunFootsteps;
         private EventInstance rickIdle;
+        private bool isHitSoundPending = false;
 
         // Defense
 	    [SerializeField] private GameObject magneticShieldPrefab;
@@ -269,19 +271,38 @@ namespace Animations
         public void Hit()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, transform.position);
+            if (isHitSoundPending)
+            {
+                isHitSoundPending = false; // "Consume" the request
+
+                // Play the sound
+                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, transform.position);
+            }
         }
 
         public void HitBySpit()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHitBySpit, transform.position);
+            if (isHitSoundPending)
+            {
+                isHitSoundPending = false; // "Consume" the request
+
+                // Play the sounds
+                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHitBySpit, transform.position);
+                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, transform.position);
+            }
         }
 
         public void HitByBite()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHitByBite, transform.position);
+            if (isHitSoundPending)
+            {
+                isHitSoundPending = false; // "Consume" the request
+
+                // Play the sound
+                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHitByBite, transform.position);
+            }
         }
 
         public void VendingMachineItemPickup()
@@ -462,7 +483,29 @@ namespace Animations
             
             playerShoot.ResetCloseAttackValues();
         }
+        
+        // Audio management
+        public void RequestHitSound(PlayerShoot.DamageTypes damageType)
+        {
+            // If there is already a request in progress, don't start another one to avoid chaos
+            if (isHitSoundPending) return;
+
+            isHitSoundPending = true;
+            // Imported the fallback chamber which, also the internal compartment of RickEvents
+            PlayHitSoundFallback();
+        }
+        
+        // Audio management
+        private void PlayHitSoundFallback()
+        {
+            // If the request is still pending after the wait, we will handle it
+            if (isHitSoundPending)
+            {
+                isHitSoundPending = false; // "Consume" the request
+
+                // Play the hit sound
+                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, transform.position);
+            }
+        }
     }
-    
-    
 }
