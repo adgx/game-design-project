@@ -84,7 +84,7 @@ public class PauseMenu : MonoBehaviour
 			GamePlayAudioManager.instance.PauseMusic();
 			
 			// Pause ambient sounds
-			GamePlayAudioManager.instance.PauseAmbience();
+			AmbienceSystem.PauseAllRoomAmbience();
 			
 			// Pause the sounds of all Incognitos
 			IncognitoAudioManager.Instance.PauseAllIncognitoSounds();
@@ -109,7 +109,7 @@ public class PauseMenu : MonoBehaviour
 			GamePlayAudioManager.instance.ResumeMusic();
 			
 			// Resume ambient sounds
-			GamePlayAudioManager.instance.ResumeAmbience();
+			AmbienceSystem.ResumeAllRoomAmbience();
 			
 			// Resume the sounds of all Incognito
 			IncognitoAudioManager.Instance.ResumeAllIncognitoSounds();

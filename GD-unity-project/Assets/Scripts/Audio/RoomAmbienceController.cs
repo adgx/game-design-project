@@ -115,5 +115,43 @@ namespace Audio
                 }
             }
         }
+        
+        public void PauseAllSounds()
+        {
+            foreach (var emitter in activeEmitters)
+            {
+                if (emitter != null && emitter.IsPlaying())
+                {
+                    emitter.EventInstance.setPaused(true);
+                }
+            }
+            foreach (var alarm in alarmEmitters)
+            {
+                if (alarm != null && alarm.IsPlaying())
+                {
+                    alarm.EventInstance.setPaused(true);
+                }
+            }
+        }
+        
+        public void ResumeAllSounds()
+        {
+            foreach (var emitter in activeEmitters)
+            {
+                // Controls both the emitter and its internal instance
+                if (emitter != null && emitter.EventInstance.isValid())
+                {
+                    emitter.EventInstance.setPaused(false);
+                }
+            }
+            foreach (var alarm in alarmEmitters)
+            {
+                // Controls both the emitter and its internal instance
+                if (alarm != null && alarm.EventInstance.isValid())
+                {
+                    alarm.EventInstance.setPaused(false);
+                }
+            }
+        }
     }
 }
