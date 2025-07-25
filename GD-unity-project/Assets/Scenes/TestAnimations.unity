@@ -2627,7 +2627,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 57556e791a883d249940c3fe72167ee5, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 57556e791a883d249940c3fe72167ee5, type: 3}
       propertyPath: m_Controller
@@ -2851,12 +2851,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ecf6dc8681d3194da69b3028722f155, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  magneticShieldPrefab: {fileID: 0}
   powerUp: {fileID: 2132800880}
   playerShoot: {fileID: 0}
   fadeManagerLoadingScreen: {fileID: 0}
-  healthVendingMachineInteraction: {fileID: 0}
-  powerUpVendingMachineInteraction: {fileID: 0}
-  machineType: 
 --- !u!114 &2132800880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2922,6 +2920,10 @@ PrefabInstance:
     - target: {fileID: 6635268580633063533, guid: a68a969db10e47e4294fc8705c93da1e, type: 3}
       propertyPath: m_Name
       value: DrakeAnimated
+      objectReference: {fileID: 0}
+    - target: {fileID: 6635268580633063533, guid: a68a969db10e47e4294fc8705c93da1e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
