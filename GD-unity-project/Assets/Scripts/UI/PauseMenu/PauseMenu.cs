@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using Animations;
-using UnityEngine.Audio;
+using Audio;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -31,6 +31,7 @@ public class PauseMenu : MonoBehaviour
 	private PlayerInput playerInput;
 	
 	// Audio management
+	[SerializeField] private UIAudioManager uiAudioManager;
 	private RickEvents rickEvents;
 
 	private bool pauseScreenOpen = false;
@@ -71,17 +72,23 @@ public class PauseMenu : MonoBehaviour
 	}
 
 	async void ChangeGameState(bool paused) {
-		if(paused) {
-			// Setting timeScale to 0 pauses the game
+		if(paused) 
+		{
 			Time.timeScale = 0f;
 			Cursor.lockState = CursorLockMode.None;
+			
+			// Audio management: pause all sounds except music
+			GameAudioPauser.PauseGameAudio(true); 
 		}
-		else {
-			// Resume the game
+		else 
+		{
 			Time.timeScale = 1f;
 			await Task.Delay(100);
 			EventSystem.current.SetSelectedGameObject(null);
 			Cursor.lockState = CursorLockMode.Locked;
+        
+			// Audio management: resume all sounds except music
+			GameAudioPauser.ResumeGameAudio(true);
 		}
 
 		GameStatus.gamePaused = paused;
@@ -90,6 +97,10 @@ public class PauseMenu : MonoBehaviour
 	void TogglePauseMenu() {
 		if(screenContainer.activeInHierarchy) {
 			pauseScreenOpen = false;
+			
+			// Audio management: play close menu sound
+			uiAudioManager.PlayCloseSound();
+			
 			screenContainer.SetActive(false);
 			foreach(Transform child in screenContainer.transform) {
 				child.gameObject.SetActive(false);
@@ -103,6 +114,10 @@ public class PauseMenu : MonoBehaviour
 			}
 			
 			pauseScreenOpen = true;
+			
+			// Audio management: play open menu sound
+			uiAudioManager.PlayOpenSound();
+			
 			screenContainer.SetActive(true);
 			pauseMenu.SetActive(true);
 			EventSystem.current.SetSelectedGameObject(firstSelected);

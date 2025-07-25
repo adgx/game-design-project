@@ -1,7 +1,5 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
@@ -63,20 +61,17 @@ public class StartGameScreen : MonoBehaviour
 	{
 		sceneIsLoading = true;
 
-		// Inizia il caricamento asincrono della scena
+		// Asynchronous loading of scene starts
 		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(gameplaySceneName);
 		asyncLoad.allowSceneActivation = false;
 
-		// Attendi finché la scena è quasi pronta (>= 0.9)
+		// Wait until the scene is almost ready (>= 0.9)
 		while (asyncLoad.progress < 0.9f)
 		{
 			yield return null;
 		}
 
-		// (Qui potresti visualizzare un "Loading..." o una schermata nera, se vuoi)
-		// TODO: inserire la schermata di caricamento di Paolone
-
-		// Ora attiva effettivamente la scena
+		// Now actually activates the scene
 		asyncLoad.allowSceneActivation = true;
 	}
 

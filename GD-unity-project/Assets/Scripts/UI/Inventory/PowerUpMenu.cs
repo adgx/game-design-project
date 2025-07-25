@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using Audio;
 
 public class PowerUpMenu : MonoBehaviour {
 	[Header("Components")]
@@ -19,6 +20,9 @@ public class PowerUpMenu : MonoBehaviour {
 	[SerializeField] private TextMeshProUGUI powerUpText;
 
 	[SerializeField] private GameObject firstSelected;
+	
+	// Audio management
+	[SerializeField] private UIAudioManager uiAudioManager;
 
 	public void OpenMenu()
 	{
@@ -68,6 +72,9 @@ public class PowerUpMenu : MonoBehaviour {
 
 	private void ShowPowerUpDescription(object powerUp)
 	{
+		// Audio management
+		uiAudioManager.PlayPositiveSelectionSound();
+		
 		powerUpText.text = powerUp + ": " + powerUpScript.powerUpsDescription[powerUp];
 	}
 }

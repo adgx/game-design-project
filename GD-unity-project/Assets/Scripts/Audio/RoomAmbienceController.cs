@@ -1,115 +1,156 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using FMODUnity;
+using UnityEngine;
 
-// This class can be in the same file or a separate
-[System.Serializable]
-public class AmbienceSoundDefinition
+namespace Audio
 {
-    public string objectTag;
-    public EventReference fmodEvent;
-}
-
-public class RoomAmbienceController : MonoBehaviour
-{
-    [SerializeField]
-    private List<AmbienceSoundDefinition> soundsToManage;
-
-    private List<StudioEventEmitter> activeEmitters;
-    private List<StudioEventEmitter> alarmEmitters;
-
-    // When the room is created
-    [Obsolete("Obsolete")]
-    private void Awake()
+    // This class can be in the same file or a separate
+    [System.Serializable]
+    public class AmbienceSoundDefinition
     {
-        InitializeRoomEmitters();
-        // Register this room to the central system
-        AmbienceSystem.Register(this);
+        public string objectTag;
+        public EventReference fmodEvent;
     }
 
-    // When the room is destroyed
-    private void OnDestroy()
+    public class RoomAmbienceController : MonoBehaviour
     {
-        // It is essential to unregister the room to avoid references to destroyed objects
-        AmbienceSystem.Unregister(this);
-    }
+        [SerializeField]
+        private List<AmbienceSoundDefinition> soundsToManage;
 
-    [Obsolete("Obsolete")]
-    private void InitializeRoomEmitters()
-    {
-        activeEmitters = new List<StudioEventEmitter>();
-        alarmEmitters = new List<StudioEventEmitter>();
-        
-        foreach (var definition in soundsToManage)
+        private List<StudioEventEmitter> activeEmitters;
+        private List<StudioEventEmitter> alarmEmitters;
+
+        // When the room is created
+        [Obsolete("Obsolete")]
+        private void Awake()
         {
-            Transform[] children = GetComponentsInChildren<Transform>(true);
-            foreach (Transform child in children)
+            InitializeRoomEmitters();
+            // Register this room to the central system
+            AmbienceSystem.Register(this);
+        }
+
+        // When the room is destroyed
+        private void OnDestroy()
+        {
+            // It is essential to unregister the room to avoid references to destroyed objects
+            AmbienceSystem.Unregister(this);
+        }
+
+        [Obsolete("Obsolete")]
+        private void InitializeRoomEmitters()
+        {
+            activeEmitters = new List<StudioEventEmitter>();
+            alarmEmitters = new List<StudioEventEmitter>();
+        
+            foreach (var definition in soundsToManage)
             {
-                if (child.CompareTag(definition.objectTag))
+                Transform[] children = GetComponentsInChildren<Transform>(true);
+                foreach (Transform child in children)
                 {
-                    // Assuming you have a GamePlayAudioManager to create the emitter
-                    var emitter = GamePlayAudioManager.instance.InitializeEventEmitter(definition.fmodEvent, child.gameObject);
-                    if (emitter != null)
+                    if (child.CompareTag(definition.objectTag))
                     {
-                        if (definition.objectTag == "AlarmSpeaker")
+                        // Assuming you have a GamePlayAudioManager to create the emitter
+                        var emitter = GamePlayAudioManager.instance.InitializeEventEmitter(definition.fmodEvent, child.gameObject);
+                        if (emitter != null)
                         {
-                            alarmEmitters.Add(emitter);
-                        }
-                        else
-                        {
-                            activeEmitters.Add(emitter);
+                            if (definition.objectTag == "AlarmSpeaker")
+                            {
+                                alarmEmitters.Add(emitter);
+                            }
+                            else
+                            {
+                                activeEmitters.Add(emitter);
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
-    // Activate the base sounds (not the alarm)
-    public void ActivateAmbience()
-    {
-        foreach (var emitter in activeEmitters)
+        // Activate the base sounds (not the alarm)
+        public void ActivateAmbience()
         {
-            // Play the sound only if:
-            // 1. The emitter exists
-            // 2. The attached GameObject is active in the scene
-            // 3. Not playing yet
-            if (emitter != null && emitter.gameObject.activeInHierarchy && !emitter.IsPlaying())
+            foreach (var emitter in activeEmitters)
             {
-                emitter.Play();
-            }
-        }
-    }
-
-    // Turn off all sounds in this room immediately
-    public void DeactivateAllSounds()
-    {
-        foreach (var emitter in activeEmitters)
-        {
-            if (emitter != null && emitter.IsPlaying())
-            {
-                emitter.EventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                // Play the sound only if:
+                // 1. The emitter exists
+                // 2. The attached GameObject is active in the scene
+                // 3. Not playing yet
+                if (emitter != null && emitter.gameObject.activeInHierarchy && !emitter.IsPlaying())
+                {
+                    emitter.Play();
+                }
             }
         }
 
-        foreach (var alarm in alarmEmitters)
+        // Turn off all sounds in this room immediately
+        public void DeactivateAllSounds()
         {
-            if (alarm != null && alarm.IsPlaying())
+            foreach (var emitter in activeEmitters)
             {
-                alarm.EventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                if (emitter != null && emitter.IsPlaying())
+                {
+                    emitter.EventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                }
+            }
+
+            foreach (var alarm in alarmEmitters)
+            {
+                if (alarm != null && alarm.IsPlaying())
+                {
+                    alarm.EventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                }
             }
         }
-    }
     
-    // Activate the alarm
-    public void ActivateAlarm()
-    {
-        foreach (var alarm in alarmEmitters)
+        // Activate the alarm
+        public void ActivateAlarm()
         {
-            if (alarm != null && !alarm.IsPlaying())
+            foreach (var alarm in alarmEmitters)
             {
-                alarm.Play();
+                if (alarm != null && !alarm.IsPlaying())
+                {
+                    alarm.Play();
+                }
+            }
+        }
+        
+        public void PauseAllSounds()
+        {
+            foreach (var emitter in activeEmitters)
+            {
+                if (emitter != null && emitter.IsPlaying())
+                {
+                    emitter.EventInstance.setPaused(true);
+                }
+            }
+            foreach (var alarm in alarmEmitters)
+            {
+                if (alarm != null && alarm.IsPlaying())
+                {
+                    alarm.EventInstance.setPaused(true);
+                }
+            }
+        }
+        
+        public void ResumeAllSounds()
+        {
+            foreach (var emitter in activeEmitters)
+            {
+                // Controls both the emitter and its internal instance
+                if (emitter != null && emitter.EventInstance.isValid())
+                {
+                    emitter.EventInstance.setPaused(false);
+                }
+            }
+            foreach (var alarm in alarmEmitters)
+            {
+                // Controls both the emitter and its internal instance
+                if (alarm != null && alarm.EventInstance.isValid())
+                {
+                    alarm.EventInstance.setPaused(false);
+                }
             }
         }
     }

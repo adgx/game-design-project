@@ -20,6 +20,9 @@ namespace Animations
         private void Awake()
         {
             drake = GetComponent<Drake>();
+            
+            // Audio manager: record this script to the central manager
+            DrakeAudioManager.Instance.Register(this);
 
             // Audio management
             drakeFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.DrakeFootsteps);
@@ -38,7 +41,13 @@ namespace Animations
         
         private void OnDestroy()
         {
-            // Stop events immediately to prevent the sound from continuing after destruction
+            // Audio management: de-register this script from the manager
+            if (DrakeAudioManager.Instance != null)
+            {
+                DrakeAudioManager.Instance.Unregister(this);
+            }
+            
+            // Audio management: stop events immediately to prevent the sound from continuing after destruction
             // and releases the resources used by the instances
             if (GamePlayAudioManager.instance != null)
             {
@@ -157,6 +166,26 @@ namespace Animations
         public void StopIdleSound()
         {
             drakeIdle.stop(STOP_MODE.ALLOWFADEOUT);
+        }
+        
+        // Audio management
+        public void PauseLoopingSounds()
+        {
+            if(drakeFootsteps.isValid())
+                drakeFootsteps.setPaused(true);
+            
+            if(drakeIdle.isValid())
+                drakeIdle.setPaused(true);
+        }
+
+        // Audio management
+        public void ResumeLoopingSounds()
+        {
+            if(drakeFootsteps.isValid())
+                drakeFootsteps.setPaused(false);
+            
+            if(drakeIdle.isValid())
+                drakeIdle.setPaused(false);
         }
     }
 }

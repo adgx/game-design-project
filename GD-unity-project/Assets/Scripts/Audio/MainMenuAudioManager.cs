@@ -1,31 +1,33 @@
-using Audio;
-using UnityEngine;
-using FMODUnity;
 using FMOD.Studio;
+using FMODUnity;
+using UnityEngine;
 
-public class MainMenuAudioManager : MonoBehaviour
+namespace Audio
 {
-    private EventInstance musicEventInstance;
-    
-    private void Start()
+    public class MainMenuAudioManager : MonoBehaviour
     {
-        InitializeMusic(FMODEvents.Instance.MainMenuMusic);
-    }
+        private EventInstance musicEventInstance;
     
-    private void OnDestroy()
-    {
-        StopMusic();
-    }
+        private void Start()
+        {
+            InitializeMusic(FMODEvents.Instance.MainMenuMusic);
+        }
     
-    private void InitializeMusic(EventReference musicEventReference)
-    {
-        musicEventInstance = RuntimeManager.CreateInstance(musicEventReference);
-        musicEventInstance.start();
-    }
+        private void OnDestroy()
+        {
+            StopMusic();
+        }
     
-    private void StopMusic()
-    {
-        musicEventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-        musicEventInstance.release();
+        private void InitializeMusic(EventReference musicEventReference)
+        {
+            musicEventInstance = RuntimeManager.CreateInstance(musicEventReference);
+            musicEventInstance.start();
+        }
+    
+        private void StopMusic()
+        {
+            musicEventInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            musicEventInstance.release();
+        }
     }
 }

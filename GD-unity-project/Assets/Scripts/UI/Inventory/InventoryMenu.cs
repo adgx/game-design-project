@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Animations;
+using Audio;
 
 public class InventoryMenu : MonoBehaviour {
 	[SerializeField] private GameObject screenContainer;
@@ -19,6 +20,7 @@ public class InventoryMenu : MonoBehaviour {
 	private PlayerInput playerInput;
 	
 	// Audio management
+	[SerializeField] private UIAudioManager uiAudioManager;
 	private RickEvents rickEvents;
 
 	private bool inventoryScreenOpen = false;
@@ -50,11 +52,15 @@ public class InventoryMenu : MonoBehaviour {
 		}
 	}
 
+
 	async void ChangeGameState(bool status) {
 		if(status) {
 			// Setting timeScale to 0 pauses the game
 			Time.timeScale = 0f;
 			Cursor.lockState = CursorLockMode.None;
+			
+			// Audio management: pause all sounds except music
+			GameAudioPauser.PauseGameAudio(false);
 		}
 		else {
 			// Resume the game
@@ -62,6 +68,9 @@ public class InventoryMenu : MonoBehaviour {
 			await Task.Delay(100);
 			EventSystem.current.SetSelectedGameObject(null);
 			Cursor.lockState = CursorLockMode.Locked;
+			
+			// Audio management: resume all sounds except music
+			GameAudioPauser.ResumeGameAudio(false);
 		}
 
 		GameStatus.gamePaused = status;
@@ -72,6 +81,10 @@ public class InventoryMenu : MonoBehaviour {
 			inventoryScreenOpen = false;
 			screenContainer.SetActive(false);
 			inventoryMenu.SetActive(false);
+			
+			// Audio management: play close inventory sound
+			uiAudioManager.PlayCloseSound();
+			
 			papersMenuScript.CloseMenu();
 			powerUpMenuScript.CloseMenu();
 		}
@@ -81,7 +94,11 @@ public class InventoryMenu : MonoBehaviour {
 			{
 				rickEvents.StopAllLoopingSounds();
 			}
+			
+			// Audio management: play open inventory sound
+			uiAudioManager.PlayOpenSound();
 
+			
 			inventoryScreenOpen = true;
 			screenContainer.SetActive(true);
 			inventoryMenu.SetActive(true);
