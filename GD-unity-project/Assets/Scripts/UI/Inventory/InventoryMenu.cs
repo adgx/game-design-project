@@ -52,11 +52,15 @@ public class InventoryMenu : MonoBehaviour {
 		}
 	}
 
+
 	async void ChangeGameState(bool status) {
 		if(status) {
 			// Setting timeScale to 0 pauses the game
 			Time.timeScale = 0f;
 			Cursor.lockState = CursorLockMode.None;
+			
+			// Audio management: pause all sounds except music
+			GameAudioPauser.PauseGameAudio(false);
 		}
 		else {
 			// Resume the game
@@ -64,6 +68,9 @@ public class InventoryMenu : MonoBehaviour {
 			await Task.Delay(100);
 			EventSystem.current.SetSelectedGameObject(null);
 			Cursor.lockState = CursorLockMode.Locked;
+			
+			// Audio management: resume all sounds except music
+			GameAudioPauser.ResumeGameAudio(false);
 		}
 
 		GameStatus.gamePaused = status;

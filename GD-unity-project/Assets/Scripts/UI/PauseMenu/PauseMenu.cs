@@ -72,53 +72,23 @@ public class PauseMenu : MonoBehaviour
 	}
 
 	async void ChangeGameState(bool paused) {
-		if(paused) {
-			// Setting timeScale to 0 pauses the game
+		if(paused) 
+		{
 			Time.timeScale = 0f;
 			Cursor.lockState = CursorLockMode.None;
 			
-			// Pause the sound of the sphere
-			Player.Instance.PauseSphereRotationSound(); 
-			
-			// Pause the music
-			GamePlayAudioManager.instance.PauseMusic();
-			
-			// Pause ambient sounds
-			AmbienceSystem.PauseAllRoomAmbience();
-			
-			// Pause the sounds of all Incognitos
-			IncognitoAudioManager.Instance.PauseAllIncognitoSounds();
-			
-			// Pause the sounds of all Maynards
-			MaynardAudioManager.Instance.PauseAllMaynardSounds();
-			
-			// Pause the sounds of all Drakes
-			DrakeAudioManager.Instance.PauseAllDrakeSounds();
+			// Audio management: pause all sounds except music
+			GameAudioPauser.PauseGameAudio(true); 
 		}
-		else {
-			// Resume the game
+		else 
+		{
 			Time.timeScale = 1f;
 			await Task.Delay(100);
 			EventSystem.current.SetSelectedGameObject(null);
 			Cursor.lockState = CursorLockMode.Locked;
-			
-			// Resume the sound of the sphere
-			Player.Instance.ResumeSphereRotationSound();
-			
-			// Resume Music
-			GamePlayAudioManager.instance.ResumeMusic();
-			
-			// Resume ambient sounds
-			AmbienceSystem.ResumeAllRoomAmbience();
-			
-			// Resume the sounds of all Incognito
-			IncognitoAudioManager.Instance.ResumeAllIncognitoSounds();
-			
-			// Resume the sounds of all Maynards
-			MaynardAudioManager.Instance.ResumeAllMaynardSounds();
-			
-			// Resume the sounds of all the Drakes
-			DrakeAudioManager.Instance.ResumeAllDrakeSounds();
+        
+			// Audio management: resume all sounds except music
+			GameAudioPauser.ResumeGameAudio(true);
 		}
 
 		GameStatus.gamePaused = paused;
