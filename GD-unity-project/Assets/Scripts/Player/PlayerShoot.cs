@@ -709,7 +709,6 @@ public class PlayerShoot : MonoBehaviour
 		}
 	}
 	
-	// Audio management: check the health status
 	private void UpdateHealthState()
 	{
 		if (rickEvents == null) return;
@@ -717,7 +716,13 @@ public class PlayerShoot : MonoBehaviour
 		// Calculate whether health is below the threshold (but the player is still alive)
 		bool isHealthLow = (health <= maxHealth * LOW_HEALTH_PERCENTAGE && health > 0);
 	
-		//Communicate status to RickEvents
+		// Audio management: communicate status to RickEvents
 		rickEvents.SetHeartbeatStatus(isHealthLow);
+		
+		// Notify HealthBar of the status for flashing
+		if (healthBar != null)
+		{
+			healthBar.SetFlashing(isHealthLow);
+		}
 	}
 }
