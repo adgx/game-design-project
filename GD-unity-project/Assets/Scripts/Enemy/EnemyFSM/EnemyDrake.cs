@@ -58,7 +58,7 @@ public class Drake : MonoBehaviour, IEnemy
     private State _deathS;
 
     private EnemyManager enemyManager;
-    private bool _debug = true;
+    private bool _debug = false;
     
     // Audio management
     private DrakeEvents _events;
