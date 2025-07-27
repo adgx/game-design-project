@@ -41,7 +41,7 @@ namespace Audio
         {
             foreach (var maynard in allMaynards)
             {
-                maynard.PauseLoopingSounds();
+                maynard.PauseAllSounds();
             }
         }
 
@@ -49,7 +49,7 @@ namespace Audio
         {
             foreach (var maynard in allMaynards)
             {
-                maynard.ResumeLoopingSounds();
+                maynard.ResumeAllSounds();
             }
         }
     }
