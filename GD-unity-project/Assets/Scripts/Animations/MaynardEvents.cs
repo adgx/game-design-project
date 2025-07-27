@@ -11,7 +11,7 @@ namespace Animations
         private EventInstance maynardFootsteps;
         private EventInstance maynardIdle;
         
-        // Audio management: one shot sounds
+        // Audio management: one-shot sounds
         private List<EventInstance> activeOneShotInstances = new List<EventInstance>();
         
         private MaynardAnimation maynardAnim;
@@ -39,8 +39,7 @@ namespace Animations
         private void FixedUpdate()
         {
             // Audio management: update Maynard's position as he's a sound source
-            maynardFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-            maynardIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            UpdateAll3DAttributes();
         }
         
         private void OnDestroy()
@@ -72,16 +71,12 @@ namespace Animations
         {
             // Instances the event
             EventInstance eventInstance = GamePlayAudioManager.instance.CreateInstance(fmodEvent);
-            
-            // Set the 3D position BEFORE starting the event
+            // Set the 3D position before starting the event
             eventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-            
             // Adds it to the list so it can be checked
             activeOneShotInstances.Add(eventInstance);
-            
             // Starts playing
             eventInstance.start();
-            
             // Removes the instance from the list once it is finished, preventing the list from growing indefinitely
             StartCoroutine(ReleaseInstanceWhenFinished(eventInstance));
         }
