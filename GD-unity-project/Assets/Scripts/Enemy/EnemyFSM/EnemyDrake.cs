@@ -58,7 +58,7 @@ public class Drake : MonoBehaviour, IEnemy
     private State _deathS;
 
     private EnemyManager enemyManager;
-    private bool _debug = false;
+    private bool _debug = true;
     
     // Audio management
     private DrakeEvents _events;
@@ -130,6 +130,7 @@ public class Drake : MonoBehaviour, IEnemy
         State swipingS = new DrakeSwipingAttackState("Swiping", this);
         State biteS = new DrakeBiteAttackState("Bite", this);
         State waitS = new DrakeWaitState("Wait", this, _events);
+        State debugS = new DrakeDebugState("Debug", this);
 
         _reactFromFrontS = new DrakeReactFromFrontState("Hit", this);
         _defenseS = new DrakeDefenseState("Defense", this);
@@ -174,7 +175,7 @@ public class Drake : MonoBehaviour, IEnemy
     void Update()
     {
         // Maybe not a great idea to have this check here, but I don't know where to put it
-        if(!playerShoot.shieldIsActive) 
+        if(!_debug && !playerShoot.shieldIsActive) 
             _attackRange = 1;
         else
             _attackRange = 2;
