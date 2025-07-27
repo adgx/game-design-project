@@ -38,7 +38,9 @@ public class PowerUpMenu : MonoBehaviour {
 			{
 				for (int i = 1; i <= level; i++)
 				{
-					spherePowerUpsRow.transform.GetChild(spherePowerUps).GetComponent<Button>().onClick.AddListener(() => ShowPowerUpDescription(puTemp));
+					Button sphereButton = spherePowerUpsRow.transform.GetChild(spherePowerUps).GetComponent<Button>(); // Take the button reference
+					sphereButton.onClick.RemoveAllListeners(); // Clean up old listeners
+					sphereButton.onClick.AddListener(() => ShowPowerUpDescription(puTemp)); // Add the new one
 					
 					Image spherePowerUpIcon = spherePowerUpsRow.transform.GetChild(spherePowerUps).GetComponent<Image>();
 					spherePowerUpIcon.sprite = powerUpIcons.Find(p => p.iconId == puTemp.ToString() + i.ToString()).icon;
@@ -51,7 +53,9 @@ public class PowerUpMenu : MonoBehaviour {
 			{
 				for (int i = 1; i <= level; i++)
 				{
-					playerPowerUpsRow.transform.GetChild(playerPowerUps).GetComponent<Button>().onClick.AddListener(() => ShowPowerUpDescription(puTemp));
+					Button playerButton = playerPowerUpsRow.transform.GetChild(playerPowerUps).GetComponent<Button>(); // Take the button reference
+					playerButton.onClick.RemoveAllListeners(); // Clean up old listeners
+					playerButton.onClick.AddListener(() => ShowPowerUpDescription(puTemp)); // Add the new one
 					
 					Image playerPowerUpIcon = playerPowerUpsRow.transform.GetChild(playerPowerUps).GetComponent<Image>();
 					playerPowerUpIcon.sprite = powerUpIcons.Find(p => p.iconId == puTemp + i.ToString()).icon;

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Threading.Tasks;
 using Audio;
 using FMOD.Studio;
@@ -17,6 +18,9 @@ namespace Animations
         private EventInstance rickWalkFootsteps;
         private EventInstance rickRunFootsteps;
         private EventInstance rickIdle;
+        private EventInstance rickHeartbeat;
+        private bool isHitSoundPending = false;
+        private bool shouldPlayHeartbeat = false;
 
         //Player
         [SerializeField] private Player _player;
@@ -271,19 +275,38 @@ namespace Animations
         public void Hit()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, transform.position);
+            if (isHitSoundPending)
+            {
+                isHitSoundPending = false; // "Consume" the request
+
+                // Play the sound
+                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, transform.position);
+            }
         }
 
         public void HitBySpit()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHitBySpit, transform.position);
+            if (isHitSoundPending)
+            {
+                isHitSoundPending = false; // "Consume" the request
+
+                // Play the sounds
+                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHitBySpit, transform.position);
+                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, transform.position);
+            }
         }
 
         public void HitByBite()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHitByBite, transform.position);
+            if (isHitSoundPending)
+            {
+                isHitSoundPending = false; // "Consume" the request
+
+                // Play the sound
+                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHitByBite, transform.position);
+            }
         }
 
         public void VendingMachineItemPickup()
@@ -333,6 +356,9 @@ namespace Animations
 
             rickIdle = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerIdle);
             rickIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            
+            rickHeartbeat = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerHeartbeat);
+            rickHeartbeat.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
         }
 
         // FixedUpdate is called once per frame
@@ -351,6 +377,7 @@ namespace Animations
             rickWalkFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             rickRunFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             rickIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            rickHeartbeat.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
 
             RickStates currentState = AnimationManager.Instance.rickState;
 
@@ -371,10 +398,11 @@ namespace Animations
                 HandleLoopingSound(rickLoadDistanceAttackWithPowerUp2, shouldPlayDistanceLoad && powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 2);
             }
 
-            // Motion and idle sounds
+            // Looping sounds
             HandleLoopingSound(rickWalkFootsteps, currentState == RickStates.Walk);
             HandleLoopingSound(rickRunFootsteps, currentState == RickStates.Run);
             HandleLoopingSound(rickIdle, currentState == RickStates.Idle);
+            HandleLoopingSound(rickHeartbeat, shouldPlayHeartbeat);
         }
 
         // Helper method to reduce code duplication for loop sounds
@@ -426,8 +454,7 @@ namespace Animations
         // Audio management
         public void StopAllLoopingSounds()
         {
-            // Use STOP_MODE.IMMEDIATE to ensure they stop instantly, without waiting for the fade-out.
-            // This is crucial in a reset
+            // Use STOP_MODE.IMMEDIATE to ensure they stop instantly, without waiting for the fade-out
             rickLoadCloseAttackWithPowerUp1.stop(STOP_MODE.IMMEDIATE);
             rickLoadDistanceAttackWithPowerUp1.stop(STOP_MODE.IMMEDIATE);
             rickLoadCloseAttackWithPowerUp2.stop(STOP_MODE.IMMEDIATE);
@@ -435,6 +462,7 @@ namespace Animations
             rickWalkFootsteps.stop(STOP_MODE.IMMEDIATE);
             rickRunFootsteps.stop(STOP_MODE.IMMEDIATE);
             rickIdle.stop(STOP_MODE.IMMEDIATE);
+            rickHeartbeat.stop(STOP_MODE.IMMEDIATE);
         }
 
         public void SpawnAreaAttack()
@@ -464,7 +492,35 @@ namespace Animations
             
             playerShoot.ResetCloseAttackValues();
         }
+        
+        // Audio management
+        public void RequestHitSound(PlayerShoot.DamageTypes damageType)
+        {
+            // If there is already a request in progress, don't start another one to avoid chaos
+            if (isHitSoundPending) return;
+
+            isHitSoundPending = true;
+            // Imported the fallback chamber which, also the internal compartment of RickEvents
+            PlayHitSoundFallback();
+        }
+        
+        // Audio management
+        private void PlayHitSoundFallback()
+        {
+            // If the request is still pending after the wait, we will handle it
+            if (isHitSoundPending)
+            {
+                isHitSoundPending = false; // "Consume" the request
+
+                // Play the hit sound
+                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, transform.position);
+            }
+        }
+        
+        // Audio management
+        public void SetHeartbeatStatus(bool shouldPlay)
+        {
+            shouldPlayHeartbeat = shouldPlay;
+        }
     }
-    
-    
 }
