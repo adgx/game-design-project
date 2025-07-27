@@ -41,7 +41,7 @@ namespace Audio
         {
             foreach (var drake in allDrakes)
             {
-                drake.PauseLoopingSounds();
+                drake.PauseAllSounds();
             }
         }
 
@@ -49,7 +49,7 @@ namespace Audio
         {
             foreach (var drake in allDrakes)
             {
-                drake.ResumeLoopingSounds();
+                drake.ResumeAllSounds();
             }
         }
     }
