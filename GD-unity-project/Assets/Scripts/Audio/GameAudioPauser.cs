@@ -1,3 +1,5 @@
+using Animations;
+
 namespace Audio
 {
     public static class GameAudioPauser
@@ -9,7 +11,14 @@ namespace Audio
         public static void PauseGameAudio(bool pauseMusic = true)
         {
             // Player
-            Player.Instance.PauseSphereRotationSound();
+            if (Player.Instance != null)
+            {
+                RickEvents rickEvents = Player.Instance.GetComponent<RickEvents>();
+                if (rickEvents != null)
+                {
+                    rickEvents.PauseAllRickSounds();
+                }
+            }
         
             // Music (conditional)
             if (pauseMusic)
@@ -33,7 +42,14 @@ namespace Audio
         public static void ResumeGameAudio(bool resumeMusic = true)
         {
             // Player
-            Player.Instance.ResumeSphereRotationSound();
+            if (Player.Instance != null)
+            {
+                RickEvents rickEvents = Player.Instance.GetComponent<RickEvents>();
+                if (rickEvents != null)
+                {
+                    rickEvents.ResumeAllRickSounds();
+                }
+            }
 
             // Music (conditional)
             if (resumeMusic)

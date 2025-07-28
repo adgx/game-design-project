@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Audio;
 using FMOD.Studio;
@@ -10,7 +10,7 @@ namespace Animations
 {
     public class RickEvents : MonoBehaviour
     {
-        // Audio management
+        // Audio management: looping sounds
         private EventInstance rickLoadCloseAttackWithPowerUp1;
         private EventInstance rickLoadDistanceAttackWithPowerUp1;
         private EventInstance rickLoadCloseAttackWithPowerUp2;
@@ -19,6 +19,11 @@ namespace Animations
         private EventInstance rickRunFootsteps;
         private EventInstance rickIdle;
         private EventInstance rickHeartbeat;
+        
+        // Audio management: one-shot sounds
+        private List<EventInstance> activeOneShotInstances = new List<EventInstance>();
+        
+        // Audio management
         private bool isHitSoundPending = false;
         private bool shouldPlayHeartbeat = false;
 
@@ -85,7 +90,7 @@ namespace Animations
         public void CloseAttackShoot()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerCloseAttackShoot, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerCloseAttackShoot);
             
             AreaAttackController areaController = playerShoot.attackAreaInstance.GetComponent<AreaAttackController>();
             if (areaController != null)
@@ -105,7 +110,7 @@ namespace Animations
         public void DistanceAttackShoot()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDistanceAttackShoot, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerCloseAttackShoot);
 
             playerShoot.FireDistanceAttack();
         }
@@ -117,7 +122,7 @@ namespace Animations
             shield.gameObject.SetActive(true);
 
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldActivation, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerShieldActivation);
 
             if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
             {
@@ -196,7 +201,7 @@ namespace Animations
         public void DeathForwardGrunt()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardGrunt, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerDieForwardGrunt);
 
             playerShoot.SetLayerToZero();
         }
@@ -204,19 +209,19 @@ namespace Animations
         public void DeathForwardThud1()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardThud1, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerDieForwardThud1);
         }
 
         public void DeathForwardThud2()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardThud2, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerDieForwardThud2);
         }
 
         public void DeathBackwardGrunt()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieBackwardGrunt, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerDieBackwardGrunt);
 
             playerShoot.SetLayerToZero();
         }
@@ -224,7 +229,7 @@ namespace Animations
         public void DeathBackwardThud()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieBackwardThud, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerDieBackwardThud);
         }
 
         public void PlayDeathAnimation()
@@ -240,13 +245,13 @@ namespace Animations
         public void Drink()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDrink, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerDrink);
         }
 
         public void EatChips()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChips, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerEatChips);
         }
 
         public void EndPowerUp()
@@ -257,7 +262,7 @@ namespace Animations
         public void EatChocolate()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChocolate, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerEatChocolate);
         }
 
         public void EndHealthRecovery()
@@ -278,7 +283,7 @@ namespace Animations
                 isHitSoundPending = false; // "Consume" the request
 
                 // Play the sound
-                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, transform.position);
+                PlayManagedEvent(FMODEvents.Instance.PlayerHit);
             }
         }
 
@@ -290,8 +295,8 @@ namespace Animations
                 isHitSoundPending = false; // "Consume" the request
 
                 // Play the sounds
-                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHitBySpit, transform.position);
-                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, transform.position);
+                PlayManagedEvent(FMODEvents.Instance.PlayerHitBySpit);
+                PlayManagedEvent(FMODEvents.Instance.PlayerHit);
             }
         }
 
@@ -303,14 +308,14 @@ namespace Animations
                 isHitSoundPending = false; // "Consume" the request
 
                 // Play the sound
-                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHitByBite, transform.position);
+                PlayManagedEvent(FMODEvents.Instance.PlayerHitByBite);
             }
         }
 
         public void VendingMachineItemPickup()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineItemPickUp, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerVendingMachineItemPickUp);
 
             if (MachineType == "health")
                 HealthVendingMachineInteraction.PlaceSpecialSnackInHand();
@@ -326,7 +331,7 @@ namespace Animations
         public void WakeUp()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerWakeUp, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerWakeUp);
 
             fadeManagerLoadingScreen.Hide();
         }
@@ -364,6 +369,49 @@ namespace Animations
         {
             // Audio management
             UpdateSound();
+        }
+        
+        private void OnDestroy()
+        {
+            // Audio management: stops and release looping sounds
+            StopAllLoopingSounds();
+
+            // Audio management: stops and releases one-shots
+            foreach (var instance in activeOneShotInstances)
+            {
+                instance.stop(STOP_MODE.IMMEDIATE);
+                GamePlayAudioManager.instance.ReleaseInstance(instance);
+            }
+            activeOneShotInstances.Clear();
+        }
+        
+        private void PlayManagedEvent(FMODUnity.EventReference fmodEvent)
+        {   
+            // Instances the event
+            EventInstance eventInstance = GamePlayAudioManager.instance.CreateInstance(fmodEvent);
+            // Set the 3D position before starting the event
+            eventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            // Adds it to the list so it can be checked
+            activeOneShotInstances.Add(eventInstance);
+            // Starts playing
+            eventInstance.start();
+            // Removes the instance from the list once it is finished, preventing the list from growing indefinitely
+            StartCoroutine(ReleaseInstanceWhenFinished(eventInstance));
+        }
+        
+        private System.Collections.IEnumerator ReleaseInstanceWhenFinished(EventInstance eventInstance)
+        {
+            // Waits until the event is no longer playing
+            PLAYBACK_STATE playbackState;
+            do {
+                eventInstance.getPlaybackState(out playbackState);
+                yield return null; // Waits for next frame
+            } while (playbackState != PLAYBACK_STATE.STOPPED);
+
+            // Removes the instance from the active list
+            activeOneShotInstances.Remove(eventInstance);
+            // Releases FMOD resources
+            GamePlayAudioManager.instance.ReleaseInstance(eventInstance);
         }
 
         private void UpdateSound()
@@ -440,7 +488,7 @@ namespace Animations
             await Task.Delay(delayMs - 1000);
 
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldDeactivation, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerShieldDeactivation);
             
             // Second part of the delay
             await Task.Delay(1000);
@@ -511,7 +559,7 @@ namespace Animations
                 isHitSoundPending = false; // "Consume" the request
 
                 // Play the hit sound
-                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, transform.position);
+                PlayManagedEvent(FMODEvents.Instance.PlayerHit);
             }
         }
         
@@ -519,6 +567,51 @@ namespace Animations
         public void SetHeartbeatStatus(bool shouldPlay)
         {
             shouldPlayHeartbeat = shouldPlay;
+        }
+        
+        /// <summary>
+        /// Pauses all Rick's sounds
+        /// </summary>
+        public void PauseAllRickSounds()
+        {
+            // Stop looping sounds
+            rickLoadCloseAttackWithPowerUp1.setPaused(true);
+            rickLoadDistanceAttackWithPowerUp1.setPaused(true);
+            rickLoadCloseAttackWithPowerUp2.setPaused(true);
+            rickLoadDistanceAttackWithPowerUp2.setPaused(true);
+            rickWalkFootsteps.setPaused(true);
+            rickRunFootsteps.setPaused(true);
+            rickIdle.setPaused(true);
+            rickHeartbeat.setPaused(true);
+
+            // Stop one-shot sounds
+            foreach (var instance in activeOneShotInstances)
+            {
+                instance.setPaused(true);
+            }
+        }
+        
+        
+        /// <summary>
+        /// Resumes all Rick's sounds
+        /// </summary>
+        public void ResumeAllRickSounds()
+        {
+            // Resume looping sounds
+            rickLoadCloseAttackWithPowerUp1.setPaused(false);
+            rickLoadDistanceAttackWithPowerUp1.setPaused(false);
+            rickLoadCloseAttackWithPowerUp2.setPaused(false);
+            rickLoadDistanceAttackWithPowerUp2.setPaused(false);
+            rickWalkFootsteps.setPaused(false);
+            rickRunFootsteps.setPaused(false);
+            rickIdle.setPaused(false);
+            rickHeartbeat.setPaused(false);
+
+            // Resume one-shot sounds
+            foreach (var instance in activeOneShotInstances)
+            {
+                instance.setPaused(false);
+            }
         }
     }
 }
