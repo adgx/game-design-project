@@ -29,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1779177418643411986}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -52,9 +52,13 @@ MonoBehaviour:
   pauseMenu: {fileID: 0}
   confirmMenu: {fileID: 0}
   volumeMenuScript: {fileID: 0}
+  creditsMenu: {fileID: 0}
+  confirmMenuText: {fileID: 0}
   firstSelected: {fileID: 0}
   noButton: {fileID: 0}
   buttonEffects: {fileID: -3958158436726632438}
+  uiAudioManager: {fileID: 0}
+  gameplaySceneName: Player+Map
 --- !u!114 &415173684934062143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74,6 +78,7 @@ MonoBehaviour:
   firstSelected: {fileID: 0}
   buttonHoverSprite: {fileID: 21300000, guid: 2074e63cc8abfd548bd4a5d8ea9fa703, type: 3}
   buttonNormalSprite: {fileID: 21300000, guid: 0e87d182b6961994b96d4fe5eeec8cf4, type: 3}
+  uiAudioManager: {fileID: 0}
 --- !u!114 &8774698924411829510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90,9 +95,9 @@ MonoBehaviour:
   spherePowerUpsRow: {fileID: 0}
   playerPowerUpsRow: {fileID: 0}
   powerUpIcons:
-  - iconId: CloseAttack1
+  - iconId: CloseAttackPowerUp1
     icon: {fileID: 21300000, guid: 49b0af1e00ffb4b4cab72fec2f8426fb, type: 3}
-  - iconId: CloseAttack2
+  - iconId: CloseAttackPowerUp2
     icon: {fileID: 21300000, guid: 2b39db847a6154fa3a35c2f7c0d8b86a, type: 3}
   - iconId: DamageReduction1
     icon: {fileID: 21300000, guid: 107790e9ce8f84a6797b90f1c626f871, type: 3}
@@ -100,13 +105,13 @@ MonoBehaviour:
     icon: {fileID: 21300000, guid: 7e9690aa34f5142ec87c6a4cb13ae539, type: 3}
   - iconId: DamageReduction3
     icon: {fileID: 21300000, guid: 9c82beaa9ece243f492f479c7c070c81, type: 3}
-  - iconId: Defense1
+  - iconId: DefensePowerUp1
     icon: {fileID: 21300000, guid: 10cb98131712a4edc975cea307ca0209, type: 3}
-  - iconId: Defense2
+  - iconId: DefensePowerUp2
     icon: {fileID: 21300000, guid: 08376996d3d23475481e8189aeba709a, type: 3}
-  - iconId: DistanceAttack1
+  - iconId: DistanceAttackPowerUp1
     icon: {fileID: 21300000, guid: 9a20893fe6c4b488385faee60ef800c6, type: 3}
-  - iconId: DistanceAttack2
+  - iconId: DistanceAttackPowerUp2
     icon: {fileID: 21300000, guid: a7bd74f1613364b9bb11da2b714f5eac, type: 3}
   - iconId: HealthBoost1
     icon: {fileID: 21300000, guid: 56dfa29c1990b400a8a957b0b79cab7c, type: 3}
@@ -117,6 +122,7 @@ MonoBehaviour:
   powerUpScript: {fileID: 0}
   powerUpText: {fileID: 0}
   firstSelected: {fileID: 0}
+  uiAudioManager: {fileID: 0}
 --- !u!114 &7076102304092396991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,6 +139,7 @@ MonoBehaviour:
   paperText: {fileID: 0}
   paperScrollContent: {fileID: 0}
   paperButton: {fileID: 0}
+  uiAudioManager: {fileID: 0}
 --- !u!114 &-3958158436726632438
 MonoBehaviour:
   m_ObjectHideFlags: 0
