@@ -49,7 +49,7 @@ public class ShieldTrigger : MonoBehaviour
     {
         if (other.tag.Contains("EnemyAttack"))
         {
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldHit, transform.position);
+            GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerShieldHit, transform.position);
             Destroy(other.gameObject);
         }
         else

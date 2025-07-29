@@ -1,3 +1,5 @@
+using Animations;
+
 namespace Audio
 {
     public static class GameAudioPauser
@@ -9,12 +11,25 @@ namespace Audio
         public static void PauseGameAudio(bool pauseMusic = true)
         {
             // Player
-            Player.Instance.PauseSphereRotationSound();
-        
-            // Music (conditional)
-            if (pauseMusic)
+            if (Player.Instance != null)
             {
-                GamePlayAudioManager.instance.PauseMusic();
+                RickEvents rickEvents = Player.Instance.GetComponent<RickEvents>();
+                if (rickEvents != null)
+                {
+                    rickEvents.PauseAllRickSounds();
+                }
+            }
+            
+            if (GamePlayAudioManager.instance != null)
+            {
+                // Player's one-shot sounds
+                GamePlayAudioManager.instance.PauseAllManagedOneShots();
+                
+                // Music (conditional)
+                if (pauseMusic)
+                {
+                    GamePlayAudioManager.instance.PauseMusic();
+                }
             }
 
             // Ambience
@@ -33,14 +48,28 @@ namespace Audio
         public static void ResumeGameAudio(bool resumeMusic = true)
         {
             // Player
-            Player.Instance.ResumeSphereRotationSound();
-
-            // Music (conditional)
-            if (resumeMusic)
+            if (Player.Instance != null)
             {
-                GamePlayAudioManager.instance.ResumeMusic();
+                RickEvents rickEvents = Player.Instance.GetComponent<RickEvents>();
+                if (rickEvents != null)
+                {
+                    rickEvents.ResumeAllRickSounds();
+                }
             }
 
+            if (GamePlayAudioManager.instance != null)
+            {
+                // Player's one-shot sounds
+                GamePlayAudioManager.instance.ResumeAllManagedOneShots();
+                
+                // Music (conditional)
+                if (resumeMusic)
+                {
+                    GamePlayAudioManager.instance.ResumeMusic();
+                }
+
+            }
+            
             // Ambience
             AmbienceSystem.ResumeAllRoomAmbience();
 

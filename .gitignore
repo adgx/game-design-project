@@ -1,36 +1,39 @@
 # ===== Unity =====
-UnityProject/Library/
-UnityProject/Temp/
-UnityProject/Obj/
-UnityProject/Build/
-UnityProject/Logs/
-UnityProject/UserSettings/
-UnityProject/MemoryCaptures/
-UnityProject/.collab/
-UnityProject/Packages/manifest.json
-UnityProject/*.csproj
-UnityProject/*.sln
-UnityProject/.vscode/
-UnityProject/.idea/
+GD-unity-project/Library/
+GD-unity-project/Temp/
+GD-unity-project/Obj/
+GD-unity-project/Build/
+GD-unity-project/Logs/
+GD-unity-project/UserSettings/
+GD-unity-project/MemoryCaptures/
+GD-unity-project/.collab/
+GD-unity-project/Packages/manifest.json
+GD-unity-project/*.csproj
+GD-unity-project/*.sln
+GD-unity-project/.vscode/
+GD-unity-project/.idea/
 
 # Keep Unity Assets
-!UnityProject/Assets/
+!GD-unity-project/Assets/
 
 # Addressables (optional)
-UnityProject/Assets/AddressableAssetsData/*/*.bin*
-UnityProject/Assets/AddressableAssetsData/*/*.catalog*
+GD-unity-project/Assets/AddressableAssetsData/*/*.bin*
+GD-unity-project/Assets/AddressableAssetsData/*/*.catalog*
 
 # ===== FMOD =====
-FMODProject/Build/
-FMODProject/Metadata/
-FMODProject/.fmod/
-FMODProject/*.fspro.user
-FMODProject/*.log
-FMODProject/*.bak
+GD-fmod-project/Metadata/
+GD-fmod-project/.fmod/
+GD-fmod-project/*.fspro.user
+GD-fmod-project/*.log
+GD-fmod-project/*.bak
+GD-fmod-project/.cache/
+GD-fmod-project/.user/
+GD-fmod-project/.unsaved/
 
 # Keep FMOD assets and project file
-!FMODProject/Assets/
-!FMODProject/*.fspro
+!GD-fmod-project/Assets/
+!GD-fmod-project/*.fspro
+!GD-fmod-project/Build/**
 
 # OS junk
 .DS_Store

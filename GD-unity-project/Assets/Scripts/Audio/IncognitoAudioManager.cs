@@ -41,7 +41,7 @@ namespace Audio
         {
             foreach (var incognito in allIncognitos)
             {
-                incognito.PauseLoopingSounds();
+                incognito.PauseAllSounds();
             }
         }
 
@@ -49,7 +49,7 @@ namespace Audio
         {
             foreach (var incognito in allIncognitos)
             {
-                incognito.ResumeLoopingSounds();
+                incognito.ResumeAllSounds();
             }
         }
     }

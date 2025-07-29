@@ -149,7 +149,7 @@ public class PlayerShoot : MonoBehaviour
 		}
 		
 		// Audio management: the Sphere has finished the stamina or is loading after having been completely discharged
-		GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerSphereDischarge, rotatingSphere.transform.position);
+		GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerSphereDischarge, rotatingSphere.transform.position);
 		return false;
 	}
 
@@ -171,7 +171,7 @@ public class PlayerShoot : MonoBehaviour
 				if (sphereStamina == maxSphereStamina)
 				{
 					sphereIsDischarged = false; 
-					GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerSphereFullRecharge, rotatingSphere.transform.position);
+					GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerSphereFullRecharge, rotatingSphere.transform.position);
 				}
 			}
 		}

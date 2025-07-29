@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using FMOD.Studio;
 using FMODUnity;
@@ -28,6 +29,7 @@ namespace Audio
     
         private EventInstance musicEventInstance;
         public static GamePlayAudioManager instance { get; private set; }
+        private List<EventInstance> managedOneShotInstances = new List<EventInstance>();
 
         private void Awake()
         {
@@ -54,7 +56,67 @@ namespace Audio
             ambienceBus.setVolume(ambienceVolume);
             sfxBus.setVolume(SFXVolume);
         }
-    
+        
+        private void OnDestroy()
+        {
+            CleanUp();
+        }
+        
+        public void PlayManagedOneShot(EventReference sound, Vector3 worldPos)
+        {
+            if (!Application.isPlaying || !RuntimeManager.IsInitialized) return;
+
+            EventInstance eventInstance = CreateInstance(sound);
+            eventInstance.set3DAttributes(RuntimeUtils.To3DAttributes(worldPos));
+            
+            managedOneShotInstances.Add(eventInstance);
+            
+            eventInstance.start();
+            StartCoroutine(ReleaseManagedInstanceWhenFinished(eventInstance));
+        }
+        
+        public void PlayManagedOneShotWithDelay(EventReference sound, Vector3 worldPos, float delay)
+        {
+            StartCoroutine(PlayWithDelayCoroutine(sound, worldPos, delay));
+        }
+        
+        private IEnumerator PlayWithDelayCoroutine(EventReference sound, Vector3 worldPos, float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            PlayManagedOneShot(sound, worldPos);
+        }
+        
+        private IEnumerator ReleaseManagedInstanceWhenFinished(EventInstance eventInstance)
+        {
+            PLAYBACK_STATE playbackState;
+            do {
+                eventInstance.getPlaybackState(out playbackState);
+                yield return null;
+            } while (playbackState != PLAYBACK_STATE.STOPPED);
+
+            // Remove from the list of managed one-shots
+            managedOneShotInstances.Remove(eventInstance);
+            
+            // Release the instance using your existing method, which also removes it from the main list.
+            ReleaseInstance(eventInstance);
+        }
+        
+        public void PauseAllManagedOneShots()
+        {
+            foreach (var instance in managedOneShotInstances)
+            {
+                if(instance.isValid()) instance.setPaused(true);
+            }
+        }
+        
+        public void ResumeAllManagedOneShots()
+        {
+            foreach (var instance in managedOneShotInstances)
+            {
+                if(instance.isValid()) instance.setPaused(false);
+            }
+        }
+        
         private void InitializeMusic(EventReference musicEventReference)
         {
             if (musicEventInstance.isValid())
@@ -77,13 +139,13 @@ namespace Audio
             }
         }
     
-        public void PlayOneShot(EventReference sound, Vector3 worldPos)
-        {
-            if (!Application.isPlaying || !RuntimeManager.IsInitialized)
-                return;
-
-            RuntimeManager.PlayOneShot(sound, worldPos);
-        }
+        // public void PlayOneShot(EventReference sound, Vector3 worldPos)
+        // {
+        //     if (!Application.isPlaying || !RuntimeManager.IsInitialized)
+        //         return;
+        //
+        //     RuntimeManager.PlayOneShot(sound, worldPos);
+        // }
     
         public EventInstance CreateInstance(EventReference eventReference)
         {
@@ -139,11 +201,7 @@ namespace Audio
             // Clear lists for next boot
             eventInstances.Clear();
             eventEmitters.Clear();
-        }
-
-        private void OnDestroy()
-        {
-            CleanUp();
+            managedOneShotInstances.Clear();
         }
 
         // Allows any script to request the release of a specific auio instance

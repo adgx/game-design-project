@@ -104,14 +104,14 @@ namespace PlayerInteraction
 
             if (_roomManager.DoesRoomExistAt(nextRoomGridIndex))
             {
-                GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDoorOpen,
+                GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerDoorOpen,
                     interactor.transform.position);
 
                 FadeManager.Instance.FadeOutIn(() =>
                 {
                     playerScript.FreezeMovement(true);
                     _roomManager.TraverseRoom(nextRoomGridIndex, _leadsToWorldDirection);
-                    GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDoorClose,
+                    GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerDoorClose,
                         interactor.transform.position);
                     playerScript.FreezeMovement(false);
                 });

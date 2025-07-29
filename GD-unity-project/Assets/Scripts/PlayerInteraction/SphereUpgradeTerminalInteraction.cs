@@ -75,7 +75,7 @@ namespace PlayerInteraction
 
             _rotateSphere.positionSphere(new Vector3(_rotateSphere.DistanceFromPlayer, 1f, 0),
                 RotateSphere.Animation.Linear);
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerTerminalInteraction,
+            GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerTerminalInteraction,
                 this.transform.position);
 
             yield return new WaitForSeconds(_interactionTime);

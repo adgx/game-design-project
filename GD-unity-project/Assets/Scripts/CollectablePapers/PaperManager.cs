@@ -103,7 +103,7 @@ namespace CollectablePapers
                 _paperTextContainer.SetActive(true);
 
                 // Audio management
-				GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerPaperInteraction, paperPosition);
+				GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerPaperInteraction, paperPosition);
             }
             else
             {

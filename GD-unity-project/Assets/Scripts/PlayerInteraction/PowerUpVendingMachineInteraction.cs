@@ -96,7 +96,7 @@ namespace PlayerInteraction
         {
             _isBusy = true;
 
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineActivation, this.transform.position);
+            GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerVendingMachineActivation, this.transform.position);
             _rotateSphere.positionSphere(new Vector3(_rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
 
 			yield return new WaitForSeconds(_freeSphere);
