@@ -485,44 +485,62 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3528708864393528342}
+      addedObject: {fileID: 3344086524421311603}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1695218055873817924}
+      addedObject: {fileID: 6148504354750086159}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7409751501246628611}
+      addedObject: {fileID: 466019415660402841}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8854736316970946577}
+      addedObject: {fileID: 5352293208318039379}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6023470848816913080}
+      addedObject: {fileID: 888624955853524467}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3067841262735337796}
+      addedObject: {fileID: 240093825647973371}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4219811521934878475}
+      addedObject: {fileID: 5931207847125737587}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8353464297607826101}
+      addedObject: {fileID: 1504280233393689418}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7086493589103723552}
+      addedObject: {fileID: 6296262175319179377}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 96081689891110004}
+      addedObject: {fileID: 8242006737155467440}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1430527262991367144}
+      addedObject: {fileID: 5602111076180119769}
   m_SourcePrefab: {fileID: 100100000, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
 --- !u!1 &7310133868445848391 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
   m_PrefabInstance: {fileID: 7616635715757633046}
   m_PrefabAsset: {fileID: 0}
---- !u!136 &3528708864393528342
+--- !u!114 &3344086524421311603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7310133868445848391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0be8c9ea57c92cc4680b7b34414ab1bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxMovementSpeed: 7
+  speedChangeRate: 10
+  player: {fileID: 466019415660402841}
+  mainCamera: {fileID: 0}
+  isFrozen: 0
+  rotatingSphere: {fileID: 7466109011567372119}
+--- !u!136 &6148504354750086159
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -545,7 +563,7 @@ CapsuleCollider:
   m_Height: 1.7
   m_Direction: 1
   m_Center: {x: 0, y: 0.85, z: 0}
---- !u!54 &1695218055873817924
+--- !u!54 &466019415660402841
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -572,25 +590,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &7409751501246628611
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7310133868445848391}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0be8c9ea57c92cc4680b7b34414ab1bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxMovementSpeed: 7
-  speedChangeRate: 10
-  player: {fileID: 1695218055873817924}
-  mainCamera: {fileID: 0}
-  isFrozen: 0
-  rotatingSphere: {fileID: 7466109011567372119}
---- !u!114 &8854736316970946577
+--- !u!114 &5352293208318039379
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -614,7 +614,7 @@ MonoBehaviour:
   backInputController: 331
   interactionInput: 101
   interactionInputController: 333
---- !u!114 &6023470848816913080
+--- !u!114 &888624955853524467
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -626,7 +626,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87b5d102fe9948f8a62870a5cb922bf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rickEvents: {fileID: 96081689891110004}
+  rickEvents: {fileID: 8242006737155467440}
   bulletSpeed: 16
   bulletSpawnTransform: {fileID: 4647093185041228041}
   bulletPrefab: {fileID: 1351494042883776938, guid: eb29ac79095518f468dd53ef8494cebb, type: 3}
@@ -634,8 +634,8 @@ MonoBehaviour:
   attackAreaInstance: {fileID: 0}
   attackAreaVFXPrefab: {fileID: 2067102190422821462, guid: f1e0d0fc31489a647adffe39cc8499a0, type: 3}
   defaultCloseAttackDamage: 50
-  closeAttackDamage: 50
   damageRadius: 2
+  chargedCloseAttackDamage: 0
   cannotAttack: 0
   increaseAttackController: 335
   decreaseAttackController: 334
@@ -643,7 +643,7 @@ MonoBehaviour:
   closeAttackImage: {fileID: 0}
   distanceAttackLoadingBar: {fileID: 0}
   closeAttackLoadingBar: {fileID: 0}
-  magneticShieldOpen: 0
+  shieldIsActive: 0
   maxHealth: 120
   health: 120
   damageReduction: 1
@@ -652,14 +652,14 @@ MonoBehaviour:
   increaseStamina: 0
   increasingStamina: 0
   sphereStamina: 5
-  powerUp: {fileID: 4219811521934878475}
+  powerUp: {fileID: 5931207847125737587}
   getCollisions: {fileID: 0}
   rotateSphere: {fileID: 1115131906452555202}
   rotatingSphere: {fileID: 7466109011567372119}
   sphereMaterial: {fileID: 2100000, guid: 5d16e6bd7dbf26f489a710633ffd7491, type: 2}
   respawnSceneName: RespawnScene
   gameTimer: {fileID: 0}
---- !u!114 &3067841262735337796
+--- !u!114 &240093825647973371
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -676,7 +676,7 @@ MonoBehaviour:
   whatIsEnemy:
     serializedVersion: 2
     m_Bits: 128
---- !u!114 &4219811521934878475
+--- !u!114 &5931207847125737587
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -690,7 +690,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spherePowerUps: 
   playerPowerUps: 
---- !u!114 &8353464297607826101
+--- !u!114 &1504280233393689418
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -709,7 +709,7 @@ MonoBehaviour:
   _helpTextContainer: {fileID: 0}
   _helpText: {fileID: 0}
   _interactionGracePeriod: 0.15
---- !u!23 &7086493589103723552
+--- !u!23 &6296262175319179377
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -754,7 +754,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &96081689891110004
+--- !u!114 &8242006737155467440
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -766,11 +766,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ecf6dc8681d3194da69b3028722f155, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _player: {fileID: 0}
   magneticShieldPrefab: {fileID: 1861958121312818245, guid: a4dd536f609ecc8479b7e157bffc3f17, type: 3}
-  powerUp: {fileID: 4219811521934878475}
-  playerShoot: {fileID: 6023470848816913080}
+  powerUp: {fileID: 5931207847125737587}
+  playerShoot: {fileID: 888624955853524467}
   fadeManagerLoadingScreen: {fileID: 0}
---- !u!114 &1430527262991367144
+--- !u!114 &5602111076180119769
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
