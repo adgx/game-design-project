@@ -28,7 +28,6 @@ namespace Audio
         [field: SerializeField] public EventReference PlayerHit { get; private set; }
         [field: SerializeField] public EventReference PlayerHitBySpit { get; private set; }
         [field: SerializeField] public EventReference PlayerHitByBite { get; private set; }
-        [field: SerializeField] public EventReference PlayerHeartbeat { get; private set; }
         [field: SerializeField] public EventReference PlayerIdle { get; private set; }
         [field: SerializeField] public EventReference PlayerPaperInteraction { get; private set; }
         [field: SerializeField] public EventReference PlayerWalkFootsteps { get; private set; }

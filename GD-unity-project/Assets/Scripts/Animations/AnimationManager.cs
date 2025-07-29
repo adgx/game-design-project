@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using System.Threading.Tasks;
 
@@ -21,7 +22,7 @@ public enum RickStates
     Drink,
     EatChips,
     Death,
-    StandUp,
+    StandUp
 }
 
 //used to handle the character animations across of the scripts 

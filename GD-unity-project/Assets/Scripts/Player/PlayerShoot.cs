@@ -17,8 +17,7 @@ public class PlayerShoot : MonoBehaviour
 	// Audio management 
 	public bool IsSphereRotating => rotateSphere.isRotating;
 	private bool isShieldCoroutineRunning;
-	[SerializeField] private RickEvents rickEvents;
-	private const float LOW_HEALTH_PERCENTAGE = 0.30f; // 30%
+	[SerializeField] private RickEvents rickEvents; 
 	
 	// Attack1
 	[SerializeField] private float bulletSpeed;
@@ -39,7 +38,6 @@ public class PlayerShoot : MonoBehaviour
 	public int chargedCloseAttackDamage;
 	
 	public bool cannotAttack = false;
-	private bool isDying = false;
 
 	// The player has 2 attacks he can choose. He can change them by using the mouse scroll wheel or the back buttons on the controller
 	private int attackNumber = 1;
@@ -478,43 +476,19 @@ public class PlayerShoot : MonoBehaviour
 	}
 
 	public void TakeDamage(float damage, DamageTypes damageType, int x, int z) {
-		if (isDying)
-		{
-			return; // If the player is already dying, ignore any further damage
-		}
-		
-		health -= damage * damageReduction;
-		if (health < 0) health = 0; // To prevent health from going below zero in the UI
-		
+     	health -= damage * damageReduction;
      	healthBar.SetHealth(health);
      
      	StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
-        
-        // Audio management: call the new method to update the audio status
-        UpdateHealthState();
-        
+
 		if(health > 0) {
-			// Audio management: he notifies RickEvents that damage has occurred and that he must handle the sound
-			if (rickEvents != null)
-			{
-				rickEvents.RequestHitSound(damageType);
-			}
-			
 			HitAnimation(damageType, 0, 1);
 		}
 		else
      	{
-	        isDying = true;
 	        DisableAttacks(true);
 	        player.FreezeMovement(true);
 			gameTimer.isRunning = false;
-			
-			// Audio management: make sure your heartbeat stops at death
-			if (rickEvents != null)
-			{
-				rickEvents.SetHeartbeatStatus(false);
-			}
-			
 			if(damageType == DamageTypes.DrakeBiteAttack) {
 				AnimationManager.Instance.Bite();
 			}
@@ -617,9 +591,6 @@ public class PlayerShoot : MonoBehaviour
 		}
 		
 		healthBar.SetHealth(health);
-		
-		// Audio management: call the update method even when recovering life
-		UpdateHealthState();
 	}
 
 	void Update() {
@@ -709,23 +680,6 @@ public class PlayerShoot : MonoBehaviour
 					}
 				}
 			}
-		}
-	}
-	
-	private void UpdateHealthState()
-	{
-		if (rickEvents == null) return;
-
-		// Calculate whether health is below the threshold (but the player is still alive)
-		bool isHealthLow = (health <= maxHealth * LOW_HEALTH_PERCENTAGE && health > 0);
-	
-		// Audio management: communicate status to RickEvents
-		rickEvents.SetHeartbeatStatus(isHealthLow);
-		
-		// Notify HealthBar of the status for flashing
-		if (healthBar != null)
-		{
-			healthBar.SetFlashing(isHealthLow);
 		}
 	}
 }
