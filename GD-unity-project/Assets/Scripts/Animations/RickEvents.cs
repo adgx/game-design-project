@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Audio;
@@ -157,22 +158,13 @@ namespace Animations
         private void ShieldDeactivation()
         {
             // Audio management
-            if (!powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
+            float delay = 2.5f; // Default value
+            if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
             {
-                _ = ShieldDestructionAfterDelay(2500);
+                if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1) delay = 3.5f;
+                else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 2) delay = 4.5f;
             }
-            else
-            {
-                if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1)
-                {
-                    _ = ShieldDestructionAfterDelay(3500);
-                }
-
-                else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 2)
-                {
-                    _ = ShieldDestructionAfterDelay(4500);
-                }
-            }
+            StartCoroutine(ShieldDestructionAfterDelay(delay));
         }
 
         private void ShieldDestroy()
@@ -479,19 +471,19 @@ namespace Animations
             playerShoot.UnfreezePlayer();
         }
         
-        private async Task ShieldDestructionAfterDelay(int delayMs)
+        private IEnumerator ShieldDestructionAfterDelay(float delaySeconds)
         {
             // The delay is split in two parts: for synchronization reasons, the first one goes
             // before the clip audio, while the second after that. 
             
             // First part of the delay
-            await Task.Delay(delayMs - 1000);
+            yield return new WaitForSeconds(delaySeconds - 1.0f);
 
             // Audio management
-            PlayManagedEvent(FMODEvents.Instance.PlayerShieldDeactivation);
+            GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerShieldDeactivation, transform.position);
             
             // Second part of the delay
-            await Task.Delay(1000);
+            yield return new WaitForSeconds(1.0f);
             
             // Destroy the shield
             ShieldDestroy();

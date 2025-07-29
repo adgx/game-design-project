@@ -78,7 +78,7 @@ public class ParticleAttackController : MonoBehaviour
             }
             else if (other.CompareTag("Shield"))
             {
-                GamePlayAudioManager.instance.PlayOneShot(Audio.FMODEvents.Instance.PlayerShieldHit, transform.position);
+                GamePlayAudioManager.instance.PlayManagedOneShot(Audio.FMODEvents.Instance.PlayerShieldHit, transform.position);
                 Destroy(gameObject);
             }
             else if (!other.CompareTag("EnemyIncognito"))

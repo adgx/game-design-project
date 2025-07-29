@@ -19,11 +19,17 @@ namespace Audio
                     rickEvents.PauseAllRickSounds();
                 }
             }
-        
-            // Music (conditional)
-            if (pauseMusic)
+            
+            if (GamePlayAudioManager.instance != null)
             {
-                GamePlayAudioManager.instance.PauseMusic();
+                // Player's one-shot sounds
+                GamePlayAudioManager.instance.PauseAllManagedOneShots();
+                
+                // Music (conditional)
+                if (pauseMusic)
+                {
+                    GamePlayAudioManager.instance.PauseMusic();
+                }
             }
 
             // Ambience
@@ -51,12 +57,19 @@ namespace Audio
                 }
             }
 
-            // Music (conditional)
-            if (resumeMusic)
+            if (GamePlayAudioManager.instance != null)
             {
-                GamePlayAudioManager.instance.ResumeMusic();
-            }
+                // Player's one-shot sounds
+                GamePlayAudioManager.instance.ResumeAllManagedOneShots();
+                
+                // Music (conditional)
+                if (resumeMusic)
+                {
+                    GamePlayAudioManager.instance.ResumeMusic();
+                }
 
+            }
+            
             // Ambience
             AmbienceSystem.ResumeAllRoomAmbience();
 
