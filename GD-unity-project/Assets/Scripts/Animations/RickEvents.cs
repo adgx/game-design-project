@@ -347,6 +347,9 @@ namespace Animations
             rickLoadDistanceAttackWithPowerUp2 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerDistanceAttackLoadWithPowerUp2);
             rickLoadDistanceAttackWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
 
+            //rickHeartbeat = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerHeartbeat);
+            //rickHeartbeat.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            
             rickWalkFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerWalkFootsteps);
             rickWalkFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
 
