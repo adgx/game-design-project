@@ -45,6 +45,41 @@ namespace Animations
 		[NonSerialized] public PowerUpVendingMachineInteraction PowerUpVendingMachineInteraction;
         [NonSerialized] public string MachineType; // Can be "playerPowerUp" or "health"
 
+        // Audio management
+        private void Start()
+        {
+            rickLoadCloseAttackWithPowerUp1 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerCloseAttackLoadWithPowerUp1);
+            rickLoadCloseAttackWithPowerUp1.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+
+            rickLoadDistanceAttackWithPowerUp1 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerDistanceAttackLoadWithPowerUp1);
+            rickLoadDistanceAttackWithPowerUp1.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+
+            rickLoadCloseAttackWithPowerUp2 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerCloseAttackLoadWithPowerUp2);
+            rickLoadCloseAttackWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+
+            rickLoadDistanceAttackWithPowerUp2 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerDistanceAttackLoadWithPowerUp2);
+            rickLoadDistanceAttackWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+
+            rickHeartbeat = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerHeartbeat);
+            rickHeartbeat.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            
+            rickWalkFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerWalkFootsteps);
+            rickWalkFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+
+            rickRunFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerRunFootsteps);
+            rickRunFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+
+            rickIdle = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerIdle);
+            rickIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+        }
+
+        // FixedUpdate is called once per frame
+        void FixedUpdate()
+        {
+            // Audio management
+            UpdateSound();
+        }
+
         public void DisableRickState()
         {
             AnimationManager.Instance.rickState = RickStates.None;
@@ -332,40 +367,7 @@ namespace Animations
             fadeManagerLoadingScreen.Hide();
         }
 
-        // Audio management
-        private void Start()
-        {
-            rickLoadCloseAttackWithPowerUp1 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerCloseAttackLoadWithPowerUp1);
-            rickLoadCloseAttackWithPowerUp1.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-
-            rickLoadDistanceAttackWithPowerUp1 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerDistanceAttackLoadWithPowerUp1);
-            rickLoadDistanceAttackWithPowerUp1.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-
-            rickLoadCloseAttackWithPowerUp2 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerCloseAttackLoadWithPowerUp2);
-            rickLoadCloseAttackWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-
-            rickLoadDistanceAttackWithPowerUp2 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerDistanceAttackLoadWithPowerUp2);
-            rickLoadDistanceAttackWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-
-            //rickHeartbeat = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerHeartbeat);
-            //rickHeartbeat.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-            
-            rickWalkFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerWalkFootsteps);
-            rickWalkFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-
-            rickRunFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerRunFootsteps);
-            rickRunFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-
-            rickIdle = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerIdle);
-            rickIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-        }
-
-        // FixedUpdate is called once per frame
-        void FixedUpdate()
-        {
-            // Audio management
-            UpdateSound();
-        }
+        
         
         private void OnDestroy()
         {

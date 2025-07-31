@@ -144,7 +144,7 @@ using UnityEngine;
 			{
 				Move();
 			}
-			Debug.Log($"Rick's state: {AnimationManager.Instance.rickState}");
+			//Debug.Log($"Rick's state: {AnimationManager.Instance.rickState}");
 			// Audio management
 			UpdateSound();
 		}
