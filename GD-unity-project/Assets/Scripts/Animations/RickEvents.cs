@@ -159,6 +159,8 @@ namespace Animations
 
         private void ShieldDeactivation()
         {
+            //reset the idle state
+            AnimationManager.Instance.rickState = RickStates.Idle;
             // Audio management
             float delay = 2.5f; // Default value
             if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))

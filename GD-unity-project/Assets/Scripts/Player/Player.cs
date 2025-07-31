@@ -32,7 +32,7 @@ using UnityEngine;
 		public bool isFrozen;
 		
 		// Audio management
-	private PlayerShoot playerShoot;
+		private PlayerShoot playerShoot;
 		private EventInstance sphere;
 		private EventInstance sphereRotation;
 		[SerializeField] private GameObject rotatingSphere;
@@ -73,11 +73,21 @@ using UnityEngine;
 			if (currentHorizontalSpeed < targetSpeed - speedOffset ||
 				currentHorizontalSpeed > targetSpeed + speedOffset)
 			{
-				if (inputMagnitude > 0.01)
+				if (inputMagnitude > 0.1)
+				{
 					speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.fixedDeltaTime * speedChangeRate);
+					if (AnimationManager.Instance.rickState == RickStates.Walk)
+					{
+						AnimationManager.Instance.rickState = RickStates.Run;
+					}
+				}
 				else
-				{ 
-					speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.fixedDeltaTime * speedChangeRate*2);
+				{
+					speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.fixedDeltaTime * speedChangeRate * 2);
+					if (AnimationManager.Instance.rickState != RickStates.Walk && AnimationManager.Instance.rickState == RickStates.Run)
+					{
+						AnimationManager.Instance.rickState = RickStates.Walk;
+					}
 				}
 			}
 			else
@@ -93,12 +103,13 @@ using UnityEngine;
 			float runBlendVal = ORF.Utils.Math.NormalizeValueByRage(0f, maxMovementSpeed, speed);
 			AnimationManager.Instance.SetRunBledingAnim(runBlendVal);
 
-			if (runBlendVal == 0f && AnimationManager.Instance.rickState.Equals(RickStates.Run))
+			if (runBlendVal == 0f && AnimationManager.Instance.rickState.Equals(RickStates.Walk))
 			{
 				AnimationManager.Instance.Idle();
 			}
 			else if (runBlendVal != 0f && AnimationManager.Instance.rickState.Equals(RickStates.Idle))
 			{
+				AnimationManager.Instance.rickState = RickStates.Walk;
 				AnimationManager.Instance.Run();
 			}
 
@@ -133,7 +144,7 @@ using UnityEngine;
 			{
 				Move();
 			}
-			
+			Debug.Log($"Rick's state: {AnimationManager.Instance.rickState}");
 			// Audio management
 			UpdateSound();
 		}

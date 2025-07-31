@@ -485,62 +485,44 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3344086524421311603}
+      addedObject: {fileID: 351342054501327582}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6148504354750086159}
+      addedObject: {fileID: 741756514304482534}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 466019415660402841}
+      addedObject: {fileID: 3254910192723179322}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5352293208318039379}
+      addedObject: {fileID: 7418635615246368157}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 888624955853524467}
+      addedObject: {fileID: 2852568361077510624}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 240093825647973371}
+      addedObject: {fileID: 6338174745435855343}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5931207847125737587}
+      addedObject: {fileID: 563829849615775049}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1504280233393689418}
+      addedObject: {fileID: 3950056974488473079}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6296262175319179377}
+      addedObject: {fileID: 5242038626193552504}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8242006737155467440}
+      addedObject: {fileID: 6347618394851439756}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5602111076180119769}
+      addedObject: {fileID: 4135507471716561410}
   m_SourcePrefab: {fileID: 100100000, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
 --- !u!1 &7310133868445848391 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 593f8ac06d930274394304b9643dbd16, type: 3}
   m_PrefabInstance: {fileID: 7616635715757633046}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3344086524421311603
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7310133868445848391}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0be8c9ea57c92cc4680b7b34414ab1bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxMovementSpeed: 7
-  speedChangeRate: 10
-  player: {fileID: 466019415660402841}
-  mainCamera: {fileID: 0}
-  isFrozen: 0
-  rotatingSphere: {fileID: 7466109011567372119}
---- !u!136 &6148504354750086159
+--- !u!136 &351342054501327582
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -563,7 +545,7 @@ CapsuleCollider:
   m_Height: 1.7
   m_Direction: 1
   m_Center: {x: 0, y: 0.85, z: 0}
---- !u!54 &466019415660402841
+--- !u!54 &741756514304482534
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -590,7 +572,25 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &5352293208318039379
+--- !u!114 &3254910192723179322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7310133868445848391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0be8c9ea57c92cc4680b7b34414ab1bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxMovementSpeed: 7
+  speedChangeRate: 10
+  player: {fileID: 741756514304482534}
+  mainCamera: {fileID: 0}
+  isFrozen: 0
+  rotatingSphere: {fileID: 7466109011567372119}
+--- !u!114 &7418635615246368157
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -614,7 +614,7 @@ MonoBehaviour:
   backInputController: 331
   interactionInput: 101
   interactionInputController: 333
---- !u!114 &888624955853524467
+--- !u!114 &2852568361077510624
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -626,7 +626,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87b5d102fe9948f8a62870a5cb922bf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rickEvents: {fileID: 8242006737155467440}
+  rickEvents: {fileID: 6347618394851439756}
   bulletSpeed: 16
   bulletSpawnTransform: {fileID: 4647093185041228041}
   bulletPrefab: {fileID: 1351494042883776938, guid: eb29ac79095518f468dd53ef8494cebb, type: 3}
@@ -652,14 +652,14 @@ MonoBehaviour:
   increaseStamina: 0
   increasingStamina: 0
   sphereStamina: 5
-  powerUp: {fileID: 5931207847125737587}
+  powerUp: {fileID: 563829849615775049}
   getCollisions: {fileID: 0}
   rotateSphere: {fileID: 1115131906452555202}
   rotatingSphere: {fileID: 7466109011567372119}
   sphereMaterial: {fileID: 2100000, guid: 5d16e6bd7dbf26f489a710633ffd7491, type: 2}
   respawnSceneName: RespawnScene
   gameTimer: {fileID: 0}
---- !u!114 &240093825647973371
+--- !u!114 &6338174745435855343
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -676,7 +676,7 @@ MonoBehaviour:
   whatIsEnemy:
     serializedVersion: 2
     m_Bits: 128
---- !u!114 &5931207847125737587
+--- !u!114 &563829849615775049
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -690,7 +690,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spherePowerUps: 
   playerPowerUps: 
---- !u!114 &1504280233393689418
+--- !u!114 &3950056974488473079
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -709,7 +709,7 @@ MonoBehaviour:
   _helpTextContainer: {fileID: 0}
   _helpText: {fileID: 0}
   _interactionGracePeriod: 0.15
---- !u!23 &6296262175319179377
+--- !u!23 &5242038626193552504
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -754,7 +754,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &8242006737155467440
+--- !u!114 &6347618394851439756
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -768,10 +768,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _player: {fileID: 0}
   magneticShieldPrefab: {fileID: 1861958121312818245, guid: a4dd536f609ecc8479b7e157bffc3f17, type: 3}
-  powerUp: {fileID: 5931207847125737587}
-  playerShoot: {fileID: 888624955853524467}
+  powerUp: {fileID: 563829849615775049}
+  playerShoot: {fileID: 2852568361077510624}
   fadeManagerLoadingScreen: {fileID: 0}
---- !u!114 &5602111076180119769
+--- !u!114 &4135507471716561410
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

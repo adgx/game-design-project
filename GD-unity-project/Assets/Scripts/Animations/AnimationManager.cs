@@ -138,7 +138,7 @@ public class AnimationManager : MonoBehaviour
     public void Run()
     {
         rickAC.SetTrigger(runTriggerHash);
-        rickState = RickStates.Run;
+        //rickState = RickStates.Run;
     }
     public void Defense()
     {
