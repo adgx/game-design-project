@@ -502,8 +502,10 @@ namespace Animations
             rickLoadDistanceAttackWithPowerUp1.stop(STOP_MODE.IMMEDIATE);
             rickLoadCloseAttackWithPowerUp2.stop(STOP_MODE.IMMEDIATE);
             rickLoadDistanceAttackWithPowerUp2.stop(STOP_MODE.IMMEDIATE);
-            rickWalkFootsteps.stop(STOP_MODE.IMMEDIATE);
-            rickRunFootsteps.stop(STOP_MODE.IMMEDIATE);
+            if(AnimationManager.Instance.rickState == RickStates.Walk)
+                rickWalkFootsteps.stop(STOP_MODE.IMMEDIATE);
+            if(AnimationManager.Instance.rickState == RickStates.Run)    
+                rickRunFootsteps.stop(STOP_MODE.IMMEDIATE);
             rickIdle.stop(STOP_MODE.IMMEDIATE);
         }
 
