@@ -139,14 +139,6 @@ namespace Audio
             }
         }
     
-        // public void PlayOneShot(EventReference sound, Vector3 worldPos)
-        // {
-        //     if (!Application.isPlaying || !RuntimeManager.IsInitialized)
-        //         return;
-        //
-        //     RuntimeManager.PlayOneShot(sound, worldPos);
-        // }
-    
         public EventInstance CreateInstance(EventReference eventReference)
         {
             EventInstance eventInstance = RuntimeManager.CreateInstance(eventReference);

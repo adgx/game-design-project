@@ -1,3 +1,4 @@
+using Animations;
 using FMOD.Studio;
 using Audio;
 using UnityEngine;
@@ -32,10 +33,7 @@ using UnityEngine;
 		public bool isFrozen;
 		
 		// Audio management
-		private PlayerShoot playerShoot;
-		private EventInstance sphere;
-		private EventInstance sphereRotation;
-		[SerializeField] private GameObject rotatingSphere;
+		private RickEvents rickEvents;
 
 		public void FreezeMovement(bool freeze)
 		{
@@ -54,6 +52,9 @@ using UnityEngine;
 			player.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
 			Cursor.lockState = CursorLockMode.Locked;
+			
+			// Audio management
+			rickEvents = GetComponentInChildren<RickEvents>();
 		}
 
 		private void Move()
@@ -115,14 +116,6 @@ using UnityEngine;
 			// I need this constraint to avoid that the player turns upside down when it touches another collider
 			player.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 		}
-		
-		// Audio management
-		private void Start()
-		{
-			playerShoot = GetComponent<PlayerShoot>();
-			sphereRotation = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerSphereRotation);
-			sphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
-		}
 
 		// FixedUpdate is called once per frame
 		void FixedUpdate()
@@ -139,49 +132,20 @@ using UnityEngine;
 		// Audio management
 		private void UpdateSound()
 		{
-			sphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
-			
-			// Get the playback state for the rotation event
-			PLAYBACK_STATE rotationPlaybackState;
-			sphereRotation.getPlaybackState(out rotationPlaybackState);
-
-			if (playerShoot != null && playerShoot.IsSphereRotating)
+			// We get the ball state from PlayerShoot
+			PlayerShoot playerShoot = GetComponent<PlayerShoot>();
+			if (playerShoot != null && rickEvents != null)
 			{
-				// If the sphere is rotating, then start the sound
-				if (rotationPlaybackState == PLAYBACK_STATE.STOPPED)
-					sphereRotation.start();
-			}
-			else
-			{
-				// If the sphere is not rotating, then stop the sound
-				if (rotationPlaybackState != PLAYBACK_STATE.STOPPED)
-					sphereRotation.stop(STOP_MODE.ALLOWFADEOUT);
-			}
-		}
-		
-		/// <summary>
-		/// Pauses the ball's spinning sound if it is playing.
-		/// </summary>
-		public void PauseSphereRotationSound()
-		{
-			// Check if the instance is valid before using it
-			if (sphereRotation.isValid())
-			{
-				// Pause event. The event will remember its location
-				sphereRotation.setPaused(true);
-			}
-		}
-
-		/// <summary>
-		/// Reparts playback of the spinning sound of the sphere from where it was interrupted.
-		/// </summary>
-		public void ResumeSphereRotationSound()
-		{
-			// Check if the instance is valid before using it
-			if (sphereRotation.isValid())
-			{
-				// The event resumes
-				sphereRotation.setPaused(false);
+				if (playerShoot.IsSphereRotating)
+				{
+					// We tell RickEvents to start the sound
+					rickEvents.StartSphereRotationSound();
+				}
+				else
+				{
+					// We tell RickEvents to stop the sound
+					rickEvents.StopSphereRotationSound();
+				}
 			}
 		}
 	}

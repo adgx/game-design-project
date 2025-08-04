@@ -3329,7 +3329,6 @@ MonoBehaviour:
   player: {fileID: 972097721}
   mainCamera: {fileID: 2143297039}
   isFrozen: 0
-  rotatingSphere: {fileID: 134964747}
 --- !u!114 &972097724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3506,6 +3505,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ecf6dc8681d3194da69b3028722f155, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rotatingSphereSource: {fileID: 134964747}
   magneticShieldPrefab: {fileID: 1861958121312818245, guid: a4dd536f609ecc8479b7e157bffc3f17, type: 3}
   powerUp: {fileID: 972097725}
   playerShoot: {fileID: 972097727}
