@@ -30,13 +30,13 @@ namespace Animations
         [SerializeField] private GameObject rotatingSphereSource; 
         private bool isHitSoundPending = false;
         private bool shouldPlayHeartbeat = false;
+        private bool sphereShouldBePlaying = false;
 
         // Defense
 	    [SerializeField] private GameObject magneticShieldPrefab;
         private GameObject shield;
 
-        // This flag must be set to 'true' by the input script when the attack key is pressed,
-        // and to 'false' when released
+        // This flag must be set to 'true' by the input script when the attack key is pressed, and to 'false' when released
         public bool ShouldPlayChargeSound { get; set; } = false;
 
         public PowerUp powerUp;
@@ -430,8 +430,7 @@ namespace Animations
 
             RickStates currentState = AnimationManager.Instance.rickState;
 
-            // Condition for close-loading audio:
-            // Must be in the correct state and the isLoadingSoundPlaying flag must be true
+            // Condition for close-loading audio
             bool shouldPlayCloseLoad = currentState == RickStates.LoadingCloseAttack && ShouldPlayChargeSound;
             if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp))
             {
@@ -439,7 +438,7 @@ namespace Animations
                 HandleLoopingSound(rickLoadCloseAttackWithPowerUp2, shouldPlayCloseLoad && powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 2);
             }
 
-            // Condition for remote loading audio:
+            // Condition for remote-loading audio
             bool shouldPlayDistanceLoad = currentState == RickStates.LoadingDistanceAttack && ShouldPlayChargeSound;
             if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp))
             {
@@ -448,6 +447,7 @@ namespace Animations
             }
 
             // Looping sounds
+            HandleLoopingSound(rickSphereRotation, sphereShouldBePlaying);
             HandleLoopingSound(rickWalkFootsteps, currentState == RickStates.Walk);
             HandleLoopingSound(rickRunFootsteps, currentState == RickStates.Run);
             HandleLoopingSound(rickIdle, currentState == RickStates.Idle);
@@ -574,15 +574,9 @@ namespace Animations
         }
         
         // Audio management
-        public void StartSphereRotationSound()
+        public void SetSphereRotationState(bool shouldBePlaying)
         {
-            HandleLoopingSound(rickSphereRotation, true);
-        }
-
-        // Audio management
-        public void StopSphereRotationSound()
-        {
-            HandleLoopingSound(rickSphereRotation, false);
+            sphereShouldBePlaying = shouldBePlaying;
         }
         
         /// <summary>
