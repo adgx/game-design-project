@@ -158,11 +158,14 @@ public class PlayerShoot : MonoBehaviour
 		ChangeSphereColor(sphereStamina);
 	}
 
-	public async Task RecoverStamina() {
+	private IEnumerator RecoverStaminaCoroutine() {
 		increasingStamina = true;
-		while(sphereStamina < maxSphereStamina && increaseStamina && !loadingAttack) {
-			await Task.Delay(500);
-			if(increaseStamina && !loadingAttack) {
+		while(sphereStamina < maxSphereStamina && increaseStamina && !loadingAttack) 
+		{
+			yield return new WaitForSeconds(0.5f); // 500ms
+
+			if(increaseStamina && !loadingAttack) 
+			{
 				sphereStamina += 1;
 				ChangeSphereColor(sphereStamina);
 
@@ -692,19 +695,23 @@ public class PlayerShoot : MonoBehaviour
 				{
 					SetAttack(2);
 				}
+			}
+			
+			// Conditions for starting charging:
+			// 1. The charge is not full
+			// 2. We're not already charging
+			// 3. We are not charging an attack
+			if (sphereStamina < maxSphereStamina && !increasingStamina && !loadingAttack)
+			{
+				// We set the flag to start the coroutine
+				increaseStamina = true;
+				StartCoroutine(RecoverStaminaCoroutine()); 
+			}
 
-				// I check the stamina every frame since it is possible that it is = 0 when I am not attacking (thanks asynchronous processes)
-				// Not that good, but I don't have better ways to manage it
-				if (sphereStamina <= 0)
-				{
-					sphereIsDischarged = true;
-					
-					if (!increasingStamina)
-					{
-						increaseStamina = true;
-						_ = RecoverStamina();
-					}
-				}
+			// Condition to stop charging: if we start charging an attack, the charging must stop
+			if (loadingAttack)
+			{
+				increaseStamina = false;
 			}
 		}
 	}

@@ -6,9 +6,6 @@ public class LookAtEnemy : MonoBehaviour
     [SerializeField] private float sightRange = 20;
     [SerializeField] private LayerMask whatIsEnemy;
 
-    private float playerPivotOffset;
-    private float heightY;
-
     private PlayerInput input;
     private PlayerShoot playerShoot;
 
@@ -42,13 +39,6 @@ public class LookAtEnemy : MonoBehaviour
                 Quaternion targetRotation = Quaternion.LookRotation(direction);
                 Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, Time.fixedDeltaTime * maxRotationSpeed);
                 transform.rotation = rotation;
-            }
-        }
-        else {
-            if (enemiesInRange.Length == 0 && playerShoot.sphereStamina < playerShoot.maxSphereStamina && !playerShoot.increasingStamina)
-            {
-                playerShoot.increaseStamina = true;
-                _ = playerShoot.RecoverStamina();
             }
         }
     }
