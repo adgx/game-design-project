@@ -371,14 +371,17 @@ namespace Animations
         
         private void OnDestroy()
         {
+            // If the FMOD manager has already been turned off, do not even attempt to clean the instances
+            if (!FMODUnity.RuntimeManager.IsInitialized) return;
+            
             // Audio management: stops and release looping sounds
             StopAllLoopingSounds();
 
-            // Audio management: stops and releases one-shots
+            // Audio management: stops one-shot sounds
             foreach (var instance in activeOneShotInstances)
             {
-                instance.stop(STOP_MODE.IMMEDIATE);
-                GamePlayAudioManager.instance.ReleaseInstance(instance);
+                if (instance.isValid())
+                    instance.stop(STOP_MODE.IMMEDIATE);
             }
             activeOneShotInstances.Clear();
         }
@@ -504,15 +507,24 @@ namespace Animations
         public void StopAllLoopingSounds()
         {
             // Use STOP_MODE.IMMEDIATE to ensure they stop instantly, without waiting for the fade-out
-            rickLoadCloseAttackWithPowerUp1.stop(STOP_MODE.IMMEDIATE);
-            rickLoadDistanceAttackWithPowerUp1.stop(STOP_MODE.IMMEDIATE);
-            rickLoadCloseAttackWithPowerUp2.stop(STOP_MODE.IMMEDIATE);
-            rickLoadDistanceAttackWithPowerUp2.stop(STOP_MODE.IMMEDIATE);
-            rickWalkFootsteps.stop(STOP_MODE.IMMEDIATE);
-            rickRunFootsteps.stop(STOP_MODE.IMMEDIATE);
-            rickIdle.stop(STOP_MODE.IMMEDIATE);
-            rickHeartbeat.stop(STOP_MODE.IMMEDIATE);
-            rickSphereRotation.stop(STOP_MODE.IMMEDIATE);
+            if (rickLoadCloseAttackWithPowerUp1.isValid())
+                rickLoadCloseAttackWithPowerUp1.stop(STOP_MODE.IMMEDIATE);
+            if (rickLoadDistanceAttackWithPowerUp1.isValid())
+                rickLoadDistanceAttackWithPowerUp1.stop(STOP_MODE.IMMEDIATE);
+            if (rickLoadCloseAttackWithPowerUp2.isValid())
+                rickLoadCloseAttackWithPowerUp2.stop(STOP_MODE.IMMEDIATE);
+            if (rickLoadDistanceAttackWithPowerUp2.isValid())
+                rickLoadDistanceAttackWithPowerUp2.stop(STOP_MODE.IMMEDIATE);
+            if (rickWalkFootsteps.isValid())
+                rickWalkFootsteps.stop(STOP_MODE.IMMEDIATE);
+            if (rickRunFootsteps.isValid())
+                rickRunFootsteps.stop(STOP_MODE.IMMEDIATE);
+            if (rickIdle.isValid())
+                rickIdle.stop(STOP_MODE.IMMEDIATE);
+            if (rickHeartbeat.isValid())
+                rickHeartbeat.stop(STOP_MODE.IMMEDIATE);
+            if (rickSphereRotation.isValid())
+                rickSphereRotation.stop(STOP_MODE.IMMEDIATE);
         }
 
         public void SpawnAreaAttack()

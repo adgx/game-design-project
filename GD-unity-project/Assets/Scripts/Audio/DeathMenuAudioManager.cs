@@ -15,7 +15,10 @@ namespace Audio
     
         private void OnDestroy()
         {
-            StopMusic();
+            if (FMODUnity.RuntimeManager.IsInitialized)
+            {
+                StopMusic();   
+            }
         }
     
         private void InitializeMusic(EventReference musicEventReference)
@@ -26,8 +29,11 @@ namespace Audio
     
         private void StopMusic()
         {
-            musicEventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-            musicEventInstance.release();
+            if (musicEventInstance.isValid())
+            {
+                musicEventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                musicEventInstance.release();   
+            }
         }
     }
 }
