@@ -142,13 +142,19 @@ public class PlayerShoot : MonoBehaviour
 	}
 
 	private bool CheckStamina(int value) {
-		// The Sphere still has stamina
-		if (sphereStamina >= value && !sphereIsDischarged) {
+		if (sphereIsDischarged || increasingStamina) 
+		{
+			// Audio management: the sphere has finished the stamina or is loading after having been completely discharged
+			GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerSphereDischarge, rotatingSphere.transform.position);
+			return false;
+		}
+		
+		// The sphere still has stamina
+		if (sphereStamina >= value && !sphereIsDischarged) 
+		{
 			return true;
 		}
 		
-		// Audio management: the Sphere has finished the stamina or is loading after having been completely discharged
-		GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerSphereDischarge, rotatingSphere.transform.position);
 		return false;
 	}
 
@@ -246,58 +252,67 @@ public class PlayerShoot : MonoBehaviour
 	async void LoadDistanceAttack() {
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
+		
 		rotateSphere.positionSphere(new Vector3(0, 0.8f, rotateSphere.DistanceFromPlayer), RotateSphere.Animation.RotateAround);
-
 		AnimationManager.Instance.Attack();
-		
 		await Task.Delay(50);
-		
 		attackStamina = 0;
-		int maxStamina = 0;
+		
+		// Let's check if the player has the power-up for the loaded attack
 		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp))
 		{
-			if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 1)
+			int maxStamina = 0;
+			if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp))
 			{
-				maxStamina = Math.Min(sphereStamina, 3);
-			}
-			else
-			{
-				if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 2)
+				if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 1)
 				{
-					maxStamina = Math.Min(sphereStamina, 5);
+					maxStamina = Math.Min(sphereStamina, 3);
+				}
+				else
+				{
+					if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 2)
+					{
+						maxStamina = Math.Min(sphereStamina, 5);
+					}
 				}
 			}
-		}
 		
-		// This delay is necessary to avoid the activation of the loading bar whenever the player press and released the attack
-		// button in a very fast way (as for the loading sound)
-		await Task.Delay(50);
+			// This delay is necessary to avoid the activation of the loading bar whenever the player press and released the attack
+			// button in a very fast way (as for the loading sound)
+			await Task.Delay(50);
 		
-		// Audio management: if after the delay we are still charging, start the sound
-		if (loadingAttack && rickEvents != null)
-		{
-			rickEvents.ShouldPlayChargeSound = true;
-		}
+			// Audio management: if after the delay we are still charging, start the sound
+			if (loadingAttack && rickEvents != null)
+			{
+				rickEvents.ShouldPlayChargeSound = true;
+			}
 		
-		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp) && loadingAttack)
-		{
-			attackStamina++;
-			ChangeSphereColor(attackStamina);
+			while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp) && loadingAttack)
+			{
+				attackStamina++;
+				ChangeSphereColor(attackStamina);
 
-			distanceAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
+				distanceAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
 			
-			chargedBulletDamage = getCollisions.initialPlayerBulletDamage;
+				chargedBulletDamage = getCollisions.initialPlayerBulletDamage;
 
-			if (attackStamina > 1) {
-				chargedBulletDamage += (attackStamina - 1) * 10;
-			}			
-			await Task.Delay(500);
-		}
+				if (attackStamina > 1) {
+					chargedBulletDamage += (attackStamina - 1) * 10;
+				}			
+				await Task.Delay(500);
+			}
 		
-		// Audio management: stop the loading sound of the attack when the loading is terminated 
-		if (rickEvents != null)
+			// Audio management: stop the loading sound of the attack when the loading is terminated 
+			if (rickEvents != null)
+			{
+				rickEvents.ShouldPlayChargeSound = false;
+			}
+		}
+
+		else
 		{
-			rickEvents.ShouldPlayChargeSound = false;
+			// The player doesn't have the power-up, so we immediately fire a normal (not loaded) distance attack
+			DistanceAttackAnimation();
 		}
 	}
 	
@@ -351,65 +366,76 @@ public class PlayerShoot : MonoBehaviour
 	async void LoadCloseAttack() {
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
+		
 		rotateSphere.positionSphere(new Vector3(0, 1.8f, 0), RotateSphere.Animation.Linear);
 		FreezePlayer();
 		AnimationManager.Instance.AreaAttack();
-		
 		await Task.Delay(50);
-		
 		attackStamina = 0;
-		int maxStamina = 0;
+		
+		// Let's check if the player has the power-up for the loaded attack
 		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp))
 		{
-			if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 1)
+			int maxStamina = 0;
+			if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp))
 			{
-				maxStamina = Math.Min(sphereStamina, 3);
-			}
-			else
-			{
-				if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 2)
+				if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 1)
 				{
-					maxStamina = Math.Min(sphereStamina, 5);
+					maxStamina = Math.Min(sphereStamina, 3);
+				}
+				else
+				{
+					if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 2)
+					{
+						maxStamina = Math.Min(sphereStamina, 5);
+					}
 				}
 			}
-		}
 		
-		// This delay is necessary to avoid the activation of the loading bar whenever the player press and released the attack
-		// button in a very fast way (as for the loading sound)
-		await Task.Delay(50);
+			// This delay is necessary to avoid the activation of the loading bar whenever the player press and released the attack
+			// button in a very fast way (as for the loading sound)
+			await Task.Delay(50);
 		
-		// Audio management: if after the delay we are still charging, start the sound
-		if (loadingAttack && rickEvents != null)
-		{
-			rickEvents.ShouldPlayChargeSound = true;
-		}
+			// Audio management: if after the delay we are still charging, start the sound
+			if (loadingAttack && rickEvents != null)
+			{
+				rickEvents.ShouldPlayChargeSound = true;
+			}
 		
-		chargedCloseAttackDamage = defaultCloseAttackDamage;
-		damageRadius = defaultDamageRadius;
-		
-		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp) && loadingAttack) {
-			attackStamina++;
-			ChangeSphereColor(attackStamina);
-
-			closeAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
-
 			chargedCloseAttackDamage = defaultCloseAttackDamage;
 			damageRadius = defaultDamageRadius;
-			
-			if (attackStamina > 1)
-			{
-				chargedCloseAttackDamage += (attackStamina - 1) * 20;
-				damageRadius += (attackStamina - 1) * 1f;
-			}
-			
-			await Task.Delay(500);
-		}
 		
-		// Audio management: stop the loading sound of the attack when the loading is terminated 
-		if (rickEvents != null)
-		{
-			rickEvents.ShouldPlayChargeSound = false;
+			while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp) && loadingAttack) {
+				attackStamina++;
+				ChangeSphereColor(attackStamina);
+
+				closeAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
+
+				chargedCloseAttackDamage = defaultCloseAttackDamage;
+				damageRadius = defaultDamageRadius;
+			
+				if (attackStamina > 1)
+				{
+					chargedCloseAttackDamage += (attackStamina - 1) * 20;
+					damageRadius += (attackStamina - 1) * 1f;
+				}
+			
+				await Task.Delay(500);
+			}
+		
+			// Audio management: stop the loading sound of the attack when the loading is terminated 
+			if (rickEvents != null)
+			{
+				rickEvents.ShouldPlayChargeSound = false;
+			}
 		}
+
+		else
+		{
+			// The player does not have the power-up, we immediately carry out the normal (not loaded) attack
+			CloseAttackAnimation();
+		}
+	
 	}
 	
 	private void CloseAttackAnimation() {
