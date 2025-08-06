@@ -64,9 +64,9 @@ public class PlayerShoot : MonoBehaviour
 
 	// Stamina for the attacks
 	public int maxSphereStamina = 5;
-	public bool increaseStamina = false, increasingStamina = false;
+	[FormerlySerializedAs("increaseStamina")] public bool increasingStamina = false;
 	public int sphereStamina = 5;
-	private bool sphereIsDischarged = false;
+	public bool sphereIsDischarged = false;
 	
 	// PowerUps
 	public PowerUp powerUp;
@@ -154,17 +154,35 @@ public class PlayerShoot : MonoBehaviour
 
 	public void DecreaseStamina(int amount) {
 		sphereStamina -= amount;
-		increaseStamina = false;
+		increasingStamina = false;
+		
+		// Let's make sure the bunting doesn't go below zero
+		if (sphereStamina <= 0)
+		{
+			sphereStamina = 0;
+			sphereIsDischarged = true;
+		}
 		ChangeSphereColor(sphereStamina);
+	}
+
+	public void StartStaminaRecovery()
+	{
+		// Check if a charge is already in progress to avoid starting multiple coroutines
+		if (!increasingStamina) 
+		{
+			StartCoroutine(RecoverStaminaCoroutine());
+		}
 	}
 
 	private IEnumerator RecoverStaminaCoroutine() {
 		increasingStamina = true;
-		while(sphereStamina < maxSphereStamina && increaseStamina && !loadingAttack) 
+		sphereIsDischarged = false; 
+		
+		while(sphereStamina < maxSphereStamina && !loadingAttack)  
 		{
 			yield return new WaitForSeconds(0.5f); // 500ms
 
-			if(increaseStamina && !loadingAttack) 
+			if(!loadingAttack) 
 			{
 				sphereStamina += 1;
 				ChangeSphereColor(sphereStamina);
@@ -172,9 +190,13 @@ public class PlayerShoot : MonoBehaviour
 				// Audio management
 				if (sphereStamina == maxSphereStamina)
 				{
-					sphereIsDischarged = false; 
 					GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerSphereFullRecharge, rotatingSphere.transform.position);
 				}
+			}
+			else
+			{
+				// If the player starts charging an attack while charging, we stop the coroutine
+				break;
 			}
 		}
 		increasingStamina = false;
@@ -695,23 +717,6 @@ public class PlayerShoot : MonoBehaviour
 				{
 					SetAttack(2);
 				}
-			}
-			
-			// Conditions for starting charging:
-			// 1. The charge is not full
-			// 2. We're not already charging
-			// 3. We are not charging an attack
-			if (sphereStamina < maxSphereStamina && !increasingStamina && !loadingAttack)
-			{
-				// We set the flag to start the coroutine
-				increaseStamina = true;
-				StartCoroutine(RecoverStaminaCoroutine()); 
-			}
-
-			// Condition to stop charging: if we start charging an attack, the charging must stop
-			if (loadingAttack)
-			{
-				increaseStamina = false;
 			}
 		}
 	}
