@@ -75,11 +75,6 @@ namespace Audio
             StartCoroutine(ReleaseManagedInstanceWhenFinished(eventInstance));
         }
         
-        public void PlayManagedOneShotWithDelay(EventReference sound, Vector3 worldPos, float delay)
-        {
-            StartCoroutine(PlayWithDelayCoroutine(sound, worldPos, delay));
-        }
-        
         private IEnumerator PlayWithDelayCoroutine(EventReference sound, Vector3 worldPos, float delay)
         {
             yield return new WaitForSeconds(delay);

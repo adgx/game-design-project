@@ -1,6 +1,4 @@
 using Animations;
-using FMOD.Studio;
-using Audio;
 using UnityEngine;
 
 	public class Player : MonoBehaviour
@@ -145,20 +143,16 @@ using UnityEngine;
 		// Audio management
 		private void UpdateSound()
 		{
-			// We get the ball state from PlayerShoot
+			if (GameStatus.gamePaused)
+			{
+				return;
+			}
+			
+			// We get the sphere state from PlayerShoot
 			PlayerShoot playerShoot = GetComponent<PlayerShoot>();
 			if (playerShoot != null && rickEvents != null)
 			{
-				if (playerShoot.IsSphereRotating)
-				{
-					// We tell RickEvents to start the sound
-					rickEvents.StartSphereRotationSound();
-				}
-				else
-				{
-					// We tell RickEvents to stop the sound
-					rickEvents.StopSphereRotationSound();
-				}
+				rickEvents.SetSphereRotationState(playerShoot.IsSphereRotating);
 			}
 		}
 	}

@@ -30,6 +30,7 @@ namespace Animations
         [SerializeField] private GameObject rotatingSphereSource; 
         private bool isHitSoundPending = false;
         private bool shouldPlayHeartbeat = false;
+        private bool sphereShouldBePlaying = false;
 
         //Player
         [SerializeField] private Player _player;
@@ -37,8 +38,7 @@ namespace Animations
         [SerializeField] private GameObject magneticShieldPrefab;
         private GameObject shield;
 
-        // This flag must be set to 'true' by the input script when the attack key is pressed,
-        // and to 'false' when released
+        // This flag must be set to 'true' by the input script when the attack key is pressed, and to 'false' when released
         public bool ShouldPlayChargeSound { get; set; } = false;
 
         public PowerUp powerUp;
@@ -375,14 +375,17 @@ namespace Animations
         
         private void OnDestroy()
         {
+            // If the FMOD manager has already been turned off, do not even attempt to clean the instances
+            if (!FMODUnity.RuntimeManager.IsInitialized) return;
+            
             // Audio management: stops and release looping sounds
             StopAllLoopingSounds();
 
-            // Audio management: stops and releases one-shots
+            // Audio management: stops one-shot sounds
             foreach (var instance in activeOneShotInstances)
             {
-                instance.stop(STOP_MODE.IMMEDIATE);
-                GamePlayAudioManager.instance.ReleaseInstance(instance);
+                if (instance.isValid())
+                    instance.stop(STOP_MODE.IMMEDIATE);
             }
             activeOneShotInstances.Clear();
         }
@@ -434,8 +437,7 @@ namespace Animations
 
             RickStates currentState = AnimationManager.Instance.rickState;
 
-            // Condition for close-loading audio:
-            // Must be in the correct state and the isLoadingSoundPlaying flag must be true
+            // Condition for close-loading audio
             bool shouldPlayCloseLoad = currentState == RickStates.LoadingCloseAttack && ShouldPlayChargeSound;
             if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp))
             {
@@ -443,7 +445,7 @@ namespace Animations
                 HandleLoopingSound(rickLoadCloseAttackWithPowerUp2, shouldPlayCloseLoad && powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 2);
             }
 
-            // Condition for remote loading audio:
+            // Condition for remote-loading audio
             bool shouldPlayDistanceLoad = currentState == RickStates.LoadingDistanceAttack && ShouldPlayChargeSound;
             if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp))
             {
@@ -451,7 +453,8 @@ namespace Animations
                 HandleLoopingSound(rickLoadDistanceAttackWithPowerUp2, shouldPlayDistanceLoad && powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 2);
             }
 
-            // Motion and idle sounds
+            // Looping sounds
+            HandleLoopingSound(rickSphereRotation, sphereShouldBePlaying);
             HandleLoopingSound(rickWalkFootsteps, currentState == RickStates.Walk);
             HandleLoopingSound(rickRunFootsteps, currentState == RickStates.Run);
             HandleLoopingSound(rickIdle, currentState == RickStates.Idle);
@@ -506,19 +509,25 @@ namespace Animations
         // Audio management
         public void StopAllLoopingSounds()
         {
-            // Use STOP_MODE.IMMEDIATE to ensure they stop instantly, without waiting for the fade-out.
-            // This is crucial in a reset
-            rickLoadCloseAttackWithPowerUp1.stop(STOP_MODE.IMMEDIATE);
-            rickLoadDistanceAttackWithPowerUp1.stop(STOP_MODE.IMMEDIATE);
-            rickLoadCloseAttackWithPowerUp2.stop(STOP_MODE.IMMEDIATE);
-            rickLoadDistanceAttackWithPowerUp2.stop(STOP_MODE.IMMEDIATE);
-            if(AnimationManager.Instance.rickState == RickStates.Walk)
+            // Use STOP_MODE.IMMEDIATE to ensure they stop instantly, without waiting for the fade-out
+            if (rickLoadCloseAttackWithPowerUp1.isValid())
+                rickLoadCloseAttackWithPowerUp1.stop(STOP_MODE.IMMEDIATE);
+            if (rickLoadDistanceAttackWithPowerUp1.isValid())
+                rickLoadDistanceAttackWithPowerUp1.stop(STOP_MODE.IMMEDIATE);
+            if (rickLoadCloseAttackWithPowerUp2.isValid())
+                rickLoadCloseAttackWithPowerUp2.stop(STOP_MODE.IMMEDIATE);
+            if (rickLoadDistanceAttackWithPowerUp2.isValid())
+                rickLoadDistanceAttackWithPowerUp2.stop(STOP_MODE.IMMEDIATE);
+            if (rickWalkFootsteps.isValid())
                 rickWalkFootsteps.stop(STOP_MODE.IMMEDIATE);
-            if(AnimationManager.Instance.rickState == RickStates.Run)    
+            if (rickRunFootsteps.isValid())
                 rickRunFootsteps.stop(STOP_MODE.IMMEDIATE);
-            rickIdle.stop(STOP_MODE.IMMEDIATE);
-            rickHeartbeat.stop(STOP_MODE.IMMEDIATE);
-            rickSphereRotation.stop(STOP_MODE.IMMEDIATE);
+            if (rickIdle.isValid())
+                rickIdle.stop(STOP_MODE.IMMEDIATE);
+            if (rickHeartbeat.isValid())
+                rickHeartbeat.stop(STOP_MODE.IMMEDIATE);
+            if (rickSphereRotation.isValid())
+                rickSphereRotation.stop(STOP_MODE.IMMEDIATE);
         }
 
         public void SpawnAreaAttack()
@@ -580,15 +589,9 @@ namespace Animations
         }
         
         // Audio management
-        public void StartSphereRotationSound()
+        public void SetSphereRotationState(bool shouldBePlaying)
         {
-            HandleLoopingSound(rickSphereRotation, true);
-        }
-
-        // Audio management
-        public void StopSphereRotationSound()
-        {
-            HandleLoopingSound(rickSphereRotation, false);
+            sphereShouldBePlaying = shouldBePlaying;
         }
         
         /// <summary>

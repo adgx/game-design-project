@@ -12,44 +12,69 @@ public class LookAtEnemy : MonoBehaviour
     private PlayerInput input;
     private PlayerShoot playerShoot;
 
-	public void Awake() {
-		input = GetComponent<PlayerInput>();
+    public void Awake() {
+        input = GetComponent<PlayerInput>();
         playerShoot = GetComponent<PlayerShoot>();
     }
 
-	// Update is called once per frame
-	void FixedUpdate()
+    void FixedUpdate()
     {
-		Collider[] enemiesInRange = Physics.OverlapSphere(transform.position, sightRange, whatIsEnemy);
+        Collider[] enemiesInRange = Physics.OverlapSphere(transform.position, sightRange, whatIsEnemy);
+        bool enemiesPresent = enemiesInRange.Length > 0;
+        HandleStaminaRecovery(enemiesPresent);
+        if (input.Vertical == 0 && input.Horizontal == 0 && enemiesPresent && !playerShoot.cannotAttack) 
+        {
+            LookAtClosestEnemy(enemiesInRange);
+        }
+    }
+    
+    /// <summary>
+    /// It contains all the logic to decide whether to start bunting recovery
+    /// </summary>
+    private void HandleStaminaRecovery(bool enemiesPresent)
+    {
+        // Basic conditions for not doing anything (charging is already in progress or the bunting is full)
+        if (playerShoot.increasingStamina || playerShoot.sphereStamina >= playerShoot.maxSphereStamina)
+        {
+            return;
+        }
 
-		if(input.Vertical == 0 && input.Horizontal == 0 && enemiesInRange.Length > 0 && !playerShoot.cannotAttack) {
-            Transform closestEnemy = null;
-            float minDistance = float.MaxValue;
-
-            foreach (Collider enemyCollider in enemiesInRange) {
-                float distance = Vector3.Distance(transform.position, enemyCollider.transform.position);
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    closestEnemy = enemyCollider.transform;
-                }
-            }
-
-            if (closestEnemy != null) {
-                Vector3 direction = closestEnemy.transform.position - transform.position;
-
-                direction.y = 0;
-
-                Quaternion targetRotation = Quaternion.LookRotation(direction);
-                Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, Time.fixedDeltaTime * maxRotationSpeed);
-                transform.rotation = rotation;
+        // At this point, we know that the bunting is not full and is not recharging. Now let's decide whether to
+        // start reloading based on the presence of enemies
+        if (enemiesPresent)
+        {
+            // Logic in combat: start charging only if the ball is completely discharged
+            if (playerShoot.sphereIsDischarged)
+            {
+                playerShoot.StartStaminaRecovery();
             }
         }
-        else {
-            if (enemiesInRange.Length == 0 && playerShoot.sphereStamina < playerShoot.maxSphereStamina && !playerShoot.increasingStamina)
-            {
-                playerShoot.increaseStamina = true;
-                _ = playerShoot.RecoverStamina();
+        else
+        {
+            // Out-of-fight logic: start charging as soon as the bunting is not full
+            playerShoot.StartStaminaRecovery();
+        }
+    }
+    
+    private void LookAtClosestEnemy(Collider[] enemies)
+    {
+        Transform closestEnemy = null;
+        float minDistance = float.MaxValue;
+
+        foreach (Collider enemyCollider in enemies) {
+            float distance = Vector3.Distance(transform.position, enemyCollider.transform.position);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestEnemy = enemyCollider.transform;
             }
+        }
+
+        if (closestEnemy != null) {
+            Vector3 direction = closestEnemy.transform.position - transform.position;
+            direction.y = 0;
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, Time.fixedDeltaTime * maxRotationSpeed);
+            transform.rotation = rotation;
         }
     }
 }
