@@ -402,13 +402,8 @@ MonoBehaviour:
   VirtualChannelSettings: []
   RealChannelSettings: []
   Plugins: []
-  MasterBanks:
-  - Master
-  Banks:
-  - Ambience
-  - Music
-  - SFX
-  - UI
+  MasterBanks: []
+  Banks: []
   BanksToLoad: []
   LiveUpdatePort: 9264
   EnableMemoryTracking: 0
@@ -420,9 +415,9 @@ MonoBehaviour:
   EnableErrorCallback: 1
   SharedLibraryUpdateStage: 0
   SharedLibraryTimeSinceStart: 0
-  CurrentVersion: 131847
+  CurrentVersion: 131848
   HideSetupWizard: 1
-  LastEventReferenceScanVersion: 131847
+  LastEventReferenceScanVersion: 131848
   Platforms:
   - {fileID: -7013222806410564194}
   - {fileID: -5111230897092065156}
@@ -829,7 +824,7 @@ MonoBehaviour:
   active: 1
   Properties:
     LiveUpdate:
-      Value: 1
+      Value: 0
       HasValue: 1
     LiveUpdatePort:
       Value: 0
