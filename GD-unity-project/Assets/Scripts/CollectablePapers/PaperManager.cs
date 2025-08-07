@@ -27,7 +27,7 @@ namespace CollectablePapers
 
         private Dictionary<int, string> _paperMessages;
         private HashSet<int> _collectedPapers = new();
-        private bool _isPaperUiOpen = false;
+        private byte _isPaperUiOpen = 0;
 
         [SerializeField] private PlayerInput playerInput;
 		[SerializeField] private RickEvents _rickEvents;
@@ -76,9 +76,13 @@ namespace CollectablePapers
 
         private void Update()
         {
-            if (_isPaperUiOpen && playerInput.InteractionPressed())
+            if (_isPaperUiOpen != 0 && playerInput.InteractionPressed())
             {
-                ClosePaperUI();
+                if (_isPaperUiOpen == 2)
+                {
+                    ClosePaperUI();
+                }
+                else _isPaperUiOpen++;
             }
         }
 
@@ -88,11 +92,11 @@ namespace CollectablePapers
         /// <param name="paperPosition">World position of the paper (used for sound).</param>
         public void ShowPaper(Vector3 paperPosition)
         {
-            if (_isPaperUiOpen) return;
+            if (_isPaperUiOpen == 1) return;
 
             if (_paperMessages.TryGetValue(_collectedPapers.Count, out string messageContent))
             {
-                _isPaperUiOpen = true;
+                _isPaperUiOpen = 1;
                 _collectedPapers.Add(_collectedPapers.Count);
 
                 AnimationManager.Instance.Idle();
@@ -119,7 +123,7 @@ namespace CollectablePapers
             if(_collectedPapers.Count <= 4) {
                 StartCoroutine(_startTutorial.ShowTip(_collectedPapers.Count - 1));
             }
-            _isPaperUiOpen = false;
+            _isPaperUiOpen = 0;
             _paperTextContainer.SetActive(false);
             _player.isFrozen = false;
         }
