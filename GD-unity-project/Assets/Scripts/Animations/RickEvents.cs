@@ -429,7 +429,7 @@ namespace Animations
             rickRunFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             rickIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             rickHeartbeat.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-            
+
             if (rotatingSphereSource != null)
             {
                 rickSphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphereSource.transform));
@@ -458,6 +458,7 @@ namespace Animations
             HandleLoopingSound(rickWalkFootsteps, currentState == RickStates.Walk);
             HandleLoopingSound(rickRunFootsteps, currentState == RickStates.Run);
             HandleLoopingSound(rickIdle, currentState == RickStates.Idle);
+            HandleLoopingSound(rickHeartbeat, shouldPlayHeartbeat);
         }
 
         // Helper method to reduce code duplication for loop sounds
