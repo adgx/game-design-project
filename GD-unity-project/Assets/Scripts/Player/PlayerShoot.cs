@@ -81,7 +81,7 @@ public class PlayerShoot : MonoBehaviour
 
 	[SerializeField] private string respawnSceneName = "RespawnScene";
 	[SerializeField] private GameTimer gameTimer;
-	private bool _debug = true;
+	private bool _debug = false;
 
 	public enum DamageTypes
 	{
@@ -547,11 +547,13 @@ public class PlayerShoot : MonoBehaviour
 
 	public void TakeDamage(float damage, DamageTypes damageType, int x, int z)
 	{
+		
 		if (isDying)
 		{
 			return; // If the player is already dying, ignore any further damage
 		}
 
+		Debug.Log("Take damage");
 		health -= damage * damageReduction;
 		if (health < 0) health = 0; // To prevent health from going below zero in the UI
 
