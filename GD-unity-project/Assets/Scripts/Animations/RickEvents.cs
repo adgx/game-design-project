@@ -20,13 +20,17 @@ namespace Animations
         private EventInstance rickRunFootsteps;
         private EventInstance rickIdle;
         private EventInstance rickHeartbeat;
+        private EventInstance rickSphereRotation;
         
         // Audio management: one-shot sounds
         private List<EventInstance> activeOneShotInstances = new List<EventInstance>();
         
         // Audio management
+        [Header("Audio Sources")]
+        [SerializeField] private GameObject rotatingSphereSource; 
         private bool isHitSoundPending = false;
         private bool shouldPlayHeartbeat = false;
+        private bool sphereShouldBePlaying = false;
 
         //Player
         [SerializeField] private Player _player;
@@ -34,8 +38,7 @@ namespace Animations
         [SerializeField] private GameObject magneticShieldPrefab;
         private GameObject shield;
 
-        // This flag must be set to 'true' by the input script when the attack key is pressed,
-        // and to 'false' when released
+        // This flag must be set to 'true' by the input script when the attack key is pressed, and to 'false' when released
         public bool ShouldPlayChargeSound { get; set; } = false;
 
         public PowerUp powerUp;
@@ -60,9 +63,6 @@ namespace Animations
             rickLoadDistanceAttackWithPowerUp2 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerDistanceAttackLoadWithPowerUp2);
             rickLoadDistanceAttackWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
 
-            rickHeartbeat = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerHeartbeat);
-            rickHeartbeat.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-            
             rickWalkFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerWalkFootsteps);
             rickWalkFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
 
@@ -71,6 +71,12 @@ namespace Animations
 
             rickIdle = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerIdle);
             rickIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            
+            rickHeartbeat = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerHeartbeat);
+            rickHeartbeat.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            
+            rickSphereRotation = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerSphereRotation);
+            rickSphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphereSource.transform));
         }
 
         // FixedUpdate is called once per frame
@@ -366,19 +372,20 @@ namespace Animations
 
             fadeManagerLoadingScreen.Hide();
         }
-
-        
         
         private void OnDestroy()
         {
+            // If the FMOD manager has already been turned off, do not even attempt to clean the instances
+            if (!FMODUnity.RuntimeManager.IsInitialized) return;
+            
             // Audio management: stops and release looping sounds
             StopAllLoopingSounds();
 
-            // Audio management: stops and releases one-shots
+            // Audio management: stops one-shot sounds
             foreach (var instance in activeOneShotInstances)
             {
-                instance.stop(STOP_MODE.IMMEDIATE);
-                GamePlayAudioManager.instance.ReleaseInstance(instance);
+                if (instance.isValid())
+                    instance.stop(STOP_MODE.IMMEDIATE);
             }
             activeOneShotInstances.Clear();
         }
@@ -421,11 +428,16 @@ namespace Animations
             rickWalkFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             rickRunFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             rickIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            rickHeartbeat.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            
+            if (rotatingSphereSource != null)
+            {
+                rickSphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphereSource.transform));
+            }
 
             RickStates currentState = AnimationManager.Instance.rickState;
 
-            // Condition for close-loading audio:
-            // Must be in the correct state and the isLoadingSoundPlaying flag must be true
+            // Condition for close-loading audio
             bool shouldPlayCloseLoad = currentState == RickStates.LoadingCloseAttack && ShouldPlayChargeSound;
             if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp))
             {
@@ -433,7 +445,7 @@ namespace Animations
                 HandleLoopingSound(rickLoadCloseAttackWithPowerUp2, shouldPlayCloseLoad && powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 2);
             }
 
-            // Condition for remote loading audio:
+            // Condition for remote-loading audio
             bool shouldPlayDistanceLoad = currentState == RickStates.LoadingDistanceAttack && ShouldPlayChargeSound;
             if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp))
             {
@@ -441,7 +453,8 @@ namespace Animations
                 HandleLoopingSound(rickLoadDistanceAttackWithPowerUp2, shouldPlayDistanceLoad && powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 2);
             }
 
-            // Motion and idle sounds
+            // Looping sounds
+            HandleLoopingSound(rickSphereRotation, sphereShouldBePlaying);
             HandleLoopingSound(rickWalkFootsteps, currentState == RickStates.Walk);
             HandleLoopingSound(rickRunFootsteps, currentState == RickStates.Run);
             HandleLoopingSound(rickIdle, currentState == RickStates.Idle);
@@ -496,15 +509,25 @@ namespace Animations
         // Audio management
         public void StopAllLoopingSounds()
         {
-            // Use STOP_MODE.IMMEDIATE to ensure they stop instantly, without waiting for the fade-out.
-            // This is crucial in a reset
-            rickLoadCloseAttackWithPowerUp1.stop(STOP_MODE.IMMEDIATE);
-            rickLoadDistanceAttackWithPowerUp1.stop(STOP_MODE.IMMEDIATE);
-            rickLoadCloseAttackWithPowerUp2.stop(STOP_MODE.IMMEDIATE);
-            rickLoadDistanceAttackWithPowerUp2.stop(STOP_MODE.IMMEDIATE);
-            rickWalkFootsteps.stop(STOP_MODE.IMMEDIATE);
-            rickRunFootsteps.stop(STOP_MODE.IMMEDIATE);
-            rickIdle.stop(STOP_MODE.IMMEDIATE);
+            // Use STOP_MODE.IMMEDIATE to ensure they stop instantly, without waiting for the fade-out
+            if (rickLoadCloseAttackWithPowerUp1.isValid())
+                rickLoadCloseAttackWithPowerUp1.stop(STOP_MODE.IMMEDIATE);
+            if (rickLoadDistanceAttackWithPowerUp1.isValid())
+                rickLoadDistanceAttackWithPowerUp1.stop(STOP_MODE.IMMEDIATE);
+            if (rickLoadCloseAttackWithPowerUp2.isValid())
+                rickLoadCloseAttackWithPowerUp2.stop(STOP_MODE.IMMEDIATE);
+            if (rickLoadDistanceAttackWithPowerUp2.isValid())
+                rickLoadDistanceAttackWithPowerUp2.stop(STOP_MODE.IMMEDIATE);
+            if (rickWalkFootsteps.isValid())
+                rickWalkFootsteps.stop(STOP_MODE.IMMEDIATE);
+            if (rickRunFootsteps.isValid())
+                rickRunFootsteps.stop(STOP_MODE.IMMEDIATE);
+            if (rickIdle.isValid())
+                rickIdle.stop(STOP_MODE.IMMEDIATE);
+            if (rickHeartbeat.isValid())
+                rickHeartbeat.stop(STOP_MODE.IMMEDIATE);
+            if (rickSphereRotation.isValid())
+                rickSphereRotation.stop(STOP_MODE.IMMEDIATE);
         }
 
         public void SpawnAreaAttack()
@@ -565,6 +588,12 @@ namespace Animations
             shouldPlayHeartbeat = shouldPlay;
         }
         
+        // Audio management
+        public void SetSphereRotationState(bool shouldBePlaying)
+        {
+            sphereShouldBePlaying = shouldBePlaying;
+        }
+        
         /// <summary>
         /// Pauses all Rick's sounds
         /// </summary>
@@ -579,6 +608,7 @@ namespace Animations
             rickRunFootsteps.setPaused(true);
             rickIdle.setPaused(true);
             rickHeartbeat.setPaused(true);
+            rickSphereRotation.setPaused(true);
 
             // Stop one-shot sounds
             foreach (var instance in activeOneShotInstances)
@@ -586,7 +616,6 @@ namespace Animations
                 instance.setPaused(true);
             }
         }
-        
         
         /// <summary>
         /// Resumes all Rick's sounds
@@ -602,7 +631,8 @@ namespace Animations
             rickRunFootsteps.setPaused(false);
             rickIdle.setPaused(false);
             rickHeartbeat.setPaused(false);
-
+            rickSphereRotation.setPaused(false);
+            
             // Resume one-shot sounds
             foreach (var instance in activeOneShotInstances)
             {

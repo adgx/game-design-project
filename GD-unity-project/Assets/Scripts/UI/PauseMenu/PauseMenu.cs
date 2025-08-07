@@ -107,12 +107,6 @@ public class PauseMenu : MonoBehaviour
 			}
 		}
 		else {
-			// Audio management: stops all Rick's looping sounds  
-			if (rickEvents != null)
-			{
-				rickEvents.StopAllLoopingSounds();
-			}
-			
 			pauseScreenOpen = true;
 			
 			// Audio management: play open menu sound
