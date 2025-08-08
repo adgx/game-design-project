@@ -58,7 +58,7 @@ public class Incognito : MonoBehaviour, IEnemy
 
     private EnemyManager enemyManager;
     
-    [SerializeField] private float _gracePeriod = 5f; // Time in seconds before he can attack the player
+    [SerializeField] private float _gracePeriod = 3f; // Time in seconds before he can attack the player
     private float _graceTimer;
     private bool _graceActive = true;
 
