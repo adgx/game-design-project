@@ -60,6 +60,11 @@ public class Drake : MonoBehaviour, IEnemy
     private EnemyManager enemyManager;
     private bool _debug = false;
     
+    // Grace period (time interval before the enemy can see and attack the player when he enters a room) 
+    [SerializeField] private float _gracePeriod = 2f;
+    private float _graceTimer;
+    private bool _graceActive = true;
+    
     // Audio management
     private DrakeEvents _events;
 
@@ -101,6 +106,10 @@ public class Drake : MonoBehaviour, IEnemy
 
     void Start()
     {
+        // Grace time management
+        _graceTimer = _gracePeriod;
+        _graceActive = true;
+        
         //debug 
         if (_debug)
         {
@@ -138,7 +147,7 @@ public class Drake : MonoBehaviour, IEnemy
         //Transition
         //idle
         _stateMachine.AddTransition(idleS, patrolS, () => !_playerInSightRange && _waitCurTime >= _timeIdle);
-        _stateMachine.AddTransition(idleS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
+        _stateMachine.AddTransition(idleS, chaseS, () => !_graceActive && _playerInSightRange && !_playerInAttackRange);
         //patrol
         _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         //chase
@@ -159,11 +168,11 @@ public class Drake : MonoBehaviour, IEnemy
 		//biteS
 		_stateMachine.AddTransition(biteS, wonderS, () => anim.EndBit);
 		//_stateMachine.AddTransition(biteS, waitS, () => _alreadyAttacked);
-		//reactFromFronts
+		//react
 		_stateMachine.AddTransition(_reactFromFrontS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(_reactFromFrontS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(_reactFromFrontS, wonderS, () => _playerInSightRange && _playerInAttackRange);
-        //denfese
+        //defense
         _stateMachine.AddTransition(_defenseS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(_defenseS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(_defenseS, wonderS, () => _playerInSightRange && _playerInAttackRange);
@@ -174,20 +183,44 @@ public class Drake : MonoBehaviour, IEnemy
 
     void Update()
     {
-        // Maybe not a great idea to have this check here, but I don't know where to put it
-        if(!_debug && !playerShoot.shieldIsActive) 
-            _attackRange = 1;
-        else
-            _attackRange = 2;
+        // Grace period management
+        if (_graceActive)
+        {
+            _graceTimer -= Time.deltaTime;
+            if (_graceTimer <= 0f)
+            {
+                _graceActive = false;
+            }
+        }
 
-        //Check for sight and attack range
-        _playerInSightRange = Physics.CheckSphere(transform.position, _sightRange, whatIsPlayer);
-        _playerInAttackRange = Physics.CheckSphere(transform.position, _attackRange, whatIsPlayer);
-        _stateMachine.Tik();
+        // If we are in the grace period, then we set the flags to false
+        if (_graceActive)
+        {
+            _playerInSightRange = false;
+            _playerInAttackRange = false;
+        }
+
+        else
+        {
+            // Maybe not a great idea to have this check here, but I don't know where to put it
+            if(!_debug && !playerShoot.shieldIsActive) 
+                _attackRange = 1;
+            else
+                _attackRange = 2;
+
+            //Check for sight and attack range
+            _playerInSightRange = Physics.CheckSphere(transform.position, _sightRange, whatIsPlayer);
+            _playerInAttackRange = Physics.CheckSphere(transform.position, _attackRange, whatIsPlayer);
+            _stateMachine.Tik();
+        }
     }
 
     public void Initialize(EnemyData enemyData, RoomManager.RoomManager roomManager)
     {
+        // Resets grace period at each spawn
+        _graceTimer = _gracePeriod;
+        _graceActive = true;
+        
         _roomManager = roomManager;
 
         if (!_agent) _agent = GetComponent<NavMeshAgent>();
