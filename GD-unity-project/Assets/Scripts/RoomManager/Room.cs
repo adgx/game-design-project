@@ -93,12 +93,9 @@ namespace RoomManager
 
         private float _upgradeTerminalSpawnChance;
         private bool _spawnUpgradeTerminal;
-
-        [Tooltip("Prefab for a collectible paper item that may appear in the room.")] [SerializeField]
-        private GameObject _paperPrefab;
-
-        private float _paperSpawnChance;
+        
         private bool _spawnPaper;
+        private List<GameObject> _paperInstances = new List<GameObject>();
 
         private RoomManager _roomManager;
 
@@ -154,13 +151,18 @@ namespace RoomManager
 
             _upgradeTerminalSpawnChance = roomData.upgradeTerminalSpawnChance;
             _spawnUpgradeTerminal = roomData.spawnUpgradeTerminal;
-
-            _paperSpawnChance = roomData.paperSpawnChance;
+            
             _spawnPaper = roomData.spawnPaper;
         }
 
         private void Awake()
         {
+            _paperInstances.Clear(); // Cleans the list for safety
+            foreach (var paperScript in GetComponentsInChildren<PlayerInteraction.PaperInteraction>(true))
+            {
+                _paperInstances.Add(paperScript.gameObject);
+            }
+            
             if (_centralSpawnPoint == null)
             {
                 GameObject centralSpawnPointGameObject = new GameObject("CentralSpawnPoint_Generated");
@@ -279,9 +281,16 @@ namespace RoomManager
         /// </summary>
         public bool PostInitializePaper()
         {
-            if (_paperSpawnChance == 0) return false;
+            if (_paperInstances.Count == 0)
+            {
+                return false;
+            }
 
-            _paperPrefab.SetActive(_spawnPaper);
+            foreach (var paper in _paperInstances)
+            {
+                paper.SetActive(_spawnPaper);
+            }
+            
             return _spawnPaper;
         }
     }

@@ -217,7 +217,9 @@ namespace RoomManager
             }
 
             Vector3Int startGridIndex = new Vector3Int(_gridSizeX / 2, 0, _gridSizeZ / 2);
-            _roomGridData[startGridIndex.x, startGridIndex.y, startGridIndex.z] = _initialRoomData;
+            var initialRoomClone = _initialRoomData.Clone();
+            initialRoomClone.spawnPaper = true;
+            _roomGridData[startGridIndex.x, startGridIndex.y, startGridIndex.z] = initialRoomClone;
             _roomCount++;
             _roomsToProcessQueue.Enqueue(startGridIndex);
 
@@ -594,6 +596,19 @@ namespace RoomManager
             foreach (RoomData.RoomData roomData in _availableRooms)
             {
                 roomData.SetDifficulty(_difficultyMultiplier);
+            }
+        }
+
+        /// <summary>
+        /// Called by PaperInteraction to mark the paper in the current room as collected.
+        /// This prevents it from respawning upon re-entry.
+        /// </summary>
+        public void MarkPaperAsCollectedInCurrentRoom()
+        {
+            Vector3Int roomIndex = CurrentRoomIndex;
+            if (DoesRoomExistAt(roomIndex))
+            {
+                _roomGridData[roomIndex.x, roomIndex.y, roomIndex.z].spawnPaper = false;
             }
         }
     }

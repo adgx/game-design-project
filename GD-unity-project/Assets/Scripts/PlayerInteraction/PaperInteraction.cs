@@ -1,5 +1,6 @@
 using CollectablePapers;
 using UnityEngine;
+using RoomManager;
 
 namespace PlayerInteraction
 {
@@ -41,6 +42,11 @@ namespace PlayerInteraction
             // As soon as the valid interaction begins, we lock the paper, preventing further calls to this method
             // from taking effect, even in the same frame or in those immediately following
             isCollected = true;
+            
+            if (RoomManager.RoomManager.Instance != null)
+            {
+                RoomManager.RoomManager.Instance.MarkPaperAsCollectedInCurrentRoom();
+            }
             
             PaperManager.Instance.ShowPaper(this.transform.position);
 			gameObject.SetActive(false);
