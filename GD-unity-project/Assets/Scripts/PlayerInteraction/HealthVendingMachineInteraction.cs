@@ -7,12 +7,24 @@ namespace PlayerInteraction
 {
     public class HealthVendingMachineInteraction : MonoBehaviour, IInteractable
     {
-        public string InteractionPrompt => _healthObtained
-            ? "Your health was recovered!"
-            : _isHealthVendingMachineHacked
-                ? "Press E again to take a snack from the machine"
-                : "Press E to interact with the snack distributor";
-
+        public string InteractionPrompt
+        {
+            get
+            {
+                if (_healthObtained)
+                {
+                    return "Your health was recovered!";
+                }
+                if (_isHealthVendingMachineHacked)
+                {
+                    return "Press E again to take a snack from the machine";
+                }
+                return RoomManager.RoomManager.Instance.IsHealthVendingMachineUsedInCurrentRoom() 
+                    ? "The snack distributor is now empty" 
+                    : "Press E to interact with the snack distributor";
+            }
+        }
+        
         public bool IsInteractable => !_isBusy;
         
         public Collider InteractionZone => _interactionZone;
@@ -60,13 +72,22 @@ namespace PlayerInteraction
 
         public bool Interact(GameObject interactor)
         {
-            if (_isBusy || _healthObtained) return false;
+            if (_isBusy || _healthObtained || RoomManager.RoomManager.Instance.IsHealthVendingMachineUsedInCurrentRoom())
+            {
+                return false; 
+            }
 
             StartCoroutine(RotatePlayerTowards(transform, _rotationDuration));
             //AnimationManager.Instance.Idle();
 
-            if(_isHealthVendingMachineHacked)
+            if (_isHealthVendingMachineHacked)
+            {
                 GetItemSequence();
+                
+                // Mark the health vending machine as used (not interactable anymore)
+                RoomManager.RoomManager.Instance.MarkHealthVendingMachineAsUsedInCurrentRoom();
+            }
+                
             else 
                 StartCoroutine(HackingSequence());
 

@@ -47,19 +47,31 @@ namespace RoomManager.RoomData
 		/// </summary>
 		[HideInInspector]
 		public bool spawnHealthVendingMachine;
+		
+		/// <summary>
+		/// Internal flag for using a health vending machine (set at runtime).
+		/// </summary>
+		[HideInInspector]
+		public bool usedHealthVendingMachine;
 
 		/// <summary>
-		/// Chance (0–1) to spawn a power up vending machine.
+		/// Chance (0–1) to spawn a power-up vending machine.
 		/// </summary>
 		[Range(0f, 1f)]
         [Tooltip("Chance to spawn a vending machine in this room.")]
         public float powerUpVendingMachineSpawnChance;
 
 		/// <summary>
-		/// Internal flag for spawning a power up vending machine (set at runtime).
+		/// Internal flag for spawning a power-up vending machine (set at runtime).
 		/// </summary>
 		[HideInInspector]
         public bool spawnPowerUpVendingMachine;
+		
+        /// <summary>
+        /// Internal flag for using a power-up vending machine (set at runtime).
+        /// </summary>
+        [HideInInspector]
+        public bool usedPowerUpVendingMachine;
 
         /// <summary>
         /// Chance (0–1) to spawn an upgrade terminal.
@@ -73,6 +85,12 @@ namespace RoomManager.RoomData
         /// </summary>
         [HideInInspector]
         public bool spawnUpgradeTerminal;
+        
+        /// <summary>
+        /// Internal flag for using an upgrade terminal (set at runtime).
+        /// </summary>
+        [HideInInspector]
+        public bool usedUpgradeTerminal;
 
         /// <summary>
         /// Chance (0–1) to spawn a collectible paper item.
