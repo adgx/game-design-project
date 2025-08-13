@@ -83,7 +83,6 @@ namespace PlayerInteraction
             if (!IsInteractable || RoomManager.RoomManager.Instance.IsSphereUpgradeTerminalUsedInCurrentRoom()) 
                 return false;
 
-			_rickEvents.SetIdleState();
             AnimationManager.Instance.Idle();
 			StartCoroutine(RotatePlayerTowards(transform, _rotationDuration));
             

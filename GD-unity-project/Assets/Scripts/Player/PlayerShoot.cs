@@ -52,8 +52,6 @@ public class PlayerShoot : MonoBehaviour
 	// This flag is true if an attack is being executed. While executing it, I can not start another attack
 	private bool attacking = false;
 	private int attackStamina = 0;
-
-	GameObject magneticShield;
 	[FormerlySerializedAs("magneticShieldOpen")] public bool shieldIsActive = false;
 
 	// Health
@@ -711,6 +709,8 @@ public class PlayerShoot : MonoBehaviour
 
 	void Update()
 	{
+		//debug Rick State
+		Debug.Log($"Rick state: {AnimationManager.Instance.rickState}");
 		if (!GameStatus.gamePaused)
 		{
 			if (!cannotAttack)

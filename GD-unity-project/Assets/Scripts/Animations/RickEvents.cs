@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Xml;
 using Audio;
 using FMOD.Studio;
 using PlayerInteraction;
@@ -98,8 +99,11 @@ namespace Animations
 
         public void SetIdleState()
         {
-            AnimationManager.Instance.rickState = RickStates.Idle;
-            playerShoot.FreePlayer();
+            if (AnimationManager.Instance.rickState != RickStates.Idle)
+            {
+                AnimationManager.Instance.rickState = RickStates.Idle;
+                playerShoot.FreePlayer();
+            }
         }
 
         public void SetHitSpitState()
