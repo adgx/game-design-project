@@ -7,14 +7,28 @@ namespace PlayerInteraction
 {
     public class PowerUpVendingMachineInteraction : MonoBehaviour, IInteractable
     {
-        public string InteractionPrompt => _powerUpObtained
-            ? "You obtained a " + _obtainedPowerUp.ToString().Replace("Boost", " Boost") + "!"
-            : (_noMorePowerUp
-                ? "You have already collected a Power Up from this machine"
-				: (_isPowerUpVendingMachineHacked
-                    ? "Press E again to take a snack from the machine"
-                    : "Press E to interact with the snack distributor"));
-
+        public string InteractionPrompt
+        {
+	        get
+	        {
+		        if (_powerUpObtained)
+		        {
+			        return "You obtained a " + _obtainedPowerUp.ToString().Replace("Boost", " Boost") + "!";
+		        }
+		        if (_noMorePowerUp)
+		        {
+			        return "You have already collected a Power Up from this machine";
+		        }
+		        if (_isPowerUpVendingMachineHacked)
+		        {
+			        return "Press E again to take a snack from the machine";
+		        }
+		        return RoomManager.RoomManager.Instance.IsPowerUpVendingMachineUsedInCurrentRoom() 
+		         ? "The snack distributor is now empty" 
+		         : "Press E to interact with the snack distributor";
+	        }
+        }
+        
         public bool IsInteractable => !_isBusy;
         
         public Collider InteractionZone => _interactionZone;
@@ -75,7 +89,8 @@ namespace PlayerInteraction
 
         public bool Interact(GameObject interactor)
         {
-            if (_isBusy || _powerUpObtained || _noMorePowerUp) return false;
+            if (_isBusy || _powerUpObtained || _noMorePowerUp || RoomManager.RoomManager.Instance.IsPowerUpVendingMachineUsedInCurrentRoom())
+	            return false;
             if (_powerUp.playerPowerUps.Count <= 0 && _isPowerUpVendingMachineHacked)
             {
                 Debug.Log("Vending machine is empty.");
@@ -84,8 +99,13 @@ namespace PlayerInteraction
 
             StartCoroutine(RotatePlayerTowards(transform, _rotationDuration));
 
-			if(_isPowerUpVendingMachineHacked)
-				GetItemSequence();
+            if (_isPowerUpVendingMachineHacked)
+            {
+	            GetItemSequence();
+	            
+	            // Mark the power-up vending machine as used (not interactable anymore)
+	            RoomManager.RoomManager.Instance.MarkPowerUpVendingMachineAsUsedInCurrentRoom();
+            }
 			else
 				StartCoroutine(HackingSequence());
 

@@ -1,20 +1,43 @@
 using System.Collections;
 using Animations;
 using Audio;
+using RoomManager;
 using UnityEngine;
 
 namespace PlayerInteraction
 {
     public class SphereUpgradeTerminalInteraction : MonoBehaviour, IInteractable
     {
-        public string InteractionPrompt => _powerUpObtained
-            ? "You obtained a " + _obtainedPowerUp.ToString() + "!"
-            : (_powerUp != null && _powerUp.spherePowerUps.Count <= 0)
-                ? "Terminal is empty"
-                : (_noMorePowerUp)
-                    ? "You have already collected a Power Up from this machine"
-					: "Press E to interact with the terminal";
-
+     //    public string InteractionPrompt => _powerUpObtained
+     //        ? "You obtained a " + _obtainedPowerUp.ToString() + "!"
+     //        : (_powerUp != null && _powerUp.spherePowerUps.Count <= 0)
+     //            ? "Terminal is empty"
+     //            : (_noMorePowerUp)
+     //                ? "You have already collected a Power Up from this machine"
+					// : "Press E to interact with the terminal";
+        
+        public string InteractionPrompt
+        {
+            get
+            {
+                if (_powerUpObtained)
+                {
+                    return "You obtained a " + _obtainedPowerUp.ToString() + "!";
+                }
+                if (_powerUp != null && _powerUp.spherePowerUps.Count <= 0)
+                {
+                    return "You have already collected all sphere powerups!";
+                }
+                if (_noMorePowerUp)
+                {
+                    return "You have already collected a Power Up from this machine";
+                }
+                return RoomManager.RoomManager.Instance.IsSphereUpgradeTerminalUsedInCurrentRoom() 
+                    ? "The terminal has already been hacked" 
+                    : "Press E to interact with the terminal";
+            }
+        }
+        
         public bool IsInteractable =>
             !_isBusy && (_powerUp != null && _powerUp.spherePowerUps.Count > 0);
         
@@ -57,11 +80,15 @@ namespace PlayerInteraction
 
         public bool Interact(GameObject interactor)
         {
-            if (!IsInteractable) return false;
+            if (!IsInteractable || RoomManager.RoomManager.Instance.IsSphereUpgradeTerminalUsedInCurrentRoom()) 
+                return false;
 
 			_rickEvents.SetIdleState();
             AnimationManager.Instance.Idle();
 			StartCoroutine(RotatePlayerTowards(transform, _rotationDuration));
+            
+            // Mark the upgrade sphere terminal as used (not interactable anymore)
+            RoomManager.RoomManager.Instance.MarkSphereUpgradeTerminalAsUsedInCurrentRoom();
 
             StartCoroutine(UpgradeSequence());
             return true;

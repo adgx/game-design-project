@@ -57,6 +57,11 @@ public class Incognito : MonoBehaviour, IEnemy
     private State _deathS;
 
     private EnemyManager enemyManager;
+    
+    // Grace period (time interval before the enemy can see and attack the player when he enters a room) 
+    [SerializeField] private float _gracePeriod = 2f;
+    private float _graceTimer;
+    private bool _graceActive = true;
 
     // Audio management
     private IncognitoEvents _events;
@@ -98,6 +103,10 @@ public class Incognito : MonoBehaviour, IEnemy
 
     void Start()
     {
+        // Grace time management
+        _graceTimer = _gracePeriod;
+        _graceActive = true;
+        
         if (_debug)
         {
             _agent.speed = 5f;
@@ -130,19 +139,19 @@ public class Incognito : MonoBehaviour, IEnemy
         State waitS = new IncognitoWaitState("Wait", this, _events);
         _reactFromFrontS = new IncognitoReactFromFrontState("Hit", this);
         _deathS = new IncognitoDeathState("Death", this);
-
+        
         //Transition
         //idle
         _stateMachine.AddTransition(idleS, patrolS, () => !_playerInSightRange && _waitCurTime >= _timeIdle);
-        _stateMachine.AddTransition(idleS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
-        _stateMachine.AddTransition(idleS, wonderS, () => _playerInSightRange && _playerInAttackRange);
+        _stateMachine.AddTransition(idleS, chaseS, () => !_graceActive && _playerInSightRange && !_playerInAttackRange);
+        _stateMachine.AddTransition(idleS, wonderS, () => !_graceActive && _playerInSightRange && _playerInAttackRange);
         //patrol
         _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(patrolS, wonderS, () => _playerInSightRange && _playerInAttackRange);
         //chase
         _stateMachine.AddTransition(chaseS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(chaseS, wonderS, () => _playerInSightRange && _playerInAttackRange);
-        //wonderS
+        //wonder
         _stateMachine.AddTransition(wonderS, waitS, () => _alreadyAttacked);
         _stateMachine.AddTransition(wonderS, shortSpitAttackS, () => !_alreadyAttacked && _playerInSightRange && _playerInAttackRange && shortDistanceSpit);
 		_stateMachine.AddTransition(wonderS, longSpitAttackS, () => !_alreadyAttacked && _playerInSightRange && _playerInAttackRange && !shortDistanceSpit);
@@ -156,34 +165,57 @@ public class Incognito : MonoBehaviour, IEnemy
 		_stateMachine.AddTransition(longSpitAttackS, waitS, () => _alreadyAttacked);
 		//wait
 		_stateMachine.AddTransition(waitS, wonderS, () => !_alreadyAttacked);
-        //ReactFrom
+        //React
         _stateMachine.AddTransition(_reactFromFrontS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(_reactFromFrontS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(_reactFromFrontS, wonderS, () => _playerInSightRange && _playerInAttackRange);
-
-
+        
         //Set Initial state
         _stateMachine.SetState(idleS);
     }
 
     void Update()
     {
-        //Check for sight and attack range
-        _playerInSightRange = Physics.CheckSphere(transform.position, _sightRange, _whatIsPlayer);
-        _playerInAttackRange = Physics.CheckSphere(transform.position, _attackRange, _whatIsPlayer);
-        if(_playerInAttackRange) {
-            if(Random.Range(0, 2) == 0) {
-                shortDistanceSpit = false;
+        // Grace period management
+        if (_graceActive)
+        {
+            _graceTimer -= Time.deltaTime;
+            if (_graceTimer <= 0f)
+            {
+                _graceActive = false;
             }
-            else {
-				shortDistanceSpit = true;
-			}
         }
 
-        _stateMachine.Tik();
+        // If we are in the grace period, then we set the flags to false
+        if (_graceActive)
+        {
+            _playerInSightRange = false;
+            _playerInAttackRange = false;
+        }
+
+        else
+        {
+            //Check for sight and attack range
+            _playerInSightRange = Physics.CheckSphere(transform.position, _sightRange, _whatIsPlayer);
+            _playerInAttackRange = Physics.CheckSphere(transform.position, _attackRange, _whatIsPlayer);
+            if(_playerInAttackRange) {
+                if(Random.Range(0, 2) == 0) {
+                    shortDistanceSpit = false;
+                }
+                else {
+                    shortDistanceSpit = true;
+                }
+            }
+
+            _stateMachine.Tik();   
+        }
     }
     public void Initialize(EnemyData enemyData, RoomManager.RoomManager roomManager)
     {
+        // Resets grace period at each spawn
+        _graceTimer = _gracePeriod;
+        _graceActive = true;
+        
         _roomManager = roomManager;
 
         if (!_agent) _agent = GetComponent<NavMeshAgent>();
@@ -233,16 +265,12 @@ public class Incognito : MonoBehaviour, IEnemy
             gameObject.layer = 0;
             gameObject.tag = "Untagged";
             enemyManager.removeEnemyFromList(_roomManager.CurrentRoomIndex, gameObject, enemyName);
-
-
             _stateMachine.SetState(_deathS);
         }
         else
         {
             _stateMachine.SetState(_reactFromFrontS);
         }
-
-
     }
 
     void SearchWalkPoint()
@@ -377,5 +405,4 @@ public class Incognito : MonoBehaviour, IEnemy
     {
         _timeIdle = Random.Range(1f, 3f);
     }
-
 }

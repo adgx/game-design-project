@@ -217,7 +217,9 @@ namespace RoomManager
             }
 
             Vector3Int startGridIndex = new Vector3Int(_gridSizeX / 2, 0, _gridSizeZ / 2);
-            _roomGridData[startGridIndex.x, startGridIndex.y, startGridIndex.z] = _initialRoomData;
+            var initialRoomClone = _initialRoomData.Clone();
+            initialRoomClone.spawnPaper = true;
+            _roomGridData[startGridIndex.x, startGridIndex.y, startGridIndex.z] = initialRoomClone;
             _roomCount++;
             _roomsToProcessQueue.Enqueue(startGridIndex);
 
@@ -274,6 +276,7 @@ namespace RoomManager
             foreach (var index in upgradeTerminalRoomIndexCandidates)
             {
                 _roomGridData[index.x, index.y, index.z].spawnUpgradeTerminal = true;
+                _roomGridData[index.x, index.y, index.z].usedUpgradeTerminal = false;
                 _roomGridData[index.x, index.y, index.z].spawnPaper = false;
                 _roomGridData[index.x, index.y, index.z].spawnHealthVendingMachine = false;
                 _roomGridData[index.x, index.y, index.z].spawnPowerUpVendingMachine = false;
@@ -289,6 +292,7 @@ namespace RoomManager
             foreach (var index in healthVendingMachineRoomIndexCandidates)
             {
                 _roomGridData[index.x, index.y, index.z].spawnHealthVendingMachine = true;
+                _roomGridData[index.x, index.y, index.z].usedHealthVendingMachine = false;
             }
 
             var powerUpVendingMachineRoomIndexCandidates = _gridIndexList
@@ -303,6 +307,7 @@ namespace RoomManager
             foreach (var index in powerUpVendingMachineRoomIndexCandidates)
             {
                 _roomGridData[index.x, index.y, index.z].spawnPowerUpVendingMachine = true;
+                _roomGridData[index.x, index.y, index.z].usedPowerUpVendingMachine = false;
                 _roomGridData[index.x, index.y, index.z].spawnPaper = false;
                 _roomGridData[index.x, index.y, index.z].spawnUpgradeTerminal = false;
             }
@@ -595,6 +600,103 @@ namespace RoomManager
             {
                 roomData.SetDifficulty(_difficultyMultiplier);
             }
+        }
+
+        /// <summary>
+        /// Called by PaperInteraction to mark the paper in the current room as collected.
+        /// This prevents it from respawning upon re-entry.
+        /// </summary>
+        public void MarkPaperAsCollectedInCurrentRoom()
+        {
+            Vector3Int roomIndex = CurrentRoomIndex;
+            if (DoesRoomExistAt(roomIndex))
+            {
+                _roomGridData[roomIndex.x, roomIndex.y, roomIndex.z].spawnPaper = false;
+            }
+        }
+        
+        /// <summary>
+        /// Called by HealthVendingMachineInteraction to mark the vending machine in the current room as used.
+        /// This prevents it from allowing new interactions with it upon re-entry.
+        /// </summary>
+        public void MarkHealthVendingMachineAsUsedInCurrentRoom()
+        {
+            Vector3Int roomIndex = CurrentRoomIndex;
+            if (DoesRoomExistAt(roomIndex))
+            {
+                _roomGridData[roomIndex.x, roomIndex.y, roomIndex.z].usedHealthVendingMachine = true;
+            }
+        }
+        
+        /// <summary>
+        /// Called by HealthVendingMachineInteraction to check if the vending machine in the current room has
+        /// already been used.
+        /// </summary>
+        public bool IsHealthVendingMachineUsedInCurrentRoom()
+        {
+            Vector3Int roomIndex = CurrentRoomIndex;
+            if (DoesRoomExistAt(roomIndex))
+            {
+                return _roomGridData[roomIndex.x, roomIndex.y, roomIndex.z].usedHealthVendingMachine;
+            }
+
+            return false;
+        }
+        
+        /// <summary>
+        /// Called by PowerUpVendingMachineInteraction to mark the vending machine in the current room as used.
+        /// This prevents it from allowing new interactions with it upon re-entry.
+        /// </summary>
+        public void MarkPowerUpVendingMachineAsUsedInCurrentRoom()
+        {
+            Vector3Int roomIndex = CurrentRoomIndex;
+            if (DoesRoomExistAt(roomIndex))
+            {
+                _roomGridData[roomIndex.x, roomIndex.y, roomIndex.z].usedPowerUpVendingMachine = true;
+            }
+        }
+        
+        /// <summary>
+        /// Called by PowerUpVendingMachineInteraction to check if the vending machine in the current room has
+        /// already been used.
+        /// </summary>
+        public bool IsPowerUpVendingMachineUsedInCurrentRoom()
+        {
+            Vector3Int roomIndex = CurrentRoomIndex;
+            if (DoesRoomExistAt(roomIndex))
+            {
+                return _roomGridData[roomIndex.x, roomIndex.y, roomIndex.z].usedPowerUpVendingMachine;
+            }
+
+            return false;
+        }
+        
+        /// <summary>
+        /// Called by SphereUpgradeTerminalInteraction to mark the terminal in the current room as used.
+        /// This prevents it from allowing new interactions with it upon re-entry.
+        /// </summary>
+        public void MarkSphereUpgradeTerminalAsUsedInCurrentRoom()
+        {
+            Vector3Int roomIndex = CurrentRoomIndex;
+            if (DoesRoomExistAt(roomIndex))
+            {
+                _roomGridData[roomIndex.x, roomIndex.y, roomIndex.z].usedPowerUpVendingMachine = true;
+            }
+        }
+        
+        /// <summary>
+        /// Called by SphereUpgradeTerminalInteraction to check if the terminal in the current room has
+        /// already been used.
+        /// </summary>
+        public bool IsSphereUpgradeTerminalUsedInCurrentRoom()
+        {
+            Vector3Int roomIndex = CurrentRoomIndex;
+            if (DoesRoomExistAt(roomIndex))
+            {
+                return _roomGridData[roomIndex.x, roomIndex.y, roomIndex.z].usedPowerUpVendingMachine;
+            }
+
+            return false;
         }
     }
 }

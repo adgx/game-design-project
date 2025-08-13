@@ -54,6 +54,11 @@ public class Maynard : MonoBehaviour, IEnemy
     //states
     private State _reactFromFrontS;
     private State _deathS;
+    
+    // Grace period (time interval before the enemy can see and attack the player when he enters a room) 
+    [SerializeField] private float _gracePeriod = 2f;
+    private float _graceTimer;
+    private bool _graceActive = true;
 
     private RoomManager.RoomManager _roomManager;
 
@@ -63,6 +68,7 @@ public class Maynard : MonoBehaviour, IEnemy
 
     private bool _debug = false;
 
+    // Audio management
     private MaynardEvents _events;
 
     void Awake()
@@ -126,6 +132,10 @@ public class Maynard : MonoBehaviour, IEnemy
 
     void Start()
     {
+        // Grace time management
+        _graceTimer = _gracePeriod;
+        _graceActive = true;
+        
         //FMS base
         _stateMachine = new FiniteStateMachine<Maynard>(this);
 
@@ -140,9 +150,11 @@ public class Maynard : MonoBehaviour, IEnemy
         _reactFromFrontS = new MaynardReactFromFrontState("Hit", this);
         _deathS = new MaynardDeathState("Death", this);
         //take attention on the order with the transitions are added
-        //idle Transitions
+        
+        // Transition
+        //idle
         _stateMachine.AddTransition(idleS, chaseS, () => _playerInSightRange && (_playerInRemoteAttackRange || _playerInCloseAttackRange));
-        _stateMachine.AddTransition(idleS, patrolS, () => !_playerInSightRange && _waitCurTime >= _timeIdle);
+        _stateMachine.AddTransition(idleS, patrolS, () => !_graceActive && !_playerInSightRange && _waitCurTime >= _timeIdle);
         //Patrol
         _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && (!_playerInCloseAttackRange || !_playerInRemoteAttackRange));
         //chase
@@ -172,22 +184,47 @@ public class Maynard : MonoBehaviour, IEnemy
 
     void Update()
     {
-		// Maybe not a great idea to have this check here, but I don't know where to put it
-		if(!playerShoot.shieldIsActive)
-			_closeAttackRange = 1;
-		else
-			_closeAttackRange = 2;
+        // Grace period management
+        if (_graceActive)
+        {
+            _graceTimer -= Time.deltaTime;
+            if (_graceTimer <= 0f)
+            {
+                _graceActive = false;
+            }
+        }
 
-		//Check for sight and attack range
-		_playerInSightRange = Physics.CheckSphere(transform.position, _sightRange, _whatIsPlayer);
-        _playerInRemoteAttackRange = Physics.CheckSphere(transform.position, _remoteAttackRange, _whatIsPlayer);
-        _playerInCloseAttackRange = Physics.CheckSphere(transform.position, _closeAttackRange, _whatIsPlayer);
+        // If we are in the grace period, then we set the flags to false
+        if (_graceActive)
+        {
+            _playerInSightRange = false;
+            _playerInRemoteAttackRange = false;
+            _playerInCloseAttackRange = false;
+        }
 
-        _stateMachine.Tik();
+        else
+        {
+            // Maybe not a great idea to have this check here, but I don't know where to put it
+            if(!playerShoot.shieldIsActive)
+                _closeAttackRange = 1;
+            else
+                _closeAttackRange = 2;
+
+            //Check for sight and attack range
+            _playerInSightRange = Physics.CheckSphere(transform.position, _sightRange, _whatIsPlayer);
+            _playerInRemoteAttackRange = Physics.CheckSphere(transform.position, _remoteAttackRange, _whatIsPlayer);
+            _playerInCloseAttackRange = Physics.CheckSphere(transform.position, _closeAttackRange, _whatIsPlayer);
+
+            _stateMachine.Tik();   
+        }
     }
 
     public void Initialize(EnemyData enemyData, RoomManager.RoomManager roomManager)
     {
+        // Resets grace period at each spawn
+        _graceTimer = _gracePeriod;
+        _graceActive = true;
+        
         _roomManager = roomManager;
 
         if (!_agent) _agent = GetComponent<NavMeshAgent>();
