@@ -104,6 +104,12 @@ namespace RoomManager.RoomData
         /// </summary>
         [HideInInspector]
         public bool spawnPaper;
+        
+        /// <summary>
+        /// List of flags used only for initial room papers.
+        /// </summary>
+        [HideInInspector]
+        public List<bool> initialRoomPaperStates = new List<bool>();
 
         /// <summary>
         /// Type/category of the room (e.g. Combat, Treasure, etc).
@@ -137,6 +143,7 @@ namespace RoomManager.RoomData
             clone.spawnUpgradeTerminal = spawnUpgradeTerminal;
             clone.paperSpawnChance = paperSpawnChance;
             clone.spawnPaper = spawnPaper;
+            clone.initialRoomPaperStates = new List<bool>(this.initialRoomPaperStates);
             clone.roomType = roomType;
 
             return clone;

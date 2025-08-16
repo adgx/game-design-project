@@ -1,6 +1,5 @@
 using CollectablePapers;
 using UnityEngine;
-using RoomManager;
 
 namespace PlayerInteraction
 {
@@ -12,6 +11,10 @@ namespace PlayerInteraction
     {
         // Flag used to track whether the paper has already been collected
         private bool isCollected = false;
+        
+        [Tooltip("To be set to 0 for the first paper and 1 for the second, only in the initial room. Leave -1 for everyone else.")]
+        [SerializeField]
+        public int paperIndex = -1;
         
         /// <summary>
         /// The prompt displayed to the player when they can collect the paper.
@@ -45,7 +48,7 @@ namespace PlayerInteraction
             
             if (RoomManager.RoomManager.Instance != null)
             {
-                RoomManager.RoomManager.Instance.MarkPaperAsCollectedInCurrentRoom();
+                RoomManager.RoomManager.Instance.MarkPaperAsCollectedInCurrentRoom(paperIndex);
             }
             
             PaperManager.Instance.ShowPaper(this.transform.position);

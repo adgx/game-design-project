@@ -219,6 +219,11 @@ namespace RoomManager
             Vector3Int startGridIndex = new Vector3Int(_gridSizeX / 2, 0, _gridSizeZ / 2);
             var initialRoomClone = _initialRoomData.Clone();
             initialRoomClone.spawnPaper = true;
+            
+            initialRoomClone.initialRoomPaperStates.Clear();
+            initialRoomClone.initialRoomPaperStates.Add(true); // Status for paper with index 0
+            initialRoomClone.initialRoomPaperStates.Add(true); // Status for the paper with index 1
+            
             _roomGridData[startGridIndex.x, startGridIndex.y, startGridIndex.z] = initialRoomClone;
             _roomCount++;
             _roomsToProcessQueue.Enqueue(startGridIndex);
@@ -606,12 +611,26 @@ namespace RoomManager
         /// Called by PaperInteraction to mark the paper in the current room as collected.
         /// This prevents it from respawning upon re-entry.
         /// </summary>
-        public void MarkPaperAsCollectedInCurrentRoom()
+        public void MarkPaperAsCollectedInCurrentRoom(int paperIndex = -1)
         {
             Vector3Int roomIndex = CurrentRoomIndex;
             if (DoesRoomExistAt(roomIndex))
             {
-                _roomGridData[roomIndex.x, roomIndex.y, roomIndex.z].spawnPaper = false;
+                var roomData = _roomGridData[roomIndex.x, roomIndex.y, roomIndex.z];
+
+                // Special case: if we are in IncubatorRoom and we have a valid index
+                if (roomData.roomType == RoomType.IncubatorRoom && paperIndex != -1)
+                {
+                    // Let's make sure the index is within the limits of the list
+                    if (paperIndex >= 0 && paperIndex < roomData.initialRoomPaperStates.Count)
+                    {
+                        roomData.initialRoomPaperStates[paperIndex] = false;
+                    }
+                }
+                else // Normal case for all other rooms
+                {
+                    roomData.spawnPaper = false;
+                }
             }
         }
         

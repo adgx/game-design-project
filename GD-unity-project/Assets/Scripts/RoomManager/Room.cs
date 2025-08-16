@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using Random = UnityEngine.Random;
 
 namespace RoomManager
 {
@@ -95,6 +94,8 @@ namespace RoomManager
         private bool _spawnUpgradeTerminal;
         
         private bool _spawnPaper;
+        private List<bool> _initialRoomPaperStates;
+        private List<PlayerInteraction.PaperInteraction> _paperScripts = new List<PlayerInteraction.PaperInteraction>();
         private List<GameObject> _paperInstances = new List<GameObject>();
 
         private RoomManager _roomManager;
@@ -153,6 +154,7 @@ namespace RoomManager
             _spawnUpgradeTerminal = roomData.spawnUpgradeTerminal;
             
             _spawnPaper = roomData.spawnPaper;
+            _initialRoomPaperStates = roomData.initialRoomPaperStates;
         }
 
         private void Awake()
@@ -160,7 +162,7 @@ namespace RoomManager
             _paperInstances.Clear(); // Cleans the list for safety
             foreach (var paperScript in GetComponentsInChildren<PlayerInteraction.PaperInteraction>(true))
             {
-                _paperInstances.Add(paperScript.gameObject);
+                _paperScripts.Add(paperScript);
             }
             
             if (_centralSpawnPoint == null)
@@ -281,16 +283,33 @@ namespace RoomManager
         /// </summary>
         public bool PostInitializePaper()
         {
-            if (_paperInstances.Count == 0)
+            if (_paperScripts.Count == 0)
             {
                 return false;
             }
 
-            foreach (var paper in _paperInstances)
+            // Special case: if this is the IncubatorRoom, we use the list logic
+            if (RoomType == RoomType.IncubatorRoom && _initialRoomPaperStates != null && _initialRoomPaperStates.Count > 0)
             {
-                paper.SetActive(_spawnPaper);
+                foreach (var paperScript in _paperScripts)
+                {
+                    int index = paperScript.paperIndex;
+                
+                    // We activate the paper only if its index is valid and its flag is 'true
+                    if (index >= 0 && index < _initialRoomPaperStates.Count)
+                    {
+                        paperScript.gameObject.SetActive(_initialRoomPaperStates[index]);
+                    }
+                }
             }
-            
+            else // Normal case for all other rooms
+            {
+                foreach (var paperScript in _paperScripts)
+                {
+                    paperScript.gameObject.SetActive(_spawnPaper);
+                }
+            }
+        
             return _spawnPaper;
         }
     }
