@@ -59,7 +59,7 @@ namespace Audio
         
         private void OnDestroy()
         {
-            CleanUp();
+            StopAndReleaseAllEvents();
         }
         
         public void PlayManagedOneShot(EventReference sound, Vector3 worldPos)
@@ -168,20 +168,24 @@ namespace Audio
 
             return emitter;
         }
-    
-        private void CleanUp()
+
+        public void StopAndReleaseAllEvents()
         {
             // Stop and release any created instances
             foreach (EventInstance eventInstance in eventInstances)
             {
-                eventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-                eventInstance.release();
+                // Safety check
+                if (eventInstance.isValid())
+                { 
+                    eventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE); 
+                    eventInstance.release();   
+                }
             }
         
-            // Stop all of the event emitters, because if we don't they may hang around in other scenes
+            // Stop all the event emitters, because if we don't they may hang around in other scenes
             foreach (StudioEventEmitter emitter in eventEmitters)
             {
-                if(emitter != null && emitter.IsActive)
+                if(emitter != null && emitter.IsPlaying())
                     emitter.Stop();
             }
         
@@ -189,6 +193,8 @@ namespace Audio
             eventInstances.Clear();
             eventEmitters.Clear();
             managedOneShotInstances.Clear();
+
+            Debug.Log("GamePlayAudioManager: All events were stopped and released manually.");
         }
 
         // Allows any script to request the release of a specific auio instance

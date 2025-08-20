@@ -191,6 +191,15 @@ public class PauseMenu : MonoBehaviour
 		buttonEffects.OnMouseExit(button);
 
 		if(actionToConfirm == ActionToConfirm.StartNewGame) {
+			// Before doing anything else, clean all FMOD events
+			if (GamePlayAudioManager.instance != null)
+			{
+				GamePlayAudioManager.instance.StopAndReleaseAllEvents();
+			}
+			else
+			{
+				Debug.LogWarning("GamePlayAudioManager not found. Failed to clean FMOD events.");
+			}
 			Destroy(GameObject.Find("RoomManager"));
 			StartCoroutine(LoadGameplaySceneAsync());
 		}
