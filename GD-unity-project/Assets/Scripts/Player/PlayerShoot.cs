@@ -176,8 +176,9 @@ public class PlayerShoot : MonoBehaviour
 
 	public void StartStaminaRecovery()
 	{
-		// Check if a charge is already in progress to avoid starting multiple coroutines
-		if (!increasingStamina)
+		// Check if a charge is already in progress to avoid starting multiple coroutines, moreover check if
+		// the shield is active or not 
+		if (!increasingStamina && !shieldIsActive)
 		{
 			StartCoroutine(RecoverStaminaCoroutine());
 		}
