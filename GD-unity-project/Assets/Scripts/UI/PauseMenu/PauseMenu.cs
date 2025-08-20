@@ -196,9 +196,10 @@ public class PauseMenu : MonoBehaviour
 			{
 				GamePlayAudioManager.instance.StopAndReleaseAllEvents();
 			}
-			else
+			// Stop all audio coroutines in RickEvents
+			if (rickEvents != null)
 			{
-				Debug.LogWarning("GamePlayAudioManager not found. Failed to clean FMOD events.");
+				rickEvents.StopAllAudioCoroutines();
 			}
 			Destroy(GameObject.Find("RoomManager"));
 			StartCoroutine(LoadGameplaySceneAsync());

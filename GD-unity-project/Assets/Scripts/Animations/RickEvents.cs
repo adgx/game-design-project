@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Xml;
 using Audio;
 using FMOD.Studio;
 using PlayerInteraction;
@@ -643,6 +642,18 @@ namespace Animations
             {
                 instance.setPaused(false);
             }
+        }
+        
+        /// <summary>
+        /// Forcibly stops all coroutines running on this script.
+        /// Use before a scene change to avoid errors with invalid FMOD handles.
+        /// </summary>
+        public void StopAllAudioCoroutines()
+        {
+            // StopAllCoroutines() it is a MonoBehaviour function that interrupts
+            // all coroutines initiated by this script instance, such as ‘ReleaseInstanceWhenFinished’
+            // and ‘ShieldDestructionAfterDelay’.
+            StopAllCoroutines();
         }
     }
 }
