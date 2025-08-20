@@ -107,6 +107,9 @@ public class PlayerShoot : MonoBehaviour
 			healthBar.SetMaxHealth(health);
 		player = GetComponent<Player>();
 		ChangeSphereColor(maxSphereStamina);
+		chargedBulletDamage = getCollisions.initialPlayerBulletDamage;
+		chargedCloseAttackDamage = defaultCloseAttackDamage;
+		damageRadius = defaultDamageRadius;
 	}
 
 	void ChangeSphereColor(int stamina)
@@ -304,15 +307,7 @@ public class PlayerShoot : MonoBehaviour
 			{
 				attackStamina++;
 				ChangeSphereColor(attackStamina);
-
 				distanceAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
-
-				chargedBulletDamage = getCollisions.initialPlayerBulletDamage;
-
-				if (attackStamina > 1)
-				{
-					chargedBulletDamage += (attackStamina - 1) * 10;
-				}
 				await Task.Delay(500);
 			}
 
@@ -349,7 +344,14 @@ public class PlayerShoot : MonoBehaviour
 		GameObject bullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity);
 		bullet.tag = "PlayerProjectile";
 		ParticleAttackController PAC = bullet.GetComponent<ParticleAttackController>();
-		PAC.playerBulletDamage = chargedBulletDamage;
+		
+		// Compute bullet's damage
+		float finalBulletDamage = getCollisions.initialPlayerBulletDamage;
+		if (attackStamina > 1)
+		{
+			finalBulletDamage += (attackStamina - 1) * 10;
+		}
+		PAC.playerBulletDamage = finalBulletDamage;
 		PAC.targetPos = bulletSpawnTransform;
 		bullet.SetActive(true);
 		bulletPrefab.gameObject.SetActive(true);
@@ -364,12 +366,13 @@ public class PlayerShoot : MonoBehaviour
 		}
 
 		distanceAttackLoadingBar.fillAmount = 0;
-
-		await Task.Delay(500);
-
+		
 		// Set values back to default
 		chargedBulletDamage = getCollisions.initialPlayerBulletDamage;
 		ResetAttack();
+		
+		await Task.Delay(500);
+
 	}
 
 	async void LoadCloseAttack()
@@ -412,25 +415,11 @@ public class PlayerShoot : MonoBehaviour
 				rickEvents.ShouldPlayChargeSound = true;
 			}
 
-			chargedCloseAttackDamage = defaultCloseAttackDamage;
-			damageRadius = defaultDamageRadius;
-
 			while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp) && loadingAttack)
 			{
 				attackStamina++;
 				ChangeSphereColor(attackStamina);
-
 				closeAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
-
-				chargedCloseAttackDamage = defaultCloseAttackDamage;
-				damageRadius = defaultDamageRadius;
-
-				if (attackStamina > 1)
-				{
-					chargedCloseAttackDamage += (attackStamina - 1) * 20;
-					damageRadius += (attackStamina - 1) * 1f;
-				}
-
 				await Task.Delay(500);
 			}
 
@@ -464,6 +453,16 @@ public class PlayerShoot : MonoBehaviour
 
 	public void FireCloseAttack()
 	{
+		// Compute close attack's damage
+		chargedCloseAttackDamage = defaultCloseAttackDamage;
+		damageRadius = defaultDamageRadius;
+		
+		if (attackStamina > 1) // If the attack has been loaded
+		{
+			chargedCloseAttackDamage += (attackStamina - 1) * 20;
+			damageRadius += (attackStamina - 1) * 1f;
+		}
+		
 		if (attackStamina == 0)
 		{
 			DecreaseStamina(1);
@@ -478,10 +477,6 @@ public class PlayerShoot : MonoBehaviour
 
 	public async void ResetCloseAttackValues()
 	{
-		// Resets the values only after the attack is over
-		chargedCloseAttackDamage = defaultCloseAttackDamage;
-		damageRadius = defaultDamageRadius;
-
 		// Returns the sphere to its default position
 		rotateSphere.positionSphere(new Vector3(rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
 
@@ -497,6 +492,7 @@ public class PlayerShoot : MonoBehaviour
 		loadingAttack = false;
 		attacking = false;
 		rotateSphere.isRotating = true;
+		attackStamina = 0;
 	}
 
 	private void SpawnMagneticShield()
