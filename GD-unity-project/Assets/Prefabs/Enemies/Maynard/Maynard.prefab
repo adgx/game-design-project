@@ -2039,7 +2039,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce0a3e84796c06548ac0feb04e46de73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceInit: 1
   _agent: {fileID: 7557110717714421330}
   _whatIsGround:
     serializedVersion: 2
@@ -2048,6 +2047,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   attackSpawn: {fileID: 7405407441204640883}
+  _alreadyAttacked: 0
+  _gracePeriod: 1.5
 --- !u!1 &7405407441204640883
 GameObject:
   m_ObjectHideFlags: 0

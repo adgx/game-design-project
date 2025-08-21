@@ -61,7 +61,7 @@ public class Drake : MonoBehaviour, IEnemy
     private bool _debug = false;
     
     // Grace period (time interval before the enemy can see and attack the player when he enters a room) 
-    [SerializeField] private float _gracePeriod = 2f;
+    [SerializeField] private float _gracePeriod = 1.5f;
     private float _graceTimer;
     private bool _graceActive = true;
     
