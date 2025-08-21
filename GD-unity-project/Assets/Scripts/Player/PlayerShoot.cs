@@ -13,6 +13,9 @@ using Utils;
 public class PlayerShoot : MonoBehaviour
 {
 	public static PlayerShoot Instance { get; private set; }
+	public float LastStaminaUseTime { get; private set; }
+	[FormerlySerializedAs("IsInCombat")] [HideInInspector] public bool isInCombat = false;
+	private float recoveryDelay;
 
 	// Audio management 
 	public bool IsSphereRotating => rotateSphere.isRotating;
@@ -25,7 +28,6 @@ public class PlayerShoot : MonoBehaviour
 	// The point in which the bullet spawns
 	[SerializeField] private Transform bulletSpawnTransform;
 	[SerializeField] private GameObject bulletPrefab;
-	private float chargedBulletDamage;
 
 	// Attack2
 	[SerializeField] private GameObject attackAreaPrefab;
@@ -107,9 +109,53 @@ public class PlayerShoot : MonoBehaviour
 			healthBar.SetMaxHealth(health);
 		player = GetComponent<Player>();
 		ChangeSphereColor(maxSphereStamina);
-		chargedBulletDamage = getCollisions.initialPlayerBulletDamage;
 		chargedCloseAttackDamage = defaultCloseAttackDamage;
 		damageRadius = defaultDamageRadius;
+		
+		// We initialize the timer to the current time to prevent charging from starting immediately
+		// at the beginning of the game if the bunting is not full for some reason
+		LastStaminaUseTime = Time.time;
+	}
+	
+	private void Update()
+	{
+		HandleStaminaRecovery();
+		ProcessPlayerInput();
+	}
+	
+	/// <summary>
+	/// It contains all the logic to decide whether to start stamina recovery
+	/// </summary>
+	private void HandleStaminaRecovery()
+	{
+		// Conditions for doing nothing: charging already in progress or full stamina
+		if (increasingStamina || sphereStamina >= maxSphereStamina)
+		{
+			return;
+		}
+
+		// At this point, the bunting is not full and is not recharging
+		if (isInCombat)
+		{
+			// Logic in combat: starts only if the sphere is completely discharged
+			if (sphereIsDischarged)
+			{
+				StartStaminaRecovery();
+			}
+		}
+		else
+		{
+			// Logic out of combat: starts only after the delay
+			if (Time.time - LastStaminaUseTime >= recoveryDelay)
+			{
+				StartStaminaRecovery();
+			}
+		}
+	}
+	
+	public void SetRecoveryDelay(float delay)
+	{
+		recoveryDelay = delay;
 	}
 
 	void ChangeSphereColor(int stamina)
@@ -165,10 +211,12 @@ public class PlayerShoot : MonoBehaviour
 
 	public void DecreaseStamina(int amount)
 	{
+		// We update the timestamp every time the stamina is consumed
+		LastStaminaUseTime = Time.time;
 		sphereStamina -= amount;
 		increasingStamina = false;
 
-		// Let's make sure the bunting doesn't go below zero
+		// Let's make sure the stamina doesn't go below zero
 		if (sphereStamina <= 0)
 		{
 			sphereStamina = 0;
@@ -183,34 +231,31 @@ public class PlayerShoot : MonoBehaviour
 		// the shield is active or not 
 		if (!increasingStamina && !shieldIsActive)
 		{
+			increasingStamina = true; 
 			StartCoroutine(RecoverStaminaCoroutine());
 		}
 	}
 
 	private IEnumerator RecoverStaminaCoroutine()
 	{
-		increasingStamina = true;
 		sphereIsDischarged = false;
 
 		while (sphereStamina < maxSphereStamina && !loadingAttack)
 		{
 			yield return new WaitForSeconds(0.5f); // 500ms
 
-			if (!loadingAttack)
-			{
-				sphereStamina += 1;
-				ChangeSphereColor(sphereStamina);
-
-				// Audio management
-				if (sphereStamina == maxSphereStamina)
-				{
-					GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerSphereFullRecharge, rotatingSphere.transform.position);
-				}
-			}
-			else
+			if (loadingAttack)
 			{
 				// If the player starts charging an attack while charging, we stop the coroutine
 				break;
+			}
+			sphereStamina += 1;
+			ChangeSphereColor(sphereStamina);
+
+			// Audio management
+			if (sphereStamina == maxSphereStamina)
+			{
+				GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerSphereFullRecharge, rotatingSphere.transform.position);
 			}
 		}
 		increasingStamina = false;
@@ -367,8 +412,6 @@ public class PlayerShoot : MonoBehaviour
 
 		distanceAttackLoadingBar.fillAmount = 0;
 		
-		// Set values back to default
-		chargedBulletDamage = getCollisions.initialPlayerBulletDamage;
 		ResetAttack();
 		
 		await Task.Delay(500);
@@ -704,7 +747,7 @@ public class PlayerShoot : MonoBehaviour
 		UpdateHealthState();
 	}
 
-	void Update()
+	void ProcessPlayerInput()
 	{
 		//debug Rick State
 		Debug.Log($"Rick state: {AnimationManager.Instance.rickState}");
@@ -800,5 +843,4 @@ public class PlayerShoot : MonoBehaviour
 			healthBar.SetFlashing(isHealthLow);
 		}
 	}
-
 }
