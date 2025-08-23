@@ -182,9 +182,11 @@ namespace PlayerInteraction
         }
 
 		public void TerminatePlayerPowerUp() {
-			if(_obtainedPowerUp == PowerUp.PlayerPowerUpTypes.HealthBoost) {
-				_playerShoot.maxHealth += 20;
-				_playerShoot.health += 20;
+            if (_obtainedPowerUp == PowerUp.PlayerPowerUpTypes.HealthBoost)
+            {
+                _playerShoot.maxHealth += 20;
+                _playerShoot.health = _playerShoot.maxHealth;
+                
 			}
 
 			if(_obtainedPowerUp == PowerUp.PlayerPowerUpTypes.DamageReduction) {

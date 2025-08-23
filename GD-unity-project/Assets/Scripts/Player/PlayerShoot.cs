@@ -827,7 +827,7 @@ public class PlayerShoot : MonoBehaviour
 		}
 	}
 
-	private void UpdateHealthState()
+	public void UpdateHealthState()
 	{
 		if (rickEvents == null) return;
 

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class HealthBar : MonoBehaviour
 {
     public Slider healthBar;
-    [SerializeField] private Image fillImage;
+    [SerializeField] private Image _fillImage;
     [SerializeField] private RectTransform _barTransform;
     [SerializeField] private RectTransform _fillTransform;
     private Coroutine flashingCoroutine;
@@ -17,6 +17,7 @@ public class HealthBar : MonoBehaviour
     {
         healthBar.maxValue = health;
         healthBar.value = health;
+        PlayerShoot.Instance.UpdateHealthState();
     }
 
     public void SetHealth(float health) {
@@ -43,9 +44,9 @@ public class HealthBar : MonoBehaviour
                 flashingCoroutine = null;
             }
             // ...and make sure the bar is visible
-            if (fillImage != null)
+            if (_fillImage != null)
             {
-                fillImage.enabled = true; 
+                _fillImage.enabled = true; 
             }
         }
     }
@@ -62,14 +63,14 @@ public class HealthBar : MonoBehaviour
         while (true)
         {
             //Check if fillImage has been assigned to avoid errors
-            if (fillImage != null)
+            if (_fillImage != null)
             {
                 //Turn off the image
-                fillImage.enabled = false;
+                _fillImage.enabled = false;
                 yield return new WaitForSeconds(0.25f); // Pause
 
                 // Accendi l'immagine
-                fillImage.enabled = true;
+                _fillImage.enabled = true;
                 yield return new WaitForSeconds(0.5f); // Longer pause
             }
             else
