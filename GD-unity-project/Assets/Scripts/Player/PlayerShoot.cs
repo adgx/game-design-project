@@ -750,7 +750,7 @@ public class PlayerShoot : MonoBehaviour
 	void ProcessPlayerInput()
 	{
 		//debug Rick State
-		Debug.Log($"Rick state: {AnimationManager.Instance.rickState}");
+		//Debug.Log($"Rick state: {AnimationManager.Instance.rickState}");
 		if (!GameStatus.gamePaused)
 		{
 			if (!cannotAttack)

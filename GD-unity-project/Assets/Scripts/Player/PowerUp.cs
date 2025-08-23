@@ -1,9 +1,12 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class PowerUp : MonoBehaviour
 {
     public static PowerUp Instance { get; private set; }
+    [SerializeField] private HealthBar _healthBar;
+    private PlayerShoot _playerShoot;
 
     // Sphere PowerUps
     public enum SpherePowerUpTypes
@@ -56,6 +59,12 @@ public class PowerUp : MonoBehaviour
 
     private void Start()
     {
+        if (_healthBar == null)
+        {
+            Debug.Log("Error hb not asigned");
+        }
+        _playerShoot = PlayerShoot.Instance;
+
         spherePowerUps.Add(SpherePowerUpTypes.DistanceAttackPowerUp);
         spherePowerUps.Add(SpherePowerUpTypes.DistanceAttackPowerUp);
         spherePowerUps.Add(SpherePowerUpTypes.CloseAttackPowerUp);
@@ -80,13 +89,20 @@ public class PowerUp : MonoBehaviour
     {
         Debug.Log(powerUp.ToString());
 
+
+        if ((PlayerPowerUpTypes)powerUp == PlayerPowerUpTypes.HealthBoost)
+        {
+            _healthBar.increaseHealthBar();
+            _healthBar.SetMaxHealth(_playerShoot.maxHealth);
+        }
+
         if (powerUpsObtained.ContainsKey(powerUp))
         {
             powerUpsObtained[powerUp]++;
         }
         else
         {
-            powerUpsObtained[powerUp] = 1;
+           powerUpsObtained[powerUp] = 1;
         }
     }
 }

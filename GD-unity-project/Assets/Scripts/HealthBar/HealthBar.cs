@@ -5,10 +5,16 @@ using UnityEngine.UI;
 public class HealthBar : MonoBehaviour
 {
     public Slider healthBar;
-    [SerializeField] private Image fillImage; 
+    [SerializeField] private Image fillImage;
+    [SerializeField] private RectTransform _barTransform;
+    [SerializeField] private RectTransform _fillTransform;
     private Coroutine flashingCoroutine;
+    private float _deltaSizeBar = 40.0f;
 
-    public void SetMaxHealth(float health) {
+
+
+    public void SetMaxHealth(float health)
+    {
         healthBar.maxValue = health;
         healthBar.value = health;
     }
@@ -42,6 +48,12 @@ public class HealthBar : MonoBehaviour
                 fillImage.enabled = true; 
             }
         }
+    }
+
+    public void increaseHealthBar()
+    {
+        _barTransform.sizeDelta += new Vector2(_deltaSizeBar, 0f);
+        _fillTransform.sizeDelta += new Vector2(_deltaSizeBar, 0f); 
     }
     
     private IEnumerator FlashRoutine()
