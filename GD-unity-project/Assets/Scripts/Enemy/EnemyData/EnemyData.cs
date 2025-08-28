@@ -1,5 +1,3 @@
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Enemy.EnemyData
@@ -15,8 +13,7 @@ namespace Enemy.EnemyData
 
         [Tooltip("How 'difficult' or 'costly' this enemy is.")]
         public int spawnCost = 1;
-
-
+        
 		public float maxHealth = 100f;
 		public float maxHealthLoop1 = 100f;
 
