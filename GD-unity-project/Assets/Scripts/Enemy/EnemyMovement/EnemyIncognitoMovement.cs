@@ -131,9 +131,38 @@ namespace Enemy.EnemyData.EnemyMovement
                 //Attack code here
                 GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
                 bullet.tag = "SpitEnemyAttack";
-                bullet.GetComponent<GetCollisions>().enemyBulletDamage = distanceAttackDamage;
-    
+                
+                ParticleAttackController projectileHandler = bullet.GetComponent<ParticleAttackController>();
+                if (projectileHandler == null)
+                {
+                    projectileHandler = bullet.AddComponent<ParticleAttackController>();
+                }
+                projectileHandler.enemyBulletDamage = distanceAttackDamage;
+                projectileHandler.targetPos = player; // Assigns the target for LookAt and parabola logic in the ParticleAttackController
+
+                // Incognito uses a ParticleSystem for projectiles, so the Rigidbody and Collider may not be strictly necessary
+                // for its movement (managed by particles), but they’re required for collisions with player bullets.
+                // So, it is good practice to add them if they are not already in the prefab.
                 Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
+                if (rbBullet == null)
+                {
+                    rbBullet = bullet.AddComponent<Rigidbody>();
+                    rbBullet.useGravity = false; // The particles may not want gravity
+                    rbBullet.isKinematic = true; // If the movement is managed by the particles, not by the Rigidbody
+                }
+                
+                Collider bulletCollider = bullet.GetComponent<Collider>();
+                if (bulletCollider == null)
+                {
+                    SphereCollider sphereCol = bullet.AddComponent<SphereCollider>();
+                    sphereCol.isTrigger = true;
+                    sphereCol.radius = 0.5f; // Adjust the radius
+                }
+                else
+                {
+                    bulletCollider.isTrigger = true; // Make sure it's a trigger
+                }
+                
                 rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
                 rbBullet.AddForce(transform.up * 2f, ForceMode.Impulse);
                 //End of attack code

@@ -157,7 +157,7 @@ public class ParticleAttackController : MonoBehaviour
         // Logic for Player's bullets
         if (gameObject.CompareTag("PlayerProjectile"))
         {
-            if (other.gameObject.tag.Contains("Enemy") && !other.gameObject.tag.Contains("EnemyAttack"))
+            if (other.gameObject.tag.Contains("Enemy") && !other.gameObject.CompareTag("SpitEnemyAttack") && !other.gameObject.CompareTag("MaynardEnemyAttack"))
             {
                 other.gameObject.GetComponent<Enemy.EnemyManager.IEnemy>()?.TakeDamage(playerBulletDamage, "d", false);
                 Destroy(gameObject);
@@ -206,7 +206,7 @@ public class ParticleAttackController : MonoBehaviour
                 Destroy(gameObject); // Destroy Maynard's bullet
                 Destroy(other.gameObject); // Destroy Player's bullet
             }
-            else if (!other.gameObject.tag.Contains("Enemy") && !other.gameObject.tag.Contains("EnemyAttack"))
+            else if (!other.gameObject.tag.Contains("Enemy") && !other.gameObject.CompareTag("SpitEnemyAttack"))
             {
                 // Hit something other than the player, shield, player bullet or other enemy/enemy bullet
                 Destroy(gameObject);

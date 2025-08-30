@@ -76,9 +76,6 @@ public class PlayerShoot : MonoBehaviour
 	// PowerUps
 	public PowerUp powerUp;
 
-	// Needed to set DistantAttackDamage
-	public GetCollisions getCollisions;
-
 	private Player player;
 	[SerializeField] private RotateSphere rotateSphere;
 	[SerializeField] private GameObject rotatingSphere;

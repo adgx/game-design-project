@@ -302,7 +302,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 347109499}
-  - component: {fileID: 347109498}
   - component: {fileID: 347109501}
   - component: {fileID: 347109502}
   - component: {fileID: 347109503}
@@ -313,21 +312,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &347109498
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 347109497}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2235583f4b644424ca12f82203102fdb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initialPlayerBulletDamage: 50
-  enemyBulletDamage: 10
-  playerBulletDamage: 50
 --- !u!4 &347109499
 Transform:
   m_ObjectHideFlags: 0
@@ -4466,7 +4450,7 @@ PrefabInstance:
     - target: {fileID: 8927746728942280376, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
       propertyPath: getCollisions
       value: 
-      objectReference: {fileID: 347109498}
+      objectReference: {fileID: 0}
     - target: {fileID: 8927746728942280376, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
       propertyPath: closeAttackImage
       value: 
