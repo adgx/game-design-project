@@ -20,7 +20,7 @@ public class ParticleAttackController : MonoBehaviour
     private float _currentVF;
     private float _currentVUp;
     private float _t = 0;
-    public float initialPlayerBulletDamage = 40, enemyBulletDamage = 20;
+    public float initialPlayerBulletDamage = 50, enemyBulletDamage = 20;
     public float playerBulletDamage;
 
     void Start()

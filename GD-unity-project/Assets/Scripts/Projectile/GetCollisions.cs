@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class GetCollisions : MonoBehaviour
 {
-    public float initialPlayerBulletDamage = 40, enemyBulletDamage = 20;
+    public float initialPlayerBulletDamage = 50, enemyBulletDamage = 20;
     public float playerBulletDamage;
 
     // This function checks if the projectile shot by the player or by the enemy collides with something and, if so, it destroys the projectile
