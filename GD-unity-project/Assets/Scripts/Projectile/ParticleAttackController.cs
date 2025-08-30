@@ -2,8 +2,6 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 using Audio;
-using Unity.VisualScripting;
-
 
 public class ParticleAttackController : MonoBehaviour
 {
@@ -41,10 +39,8 @@ public class ParticleAttackController : MonoBehaviour
             transform.LookAt(_destPos);
         } 
         
-
         gameObject.SetActive(true);
         _attackPS.Play();
-
     }
     void Update()
     {
@@ -55,15 +51,12 @@ public class ParticleAttackController : MonoBehaviour
         }
 
         _currentVUp = _g * Time.deltaTime;
-
-
+        
         Vector3 sDirF = transform.forward * _currentVF * Time.deltaTime;
         Vector3 sDirUp = transform.up * _currentVUp * Time.deltaTime;
         transform.position += sDirF + sDirUp;
-
     }
-
-
+    
     void OnParticleCollision(GameObject other)
     {
         List<ParticleCollisionEvent> ce = new();

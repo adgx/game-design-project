@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 
 public class PowerUp : MonoBehaviour
 {
@@ -81,8 +80,8 @@ public class PowerUp : MonoBehaviour
         
         // TODO: debug code
         // powerUpsObtained[SpherePowerUpTypes.DefensePowerUp] = 2;
-        powerUpsObtained[SpherePowerUpTypes.DistanceAttackPowerUp] = 2;
-        powerUpsObtained[SpherePowerUpTypes.CloseAttackPowerUp] = 2;
+        // powerUpsObtained[SpherePowerUpTypes.DistanceAttackPowerUp] = 2;
+        // powerUpsObtained[SpherePowerUpTypes.CloseAttackPowerUp] = 2;
     }
 
     public void ObtainPowerUp(object powerUp)

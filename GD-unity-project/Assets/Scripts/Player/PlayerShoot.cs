@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Animations;
 using Audio;
@@ -426,7 +425,7 @@ public class PlayerShoot : MonoBehaviour
 		}
 
 		// TODO: debug code
-		Debug.LogWarning("Distance attack damage = " + finalBulletDamage + ", Consumed stamina = " + staminaConsumed);
+		// Debug.LogWarning("Distance attack damage = " + finalBulletDamage + ", Consumed stamina = " + staminaConsumed);
 		
 		PAC.playerBulletDamage = finalBulletDamage;
 		PAC.targetPos = bulletSpawnTransform;
@@ -559,7 +558,7 @@ public class PlayerShoot : MonoBehaviour
 		}
 		
 		// TODO: debug code
-		Debug.LogWarning("Close attack damage = " + finalCloseAttackDamage + ", Consumed stamina = " + staminaConsumed);
+		// Debug.LogWarning("Close attack damage = " + finalCloseAttackDamage + ", Consumed stamina = " + staminaConsumed);
 		
 		if (attackStamina == 0)
 		{

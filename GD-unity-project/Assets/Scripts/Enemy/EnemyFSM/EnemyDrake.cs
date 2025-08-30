@@ -261,12 +261,12 @@ public class Drake : MonoBehaviour, IEnemy
     public void TakeDamage(float damage, string attackType, bool isShield)
     {
         // TODO: debug code
-        Debug.LogWarning("Drake's health BEFORE the attack = " + _health);
+        // Debug.LogWarning("Drake's health BEFORE the attack = " + _health);
 
         _health -= damage;
         
         // TODO: debug code
-        Debug.LogWarning("Drake's health AFTER the attack  = " + _health);
+        // Debug.LogWarning("Drake's health AFTER the attack  = " + _health);
 
         if (attackType == "c")
         {
