@@ -110,11 +110,6 @@ public class ParticleAttackController : MonoBehaviour
                     }
                     Destroy(gameObject);
                 }
-                else if (other.CompareTag("Shield"))
-                {
-                    GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerShieldHit, transform.position);
-                    Destroy(gameObject);
-                }
                 else if (other.CompareTag("PlayerProjectile"))
                 {
                     Destroy(gameObject); // Destroy Incognito's bullet
@@ -146,11 +141,10 @@ public class ParticleAttackController : MonoBehaviour
         // Logic for Incognito's bullets
         if (gameObject.CompareTag("SpitEnemyAttack"))
         {
-            if (other.gameObject.CompareTag("PlayerProjectile"))
+            if (other.gameObject.CompareTag("PlayerProjectile")) // Incognito's bullet hits Player's bullet
             {
                 Destroy(gameObject); // Destroy Incognito's bullet
                 Destroy(other.gameObject); // Destroy Player's bullet
-                return;
             }
         }
         
@@ -166,12 +160,6 @@ public class ParticleAttackController : MonoBehaviour
             {
                 Destroy(gameObject); // Destroy enemy's bullet
                 Destroy(other.gameObject); // Destroy Player's bullet
-            }
-            else if (other.gameObject.CompareTag("Shield"))
-            {
-                // No damage to the player, but the bullet is destroyed
-                GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerShieldHit, transform.position);
-                Destroy(gameObject);
             }
             else
             {
@@ -196,12 +184,7 @@ public class ParticleAttackController : MonoBehaviour
                 }
                 Destroy(gameObject);
             }
-            else if (other.gameObject.CompareTag("Shield"))
-            {
-                GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerShieldHit, transform.position);
-                Destroy(gameObject);
-            }
-            else if (other.gameObject.CompareTag("PlayerProjectile")) // Maynard's bullet hits a Player bullet
+            else if (other.gameObject.CompareTag("PlayerProjectile")) // Maynard's bullet hits Player's bullet
             {
                 Destroy(gameObject); // Destroy Maynard's bullet
                 Destroy(other.gameObject); // Destroy Player's bullet
