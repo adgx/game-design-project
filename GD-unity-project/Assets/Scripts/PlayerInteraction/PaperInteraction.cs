@@ -29,6 +29,9 @@ namespace PlayerInteraction
         public bool IsInteractable =>
             PaperManager.Instance != null && !isCollected;
 
+        public GameObject GameObject => this.gameObject;
+
+
         /// <summary>
         /// Called when the player interacts with the paper. Triggers paper collection.
         /// </summary>

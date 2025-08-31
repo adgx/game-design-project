@@ -1,8 +1,10 @@
 using System;
+using ORF.Utils;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using UnityEngine.UIElements;
 
 namespace PlayerInteraction
 {
@@ -25,11 +27,13 @@ namespace PlayerInteraction
 
         [Tooltip("Text component that shows the interaction prompt.")] [SerializeField]
         private TextMeshProUGUI _helpText;
+        private float _viewAngle = 80.0f;
 
         [Header("Forgiveness & Feel")]
         [Tooltip("How long (in seconds) the target will remain 'sticky' after looking away from it.")]
         [SerializeField]
         private float _interactionGracePeriod = 0.15f;
+        private float _cameraOffset = 1.3f;
 
         /// <summary>
         /// Tracks the time since the last interactable was hit, used for grace period handling.
@@ -105,51 +109,87 @@ namespace PlayerInteraction
         /// </summary>
         private void FindInteractable()
         {
-            float proximityRadius = 2f;
+            float proximityRadius = 1.5f;
             float proximityDistance = 1.5f;
 
-            if (Physics.SphereCast(_mainCamera.transform.position, proximityRadius, _mainCamera.transform.forward,
-                    out RaycastHit proximityHit, proximityDistance, _interactionLayer) &&
-                proximityHit.collider.TryGetComponent(out IInteractable proximityTarget) &&
-                IsValidTarget(proximityTarget))
+            //if (Physics.SphereCast(_mainCamera.transform.position, proximityRadius, _mainCamera.transform.forward,
+            //        out RaycastHit proximityHit, proximityDistance, _interactionLayer) &&
+            //    proximityHit.collider.TryGetComponent(out IInteractable proximityTarget) &&
+            //    IsValidTarget(proximityTarget) &&
+            //    proximityTarget is PaperInteraction)
+            //{
+            //    Debug.Log("Detecting with the interactable with sphere");
+            //    SetCurrentTarget(proximityTarget);
+            //    _timeSinceLastHit = 0.0f;
+            //    return;
+            //}
+
+            //Vector3 aimStartPoint = _mainCamera.transform.position;
+            //Ray aimRay = new Ray(aimStartPoint, _mainCamera.transform.forward);
+            //
+            //if (Physics.Raycast(aimRay, out RaycastHit aimingHit, _interactionDistance, _interactionLayer) &&
+            //    aimingHit.collider.TryGetComponent(out IInteractable aimingTarget) && IsValidTarget(aimingTarget))
+            //{
+            //    Debug.Log("Detecting with the interactable with ray");
+            //    SetCurrentTarget(aimingTarget);
+            //    _timeSinceLastHit = 0.0f;
+            //    return;
+            //}
+
+            //Vector3 sphereCenter = _mainCamera.transform.position + _mainCamera.transform.forward * 1.3f;
+            //Collider[] overlaps = Physics.OverlapSphere(sphereCenter, 1.0f, _interactionLayer);
+            //
+            //foreach (Collider col in overlaps)
+            //{
+            //    if (col == null || col.gameObject == null) continue;
+            //
+            //    if (col.TryGetComponent(out IInteractable nearbyTarget) && IsValidTarget(nearbyTarget))
+            //    {
+            //
+            //        SetCurrentTarget(nearbyTarget);
+            //        _timeSinceLastHit = 0.0f;
+            //        return;
+            //    }
+            //}
+            //check the orentation of the interactable
+            if (_currentTarget != null)
             {
-                SetCurrentTarget(proximityTarget);
-                _timeSinceLastHit = 0.0f;
-                return;
-            }
-
-            Vector3 aimStartPoint = _mainCamera.transform.position - _mainCamera.transform.forward;
-            Ray aimRay = new Ray(aimStartPoint, _mainCamera.transform.forward);
-
-            if (Physics.Raycast(aimRay, out RaycastHit aimingHit, _interactionDistance, _interactionLayer) &&
-                aimingHit.collider.TryGetComponent(out IInteractable aimingTarget) && IsValidTarget(aimingTarget))
-            {
-                SetCurrentTarget(aimingTarget);
-                _timeSinceLastHit = 0.0f;
-                return;
-            }
-
-            Vector3 sphereCenter = _mainCamera.transform.position + _mainCamera.transform.forward * 1.3f;
-            Collider[] overlaps = Physics.OverlapSphere(sphereCenter, 1.0f, _interactionLayer);
-
-            foreach (Collider col in overlaps)
-            {
-                if (col == null || col.gameObject == null) continue;
-
-                if (col.TryGetComponent(out IInteractable nearbyTarget) && IsValidTarget(nearbyTarget))
+                Vector3 dirToTarget = (_currentTarget.GameObject.transform.position - _mainCamera.transform.position).normalized;
+                if (Vector3.Angle(transform.forward, dirToTarget) >= _viewAngle)
                 {
-                    SetCurrentTarget(nearbyTarget);
-                    _timeSinceLastHit = 0.0f;
-                    return;
+                    ClearTarget();
+                }
+                
+            }
+            if (_currentTarget == null)
+            {
+                Vector3 sphereCenter = _mainCamera.transform.position + _mainCamera.transform.forward * _cameraOffset;
+                Collider[] overlaps = Physics.OverlapSphere(sphereCenter, proximityRadius, _interactionLayer);
+
+                foreach (Collider col in overlaps)
+                {
+                    if (col == null || col.gameObject == null) continue;
+
+                    if (col.TryGetComponent(out IInteractable nearbyTarget) && IsValidTarget(nearbyTarget))
+                    {
+
+                        Vector3 dirToTarget = (col.transform.position - _mainCamera.transform.position).normalized;
+                        float angle = Vector3.Angle(transform.forward, dirToTarget); 
+                        if (angle >= 0 && angle < _viewAngle)
+                            SetCurrentTarget(nearbyTarget);
+                        _timeSinceLastHit = 0.0f;
+                        return;
+                    }
                 }
             }
-
-            _timeSinceLastHit += Time.deltaTime;
-
-            if (_timeSinceLastHit > _interactionGracePeriod)
-            {
-                ClearTarget();
-            }
+            
+            
+            //_timeSinceLastHit += Time.deltaTime;
+            //
+            //if (_timeSinceLastHit > _interactionGracePeriod)
+            //{
+            //    ClearTarget();
+            //}
         }
 
         /// <summary>
@@ -161,6 +201,24 @@ namespace PlayerInteraction
             if (newTarget == _currentTarget) return;
 
             _currentTarget = newTarget;
+
+            if (_currentTarget is PaperInteraction)
+            { 
+                GameObjectUtilis.SetLayerRecursively(_currentTarget.GameObject, (int)ORF.Utils.Layers.Outline);
+            }
+            else if (_currentTarget is PowerUpVendingMachineInteraction ||
+             _currentTarget is SphereUpgradeTerminalInteraction ||
+             _currentTarget is HealthVendingMachineInteraction)
+            {
+                Transform parentTransform = _currentTarget.GameObject.transform.parent;
+
+                if (parentTransform != null)
+                {
+                    GameObject parentObject = parentTransform.gameObject;
+                    GameObjectUtilis.SetLayerRecursively(parentObject, (int)ORF.Utils.Layers.Outline);
+                }
+                else GameObjectUtilis.SetLayerRecursively(_currentTarget.GameObject, (int)ORF.Utils.Layers.Outline);
+            }
             ShowPrompt();
         }
 
@@ -193,9 +251,12 @@ namespace PlayerInteraction
         /// </summary>
         private void HandleInteractionInput()
         {
+
+
             if (_playerInput.InteractionPressed() && _currentTarget != null)
             {
                 _currentTarget.Interact(this.gameObject);
+                ClearTarget();
             }
         }
 
@@ -205,7 +266,13 @@ namespace PlayerInteraction
         private void ClearTarget()
         {
             if (_currentTarget == null) return;
-
+            if (_currentTarget is PaperInteraction ||
+            _currentTarget is PowerUpVendingMachineInteraction ||
+            _currentTarget is SphereUpgradeTerminalInteraction ||
+            _currentTarget is HealthVendingMachineInteraction )
+            {
+                GameObjectUtilis.SetLayerRecursively(_currentTarget.GameObject, (int)ORF.Utils.Layers.Interactable);
+            }
             _currentTarget = null;
 
             if (_helpTextContainer != null)
@@ -241,6 +308,10 @@ namespace PlayerInteraction
                     Gizmos.color = Color.green;
                     Gizmos.DrawLine(_mainCamera.transform.position, ((MonoBehaviour)_currentTarget).transform.position);
                 }
+
+                //sphere cast debug
+                Gizmos.DrawWireSphere(_mainCamera.transform.position + _mainCamera.transform.forward * _cameraOffset, 2.5f);
+               // Gizmos.DrawWireSphere(_mainCamera.transform.position + _mainCamera.transform.forward * 1.3f, 1.0f);
             }
         }
     }

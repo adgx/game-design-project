@@ -43,6 +43,9 @@ namespace PlayerInteraction
         
         public Collider InteractionZone => _interactionZone;
 
+        public GameObject GameObject => this.gameObject;
+
+
         [Header("Interaction Zone")]
         [Tooltip("An optional trigger collider that defines the area the player must be in to use this.")]
         [SerializeField]

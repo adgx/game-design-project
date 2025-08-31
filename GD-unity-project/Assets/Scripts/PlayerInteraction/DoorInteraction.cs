@@ -22,6 +22,9 @@ namespace PlayerInteraction
 
         public bool IsInteractable => !_isTraversing;
 
+        public GameObject GameObject => this.gameObject;
+
+
         private GameObject player;
         private Player playerScript;
 

@@ -11,9 +11,9 @@ namespace PlayerInteraction
         /// The message to display to the player when this object can be interacted with.
         /// </summary>
         string InteractionPrompt { get; }
-        
+
         bool IsInteractable { get; }
-        
+
         Collider InteractionZone { get; }
 
         /// <summary>
@@ -22,5 +22,7 @@ namespace PlayerInteraction
         /// <param name="interactor">The GameObject that initiated the interaction.</param>
         /// <returns>True if the interaction was successful, false otherwise.</returns>
         bool Interact(GameObject interactor);
+
+        GameObject GameObject{ get; }
     }
 }
