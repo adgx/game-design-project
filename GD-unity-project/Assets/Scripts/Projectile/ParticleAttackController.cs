@@ -106,7 +106,7 @@ public class ParticleAttackController : MonoBehaviour
                     PlayerShoot playerShoot = other.GetComponent<PlayerShoot>();
                     if (playerShoot != null && ce.Count > 0)
                     {
-                        playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.Spit, Math.Sign(ce[0].normal.x), Math.Sign(ce[0].normal.z));
+                        playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.Spit, transform);
                     }
                     Destroy(gameObject);
                 }
@@ -184,7 +184,7 @@ public class ParticleAttackController : MonoBehaviour
                     // Determine the direction of the shot based on contact
                     Vector3 contactPoint = other.ClosestPoint(transform.position);
                     Vector3 normal = (transform.position - contactPoint).normalized;
-                    playerShoot.TakeDamage(enemyBulletDamage, maynardDamageType, Math.Sign(normal.x), Math.Sign(normal.z));
+                    playerShoot.TakeDamage(enemyBulletDamage, maynardDamageType, transform);
                 }
                 Destroy(gameObject);
             }

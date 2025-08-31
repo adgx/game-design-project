@@ -401,7 +401,7 @@ public class Drake : MonoBehaviour, IEnemy
         {
             if (Physics.CheckSphere(transform.position, 2f, whatIsPlayer) && !playerShoot.shieldIsActive)
             {
-                playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, 5, 5);
+                playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, transform);
             }
         }
     }
@@ -410,7 +410,7 @@ public class Drake : MonoBehaviour, IEnemy
     {
         if (Physics.CheckSphere(transform.position, 2f, whatIsPlayer) && !playerShoot.shieldIsActive)
         {
-            playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.DrakeBiteAttack, 5, 5);
+            playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.DrakeBiteAttack, transform);
         }
     }
 

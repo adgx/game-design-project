@@ -443,13 +443,13 @@ public class Maynard : MonoBehaviour, IEnemy
     {
         if (Physics.CheckSphere(transform.position, 2f, _whatIsPlayer) && !playerShoot.shieldIsActive)
         {
-            playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, 5, 5);
+            playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, transform);
         }
         if (Physics.CheckSphere(transform.position, 2f, _whatIsPlayer))
         {
             if (!_debug)
             {
-                playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, 5, 5);
+                playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, transform);
             }
         }
     }

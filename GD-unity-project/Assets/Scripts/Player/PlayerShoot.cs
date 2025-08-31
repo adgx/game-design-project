@@ -59,7 +59,8 @@ public class PlayerShoot : MonoBehaviour
 	// This flag is true if an attack is being executed. While executing it, I can not start another attack
 	private bool attacking = false;
 	private int attackStamina = 0;
-	[FormerlySerializedAs("magneticShieldOpen")] public bool shieldIsActive = false;
+	public bool shieldIsActive = false;
+	[SerializeField] private float shieldRadius = 1.7f; // Shield radius
 
 	// Health
 	public float maxHealth = 120;
@@ -637,12 +638,24 @@ public class PlayerShoot : MonoBehaviour
 		player.isFrozen = false;
 	}
 
-	public void TakeDamage(float damage, DamageTypes damageType, int x, int z)
+	public void TakeDamage(float damage, DamageTypes damageType, Transform enemyTransform = null)
 	{
 		
 		if (isDying)
 		{
 			return; // If the player is already dying, ignore any further damage
+		}
+		
+		if (shieldIsActive && enemyTransform != null)
+		{
+			float distanceToEnemy = Vector3.Distance(transform.position, enemyTransform.position);
+			if (distanceToEnemy <= shieldRadius)
+			{
+				Debug.Log("Danno bloccato dallo scudo!");
+				// No damage is taken and the hit animation does not start
+				GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerShieldHit, transform.position);
+				return; // Exits the function, canceling the damage
+			}
 		}
 
 		Debug.Log("Take damage");
