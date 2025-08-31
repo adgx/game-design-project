@@ -10,7 +10,7 @@ public class PulseEmission : MonoBehaviour
     [SerializeField]
     [Min(0)]
     private float flickerSpeed = 1.0f;
-    private float intensityRate = 1.5f; 
+    private float intensityRate = 0.1f; 
 
     [SerializeField] private AnimationCurve brightnessCurve;
 
@@ -50,7 +50,7 @@ public class PulseEmission : MonoBehaviour
 
                 float brightness = brightnessCurve.Evaluate(scaledTime);
                 float intensityHDR = Mathf.Pow(2, brightness * intensityRate);
-                materials[i].SetColor(EMISSIVE_COLOR_NAME, Color.white * intensityHDR);
+                materials[i].SetColor(EMISSIVE_COLOR_NAME, Color.white * brightness);
                 materials[i].EnableKeyword(EMISSIVE_KEYWORD);
             }
         }
