@@ -1,6 +1,7 @@
 using System;
 using ORF.Utils;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
@@ -27,7 +28,7 @@ namespace PlayerInteraction
 
         [Tooltip("Text component that shows the interaction prompt.")] [SerializeField]
         private TextMeshProUGUI _helpText;
-        private float _viewAngle = 80.0f;
+        private float _viewAngle = 65f;
 
         [Header("Forgiveness & Feel")]
         [Tooltip("How long (in seconds) the target will remain 'sticky' after looking away from it.")]
@@ -109,7 +110,7 @@ namespace PlayerInteraction
         /// </summary>
         private void FindInteractable()
         {
-            float proximityRadius = 1.5f;
+            float proximityRadius = 1.8f;
             float proximityDistance = 1.5f;
 
             //if (Physics.SphereCast(_mainCamera.transform.position, proximityRadius, _mainCamera.transform.forward,
@@ -154,11 +155,14 @@ namespace PlayerInteraction
             //check the orentation of the interactable
             if (_currentTarget != null)
             {
-                Vector3 dirToTarget = (_currentTarget.GameObject.transform.position - _mainCamera.transform.position).normalized;
-                if (Vector3.Angle(transform.forward, dirToTarget) >= _viewAngle)
-                {
+                //Vector3 dirToTarget = (_currentTarget.GameObject.transform.position - _mainCamera.transform.position).normalized;
+                //if (Vector3.Angle(_mainCamera.transform.forward, dirToTarget) >= _viewAngle && Vector3.Dot(_mainCamera.transform.forward, dirToTarget) < 0)
+                //{
+                //    ClearTarget();
+                //}
+
+                if ((_currentTarget.GameObject.transform.position - _mainCamera.transform.position).magnitude >= 2.0f)
                     ClearTarget();
-                }
                 
             }
             if (_currentTarget == null)
@@ -174,8 +178,9 @@ namespace PlayerInteraction
                     {
 
                         Vector3 dirToTarget = (col.transform.position - _mainCamera.transform.position).normalized;
-                        float angle = Vector3.Angle(transform.forward, dirToTarget); 
-                        if (angle >= 0 && angle < _viewAngle)
+
+                        float angle = Vector3.Angle(_mainCamera.transform.forward, dirToTarget); 
+                        if (angle >= 0 && angle < _viewAngle && Vector3.Dot(_mainCamera.transform.forward, dirToTarget) >= 0 )
                             SetCurrentTarget(nearbyTarget);
                         _timeSinceLastHit = 0.0f;
                         return;
@@ -219,7 +224,7 @@ namespace PlayerInteraction
                 }
                 else GameObjectUtilis.SetLayerRecursively(_currentTarget.GameObject, (int)ORF.Utils.Layers.Outline);
             }
-            ShowPrompt();
+            
         }
 
         /// <summary>
@@ -252,12 +257,21 @@ namespace PlayerInteraction
         private void HandleInteractionInput()
         {
 
-
-            if (_playerInput.InteractionPressed() && _currentTarget != null)
+            if (_currentTarget != null)
             {
-                _currentTarget.Interact(this.gameObject);
-                ClearTarget();
+                Vector3 targetDir = (_currentTarget.GameObject.transform.position - transform.position).normalized;
+                if (Vector3.Dot(transform.forward, targetDir) >= 0)
+                {
+                    ShowPrompt();
+                    if (_playerInput.InteractionPressed())
+                    {
+                        _currentTarget.Interact(this.gameObject);
+                        ClearTarget();
+                    }
+                }
+                else _helpTextContainer.SetActive(false);
             }
+            
         }
 
         /// <summary>
@@ -266,12 +280,22 @@ namespace PlayerInteraction
         private void ClearTarget()
         {
             if (_currentTarget == null) return;
-            if (_currentTarget is PaperInteraction ||
-            _currentTarget is PowerUpVendingMachineInteraction ||
-            _currentTarget is SphereUpgradeTerminalInteraction ||
-            _currentTarget is HealthVendingMachineInteraction )
+            if (_currentTarget is PaperInteraction)
             {
                 GameObjectUtilis.SetLayerRecursively(_currentTarget.GameObject, (int)ORF.Utils.Layers.Interactable);
+            }
+            else if (_currentTarget is PowerUpVendingMachineInteraction ||
+            _currentTarget is SphereUpgradeTerminalInteraction ||
+            _currentTarget is HealthVendingMachineInteraction)
+            { 
+                Transform parentTransform = _currentTarget.GameObject.transform.parent;
+
+                if (parentTransform != null)
+                {
+                    GameObject parentObject = parentTransform.gameObject;
+                    GameObjectUtilis.SetLayerRecursively(parentObject, (int)ORF.Utils.Layers.Interactable);
+                }
+                else GameObjectUtilis.SetLayerRecursively(_currentTarget.GameObject, (int)ORF.Utils.Layers.Interactable);
             }
             _currentTarget = null;
 
