@@ -14,7 +14,7 @@ public class PlayerShoot : MonoBehaviour
 {
 	public static PlayerShoot Instance { get; private set; }
 	public float LastStaminaUseTime { get; private set; }
-	[FormerlySerializedAs("IsInCombat")] [HideInInspector] public bool isInCombat = false;
+	[HideInInspector] public bool isInCombat = false;
 	private float recoveryDelay;
 
 	// Audio management 
@@ -822,8 +822,7 @@ public class PlayerShoot : MonoBehaviour
 		{
 			if (!cannotAttack)
 			{
-				// The attack is shot only on "Fire1" up
-				//  && AnimationManager.Instance.rickState == RickStates.Idle
+				// The attack is shot only on "Fire1" up && AnimationManager.Instance.rickState == RickStates.Idle
 				if (Input.GetButtonDown("Fire1"))
 				{
 					if (!shieldIsActive && CheckStamina(1) && !attacking)
