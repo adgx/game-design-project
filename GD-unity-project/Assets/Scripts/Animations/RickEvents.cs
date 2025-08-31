@@ -139,13 +139,13 @@ namespace Animations
             // Audio management
             PlayManagedEvent(FMODEvents.Instance.PlayerCloseAttackShoot);
             
+            playerShoot.FireCloseAttack();
+            
             AreaAttackController areaController = playerShoot.attackAreaInstance.GetComponent<AreaAttackController>();
             if (areaController != null)
             {
-                areaController.Initialize(playerShoot.chargedCloseAttackDamage);
+                areaController.Initialize(playerShoot.finalCloseAttackDamage);
             }
-            
-            playerShoot.FireCloseAttack();
         }
 
         public void DistanceAttackLoad()

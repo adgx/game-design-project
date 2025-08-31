@@ -25,20 +25,25 @@ public class PlayerShoot : MonoBehaviour
 
 	// Attack1
 	[SerializeField] private float bulletSpeed;
-	// The point in which the bullet spawns
-	[SerializeField] private Transform bulletSpawnTransform;
+	[SerializeField] private Transform bulletSpawnTransform; // The point in which the bullet spawns
 	[SerializeField] private GameObject bulletPrefab;
+	public float baseDistanceAttackDamage = 50f; // Distance attack damage with 0 power-ups (1 stamina)
+	public float distanceAttackPowerUp1Damage = 75f; // Distance attack damage with 1 power-up (3 stamina)
+	public float distanceAttackPowerUp2Damage = 100f; // Distance attack damage with 2 power-ups (5 stamina)
 
 	// Attack2
 	[SerializeField] private GameObject attackAreaPrefab;
 	[HideInInspector]
 	public GameObject attackAreaInstance;
 	public GameObject attackAreaVFXPrefab;
-	public int defaultCloseAttackDamage = 50;
+	public int defaultCloseAttackDamage = 40;
 	private readonly float defaultDamageRadius = 2.5f;
 	[HideInInspector]
 	public float damageRadius = 2f;
-	public int chargedCloseAttackDamage;
+	public float finalCloseAttackDamage;
+	public float baseCloseAttackDamage = 40f; // Close attack damage with 0 power-ups (1 stamina)
+	public float closeAttackPowerUp1Damage = 60f; // Close attack damage with 1 power-up (3 stamina)
+	public float closeAttackPowerUp2Damage = 80f; // Close attack damage with 2 power-up1 (5 stamina)
 
 	public bool cannotAttack = false;
 	private bool isDying = false;
@@ -70,9 +75,6 @@ public class PlayerShoot : MonoBehaviour
 
 	// PowerUps
 	public PowerUp powerUp;
-
-	// Needed to set DistantAttackDamage
-	public GetCollisions getCollisions;
 
 	private Player player;
 	[SerializeField] private RotateSphere rotateSphere;
@@ -109,7 +111,7 @@ public class PlayerShoot : MonoBehaviour
 			healthBar.SetMaxHealth(health);
 		player = GetComponent<Player>();
 		ChangeSphereColor(maxSphereStamina);
-		chargedCloseAttackDamage = defaultCloseAttackDamage;
+		finalCloseAttackDamage = defaultCloseAttackDamage;
 		damageRadius = defaultDamageRadius;
 		
 		// We initialize the timer to the current time to prevent charging from starting immediately
@@ -160,25 +162,28 @@ public class PlayerShoot : MonoBehaviour
 
 	void ChangeSphereColor(int stamina)
 	{
+		float intensityRate = 3.0f;
+		float intensityHDR = Mathf.Pow(2,intensityRate);
+
 		switch (stamina)
 		{
 			case 5:
-				sphereMaterial.SetColor("_EmissionColor", new Color(0, 1, 1) * 2f);
+				sphereMaterial.SetColor("_EmissionColor", new Color(0, 1, 1) * intensityHDR);
 				break;
 			case 4:
-				sphereMaterial.SetColor("_EmissionColor", Color.green * 2f);
+				sphereMaterial.SetColor("_EmissionColor", Color.green * intensityHDR);
 				break;
 			case 3:
-				sphereMaterial.SetColor("_EmissionColor", Color.yellow * 2f);
+				sphereMaterial.SetColor("_EmissionColor", Color.yellow * intensityHDR);
 				break;
 			case 2:
-				sphereMaterial.SetColor("_EmissionColor", new Color(1, 0.1875f, 0) * 2f);
+				sphereMaterial.SetColor("_EmissionColor", new Color(1, 0.1875f, 0) * intensityHDR);
 				break;
 			case 1:
-				sphereMaterial.SetColor("_EmissionColor", Color.red * 2f);
+				sphereMaterial.SetColor("_EmissionColor", Color.red * intensityHDR);
 				break;
 			case 0:
-				sphereMaterial.SetColor("_EmissionColor", Color.white * 2f);
+				sphereMaterial.SetColor("_EmissionColor", Color.white * intensityHDR);
 				break;
 			default:
 				break;
@@ -391,11 +396,37 @@ public class PlayerShoot : MonoBehaviour
 		ParticleAttackController PAC = bullet.GetComponent<ParticleAttackController>();
 		
 		// Compute bullet's damage
-		float finalBulletDamage = getCollisions.initialPlayerBulletDamage;
-		if (attackStamina > 1)
+		float finalBulletDamage = PAC.initialPlayerBulletDamage;
+		int staminaConsumed = (attackStamina == 0) ? 1 : attackStamina; // If not loaded, the attack consumes 1 stamina
+		
+		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp))
 		{
-			finalBulletDamage += (attackStamina - 1) * 10;
+			int powerUpLevel = powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp];
+			if (powerUpLevel == 1) // First power-up, max 3 stamina
+			{
+				float maxDamageForPowerUp = distanceAttackPowerUp1Damage;
+				float damageRange = maxDamageForPowerUp - baseDistanceAttackDamage;
+				finalBulletDamage = baseDistanceAttackDamage + (damageRange * ((float)(staminaConsumed - 1) / 2));
+			}
+			else if (powerUpLevel == 2) // Second power-up, max 5 stamina
+			{
+				float maxDamageForPowerUp = distanceAttackPowerUp2Damage;
+				float damageRange = maxDamageForPowerUp - baseDistanceAttackDamage;
+				finalBulletDamage = baseDistanceAttackDamage + (damageRange * ((float)(staminaConsumed - 1) / 4));
+			}
+			else // No power-up
+			{
+				finalBulletDamage = baseDistanceAttackDamage;
+			}
 		}
+		else
+		{
+			finalBulletDamage = baseDistanceAttackDamage;
+		}
+
+		// TODO: debug code
+		// Debug.LogWarning("Distance attack damage = " + finalBulletDamage + ", Consumed stamina = " + staminaConsumed);
+		
 		PAC.playerBulletDamage = finalBulletDamage;
 		PAC.targetPos = bulletSpawnTransform;
 		bullet.SetActive(true);
@@ -411,11 +442,8 @@ public class PlayerShoot : MonoBehaviour
 		}
 
 		distanceAttackLoadingBar.fillAmount = 0;
-		
 		ResetAttack();
-		
 		await Task.Delay(500);
-
 	}
 
 	async void LoadCloseAttack()
@@ -497,14 +525,40 @@ public class PlayerShoot : MonoBehaviour
 	public void FireCloseAttack()
 	{
 		// Compute close attack's damage
-		chargedCloseAttackDamage = defaultCloseAttackDamage;
+		finalCloseAttackDamage = defaultCloseAttackDamage;
 		damageRadius = defaultDamageRadius;
 		
-		if (attackStamina > 1) // If the attack has been loaded
+		int staminaConsumed = (attackStamina == 0) ? 1 : attackStamina; // If not loaded, the attack consumes 1 stamina
+		
+		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp))
 		{
-			chargedCloseAttackDamage += (attackStamina - 1) * 20;
-			damageRadius += (attackStamina - 1) * 1f;
+			int powerUpLevel = powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp];
+			if (powerUpLevel == 1) // First power-up, max 3 stamina
+			{
+				float maxDamageForPowerUp = closeAttackPowerUp1Damage;
+				float damageRange = maxDamageForPowerUp - baseCloseAttackDamage;
+				finalCloseAttackDamage = baseCloseAttackDamage + (damageRange * ((float)(staminaConsumed - 1) / 2));
+				damageRadius += ((float)(staminaConsumed - 1) / 2) * 1f; // Increase the radius proportionally to stamina
+			}
+			else if (powerUpLevel == 2) // Second power-up, max 5 stamina
+			{
+				float maxDamageForPowerUp = closeAttackPowerUp2Damage;
+				float damageRange = maxDamageForPowerUp - baseCloseAttackDamage;
+				finalCloseAttackDamage = baseCloseAttackDamage + (damageRange * ((float)(staminaConsumed - 1) / 4));
+				damageRadius += ((float)(staminaConsumed - 1) / 4) * 1f; // Increase the radius proportionally to stamina
+			}
+			else // No power-up
+			{
+				finalCloseAttackDamage = baseCloseAttackDamage;
+			}
 		}
+		else
+		{
+			finalCloseAttackDamage = baseCloseAttackDamage;
+		}
+		
+		// TODO: debug code
+		// Debug.LogWarning("Close attack damage = " + finalCloseAttackDamage + ", Consumed stamina = " + staminaConsumed);
 		
 		if (attackStamina == 0)
 		{

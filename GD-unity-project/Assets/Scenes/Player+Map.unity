@@ -168,6 +168,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &173020062
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 173020063}
+  - component: {fileID: 173020064}
+  m_Layer: 0
+  m_Name: VolumePostProcessing
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &173020063
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 173020062}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1684462101}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &173020064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 173020062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 880ff0de72fe05c45bef9bc1e27791f4, type: 2}
 --- !u!1 &205731131 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3485552226981936514, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
@@ -302,7 +351,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 347109499}
-  - component: {fileID: 347109498}
   - component: {fileID: 347109501}
   - component: {fileID: 347109502}
   - component: {fileID: 347109503}
@@ -313,21 +361,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &347109498
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 347109497}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2235583f4b644424ca12f82203102fdb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initialPlayerBulletDamage: 50
-  enemyBulletDamage: 10
-  playerBulletDamage: 50
 --- !u!4 &347109499
 Transform:
   m_ObjectHideFlags: 0
@@ -4471,6 +4504,7 @@ Transform:
   - {fileID: 457606835}
   - {fileID: 1552879524}
   - {fileID: 764376011}
+  - {fileID: 173020063}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1707494894
@@ -4692,7 +4726,7 @@ PrefabInstance:
     - target: {fileID: 8927746728942280376, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
       propertyPath: getCollisions
       value: 
-      objectReference: {fileID: 347109498}
+      objectReference: {fileID: 0}
     - target: {fileID: 8927746728942280376, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
       propertyPath: closeAttackImage
       value: 
@@ -4702,13 +4736,41 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 766725499}
     - target: {fileID: 8927746728942280376, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: baseCloseAttackDamage
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 8927746728942280376, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
       propertyPath: closeAttackLoadingBar
       value: 
       objectReference: {fileID: 766725496}
     - target: {fileID: 8927746728942280376, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: baseDistanceAttackDamage
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 8927746728942280376, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: defaultCloseAttackDamage
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 8927746728942280376, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
       propertyPath: distanceAttackLoadingBar
       value: 
       objectReference: {fileID: 766725497}
+    - target: {fileID: 8927746728942280376, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: closeAttackPowerUp1Damage
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 8927746728942280376, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: closeAttackPowerUp2Damage
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 8927746728942280376, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: distanceAttackPowerUp1Damage
+      value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 8927746728942280376, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: distanceAttackPowerUp2Damage
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 8968511297086779072, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
       propertyPath: _helpText
       value: 
@@ -4767,9 +4829,9 @@ MonoBehaviour:
   _maxRooms: 12
   _minRooms: 10
   _skipConnectionChance: 0.35
-  _maxHealthVendingMachines: 9
+  _maxHealthVendingMachines: 5
   _maxPowerUpVendingMachines: 2
-  _maxUpgradeTerminal: 1
+  _maxUpgradeTerminal: 2
   _minPaper: 2
   _maxPaper: 3
   _difficultyMultiplier: 0.33

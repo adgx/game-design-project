@@ -376,7 +376,12 @@ namespace RoomManager
                 Destroy(projectile);
             }
 
-            foreach (GameObject projectile in GameObject.FindGameObjectsWithTag("EnemyAttack"))
+            foreach (GameObject projectile in GameObject.FindGameObjectsWithTag("MaynardEnemyAttack"))
+            {
+                Destroy(projectile);
+            }
+            
+            foreach (GameObject projectile in GameObject.FindGameObjectsWithTag("DrakeEnemyAttack"))
             {
                 Destroy(projectile);
             }

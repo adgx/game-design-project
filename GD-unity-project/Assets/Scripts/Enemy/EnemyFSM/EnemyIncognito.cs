@@ -11,9 +11,7 @@ public class Incognito : MonoBehaviour, IEnemy
     [SerializeField] private LayerMask _whatIsGround, _whatIsPlayer;
     [SerializeField] private GameObject _attackSpawn;
     [SerializeField] private GameObject _spitDegub;
-
-    private float _distanceAttackDamageMultiplier;
-    private float _closeAttackDamageMultiplier;
+    
     private float _shortSpitAttackDamage;
 	private float _longSpitAttackDamage;
 	private Transform _playerTransform;
@@ -119,9 +117,6 @@ public class Incognito : MonoBehaviour, IEnemy
             _sightRange = 12f;
             _attackRange = 8f;
             _bulletPrefab = _spitDegub;
-
-            _distanceAttackDamageMultiplier = 1.4f;
-            _closeAttackDamageMultiplier = 1.4f;
 
 			_shortSpitAttackDamage = 10f;
             _longSpitAttackDamage = 20f;
@@ -244,16 +239,19 @@ public class Incognito : MonoBehaviour, IEnemy
         _sightRange = incognitoData.sightRange;
         _attackRange = incognitoData.attackRange;
 
-        _distanceAttackDamageMultiplier = incognitoData.distanceAttackDamageMultiplier;
-        _closeAttackDamageMultiplier = incognitoData.closeAttackDamageMultiplier;
-
         _shortSpitAttackDamage = incognitoData.distanceAttackDamage;
 		_longSpitAttackDamage = incognitoData.longSpitAttackDamage;
 	}
 
     public void TakeDamage(float damage, string attackType, bool isShield)
     {
-        _health -= damage * (attackType == "c" ? _closeAttackDamageMultiplier : _distanceAttackDamageMultiplier);
+        // TODO: debug code
+        // Debug.LogWarning("Incognito's health BEFORE the attack = " + _health);
+
+        _health -= damage;
+        
+        // TODO: debug code
+        // Debug.LogWarning("Incognito's health AFTER the attack  = " + _health);
 
         if (!isShield)
         {

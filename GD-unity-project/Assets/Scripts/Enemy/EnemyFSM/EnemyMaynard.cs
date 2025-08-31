@@ -264,7 +264,13 @@ public class Maynard : MonoBehaviour, IEnemy
 
     public void TakeDamage(float damage, string attackType, bool isShield)
     {
-        _health -= damage * (attackType == "c" ? _closeAttackDamageMultiplier : _distanceAttackDamageMultiplier);
+        // TODO: debug code
+        // Debug.LogWarning("Maynard's health BEFORE the attack = " + _health);
+
+        _health -= damage;
+        
+        // TODO: debug code
+        // Debug.LogWarning("Maynard's health AFTER the attack  = " + _health);
 
         if (!isShield)
         {
@@ -391,12 +397,38 @@ public class Maynard : MonoBehaviour, IEnemy
         if (!_debug)
         {
             GameObject bullet = Instantiate(_bulletPrefab, attackSpawn.transform.position, Quaternion.identity);
-            bullet.tag = "EnemyAttack";
-            bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
+            bullet.tag = "MaynardEnemyAttack"; // Make sure the tag is “MaynardEnemyAttack
+            
+            ParticleAttackController projectileHandler = bullet.GetComponent<ParticleAttackController>();
+            if (projectileHandler == null)
+            {
+                projectileHandler = bullet.AddComponent<ParticleAttackController>();
+            }
+            projectileHandler.enemyBulletDamage = _distanceAttackDamage;
+            projectileHandler.maynardDamageType = PlayerShoot.DamageTypes.MaynardDistanceAttack; // Set damage type
 
             Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
+            if (rbBullet == null)
+            {
+                rbBullet = bullet.AddComponent<Rigidbody>(); // Make sure there is a Rigidbody
+                rbBullet.useGravity = true;
+            }
             rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
             rbBullet.AddForce(transform.up * 1f, ForceMode.Impulse);
+
+            // Make sure the bullet has a Collider with Is Trigger enabled
+            Collider bulletCollider = bullet.GetComponent<Collider>();
+            if (bulletCollider == null)
+            {
+                // Add a collider if it doesn't exist, such as a SphereCollider
+                SphereCollider sphereCol = bullet.AddComponent<SphereCollider>();
+                sphereCol.isTrigger = true;
+                sphereCol.radius = 0.5f;
+            }
+            else
+            {
+                bulletCollider.isTrigger = true; // Make sure Is Trigger is true
+            }
         }
         //End of attack code
     }
@@ -443,7 +475,7 @@ public class Maynard : MonoBehaviour, IEnemy
         _chaseRange = choice == 0 ? _remoteAttackRange : _closeAttackRange;
     }
 
-    public bool CheckeChaseRange()
+    public bool CheckChaseRange()
     {
         if (_chaseRange == _remoteAttackRange)
         {

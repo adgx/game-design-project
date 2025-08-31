@@ -13,10 +13,9 @@ GameObject:
   - component: {fileID: 5304675005428287181}
   - component: {fileID: 9068275819831391701}
   - component: {fileID: 5766187889019907510}
-  - component: {fileID: -3336965471724815484}
   m_Layer: 0
   m_Name: Projectile
-  m_TagString: Untagged
+  m_TagString: EnemyAttack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -104,7 +103,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
@@ -137,18 +136,3 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &-3336965471724815484
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3780818778376199547}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2235583f4b644424ca12f82203102fdb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initialPlayerBulletDamage: 40
-  enemyBulletDamage: 20
-  playerBulletDamage: 40
