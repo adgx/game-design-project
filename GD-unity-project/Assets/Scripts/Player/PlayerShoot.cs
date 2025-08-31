@@ -162,25 +162,28 @@ public class PlayerShoot : MonoBehaviour
 
 	void ChangeSphereColor(int stamina)
 	{
+		float intensityRate = 3.0f;
+		float intensityHDR = Mathf.Pow(2,intensityRate);
+
 		switch (stamina)
 		{
 			case 5:
-				sphereMaterial.SetColor("_EmissionColor", new Color(0, 1, 1) * 2f);
+				sphereMaterial.SetColor("_EmissionColor", new Color(0, 1, 1) * intensityHDR);
 				break;
 			case 4:
-				sphereMaterial.SetColor("_EmissionColor", Color.green * 2f);
+				sphereMaterial.SetColor("_EmissionColor", Color.green * intensityHDR);
 				break;
 			case 3:
-				sphereMaterial.SetColor("_EmissionColor", Color.yellow * 2f);
+				sphereMaterial.SetColor("_EmissionColor", Color.yellow * intensityHDR);
 				break;
 			case 2:
-				sphereMaterial.SetColor("_EmissionColor", new Color(1, 0.1875f, 0) * 2f);
+				sphereMaterial.SetColor("_EmissionColor", new Color(1, 0.1875f, 0) * intensityHDR);
 				break;
 			case 1:
-				sphereMaterial.SetColor("_EmissionColor", Color.red * 2f);
+				sphereMaterial.SetColor("_EmissionColor", Color.red * intensityHDR);
 				break;
 			case 0:
-				sphereMaterial.SetColor("_EmissionColor", Color.white * 2f);
+				sphereMaterial.SetColor("_EmissionColor", Color.white * intensityHDR);
 				break;
 			default:
 				break;
