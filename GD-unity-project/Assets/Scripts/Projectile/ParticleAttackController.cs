@@ -166,6 +166,10 @@ public class ParticleAttackController : MonoBehaviour
                 // Collision with something else that is not an enemy or an enemy bullet, destroy the player's bullet
                 Destroy(gameObject);
             }
+            
+            // Audio management
+            GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerDistanceAttackImpact, transform.position);
+            
             return; // Exit after handling the player's bullet collision
         }
 

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.VFX;
+using Audio;
 
 public class AreaAttackController : MonoBehaviour
 {
@@ -62,9 +63,19 @@ public class AreaAttackController : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
+        // Check if the area attack collided with an enemy
         if(other.tag.Contains("Enemy") && !other.tag.Contains("EnemyAttack")) {
 				other.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(_closeAttackDamage, "c", false);
-        }   
+        }
+        
+        // Check if the area attack collided with an enemy projectile
+        if (other.tag.Contains("EnemyAttack"))
+        {
+            // Audio management
+            GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerCloseAttackImpact, transform.position);
+            
+            Destroy(other.gameObject); // Destroy enemy's projectile
+        }
     }
 
 }

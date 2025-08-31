@@ -9,9 +9,11 @@ namespace Audio
         [field: SerializeField] public EventReference PlayerCloseAttackLoadWithPowerUp1 { get; private set; }
         [field: SerializeField] public EventReference PlayerCloseAttackLoadWithPowerUp2 { get; private set; }
         [field: SerializeField] public EventReference PlayerCloseAttackShoot { get; private set; }
+        [field: SerializeField] public EventReference PlayerCloseAttackImpact { get; private set; }
         [field: SerializeField] public EventReference PlayerDistanceAttackLoadWithPowerUp1 { get; private set; }
         [field: SerializeField] public EventReference PlayerDistanceAttackLoadWithPowerUp2 { get; private set; }
         [field: SerializeField] public EventReference PlayerDistanceAttackShoot { get; private set; }
+        [field: SerializeField] public EventReference PlayerDistanceAttackImpact { get; private set; }
         [field: SerializeField] public EventReference PlayerShieldActivation { get; private set; }
         [field: SerializeField] public EventReference PlayerShieldDeactivation { get; private set; }
         [field: SerializeField] public EventReference PlayerShieldHit { get; private set; }
@@ -28,7 +30,6 @@ namespace Audio
         [field: SerializeField] public EventReference PlayerHit { get; private set; }
         [field: SerializeField] public EventReference PlayerHitBySpit { get; private set; }
         [field: SerializeField] public EventReference PlayerHitByBite { get; private set; }
-        //fai merge bene please
         [field: SerializeField] public EventReference PlayerHeartbeat { get; private set; }
         [field: SerializeField] public EventReference PlayerIdle { get; private set; }
         [field: SerializeField] public EventReference PlayerPaperInteraction { get; private set; }
