@@ -135,10 +135,36 @@ namespace Enemy.EnemyData.EnemyMovement
             {
                 //Attack code here
                 GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-                bullet.tag = "EnemyAttack";
-                bullet.GetComponent<GetCollisions>().enemyBulletDamage = distanceAttackDamage;
+                bullet.tag = "MaynardEnemyAttack";
+                
+                ParticleAttackController projectileHandler = bullet.GetComponent<ParticleAttackController>();
+                if (projectileHandler == null)
+                {
+                    projectileHandler = bullet.AddComponent<ParticleAttackController>();
+                }
+                projectileHandler.enemyBulletDamage = distanceAttackDamage;
+                projectileHandler.maynardDamageType = PlayerShoot.DamageTypes.MaynardDistanceAttack; // Set the specific damage type
 
+                // Make sure the bullet has a Rigidbody and a Collider (like SphereCollider) with isTrigger=true
                 Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
+                if (rbBullet == null)
+                {
+                    rbBullet = bullet.AddComponent<Rigidbody>();
+                    rbBullet.useGravity = true; // Set gravity if the bullet is to fall
+                }
+                
+                Collider bulletCollider = bullet.GetComponent<Collider>();
+                if (bulletCollider == null)
+                {
+                    SphereCollider sphereCol = bullet.AddComponent<SphereCollider>();
+                    sphereCol.isTrigger = true;
+                    sphereCol.radius = 0.5f; // Adjust the radius
+                }
+                else
+                {
+                    bulletCollider.isTrigger = true; // Make sure it's a trigger
+                }
+                
                 rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
                 rbBullet.AddForce(transform.up * 2f, ForceMode.Impulse);
                 //End of attack code
@@ -162,10 +188,35 @@ namespace Enemy.EnemyData.EnemyMovement
                 //Attack code here
                 GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
                 bullet.transform.GetComponent<Renderer>().material.color = Color.red;
-                bullet.tag = "EnemyAttack";
-                bullet.GetComponent<GetCollisions>().enemyBulletDamage = closeAttackDamage;
-                    
+                bullet.tag = "MaynardEnemyAttack";
+                
+                ParticleAttackController projectileHandler = bullet.GetComponent<ParticleAttackController>();
+                if (projectileHandler == null)
+                {
+                    projectileHandler = bullet.AddComponent<ParticleAttackController>();
+                }
+                projectileHandler.enemyBulletDamage = closeAttackDamage;
+                projectileHandler.maynardDamageType = PlayerShoot.DamageTypes.MaynardDistanceAttack; // Set the specific damage type
+
                 Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
+                if (rbBullet == null)
+                {
+                    rbBullet = bullet.AddComponent<Rigidbody>();
+                    rbBullet.useGravity = true; // Set gravity if the bullet is to fall
+                }
+
+                Collider bulletCollider = bullet.GetComponent<Collider>();
+                if (bulletCollider == null)
+                {
+                    SphereCollider sphereCol = bullet.AddComponent<SphereCollider>();
+                    sphereCol.isTrigger = true;
+                    sphereCol.radius = 0.5f; // Adjust the radius
+                }
+                else
+                {
+                    bulletCollider.isTrigger = true; // Make sure it's a trigger
+                }
+                
                 rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
                 rbBullet.AddForce(transform.up * 2f, ForceMode.Impulse);
                 //End of attack code
