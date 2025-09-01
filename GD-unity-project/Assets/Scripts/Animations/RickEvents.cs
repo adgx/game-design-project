@@ -539,6 +539,7 @@ namespace Animations
             yield return new WaitForSeconds(1.0f);
             
             // Destroy the shield
+            shieldDeactivationCoroutine = null;
             ShieldDestroy();
         }
 
