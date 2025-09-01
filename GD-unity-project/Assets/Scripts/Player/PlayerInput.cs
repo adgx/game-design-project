@@ -9,7 +9,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private KeyCode leftMouseInput;
 
     // Lock enemy 
-    [SerializeField] private KeyCode lockInput;
+    [SerializeField] private KeyCode lockInput, lockInputController;
 
     // Pause
     [SerializeField] private KeyCode pauseInput, pauseInputController;
@@ -70,6 +70,11 @@ public class PlayerInput : MonoBehaviour
     public bool InteractionPressed()
     {
         return Input.GetKeyDown(interactionInput) || Input.GetKeyDown(interactionInputController);
+    }
+
+    public bool LockPressed()
+    {
+        return Input.GetKeyDown(lockInput) || Input.GetKeyDown(lockInputController);
     }
 
     private void GetInput()
