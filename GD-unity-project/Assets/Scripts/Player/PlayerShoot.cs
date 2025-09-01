@@ -263,7 +263,7 @@ public class PlayerShoot : MonoBehaviour
 		}
 		else
 		{
-			// Debug.LogWarning("Stamina recovery process was NOT interrupted");
+			Debug.LogWarning("Stamina recovery process was NOT interrupted");
 		}
 	}
 
@@ -458,8 +458,7 @@ public class PlayerShoot : MonoBehaviour
 		{
 			finalBulletDamage = baseDistanceAttackDamage;
 		}
-
-		// TODO: debug code
+		
 		// Debug.LogWarning("Distance attack damage = " + finalBulletDamage + ", Consumed stamina = " + staminaConsumed);
 		
 		PAC.playerBulletDamage = finalBulletDamage;
@@ -592,7 +591,6 @@ public class PlayerShoot : MonoBehaviour
 			finalCloseAttackDamage = baseCloseAttackDamage;
 		}
 		
-		// TODO: debug code
 		// Debug.LogWarning("Close attack damage = " + finalCloseAttackDamage + ", Consumed stamina = " + staminaConsumed);
 		
 		if (attackStamina == 0)
@@ -685,14 +683,14 @@ public class PlayerShoot : MonoBehaviour
 			float distanceToEnemy = Vector3.Distance(transform.position, enemyTransform.position);
 			if (distanceToEnemy <= shieldRadius)
 			{
-				Debug.Log("Danno bloccato dallo scudo!");
+				// Debug.Log("Damage blocked by the shield!");
 				// No damage is taken and the hit animation does not start
 				GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerShieldHit, transform.position);
 				return; // Exits the function, canceling the damage
 			}
 		}
 
-		Debug.Log("Take damage");
+		// Debug.Log("Take damage");
 		health -= damage * damageReduction;
 		if (health < 0) health = 0; // To prevent health from going below zero in the UI
 

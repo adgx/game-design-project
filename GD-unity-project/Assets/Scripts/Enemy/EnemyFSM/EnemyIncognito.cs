@@ -315,7 +315,7 @@ public class Incognito : MonoBehaviour, IEnemy
 
     public void WonderAttackPlayer()
     {
-        print("WonderAttack");
+        // print("WonderAttack");
         if (_agent == null || !_agent.isOnNavMesh) return;
 
         //Make sure enemy doesn't move
@@ -326,7 +326,7 @@ public class Incognito : MonoBehaviour, IEnemy
 
     public void SpitAttackPlayer()
     {
-        print("Spit attack");
+        // print("Spit attack");
         _alreadyAttacked = true;
         StartCoroutine(ResetAttack());
     }

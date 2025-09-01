@@ -194,7 +194,7 @@ namespace Audio
             eventEmitters.Clear();
             managedOneShotInstances.Clear();
 
-            Debug.Log("GamePlayAudioManager: All events were stopped and released manually.");
+            // Debug.Log("GamePlayAudioManager: All events were stopped and released manually.");
         }
 
         // Allows any script to request the release of a specific auio instance

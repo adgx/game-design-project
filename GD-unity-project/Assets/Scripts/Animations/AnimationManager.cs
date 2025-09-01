@@ -107,7 +107,7 @@ public class AnimationManager : MonoBehaviour
 
         //sheild check
         if (prefabSheildVFX == null)
-            Debug.LogError("The sheild VFX not found!");
+            Debug.LogError("Shield VFX not found!");
     }
 
     private void Update()
