@@ -7,7 +7,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Helper;
-using UnityEngine.Serialization;
 using Utils;
 
 public class PlayerShoot : MonoBehaviour
@@ -59,6 +58,9 @@ public class PlayerShoot : MonoBehaviour
 	// This flag is true if an attack is being executed. While executing it, I can not start another attack
 	private bool attacking = false;
 	private int attackStamina = 0;
+	private bool isStaminaRecoveryInterruptible = true;
+	private bool isStaminaRecoveryInterrupted = false;
+	private Coroutine staminaRecoveryCoroutine = null;
 	public bool shieldIsActive = false;
 	[SerializeField] private float shieldRadius = 1.7f; // Shield radius
 	public bool isInteracting = false;
@@ -71,7 +73,7 @@ public class PlayerShoot : MonoBehaviour
 
 	// Stamina for the attacks
 	public int maxSphereStamina = 5;
-	[FormerlySerializedAs("increaseStamina")] public bool increasingStamina = false;
+	public bool increasingStamina = false;
 	public int sphereStamina = 5;
 	public bool sphereIsDischarged = false;
 
@@ -117,7 +119,7 @@ public class PlayerShoot : MonoBehaviour
 		damageRadius = defaultDamageRadius;
 		
 		// We initialize the timer to the current time to prevent charging from starting immediately
-		// at the beginning of the game if the bunting is not full for some reason
+		// at the beginning of the game if the stamina is not full for some reason
 		LastStaminaUseTime = Time.time;
 	}
 	
@@ -200,7 +202,7 @@ public class PlayerShoot : MonoBehaviour
 
 	private bool CheckStamina(int value)
 	{
-		if (sphereIsDischarged || increasingStamina)
+		if (sphereIsDischarged || (increasingStamina && !isStaminaRecoveryInterruptible))
 		{
 			// Audio management: the sphere has finished the stamina or is loading after having been completely discharged
 			GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerSphereDischarge, rotatingSphere.transform.position);
@@ -210,6 +212,12 @@ public class PlayerShoot : MonoBehaviour
 		// The sphere still has stamina
 		if (sphereStamina >= value && !sphereIsDischarged)
 		{
+			// If the stamina recovery process can still be interrupted, and it's currently running, then stop it
+			if (increasingStamina)
+			{
+				InterruptStaminaRecovery();
+			}
+			
 			return true;
 		}
 
@@ -236,36 +244,70 @@ public class PlayerShoot : MonoBehaviour
 	{
 		// Check if a charge is already in progress to avoid starting multiple coroutines, moreover check if
 		// the shield is active or not 
-		if (!increasingStamina && !shieldIsActive)
+		if (!increasingStamina && !shieldIsActive && staminaRecoveryCoroutine == null)
 		{
 			increasingStamina = true; 
-			StartCoroutine(RecoverStaminaCoroutine());
+			isStaminaRecoveryInterruptible = true;
+			staminaRecoveryCoroutine = StartCoroutine(RecoverStaminaCoroutine());
+		}
+	}
+
+	private void InterruptStaminaRecovery()
+	{
+		// Stop the recovery process only if the coroutine is active and the process is interruptible
+		if (staminaRecoveryCoroutine != null && isStaminaRecoveryInterruptible && !isStaminaRecoveryInterrupted)
+		{
+			isStaminaRecoveryInterrupted = true;
+			Debug.LogWarning("Stamina recovery process was interrupted, tempo = " + DateTime.Now);
+			StopCoroutine(staminaRecoveryCoroutine);
+			LastStaminaUseTime = Time.time;
+			staminaRecoveryCoroutine = null;
+			increasingStamina = false;
+			isStaminaRecoveryInterrupted = false;
+		}
+		else
+		{
+			Debug.LogWarning("Stamina recovery process was NOT interrupted");
 		}
 	}
 
 	private IEnumerator RecoverStaminaCoroutine()
 	{
+		// TODO: debug code
+		Debug.LogWarning("Recovering stamina, tempo = " + DateTime.Now);
+		
 		sphereIsDischarged = false;
-
+		
 		while (sphereStamina < maxSphereStamina && !loadingAttack)
 		{
+			// TODO: restore 500 ms
 			yield return new WaitForSeconds(0.5f); // 500ms
-
-			if (loadingAttack)
+			
+			// Passed this checkpoint, if stamina is at least 1, the recovering process can't be interrupted anymore
+			if (sphereStamina >= 1)
 			{
-				// If the player starts charging an attack while charging, we stop the coroutine
-				break;
+				isStaminaRecoveryInterruptible = false;
 			}
-			sphereStamina += 1;
-			ChangeSphereColor(sphereStamina);
+			
+			// TODO: restore 500 ms
+			// yield return new WaitForSeconds(3f); // 500ms
 
-			// Audio management
-			if (sphereStamina == maxSphereStamina)
+			if (!isStaminaRecoveryInterrupted)
 			{
-				GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerSphereFullRecharge, rotatingSphere.transform.position);
+				sphereStamina += 1;
+				Debug.LogWarning("Current stamina = " + sphereStamina + ", tempo = " + DateTime.Now);
+				ChangeSphereColor(sphereStamina);
+
+				// Audio management
+				if (sphereStamina == maxSphereStamina)
+				{
+					GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerSphereFullRecharge, rotatingSphere.transform.position);
+				}
 			}
 		}
 		increasingStamina = false;
+		isStaminaRecoveryInterruptible = true;
+		staminaRecoveryCoroutine = null;
 	}
 
 	private void SetSelectedAttackImage()
@@ -784,7 +826,6 @@ public class PlayerShoot : MonoBehaviour
 	}
 	private IEnumerator LoadRespawnSceneAsync()
 	{
-
 		// Asynchronous loading of scene starts
 		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(respawnSceneName);
 		if (asyncLoad != null)
@@ -819,6 +860,7 @@ public class PlayerShoot : MonoBehaviour
 	{
 		//debug Rick State
 		//Debug.Log($"Rick state: {AnimationManager.Instance.rickState}");
+		
 		if (!GameStatus.gamePaused)
 		{
 			if (!cannotAttack)
@@ -836,7 +878,7 @@ public class PlayerShoot : MonoBehaviour
 						}
 						SetShieldIsActive(false); // Set shield as inactive
 						// At this point, the player can proceed with the attack
-						if (CheckStamina(1) && !attacking) // Check the bunting even after the shield is deactivated
+						if (!attacking && CheckStamina(1)) // Check the stamina even after the shield is deactivated
 						{
 							loadingAttack = true;
 							attacking = true;
@@ -854,7 +896,7 @@ public class PlayerShoot : MonoBehaviour
 							}
 						}
 					}
-					else if (CheckStamina(1) && !attacking)
+					else if (!attacking && CheckStamina(1))
 					{
 						loadingAttack = true;
 						attacking = true;
@@ -875,7 +917,7 @@ public class PlayerShoot : MonoBehaviour
 
 				if (Input.GetButtonUp("Fire1"))
 				{
-					if (!shieldIsActive && CheckStamina(1) && loadingAttack)
+					if (!shieldIsActive && loadingAttack && CheckStamina(1))
 					{
 						switch (attackNumber)
 						{
