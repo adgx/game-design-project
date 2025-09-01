@@ -245,11 +245,10 @@ public class Incognito : MonoBehaviour, IEnemy
 
     public void TakeDamage(float damage, string attackType, bool isShield)
     {
-        // Debug.LogWarning("Incognito's health BEFORE the attack = " + _health);
-
+        // Incognito can be hurt from the player both with distance and close attacks
         _health -= damage;
         
-        // Debug.LogWarning("Incognito's health AFTER the attack  = " + _health);
+        // Debug.Log("Incognito's health BEFORE the attack = " + (_health + damage) + ", Incognito's health AFTER the attack  = " + _health);
 
         if (!isShield)
         {

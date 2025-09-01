@@ -260,14 +260,13 @@ public class Drake : MonoBehaviour, IEnemy
 
     public void TakeDamage(float damage, string attackType, bool isShield)
     {
-        Debug.LogWarning("Drake's health BEFORE the attack = " + _health);
-
-        _health -= damage;
-        
-        Debug.LogWarning("Drake's health AFTER the attack  = " + _health);
-
+        // Drake can be hurt from the player only with close attacks
         if (attackType == "c")
         {
+            _health -= damage;
+        
+            Debug.Log("Drake's health BEFORE the attack = " + (_health + damage) + ", Drake's health AFTER the attack  = " + _health);
+            
             if (!isShield)
             {
                 StartCoroutine(ChangeColor(Color.red, 0.8f, 0));   
