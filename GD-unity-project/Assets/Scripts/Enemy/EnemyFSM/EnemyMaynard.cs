@@ -264,12 +264,10 @@ public class Maynard : MonoBehaviour, IEnemy
 
     public void TakeDamage(float damage, string attackType, bool isShield)
     {
-        // TODO: debug code
         // Debug.LogWarning("Maynard's health BEFORE the attack = " + _health);
 
         _health -= damage;
         
-        // TODO: debug code
         // Debug.LogWarning("Maynard's health AFTER the attack  = " + _health);
 
         if (!isShield)

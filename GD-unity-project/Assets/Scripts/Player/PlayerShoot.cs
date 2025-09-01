@@ -183,7 +183,7 @@ public class PlayerShoot : MonoBehaviour
 				break;
 			case 0:
 				sphereMaterial.SetColor("_EmissionColor", Color.white * intensityHDR);
-				Debug.LogWarning("Stamina is 0, Time = " + DateTime.Now);
+				// Debug.LogWarning("Stamina is 0, Time = " + DateTime.Now);
 				break;
 			default:
 				break;
@@ -254,7 +254,7 @@ public class PlayerShoot : MonoBehaviour
 		if (staminaRecoveryCoroutine != null && isStaminaRecoveryInterruptible && !isStaminaRecoveryInterrupted)
 		{
 			isStaminaRecoveryInterrupted = true;
-			Debug.LogWarning("Stamina recovery process was interrupted, Time = " + DateTime.Now);
+			// Debug.LogWarning("Stamina recovery process was interrupted, Time = " + DateTime.Now);
 			StopCoroutine(staminaRecoveryCoroutine);
 			LastStaminaUseTime = Time.time;
 			staminaRecoveryCoroutine = null;
@@ -263,13 +263,13 @@ public class PlayerShoot : MonoBehaviour
 		}
 		else
 		{
-			Debug.LogWarning("Stamina recovery process was NOT interrupted");
+			// Debug.LogWarning("Stamina recovery process was NOT interrupted");
 		}
 	}
 
 	private IEnumerator RecoverStaminaCoroutine()
 	{
-		Debug.LogWarning("Recovering stamina, Time = " + DateTime.Now);
+		// Debug.LogWarning("Recovering stamina, Time = " + DateTime.Now);
 		
 		sphereIsDischarged = false;
 		
@@ -286,7 +286,7 @@ public class PlayerShoot : MonoBehaviour
 			if (!isStaminaRecoveryInterrupted)
 			{
 				sphereStamina += 1;
-				Debug.LogWarning("Current stamina = " + sphereStamina + ", Time = " + DateTime.Now);
+				// Debug.LogWarning("Current stamina = " + sphereStamina + ", Time = " + DateTime.Now);
 				ChangeSphereColor(sphereStamina);
 
 				// Audio management
