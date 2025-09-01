@@ -265,7 +265,7 @@ public class Drake : MonoBehaviour, IEnemy
         {
             _health -= damage;
         
-            Debug.Log("Drake's health BEFORE the attack = " + (_health + damage) + ", Drake's health AFTER the attack  = " + _health);
+            // Debug.Log("Drake's health BEFORE the attack = " + (_health + damage) + ", Drake's health AFTER the attack  = " + _health);
             
             if (!isShield)
             {
@@ -394,9 +394,13 @@ public class Drake : MonoBehaviour, IEnemy
 
     public void CheckSwipingAttackDamage()
     {
-        if (!_debug)
+        if (Physics.CheckSphere(transform.position, 2f, whatIsPlayer) && !playerShoot.shieldIsActive)
         {
-            if (Physics.CheckSphere(transform.position, 2f, whatIsPlayer) && !playerShoot.shieldIsActive)
+            playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack);
+        }
+        if (Physics.CheckSphere(transform.position, 2f, whatIsPlayer))
+        {
+            if (!_debug)
             {
                 playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, transform);
             }

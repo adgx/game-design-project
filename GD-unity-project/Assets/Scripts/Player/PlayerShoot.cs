@@ -62,7 +62,6 @@ public class PlayerShoot : MonoBehaviour
 	private bool isStaminaRecoveryInterrupted = false;
 	private Coroutine staminaRecoveryCoroutine = null;
 	public bool shieldIsActive = false;
-	[SerializeField] private float shieldRadius = 1.7f; // Shield radius
 	public bool isInteracting = false;
 
 	// Health
@@ -687,22 +686,17 @@ public class PlayerShoot : MonoBehaviour
 
 	public void TakeDamage(float damage, DamageTypes damageType, Transform enemyTransform = null)
 	{
-		
 		if (isDying)
 		{
 			return; // If the player is already dying, ignore any further damage
 		}
 		
-		if (shieldIsActive && enemyTransform != null)
+		// If the shield is active then no damage is taken by the player and his hit animation does not start
+		if (shieldIsActive)
 		{
-			float distanceToEnemy = Vector3.Distance(transform.position, enemyTransform.position);
-			if (distanceToEnemy <= shieldRadius)
-			{
-				// Debug.Log("Damage blocked by the shield!");
-				// No damage is taken and the hit animation does not start
-				GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerShieldHit, transform.position);
-				return; // Exits the function, canceling the damage
-			}
+			// Debug.Log("Damage blocked by the shield!");
+			GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerShieldHit, transform.position);
+			return; // Exits the function, canceling the damage
 		}
 
 		// Debug.Log("Take damage");
