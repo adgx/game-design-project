@@ -91,8 +91,6 @@ namespace PlayerInteraction
         {
             _isBusy = true;
             _playerShoot.isInteracting = true;
-            _player.FreezeMovement(true);
-            _playerShoot.DisableAttacks(true);
 
             _rotateSphere.positionSphere(new Vector3(_rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
             GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerTerminalInteraction, transform.position);
@@ -109,11 +107,8 @@ namespace PlayerInteraction
             yield return new WaitForSeconds(_postInteractionDelay);
 
             _playerShoot.DecreaseStamina(1);
-
-			_player.FreezeMovement(false);
-			_playerShoot.DisableAttacks(false);
+            
 			_rotateSphere.isRotating = true;
-
             _isBusy = false;
             _playerShoot.isInteracting = false;
         }
