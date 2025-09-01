@@ -231,9 +231,9 @@ namespace Animations
                 // Explicitly sets the variable to null, allowing the creation of a new shield
                 shield = null; 
                 
-                // Notify PlayerShoot that the shield is no longer active
                 if (playerShoot != null)
                 {
+                    // Notify PlayerShoot that the shield is no longer active
                     playerShoot.SetShieldIsActive(false);
                 }
             }
@@ -521,6 +521,12 @@ namespace Animations
 
             // Audio management
             GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerShieldDeactivationAfterDelay, transform.position);
+            
+            // The recharge delay of the stamina must start just before the shield is destroyed
+            if (playerShoot != null)
+            {
+                playerShoot.LastStaminaUseTime = Time.time - 1.0f;   
+            }
             
             // Second part of the delay
             yield return new WaitForSeconds(1.0f);

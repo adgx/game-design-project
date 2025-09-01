@@ -12,7 +12,7 @@ using Utils;
 public class PlayerShoot : MonoBehaviour
 {
 	public static PlayerShoot Instance { get; private set; }
-	public float LastStaminaUseTime { get; private set; }
+	public float LastStaminaUseTime { get; set; }
 	[HideInInspector] public bool isInCombat = false;
 	private float recoveryDelay = 3f;
 
@@ -256,7 +256,6 @@ public class PlayerShoot : MonoBehaviour
 			isStaminaRecoveryInterrupted = true;
 			// Debug.LogWarning("Stamina recovery process was interrupted, Time = " + DateTime.Now);
 			StopCoroutine(staminaRecoveryCoroutine);
-			LastStaminaUseTime = Time.time;
 			staminaRecoveryCoroutine = null;
 			increasingStamina = false;
 			isStaminaRecoveryInterrupted = false;
