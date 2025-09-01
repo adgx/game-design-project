@@ -291,7 +291,7 @@ public class PlayerShoot : MonoBehaviour
 				// Audio management
 				if (sphereStamina == maxSphereStamina)
 				{
-					GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerSphereFullRecharge, rotatingSphere.transform.position);
+					GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerSphereFullCharge, rotatingSphere.transform.position);
 				}
 			}
 		}

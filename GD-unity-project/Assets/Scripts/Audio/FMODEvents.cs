@@ -37,7 +37,8 @@ namespace Audio
         [field: SerializeField] public EventReference PlayerWalkFootsteps { get; private set; }
         [field: SerializeField] public EventReference PlayerRunFootsteps { get; private set; }
         [field: SerializeField] public EventReference PlayerSphereDischarge { get; private set; }
-        [field: SerializeField] public EventReference PlayerSphereFullRecharge { get; private set; }
+        [field: SerializeField] public EventReference PlayerSphereFullCharge { get; private set; }
+        [field: SerializeField] public EventReference PlayerSphereCharging { get; private set; }
         [field: SerializeField] public EventReference PlayerSphereRotation { get; private set; }
         [field: SerializeField] public EventReference PlayerTerminalInteraction { get; private set; }
         [field: SerializeField] public EventReference PlayerVendingMachineActivation { get; private set; }
