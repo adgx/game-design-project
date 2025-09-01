@@ -8,6 +8,9 @@ public class PlayerInput : MonoBehaviour
     // Shooting
     [SerializeField] private KeyCode leftMouseInput;
 
+    // Lock enemy 
+    [SerializeField] private KeyCode lockInput;
+
     // Pause
     [SerializeField] private KeyCode pauseInput, pauseInputController;
 
