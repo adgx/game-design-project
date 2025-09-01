@@ -825,7 +825,35 @@ public class PlayerShoot : MonoBehaviour
 				// The attack is shot only on "Fire1" up && AnimationManager.Instance.rickState == RickStates.Idle
 				if (Input.GetButtonDown("Fire1"))
 				{
-					if (!shieldIsActive && CheckStamina(1) && !attacking)
+					if (shieldIsActive)
+					{
+						// If the player has enough stamina for the attack, then deactivate the shield immediately and
+						// play the deactivation sound
+						if (rickEvents != null && CheckStamina(1))
+						{
+							rickEvents.InstantShieldDeactivation();
+						}
+						SetShieldIsActive(false); // Set shield as inactive
+						// At this point, the player can proceed with the attack
+						if (CheckStamina(1) && !attacking) // Check the bunting even after the shield is deactivated
+						{
+							loadingAttack = true;
+							attacking = true;
+
+							switch (attackNumber)
+							{
+								case 1:
+									LoadDistanceAttack();
+									break;
+								case 2:
+									LoadCloseAttack();
+									break;
+								default:
+									break;
+							}
+						}
+					}
+					else if (CheckStamina(1) && !attacking)
 					{
 						loadingAttack = true;
 						attacking = true;

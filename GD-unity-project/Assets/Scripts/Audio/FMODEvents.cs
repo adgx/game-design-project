@@ -15,7 +15,8 @@ namespace Audio
         [field: SerializeField] public EventReference PlayerDistanceAttackShoot { get; private set; }
         [field: SerializeField] public EventReference PlayerDistanceAttackImpact { get; private set; }
         [field: SerializeField] public EventReference PlayerShieldActivation { get; private set; }
-        [field: SerializeField] public EventReference PlayerShieldDeactivation { get; private set; }
+        [field: SerializeField] public EventReference PlayerShieldDeactivationAfterDelay { get; private set; }
+        [field: SerializeField] public EventReference PlayerShieldImmediateDeactivation { get; private set; }
         [field: SerializeField] public EventReference PlayerShieldHit { get; private set; }
         [field: SerializeField] public EventReference PlayerDieBackwardGrunt { get; private set; }
         [field: SerializeField] public EventReference PlayerDieBackwardThud { get; private set; }

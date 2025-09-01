@@ -31,6 +31,7 @@ namespace Animations
         private bool isHitSoundPending = false;
         private bool shouldPlayHeartbeat = false;
         private bool sphereShouldBePlaying = false;
+        private Coroutine shieldDeactivationCoroutine;
 
         //Player
         [SerializeField] private Player _player;
@@ -201,7 +202,7 @@ namespace Animations
             ShieldDeactivation();
         }
 
-        private void ShieldDeactivation()
+        public void ShieldDeactivation()
         {
             //reset the idle state
             AnimationManager.Instance.rickState = RickStates.Idle;
@@ -212,7 +213,7 @@ namespace Animations
                 if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1) delay = 3.5f;
                 else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 2) delay = 4.5f;
             }
-            StartCoroutine(ShieldDestructionAfterDelay(delay));
+            shieldDeactivationCoroutine = StartCoroutine(ShieldDestructionAfterDelay(delay)); // Save the reference to coroutine
         }
 
         private void ShieldDestroy()
@@ -236,6 +237,24 @@ namespace Animations
                     playerShoot.SetShieldIsActive(false);
                 }
             }
+        }
+        
+        public void InstantShieldDeactivation()
+        {
+            if (shieldDeactivationCoroutine != null)
+            {
+                StopCoroutine(shieldDeactivationCoroutine); // Stop the automatic deactivation coroutine by using its reference
+                shieldDeactivationCoroutine = null; // Remove the reference
+            }
+
+            // Audio management
+            GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerShieldImmediateDeactivation, transform.position);
+
+            // Destroy the shield immediately
+            ShieldDestroy();
+    
+            // Make sure the player is unlocked if it was frozen by the shield
+            playerShoot.UnfreezePlayer();
         }
 
         public void DeathForwardGrunt()
@@ -501,7 +520,7 @@ namespace Animations
             yield return new WaitForSeconds(delaySeconds - 1.0f);
 
             // Audio management
-            GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerShieldDeactivation, transform.position);
+            GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerShieldDeactivationAfterDelay, transform.position);
             
             // Second part of the delay
             yield return new WaitForSeconds(1.0f);
