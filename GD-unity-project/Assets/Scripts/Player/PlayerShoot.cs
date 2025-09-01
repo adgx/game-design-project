@@ -14,7 +14,7 @@ public class PlayerShoot : MonoBehaviour
 	public static PlayerShoot Instance { get; private set; }
 	public float LastStaminaUseTime { get; private set; }
 	[HideInInspector] public bool isInCombat = false;
-	private float recoveryDelay;
+	private float recoveryDelay = 3f;
 
 	// Audio management 
 	public bool IsSphereRotating => rotateSphere.isRotating;
@@ -144,7 +144,7 @@ public class PlayerShoot : MonoBehaviour
 		if (isInCombat)
 		{
 			// Logic in combat: starts only if the sphere is completely discharged
-			if (sphereIsDischarged)
+			if (sphereIsDischarged && Time.time - LastStaminaUseTime >= recoveryDelay)
 			{
 				StartStaminaRecovery();
 			}
@@ -157,11 +157,6 @@ public class PlayerShoot : MonoBehaviour
 				StartStaminaRecovery();
 			}
 		}
-	}
-	
-	public void SetRecoveryDelay(float delay)
-	{
-		recoveryDelay = delay;
 	}
 
 	void ChangeSphereColor(int stamina)
@@ -188,6 +183,7 @@ public class PlayerShoot : MonoBehaviour
 				break;
 			case 0:
 				sphereMaterial.SetColor("_EmissionColor", Color.white * intensityHDR);
+				Debug.LogWarning("Stamina is 0! time = " + DateTime.Now);
 				break;
 			default:
 				break;
@@ -258,7 +254,7 @@ public class PlayerShoot : MonoBehaviour
 		if (staminaRecoveryCoroutine != null && isStaminaRecoveryInterruptible && !isStaminaRecoveryInterrupted)
 		{
 			isStaminaRecoveryInterrupted = true;
-			Debug.LogWarning("Stamina recovery process was interrupted, tempo = " + DateTime.Now);
+			Debug.LogWarning("Stamina recovery process was interrupted, Time = " + DateTime.Now);
 			StopCoroutine(staminaRecoveryCoroutine);
 			LastStaminaUseTime = Time.time;
 			staminaRecoveryCoroutine = null;
@@ -273,29 +269,24 @@ public class PlayerShoot : MonoBehaviour
 
 	private IEnumerator RecoverStaminaCoroutine()
 	{
-		// TODO: debug code
-		Debug.LogWarning("Recovering stamina, tempo = " + DateTime.Now);
+		Debug.LogWarning("Recovering stamina, Time = " + DateTime.Now);
 		
 		sphereIsDischarged = false;
 		
 		while (sphereStamina < maxSphereStamina && !loadingAttack)
 		{
-			// TODO: restore 500 ms
 			yield return new WaitForSeconds(0.5f); // 500ms
 			
 			// Passed this checkpoint, if stamina is at least 1, the recovering process can't be interrupted anymore
-			if (sphereStamina >= 1)
+			if (sphereStamina >= 0)
 			{
 				isStaminaRecoveryInterruptible = false;
 			}
 			
-			// TODO: restore 500 ms
-			// yield return new WaitForSeconds(3f); // 500ms
-
 			if (!isStaminaRecoveryInterrupted)
 			{
 				sphereStamina += 1;
-				Debug.LogWarning("Current stamina = " + sphereStamina + ", tempo = " + DateTime.Now);
+				Debug.LogWarning("Current stamina = " + sphereStamina + ", Time = " + DateTime.Now);
 				ChangeSphereColor(sphereStamina);
 
 				// Audio management
