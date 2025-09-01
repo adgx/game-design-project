@@ -271,15 +271,24 @@ public class PlayerShoot : MonoBehaviour
 		// Debug.LogWarning("Recovering stamina, Time = " + DateTime.Now);
 		
 		sphereIsDischarged = false;
+		bool firstIteration = true;
 		
 		while (sphereStamina < maxSphereStamina && !loadingAttack)
 		{
 			yield return new WaitForSeconds(0.5f); // 500ms
 			
 			// Passed this checkpoint, if stamina is at least 1, the recovering process can't be interrupted anymore
-			if (sphereStamina >= 0)
+			if (sphereStamina >= 0 && firstIteration)
 			{
 				isStaminaRecoveryInterruptible = false;
+				firstIteration = false;
+				
+				// Audio management: start sphere charging sound
+				if (rickEvents != null)
+				{
+					// Debug.Log("Starting sphere charging SFX");
+					rickEvents.SetSphereChargingState(true); 
+				}
 			}
 			
 			if (!isStaminaRecoveryInterrupted)
@@ -288,9 +297,16 @@ public class PlayerShoot : MonoBehaviour
 				// Debug.LogWarning("Current stamina = " + sphereStamina + ", Time = " + DateTime.Now);
 				ChangeSphereColor(sphereStamina);
 
-				// Audio management
 				if (sphereStamina == maxSphereStamina)
 				{
+					// Audio management: stop sphere charging sound
+					if (rickEvents != null)
+					{
+						// Debug.Log("Stopping sphere charging SFX");
+						rickEvents.SetSphereChargingState(false);
+					}
+					
+					// Audio management: play sphere full charge sound
 					GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerSphereFullCharge, rotatingSphere.transform.position);
 				}
 			}

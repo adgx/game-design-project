@@ -21,6 +21,7 @@ namespace Animations
         private EventInstance rickIdle;
         private EventInstance rickHeartbeat;
         private EventInstance rickSphereRotation;
+        private EventInstance rickSphereCharging;
         
         // Audio management: one-shot sounds
         private List<EventInstance> activeOneShotInstances = new List<EventInstance>();
@@ -31,6 +32,7 @@ namespace Animations
         private bool isHitSoundPending = false;
         private bool shouldPlayHeartbeat = false;
         private bool sphereShouldBePlaying = false;
+        private bool sphereChargingShouldBePlaying = false;
         private Coroutine shieldDeactivationCoroutine;
 
         //Player
@@ -78,6 +80,9 @@ namespace Animations
             
             rickSphereRotation = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerSphereRotation);
             rickSphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphereSource.transform));
+            
+            rickSphereCharging = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerSphereCharging);
+            rickSphereCharging.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphereSource.transform));
         }
 
         // FixedUpdate is called once per frame
@@ -455,6 +460,7 @@ namespace Animations
             if (rotatingSphereSource != null)
             {
                 rickSphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphereSource.transform));
+                rickSphereCharging.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphereSource.transform));
             }
 
             RickStates currentState = AnimationManager.Instance.rickState;
@@ -477,6 +483,7 @@ namespace Animations
 
             // Looping sounds
             HandleLoopingSound(rickSphereRotation, sphereShouldBePlaying);
+            HandleLoopingSound(rickSphereCharging, sphereChargingShouldBePlaying);
             HandleLoopingSound(rickWalkFootsteps, currentState == RickStates.Walk);
             HandleLoopingSound(rickRunFootsteps, currentState == RickStates.Run);
             HandleLoopingSound(rickIdle, currentState == RickStates.Idle);
@@ -557,6 +564,8 @@ namespace Animations
                 rickHeartbeat.stop(STOP_MODE.IMMEDIATE);
             if (rickSphereRotation.isValid())
                 rickSphereRotation.stop(STOP_MODE.IMMEDIATE);
+            if(rickSphereCharging.isValid())
+                rickSphereCharging.stop(STOP_MODE.IMMEDIATE);
         }
 
         public void SpawnAreaAttack()
@@ -623,6 +632,12 @@ namespace Animations
             sphereShouldBePlaying = shouldBePlaying;
         }
         
+        // Audio management
+        public void SetSphereChargingState(bool shouldBePlaying)
+        {
+            sphereChargingShouldBePlaying = shouldBePlaying;
+        }
+        
         /// <summary>
         /// Pauses all Rick's sounds
         /// </summary>
@@ -638,6 +653,7 @@ namespace Animations
             rickIdle.setPaused(true);
             rickHeartbeat.setPaused(true);
             rickSphereRotation.setPaused(true);
+            rickSphereCharging.setPaused(true);
 
             // Stop one-shot sounds
             foreach (var instance in activeOneShotInstances)
@@ -661,6 +677,7 @@ namespace Animations
             rickIdle.setPaused(false);
             rickHeartbeat.setPaused(false);
             rickSphereRotation.setPaused(false);
+            rickSphereCharging.setPaused(false);
             
             // Resume one-shot sounds
             foreach (var instance in activeOneShotInstances)
