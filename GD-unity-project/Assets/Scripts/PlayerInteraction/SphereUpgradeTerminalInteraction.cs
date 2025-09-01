@@ -30,8 +30,7 @@ namespace PlayerInteraction
             }
         }
         
-        public bool IsInteractable =>
-            !_isBusy && (_powerUp != null && _powerUp.spherePowerUps.Count > 0);
+        public bool IsInteractable => !_isBusy && (_powerUp != null && _powerUp.spherePowerUps.Count > 0);
         
         public Collider InteractionZone => _interactionZone;
 
@@ -75,7 +74,7 @@ namespace PlayerInteraction
 
         public bool Interact(GameObject interactor)
         {
-            if (!IsInteractable || RoomManager.RoomManager.Instance.IsSphereUpgradeTerminalUsedInCurrentRoom()) 
+            if (!IsInteractable || RoomManager.RoomManager.Instance.IsSphereUpgradeTerminalUsedInCurrentRoom() || !_playerShoot.CheckStamina(1)) 
                 return false;
 
             AnimationManager.Instance.Idle();

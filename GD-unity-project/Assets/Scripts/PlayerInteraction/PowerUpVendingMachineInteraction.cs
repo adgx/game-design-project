@@ -108,7 +108,7 @@ namespace PlayerInteraction
 	            // Mark the power-up vending machine as used (not interactable anymore)
 	            RoomManager.RoomManager.Instance.MarkPowerUpVendingMachineAsUsedInCurrentRoom();
             }
-			else
+            else if(_playerShoot.CheckStamina(1))
 				StartCoroutine(HackingSequence());
 
 			return true;
@@ -125,6 +125,8 @@ namespace PlayerInteraction
 	        _playerShoot.DecreaseStamina(1);
 	        
 	        yield return new WaitForSeconds(_hackingTime);
+	        
+	        _playerShoot.LastStaminaUseTime = Time.time;
 	        
 	        _rotateSphere.isRotating = true;
 	        _isPowerUpVendingMachineHacked = true;

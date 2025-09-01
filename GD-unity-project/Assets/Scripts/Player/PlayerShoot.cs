@@ -196,7 +196,7 @@ public class PlayerShoot : MonoBehaviour
 		cannotAttack = value;
 	}
 
-	private bool CheckStamina(int value)
+	public bool CheckStamina(int value)
 	{
 		if (sphereIsDischarged || (increasingStamina && !isStaminaRecoveryInterruptible))
 		{
