@@ -61,6 +61,7 @@ public class PlayerShoot : MonoBehaviour
 	private int attackStamina = 0;
 	public bool shieldIsActive = false;
 	[SerializeField] private float shieldRadius = 1.7f; // Shield radius
+	public bool isInteracting = false;
 
 	// Health
 	public float maxHealth = 120;
@@ -132,12 +133,12 @@ public class PlayerShoot : MonoBehaviour
 	private void HandleStaminaRecovery()
 	{
 		// Conditions for doing nothing: charging already in progress or full stamina
-		if (increasingStamina || sphereStamina >= maxSphereStamina)
+		if (increasingStamina || sphereStamina >= maxSphereStamina || isInteracting)
 		{
 			return;
 		}
 
-		// At this point, the bunting is not full and is not recharging
+		// At this point, the stamina is not full and is not recharging
 		if (isInCombat)
 		{
 			// Logic in combat: starts only if the sphere is completely discharged

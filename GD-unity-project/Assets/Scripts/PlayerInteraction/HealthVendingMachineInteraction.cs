@@ -41,7 +41,6 @@ namespace PlayerInteraction
         private GameObject _specialSnackMeshPrefab;
 
         [Header("Timings")]
-		[SerializeField] private float _freeSphere = 0.5f;
 		[SerializeField] private float _hackingTime = 3.7f;
         [SerializeField] private float _rotationDuration = 0.2f;
 
@@ -100,21 +99,19 @@ namespace PlayerInteraction
         private IEnumerator HackingSequence()
         {
             _isBusy = true;
-
-            GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerVendingMachineActivation,
-                this.transform.position);
-            _rotateSphere.positionSphere(new Vector3(_rotateSphere.DistanceFromPlayer, 1f, 0),
-                RotateSphere.Animation.Linear);
-
-            yield return new WaitForSeconds(_freeSphere);
-			_playerShoot.DecreaseStamina(1);
-			_rotateSphere.isRotating = true;
-
-			yield return new WaitForSeconds(_hackingTime);
-
-            _isHealthVendingMachineHacked = true;
+            _playerShoot.isInteracting = true;
             
+            _rotateSphere.positionSphere(new Vector3(_rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
+            GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerVendingMachineActivation, transform.position);
+
+            _playerShoot.DecreaseStamina(1);
+            
+			yield return new WaitForSeconds(_hackingTime);
+            
+            _rotateSphere.isRotating = true;
+            _isHealthVendingMachineHacked = true;
             _isBusy = false;
+            _playerShoot.isInteracting = false;
         }
 
         private void GetItemSequence()

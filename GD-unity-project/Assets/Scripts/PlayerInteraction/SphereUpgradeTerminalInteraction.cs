@@ -8,14 +8,6 @@ namespace PlayerInteraction
 {
     public class SphereUpgradeTerminalInteraction : MonoBehaviour, IInteractable
     {
-     //    public string InteractionPrompt => _powerUpObtained
-     //        ? "You obtained a " + _obtainedPowerUp.ToString() + "!"
-     //        : (_powerUp != null && _powerUp.spherePowerUps.Count <= 0)
-     //            ? "Terminal is empty"
-     //            : (_noMorePowerUp)
-     //                ? "You have already collected a Power Up from this machine"
-					// : "Press E to interact with the terminal";
-        
         public string InteractionPrompt
         {
             get
@@ -99,13 +91,12 @@ namespace PlayerInteraction
         private IEnumerator UpgradeSequence()
         {
             _isBusy = true;
+            _playerShoot.isInteracting = true;
             _player.FreezeMovement(true);
             _playerShoot.DisableAttacks(true);
 
-            _rotateSphere.positionSphere(new Vector3(_rotateSphere.DistanceFromPlayer, 1f, 0),
-                RotateSphere.Animation.Linear);
-            GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerTerminalInteraction,
-                this.transform.position);
+            _rotateSphere.positionSphere(new Vector3(_rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
+            GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerTerminalInteraction, transform.position);
 
             yield return new WaitForSeconds(_interactionTime);
 
@@ -125,6 +116,7 @@ namespace PlayerInteraction
 			_rotateSphere.isRotating = true;
 
             _isBusy = false;
+            _playerShoot.isInteracting = false;
         }
 
         private IEnumerator RotatePlayerTowards(Transform target, float duration)
