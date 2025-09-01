@@ -140,19 +140,19 @@ public class PlayerShoot : MonoBehaviour
 			return;
 		}
 
-		// At this point, the stamina is not full and is not recharging
-		if (isInCombat)
+		// At this point, the stamina is not full and is not recharging 
+		if (Time.time - LastStaminaUseTime >= recoveryDelay)
 		{
-			// Logic in combat: starts only if the sphere is completely discharged
-			if (sphereIsDischarged && Time.time - LastStaminaUseTime >= recoveryDelay)
+			// Logic in combat: starts only after the delay if the sphere is completely discharged
+			if (isInCombat)
 			{
-				StartStaminaRecovery();
+				if (sphereIsDischarged)
+				{
+					StartStaminaRecovery();
+				}
 			}
-		}
-		else
-		{
 			// Logic out of combat: starts only after the delay
-			if (Time.time - LastStaminaUseTime >= recoveryDelay)
+			else
 			{
 				StartStaminaRecovery();
 			}
@@ -183,7 +183,7 @@ public class PlayerShoot : MonoBehaviour
 				break;
 			case 0:
 				sphereMaterial.SetColor("_EmissionColor", Color.white * intensityHDR);
-				Debug.LogWarning("Stamina is 0! time = " + DateTime.Now);
+				Debug.LogWarning("Stamina is 0, Time = " + DateTime.Now);
 				break;
 			default:
 				break;
