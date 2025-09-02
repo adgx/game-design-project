@@ -233,6 +233,12 @@ public class PlayerShoot : MonoBehaviour
 			sphereStamina = 0;
 			sphereIsDischarged = true;
 		}
+		// If the stamina is > 0, the sphere is not discharged
+		else
+		{
+			sphereIsDischarged = false;
+		}
+		
 		ChangeSphereColor(sphereStamina);
 	}
 
@@ -294,7 +300,15 @@ public class PlayerShoot : MonoBehaviour
 			if (!isStaminaRecoveryInterrupted)
 			{
 				sphereStamina += 1;
+				
+				// If the stamina is > 0, the sphere is not discharged
+				if (sphereStamina > 0) 
+				{
+					sphereIsDischarged = false; 
+				}
+				
 				// Debug.Log("Current stamina = " + sphereStamina + ", Time = " + DateTime.Now);
+				
 				ChangeSphereColor(sphereStamina);
 
 				if (sphereStamina == maxSphereStamina)
