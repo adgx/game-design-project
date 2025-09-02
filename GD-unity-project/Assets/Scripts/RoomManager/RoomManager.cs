@@ -66,7 +66,8 @@ namespace RoomManager
 
         private int _nPaper;
 
-        [Tooltip("")] [SerializeField] private float _difficultyMultiplier = 0.33f;
+        [Tooltip("Parameter used to increase the spawn budget of every room of every loop iteration")] [SerializeField] 
+        private float _difficultyMultiplier = 0.33f;
 
         [Header("Player References")]
         [Tooltip("Reference to the player GameObject. Will be found by tag if not assigned.")]

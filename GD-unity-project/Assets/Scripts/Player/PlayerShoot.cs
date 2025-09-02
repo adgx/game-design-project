@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Helper;
+using PlayerInteraction;
 using Utils;
 
 public class PlayerShoot : MonoBehaviour
@@ -182,7 +183,7 @@ public class PlayerShoot : MonoBehaviour
 				break;
 			case 0:
 				sphereMaterial.SetColor("_EmissionColor", Color.white * intensityHDR);
-				// Debug.LogWarning("Stamina is 0, Time = " + DateTime.Now);
+				// Debug.Log("Stamina is 0, Time = " + DateTime.Now);
 				break;
 			default:
 				break;
@@ -253,7 +254,7 @@ public class PlayerShoot : MonoBehaviour
 		if (staminaRecoveryCoroutine != null && isStaminaRecoveryInterruptible && !isStaminaRecoveryInterrupted)
 		{
 			isStaminaRecoveryInterrupted = true;
-			// Debug.LogWarning("Stamina recovery process was interrupted, Time = " + DateTime.Now);
+			// Debug.Log("Stamina recovery process was interrupted, Time = " + DateTime.Now);
 			StopCoroutine(staminaRecoveryCoroutine);
 			staminaRecoveryCoroutine = null;
 			increasingStamina = false;
@@ -267,7 +268,7 @@ public class PlayerShoot : MonoBehaviour
 
 	private IEnumerator RecoverStaminaCoroutine()
 	{
-		// Debug.LogWarning("Recovering stamina, Time = " + DateTime.Now);
+		// Debug.Log("Recovering stamina, Time = " + DateTime.Now);
 		
 		sphereIsDischarged = false;
 		bool firstIteration = true;
@@ -293,7 +294,7 @@ public class PlayerShoot : MonoBehaviour
 			if (!isStaminaRecoveryInterrupted)
 			{
 				sphereStamina += 1;
-				// Debug.LogWarning("Current stamina = " + sphereStamina + ", Time = " + DateTime.Now);
+				// Debug.Log("Current stamina = " + sphereStamina + ", Time = " + DateTime.Now);
 				ChangeSphereColor(sphereStamina);
 
 				if (sphereStamina == maxSphereStamina)
@@ -473,7 +474,7 @@ public class PlayerShoot : MonoBehaviour
 			finalBulletDamage = baseDistanceAttackDamage;
 		}
 		
-		// Debug.LogWarning("Distance attack damage = " + finalBulletDamage + ", Consumed stamina = " + staminaConsumed);
+		// Debug.Log("Distance attack damage = " + finalBulletDamage + ", Consumed stamina = " + staminaConsumed);
 		
 		PAC.playerBulletDamage = finalBulletDamage;
 		PAC.targetPos = bulletSpawnTransform;
@@ -605,7 +606,7 @@ public class PlayerShoot : MonoBehaviour
 			finalCloseAttackDamage = baseCloseAttackDamage;
 		}
 		
-		// Debug.LogWarning("Close attack damage = " + finalCloseAttackDamage + ", Consumed stamina = " + staminaConsumed);
+		// Debug.Log("Close attack damage = " + finalCloseAttackDamage + ", Consumed stamina = " + staminaConsumed);
 		
 		if (attackStamina == 0)
 		{

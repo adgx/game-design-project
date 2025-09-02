@@ -123,8 +123,10 @@ namespace RoomManager.RoomData
         /// <param name="difficultyMultiplier">Multiplier to scale difficulty (e.g., 1.2 for 20% harder).</param>
         public void SetDifficulty(float difficultyMultiplier)
         {
-            roomSpawnBudget = roomSpawnBudgetLoop1 +
-                              (int)Math.Round(roomSpawnBudgetLoop1 * difficultyMultiplier * (int)GameStatus.loopIteration);
+            roomSpawnBudget = roomSpawnBudgetLoop1 + (int)Math.Round(roomSpawnBudgetLoop1 * difficultyMultiplier * ((int)GameStatus.loopIteration + 1));
+            
+            // Make sure the minimum budget is at least roomSpawnBudgetLoop1 to avoid empty rooms
+            roomSpawnBudget = Math.Max(roomSpawnBudget, roomSpawnBudgetLoop1);
         }
         
         public RoomData Clone()

@@ -94,6 +94,14 @@ namespace Utils {
 			if(currentTime <= 0f) {
 				currentTime = 0f;
 				isRunning = false;
+				
+				// This code is necessary to avoid problems with stamina recovery process whenever the player interacts
+				// with a terminal/distributor at the end of the current loop iteration
+				if (playerShoot != null && playerShoot.isInteracting)
+				{
+					// Debug.Log("Flag reset");
+					playerShoot.isInteracting = false;
+				}
 
 				AnimationManager.Instance.Idle();
 				rickEvents.DisableRickState();
