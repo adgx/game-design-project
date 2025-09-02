@@ -55,7 +55,7 @@ public class LookAtEnemy : MonoBehaviour
                 // We must inform PlayerShoot of the combat status
                 //playerShoot.isInCombat = enemiesPresent;
 
-                if (input.Vertical == 0 && input.Horizontal == 0 && !playerShoot.cannotAttack)
+                if (!playerShoot.cannotAttack)
                 {
                     LookAtClosestEnemy(enemiesInRange);
                 }
@@ -147,8 +147,8 @@ public class LookAtEnemy : MonoBehaviour
     bool Blocked(Vector3 t)
     {
         RaycastHit hit;
-        if(Physics.Linecast(transform.position + Vector3.up * 0.5f, t, out hit)){
-            if(!hit.transform.CompareTag("Enemy")) return true;
+        if(Physics.Raycast(transform.position + Vector3.up * 1f, t, out hit)){
+            if(hit.collider.gameObject.layer != (int)ORF.Utils.Layers.Enemy) return true;
         }
         return false;
     }    
