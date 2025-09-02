@@ -7,7 +7,7 @@ using UnityEngine;
         //player attributes
         [Header("Player Attributes")]
         [Tooltip("Max speed")]
-        [SerializeField] private float maxMovementSpeed = 7f;
+        [SerializeField] private float maxMovementSpeed = 6.5f;
         
 		[Tooltip("Acceleration and deceleration")]
 		[SerializeField] private float speedChangeRate = 10.0f;
