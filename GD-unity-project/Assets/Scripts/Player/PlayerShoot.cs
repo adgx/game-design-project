@@ -58,6 +58,7 @@ public class PlayerShoot : MonoBehaviour
 	private bool loadingAttack = false;
 	// This flag is true if an attack is being executed. While executing it, I can not start another attack
 	private bool attacking = false;
+	private Coroutine currentLoadingAttackCoroutine = null;
 	private int attackStamina = 0;
 	private bool isStaminaRecoveryInterruptible = true;
 	private bool isStaminaRecoveryInterrupted = false;
@@ -267,11 +268,11 @@ public class PlayerShoot : MonoBehaviour
 		if (staminaRecoveryCoroutine != null && isStaminaRecoveryInterruptible && !isStaminaRecoveryInterrupted)
 		{
 			isStaminaRecoveryInterrupted = true;
-			// Debug.Log("Stamina recovery process was interrupted, Time = " + DateTime.Now);
 			StopCoroutine(staminaRecoveryCoroutine);
 			staminaRecoveryCoroutine = null;
 			increasingStamina = false;
 			isStaminaRecoveryInterrupted = false;
+			// Debug.Log("Stamina recovery process was interrupted, Time = " + DateTime.Now);
 		}
 		else
 		{
@@ -384,24 +385,33 @@ public class PlayerShoot : MonoBehaviour
 
 		SetSelectedAttackImage();
 	}
-
-	async void LoadDistanceAttack()
+	
+	public void ResetAttack()
 	{
-		Debug.Log("Loading distance attack");
+		loadingAttack = false;
+		attacking = false;
+		rotateSphere.isRotating = true;
+	}
+
+	IEnumerator LoadDistanceAttackCoroutine()
+	{
+		// Debug.Log("Loading distance attack");
+		
 		// Control to avoid multiple concurrent calls: if it's already loading, exit immediately
 		if (loadingAttack)
 		{
 			Debug.Log("You're already loading a distance attack!");
 			DistanceAttackAnimation();
-			return;
+			yield break;
 		}
 		
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
+		attackStamina = 0; 
 
 		rotateSphere.positionSphere(new Vector3(0, 0.8f, rotateSphere.DistanceFromPlayer), RotateSphere.Animation.RotateAround);
 		AnimationManager.Instance.Attack();
-		await Task.Delay(50);
+		yield return new WaitForSeconds(0.05f);
 
 		// Let's check if the player has the power-up for the loaded attack
 		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp))
@@ -424,7 +434,7 @@ public class PlayerShoot : MonoBehaviour
 
 			// This delay is necessary to avoid the activation of the loading bar whenever the player press and released the attack
 			// button in a very fast way (as for the loading sound)
-			await Task.Delay(50);
+			yield return new WaitForSeconds(0.25f);
 
 			// Audio management: if after the delay we are still charging, start the sound
 			if (loadingAttack && rickEvents != null)
@@ -435,12 +445,11 @@ public class PlayerShoot : MonoBehaviour
 			while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp) && loadingAttack)
 			{
 				attackStamina++;
-				
-				Debug.Log("Stamina the player is about to use = " + attackStamina);
-				
 				ChangeSphereColor(attackStamina);
 				distanceAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
-				await Task.Delay(500);
+				
+				// Debug.Log("Stamina the player is about to use = " + attackStamina);
+				yield return new WaitForSeconds(0.5f);
 			}
 
 			// Audio management: stop the loading sound of the attack when the loading is terminated 
@@ -455,6 +464,8 @@ public class PlayerShoot : MonoBehaviour
 			// The player doesn't have the power-up, so we immediately fire a normal (not loaded) distance attack
 			DistanceAttackAnimation();
 		}
+		
+		currentLoadingAttackCoroutine = null; // The coroutine is finished
 	}
 
 	private void DistanceAttackAnimation()
@@ -468,9 +479,15 @@ public class PlayerShoot : MonoBehaviour
 		AnimationManager.Instance.EndAttack();
 	}
 
-	public async void FireDistanceAttack()
+	public void FireDistanceAttack()
 	{
-		// Debug.Log("Firing distance attack");
+		Debug.Log("Firing distance attack");
+		
+		// If there is an active loading coroutine, then stop it
+		if (currentLoadingAttackCoroutine != null)
+		{
+			InterruptAttackLoading(true);
+		}
 		
 		// If we are here and the player was loading the distance attack, then it means the loading process is terminated
 		loadingAttack = false;
@@ -519,38 +536,45 @@ public class PlayerShoot : MonoBehaviour
 		if (attackStamina == 0)
 		{
 			DecreaseStamina(1);
-			Debug.Log("Stamina consumed by the distance attack = 1 (no power-up)");
+			Debug.Log("Stamina consumed by the basic distance attack = 1");
 		}
 		else
 		{
 			DecreaseStamina(attackStamina);
-			Debug.Log("Stamina consumed by the distance attack = " + attackStamina + " (with power-up)");
+			Debug.Log("Stamina consumed by the loaded distance attack = " + attackStamina);
 			attackStamina = 0;
 		}
 		
 		distanceAttackLoadingBar.fillAmount = 0;
+		ResetDistanceAttackValues();
+	}
+	
+	public void ResetDistanceAttackValues()
+	{
+		// Restore free spin and status flags
 		ResetAttack();
-		await Task.Delay(500);
 	}
 
-	async void LoadCloseAttack()
+	IEnumerator LoadCloseAttackCoroutine()
 	{
-		Debug.Log("Loading close attack");
+		// Debug.Log("Loading close attack");
+		
 		// Control to avoid multiple concurrent calls: if it's already loading, exit immediately
 		if (loadingAttack)
 		{
 			Debug.Log("You're already loading a close attack!");
 			CloseAttackAnimation();
-			return;
+			yield break;
 		}
 		
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
+		attackStamina = 0;
 
 		rotateSphere.positionSphere(new Vector3(0, 1.8f, 0), RotateSphere.Animation.Linear);
 		FreezePlayer();
 		AnimationManager.Instance.AreaAttack();
-		await Task.Delay(50);
+		yield return new WaitForSeconds(0.05f);
 
 		// Let's check if the player has the power-up for the loaded attack
 		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp))
@@ -573,7 +597,7 @@ public class PlayerShoot : MonoBehaviour
 
 			// This delay is necessary to avoid the activation of the loading bar whenever the player press and released the attack
 			// button in a very fast way (as for the loading sound)
-			await Task.Delay(50);
+			yield return new WaitForSeconds(0.25f);
 
 			// Audio management: if after the delay we are still charging, start the sound
 			if (loadingAttack && rickEvents != null)
@@ -586,7 +610,9 @@ public class PlayerShoot : MonoBehaviour
 				attackStamina++;
 				ChangeSphereColor(attackStamina);
 				closeAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
-				await Task.Delay(500);
+				
+				// Debug.Log("Stamina the player is about to use = " + attackStamina);
+				yield return new WaitForSeconds(0.5f);
 			}
 
 			// Audio management: stop the loading sound of the attack when the loading is terminated 
@@ -601,7 +627,8 @@ public class PlayerShoot : MonoBehaviour
 			// The player does not have the power-up, we immediately carry out the normal (not loaded) attack
 			CloseAttackAnimation();
 		}
-
+		
+		currentLoadingAttackCoroutine = null; // The coroutine is finished
 	}
 
 	private void CloseAttackAnimation()
@@ -614,9 +641,47 @@ public class PlayerShoot : MonoBehaviour
 
 		AnimationManager.Instance.EndAreaAttack();
 	}
+	
+	private void InterruptAttackLoading(bool isDistanceAttack)
+	{
+		// Stop the attack loading process only if the coroutine is active
+		if (currentLoadingAttackCoroutine != null)
+		{
+			StopCoroutine(currentLoadingAttackCoroutine);
+			currentLoadingAttackCoroutine = null;
+
+			if (isDistanceAttack)
+			{
+				ResetDistanceAttackValues();
+				distanceAttackLoadingBar.fillAmount = 0;
+			}
+			else
+			{
+				// IMPORTANT: Do not use here ResetCloseAttackValues(). Differently from the distance attack, the reset of the
+				// values of the close attack is handle in RickEvents.cs, by the function DestroyAreaAttack(), which destroys
+				// the area attack and, only after that, goes on calling the ResetCloseAttackValues(). If you use this function
+				// here then there will be problems with most sequence of 5 rapid close attacks.
+				closeAttackLoadingBar.fillAmount = 0;
+			}
+			
+			Debug.Log("Attack loading process was interrupted");
+		}
+		else
+		{
+			Debug.LogWarning("Attack loading process was NOT interrupted");
+		}
+	}
 
 	public void FireCloseAttack()
 	{
+		Debug.Log("Firing close attack");
+		
+		// If there is an active loading coroutine, then stop it
+		if (currentLoadingAttackCoroutine != null)
+		{
+			InterruptAttackLoading(false);
+		}
+		
 		// If we are here and the player was loading the close attack, then it means the loading process is terminated
 		loadingAttack = false;
 		
@@ -658,17 +723,21 @@ public class PlayerShoot : MonoBehaviour
 		if (attackStamina == 0)
 		{
 			DecreaseStamina(1);
-			Debug.Log("Stamina consumed by the basic close attack = 1 (no power-up)");
+			Debug.Log("Stamina consumed by the basic close attack = 1");
 		}
 		else
 		{
 			DecreaseStamina(attackStamina);
-			Debug.Log("Stamina consumed by the loaded close attack = " + attackStamina + " (with power-up)");
-			attackStamina = 0;
+			Debug.Log("Stamina consumed by the loaded close attack = " + attackStamina);
+			attackStamina = 0; 
 		}
-
+		
 		closeAttackLoadingBar.fillAmount = 0;
-		ResetAttack();
+		
+		// IMPORTANT: Do not use here ResetCloseAttackValues(). Differently from the distance attack, the reset of the
+		// values of the close attack is handle in RickEvents.cs, by the function DestroyAreaAttack(), which destroys
+		// the area attack and, only after that, goes on calling the ResetCloseAttackValues(). If you use this function
+		// here then there will be problems with most sequence of 5 rapid close attacks.
 	}
 
 	public async void ResetCloseAttackValues()
@@ -681,14 +750,6 @@ public class PlayerShoot : MonoBehaviour
 
 		// Restore free spin and status flags
 		ResetAttack();
-	}
-
-	public void ResetAttack()
-	{
-		loadingAttack = false;
-		attacking = false;
-		rotateSphere.isRotating = true;
-		attackStamina = 0;
 	}
 
 	private void SpawnMagneticShield()
@@ -930,17 +991,15 @@ public class PlayerShoot : MonoBehaviour
 						// At this point, the player can proceed with the attack
 						if (!attacking && CheckStamina(1)) // Check the stamina even after the shield is deactivated
 						{
-							// loadingAttack = true;
 							attacking = true;
-							attackStamina = 0;
 
 							switch (attackNumber)
 							{
 								case 1:
-									LoadDistanceAttack();
+									currentLoadingAttackCoroutine = StartCoroutine(LoadDistanceAttackCoroutine());
 									break;
 								case 2:
-									LoadCloseAttack();
+									currentLoadingAttackCoroutine = StartCoroutine(LoadCloseAttackCoroutine());
 									break;
 								default:
 									break;
@@ -949,17 +1008,15 @@ public class PlayerShoot : MonoBehaviour
 					}
 					else if (!attacking && CheckStamina(1))
 					{
-						// loadingAttack = true;
 						attacking = true;
-						attackStamina = 0;
 
 						switch (attackNumber)
 						{
 							case 1:
-								LoadDistanceAttack();
+								currentLoadingAttackCoroutine = StartCoroutine(LoadDistanceAttackCoroutine());
 								break;
 							case 2:
-								LoadCloseAttack();
+								currentLoadingAttackCoroutine = StartCoroutine(LoadCloseAttackCoroutine());
 								break;
 							default:
 								break;
@@ -969,8 +1026,10 @@ public class PlayerShoot : MonoBehaviour
 
 				if (Input.GetButtonUp("Fire1"))
 				{
-					if (!shieldIsActive && loadingAttack && CheckStamina(1))
+					if (!shieldIsActive && loadingAttack)
 					{
+						// Debug.Log("Button released, now the attack loading process will be stopped");
+						
 						switch (attackNumber)
 						{
 							case 1:
