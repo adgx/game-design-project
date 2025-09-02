@@ -126,8 +126,7 @@ namespace PlayerInteraction
 	        
 	        yield return new WaitForSeconds(_hackingTime);
 	        
-	        _playerShoot.LastStaminaUseTime = Time.time;
-	        
+	        _playerShoot.lastStaminaUseTime = Time.time;
 	        _rotateSphere.isRotating = true;
 	        _isPowerUpVendingMachineHacked = true;
 	        _isBusy = false;

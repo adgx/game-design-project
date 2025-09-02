@@ -7,13 +7,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Helper;
-using PlayerInteraction;
 using Utils;
 
 public class PlayerShoot : MonoBehaviour
 {
 	public static PlayerShoot Instance { get; private set; }
-	public float LastStaminaUseTime { get; set; }
+	public float lastStaminaUseTime;
+	public DateTime DebugLastStaminaUseDateTime;
 	[HideInInspector] public bool isInCombat = false;
 	private float recoveryDelay = 3f;
 
@@ -120,7 +120,9 @@ public class PlayerShoot : MonoBehaviour
 		
 		// We initialize the timer to the current time to prevent charging from starting immediately
 		// at the beginning of the game if the stamina is not full for some reason
-		LastStaminaUseTime = Time.time;
+		lastStaminaUseTime = Time.time;
+		
+		DebugLastStaminaUseDateTime = DateTime.Now;
 	}
 	
 	private void Update()
@@ -134,15 +136,18 @@ public class PlayerShoot : MonoBehaviour
 	/// </summary>
 	private void HandleStaminaRecovery()
 	{
-		// Conditions for doing nothing: charging already in progress or full stamina
-		if (increasingStamina || sphereStamina >= maxSphereStamina || isInteracting)
+		// Conditions for doing nothing: stamina recovery already in progress or full stamina or the playe is loading an attack 
+		if (increasingStamina || sphereStamina >= maxSphereStamina || isInteracting || loadingAttack)
 		{
 			return;
 		}
 
 		// At this point, the stamina is not full and is not recharging 
-		if (Time.time - LastStaminaUseTime >= recoveryDelay)
+		if (Time.time - lastStaminaUseTime >= recoveryDelay)
 		{
+			// Debug.Log("Starting stamina recovery process. Current time = " + DateTime.Now + 
+			//           ", Last time stamina was used = " + DebugLastStaminaUseDateTime);
+			
 			// Logic in combat: starts only after the delay if the sphere is completely discharged
 			if (isInCombat)
 			{
@@ -223,7 +228,8 @@ public class PlayerShoot : MonoBehaviour
 	public void DecreaseStamina(int amount)
 	{
 		// We update the timestamp every time the stamina is consumed
-		LastStaminaUseTime = Time.time;
+		lastStaminaUseTime = Time.time;
+		DebugLastStaminaUseDateTime = DateTime.Now;
 		sphereStamina -= amount;
 		increasingStamina = false;
 
@@ -250,6 +256,7 @@ public class PlayerShoot : MonoBehaviour
 		{
 			increasingStamina = true; 
 			isStaminaRecoveryInterruptible = true;
+			isStaminaRecoveryInterrupted = false;
 			staminaRecoveryCoroutine = StartCoroutine(RecoverStaminaCoroutine());
 		}
 	}
@@ -380,13 +387,21 @@ public class PlayerShoot : MonoBehaviour
 
 	async void LoadDistanceAttack()
 	{
+		Debug.Log("Loading distance attack");
+		// Control to avoid multiple concurrent calls: if it's already loading, exit immediately
+		if (loadingAttack)
+		{
+			Debug.Log("You're already loading a distance attack!");
+			DistanceAttackAnimation();
+			return;
+		}
+		
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
 
 		rotateSphere.positionSphere(new Vector3(0, 0.8f, rotateSphere.DistanceFromPlayer), RotateSphere.Animation.RotateAround);
 		AnimationManager.Instance.Attack();
 		await Task.Delay(50);
-		attackStamina = 0;
 
 		// Let's check if the player has the power-up for the loaded attack
 		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp))
@@ -420,6 +435,9 @@ public class PlayerShoot : MonoBehaviour
 			while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp) && loadingAttack)
 			{
 				attackStamina++;
+				
+				Debug.Log("Stamina the player is about to use = " + attackStamina);
+				
 				ChangeSphereColor(attackStamina);
 				distanceAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
 				await Task.Delay(500);
@@ -441,8 +459,6 @@ public class PlayerShoot : MonoBehaviour
 
 	private void DistanceAttackAnimation()
 	{
-		loadingAttack = false;
-
 		// Audio management: stop the loading sound of the attack if the button is released
 		if (rickEvents != null)
 		{
@@ -454,6 +470,11 @@ public class PlayerShoot : MonoBehaviour
 
 	public async void FireDistanceAttack()
 	{
+		// Debug.Log("Firing distance attack");
+		
+		// If we are here and the player was loading the distance attack, then it means the loading process is terminated
+		loadingAttack = false;
+		
 		bulletPrefab.gameObject.SetActive(false);
 		GameObject bullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity);
 		bullet.tag = "PlayerProjectile";
@@ -498,12 +519,15 @@ public class PlayerShoot : MonoBehaviour
 		if (attackStamina == 0)
 		{
 			DecreaseStamina(1);
+			Debug.Log("Stamina consumed by the distance attack = 1 (no power-up)");
 		}
 		else
 		{
 			DecreaseStamina(attackStamina);
+			Debug.Log("Stamina consumed by the distance attack = " + attackStamina + " (with power-up)");
+			attackStamina = 0;
 		}
-
+		
 		distanceAttackLoadingBar.fillAmount = 0;
 		ResetAttack();
 		await Task.Delay(500);
@@ -511,6 +535,15 @@ public class PlayerShoot : MonoBehaviour
 
 	async void LoadCloseAttack()
 	{
+		Debug.Log("Loading close attack");
+		// Control to avoid multiple concurrent calls: if it's already loading, exit immediately
+		if (loadingAttack)
+		{
+			Debug.Log("You're already loading a close attack!");
+			CloseAttackAnimation();
+			return;
+		}
+		
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
 
@@ -518,7 +551,6 @@ public class PlayerShoot : MonoBehaviour
 		FreezePlayer();
 		AnimationManager.Instance.AreaAttack();
 		await Task.Delay(50);
-		attackStamina = 0;
 
 		// Let's check if the player has the power-up for the loaded attack
 		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp))
@@ -574,8 +606,6 @@ public class PlayerShoot : MonoBehaviour
 
 	private void CloseAttackAnimation()
 	{
-		loadingAttack = false;
-
 		// Audio management: stop the loading sound of the attack if the button is released
 		if (rickEvents != null)
 		{
@@ -587,6 +617,9 @@ public class PlayerShoot : MonoBehaviour
 
 	public void FireCloseAttack()
 	{
+		// If we are here and the player was loading the close attack, then it means the loading process is terminated
+		loadingAttack = false;
+		
 		// Compute close attack's damage
 		finalCloseAttackDamage = defaultCloseAttackDamage;
 		damageRadius = defaultDamageRadius;
@@ -625,13 +658,17 @@ public class PlayerShoot : MonoBehaviour
 		if (attackStamina == 0)
 		{
 			DecreaseStamina(1);
+			Debug.Log("Stamina consumed by the basic close attack = 1 (no power-up)");
 		}
 		else
 		{
 			DecreaseStamina(attackStamina);
+			Debug.Log("Stamina consumed by the loaded close attack = " + attackStamina + " (with power-up)");
+			attackStamina = 0;
 		}
 
 		closeAttackLoadingBar.fillAmount = 0;
+		ResetAttack();
 	}
 
 	public async void ResetCloseAttackValues()
@@ -893,8 +930,9 @@ public class PlayerShoot : MonoBehaviour
 						// At this point, the player can proceed with the attack
 						if (!attacking && CheckStamina(1)) // Check the stamina even after the shield is deactivated
 						{
-							loadingAttack = true;
+							// loadingAttack = true;
 							attacking = true;
+							attackStamina = 0;
 
 							switch (attackNumber)
 							{
@@ -911,8 +949,9 @@ public class PlayerShoot : MonoBehaviour
 					}
 					else if (!attacking && CheckStamina(1))
 					{
-						loadingAttack = true;
+						// loadingAttack = true;
 						attacking = true;
+						attackStamina = 0;
 
 						switch (attackNumber)
 						{

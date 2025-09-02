@@ -95,18 +95,20 @@ namespace PlayerInteraction
             _rotateSphere.positionSphere(new Vector3(_rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
             GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerTerminalInteraction, transform.position);
 
+            _playerShoot.DecreaseStamina(1);
+            
             yield return new WaitForSeconds(_interactionTime);
-
+            
+            _playerShoot.lastStaminaUseTime = Time.time;
+            
             int powerUpIndex = _random.Next(_powerUp.spherePowerUps.Count);
             _obtainedPowerUp = _powerUp.spherePowerUps[powerUpIndex];
             _powerUp.ObtainPowerUp(_obtainedPowerUp);
             _powerUp.spherePowerUps.RemoveAt(powerUpIndex);
 
             StartCoroutine(ShowFeedbackMessage());
-
+            
             yield return new WaitForSeconds(_postInteractionDelay);
-
-            _playerShoot.DecreaseStamina(1);
             
 			_rotateSphere.isRotating = true;
             _isBusy = false;

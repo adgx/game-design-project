@@ -163,7 +163,7 @@ namespace Animations
         public void DistanceAttackShoot()
         {
             // Audio management
-            PlayManagedEvent(FMODEvents.Instance.PlayerCloseAttackShoot);
+            PlayManagedEvent(FMODEvents.Instance.PlayerDistanceAttackShoot);
 
             playerShoot.FireDistanceAttack();
         }
@@ -532,7 +532,7 @@ namespace Animations
             // The recharge delay of the stamina must start just before the shield is destroyed
             if (playerShoot != null)
             {
-                playerShoot.LastStaminaUseTime = Time.time - 1.0f;   
+                playerShoot.lastStaminaUseTime = Time.time - 1.0f;
             }
             
             // Second part of the delay

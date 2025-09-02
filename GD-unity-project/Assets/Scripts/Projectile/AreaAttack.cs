@@ -24,6 +24,9 @@ public class AreaAttackController : MonoBehaviour
     public void Start()
     {
         _currentSize = startSize;
+        
+        // Debug.Log("Initial area attack size = "  + _currentSize);
+        
         _attack = false;
         _sphereCol.radius = startSize;
         if (_areaVFX.HasFloat("Size"))
@@ -59,6 +62,8 @@ public class AreaAttackController : MonoBehaviour
     {
         _endSize = size;
         _attack = true;
+        
+        // Debug.Log("Current area attack size = " + _endSize);
     }
 
     public void OnTriggerEnter(Collider other)
