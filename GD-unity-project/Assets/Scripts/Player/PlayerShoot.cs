@@ -445,11 +445,13 @@ public class PlayerShoot : MonoBehaviour
 			while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp) && loadingAttack)
 			{
 				attackStamina++;
-				ChangeSphereColor(attackStamina);
-				distanceAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
-				
 				// Debug.Log("Stamina the player is about to use = " + attackStamina);
+				
 				yield return new WaitForSeconds(0.5f);
+				
+				ChangeSphereColor(attackStamina);
+				// Debug.Log("Sphere stamina has changed");
+				distanceAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
 			}
 
 			// Audio management: stop the loading sound of the attack when the loading is terminated 
@@ -608,11 +610,13 @@ public class PlayerShoot : MonoBehaviour
 			while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp) && loadingAttack)
 			{
 				attackStamina++;
-				ChangeSphereColor(attackStamina);
-				closeAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
-				
 				// Debug.Log("Stamina the player is about to use = " + attackStamina);
+				
 				yield return new WaitForSeconds(0.5f);
+				
+				ChangeSphereColor(attackStamina);
+				// Debug.Log("Sphere stamina has changed");
+				closeAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
 			}
 
 			// Audio management: stop the loading sound of the attack when the loading is terminated 
