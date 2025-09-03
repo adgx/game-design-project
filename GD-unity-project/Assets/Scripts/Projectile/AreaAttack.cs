@@ -63,7 +63,7 @@ public class AreaAttackController : MonoBehaviour
         _endSize = size;
         _attack = true;
         
-        // Debug.Log("Current area attack size = " + _endSize);
+        Debug.Log("Current area attack size = " + _endSize);
     }
 
     public void OnTriggerEnter(Collider other)

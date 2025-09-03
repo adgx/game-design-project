@@ -424,20 +424,23 @@ public class PlayerShoot : MonoBehaviour
 				}
 			}
 
-			// This delay is necessary to avoid the activation of the loading bar whenever the player press and released the attack
-			// button in a very fast way (as for the loading sound)
+			// This delay is necessary to avoid the activation of the loading bar whenever the player press and released
+			// the attack button in a very fast way (as for the loading sound)
 			yield return new WaitForSeconds(0.25f);
 
-			// Audio management: if after the delay we are still charging, start the sound
-			if (loadingAttack && rickEvents != null)
-			{
-				rickEvents.ShouldPlayChargeSound = true;
-			}
+			bool firstIteration = true;
 
 			while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp) && loadingAttack)
 			{
 				attackStamina++;
 				// Debug.Log("Stamina the player is about to use = " + attackStamina);
+				
+				// Audio management: if after the delay we are still charging, start the sound
+				if (loadingAttack && rickEvents != null && firstIteration)
+				{
+					firstIteration = false;
+					rickEvents.ShouldPlayChargeSound = true;
+				}
 				
 				yield return new WaitForSeconds(0.5f);
 				
@@ -530,12 +533,10 @@ public class PlayerShoot : MonoBehaviour
 		if (attackStamina == 0)
 		{
 			DecreaseStamina(1);
-			// Debug.Log("Stamina consumed by the basic distance attack = 1");
 		}
 		else
 		{
 			DecreaseStamina(attackStamina);
-			// Debug.Log("Stamina consumed by the loaded distance attack = " + attackStamina);
 			attackStamina = 0;
 		}
 		
@@ -581,20 +582,23 @@ public class PlayerShoot : MonoBehaviour
 				}
 			}
 
-			// This delay is necessary to avoid the activation of the loading bar whenever the player press and released the attack
-			// button in a very fast way (as for the loading sound)
+			// This delay is necessary to avoid the activation of the loading bar whenever the player press and released
+			// the attack button in a very fast way (as for the loading sound)
 			yield return new WaitForSeconds(0.25f);
-
-			// Audio management: if after the delay we are still charging, start the sound
-			if (loadingAttack && rickEvents != null)
-			{
-				rickEvents.ShouldPlayChargeSound = true;
-			}
+			
+			bool firstIteration = true;
 
 			while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp) && loadingAttack)
 			{
 				attackStamina++;
 				// Debug.Log("Stamina the player is about to use = " + attackStamina);
+				
+				// Audio management: if after the delay we are still charging, start the sound
+				if (loadingAttack && rickEvents != null && firstIteration)
+				{
+					firstIteration = false;
+					rickEvents.ShouldPlayChargeSound = true;
+				}
 				
 				yield return new WaitForSeconds(0.5f);
 				
@@ -706,17 +710,15 @@ public class PlayerShoot : MonoBehaviour
 			finalCloseAttackDamage = baseCloseAttackDamage;
 		}
 		
-		// Debug.Log("Close attack damage = " + finalCloseAttackDamage + ", Consumed stamina = " + staminaConsumed);
+		Debug.Log("Close attack damage = " + finalCloseAttackDamage + ", Consumed stamina = " + staminaConsumed);
 		
 		if (attackStamina == 0)
 		{
 			DecreaseStamina(1);
-			// Debug.Log("Stamina consumed by the basic close attack = 1");
 		}
 		else
 		{
 			DecreaseStamina(attackStamina);
-			// Debug.Log("Stamina consumed by the loaded close attack = " + attackStamina);
 			attackStamina = 0; 
 		}
 		
