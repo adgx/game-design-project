@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Audio;
+using System.Collections;
 
 public class ParticleAttackController : MonoBehaviour
 {
@@ -21,7 +22,9 @@ public class ParticleAttackController : MonoBehaviour
     public float playerBulletDamage;
     public PlayerShoot.DamageTypes maynardDamageType = PlayerShoot.DamageTypes.MaynardDistanceAttack;
     public GameObject bulletOwner;
-
+    [SerializeField] private float destructionDelay = 0.1f;
+    private Coroutine _destroyBulletAfterDelay = null;
+    
     void Start()
     {
         // This section of code only applies to projectiles that use a _currentVF and _currentVUp based motion system,
@@ -119,8 +122,8 @@ public class ParticleAttackController : MonoBehaviour
                 {
                     Destroy(other); // Destroy Player's bullet
                 }
-
-                Debug.Log("Destroyed Incognito's bullet");
+                
+                // Debug.Log("Incognito's bullet was destroyed");
                 Destroy(gameObject); // Destroy Incognito's bullet
             }
         }
@@ -150,17 +153,28 @@ public class ParticleAttackController : MonoBehaviour
         // Logic for Player's bullets
         if (gameObject.CompareTag("PlayerProjectile"))
         {
+            bool hasHitEnemy = false;
+            
             if (other.gameObject.tag.Contains("Enemy") && !other.gameObject.CompareTag("SpitEnemyAttack") && !other.gameObject.CompareTag("MaynardEnemyAttack"))
             {
+                hasHitEnemy = true;
                 other.gameObject.GetComponent<Enemy.EnemyManager.IEnemy>()?.TakeDamage(playerBulletDamage, "d", false);
             }
             else if (other.gameObject.CompareTag("SpitEnemyAttack") || other.gameObject.CompareTag("MaynardEnemyAttack")) // Player's bullet hits an enemy bullet
             {
                 Destroy(other.gameObject); // Destroy enemy's bullet
             }
-            
-            Debug.Log("Destroyed Player's bullet");
-            Destroy(gameObject); // Destroy Player's bullet
+
+            if (!hasHitEnemy)
+            {
+                // Debug.Log("Player's bullet was destroyed immediately");
+                Destroy(gameObject); // Destroy Player's bullet
+            }
+            else if(_destroyBulletAfterDelay == null)
+            {
+                // Debug.Log("Player's bullet was destroyed after a " + destructionDelay + " seconds delay");
+                _destroyBulletAfterDelay = StartCoroutine(DestroyBulletAfterDelayCoroutine(destructionDelay));
+            }
             
             // Audio management
             GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerDistanceAttackImpact, transform.position);
@@ -179,6 +193,7 @@ public class ParticleAttackController : MonoBehaviour
                     // Determine the direction of the shot based on contact
                     Vector3 contactPoint = other.ClosestPoint(transform.position);
                     Vector3 normal = (transform.position - contactPoint).normalized;
+                    // hasHitPlayer = true;
                     playerShoot.TakeDamage(enemyBulletDamage, maynardDamageType, transform);
                 }
             }
@@ -187,8 +202,23 @@ public class ParticleAttackController : MonoBehaviour
                 Destroy(other.gameObject); // Destroy Player's bullet
             }
 
-            Debug.Log("Destroyed Maynard's bullet");
+            // Debug.Log("Maynard's bullet was destroyed");
             Destroy(gameObject); // Destroy Maynard's bullet
         }
+    }
+    
+    // Coroutine to destroy the projectile after a specific delay
+    private IEnumerator DestroyBulletAfterDelayCoroutine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        
+        // Check if the GameObject even exists before attempting to destroy it to avoid errors if it has
+        // already been destroyed by a collision
+        if (gameObject != null)
+        {
+            Destroy(gameObject);
+        }
+
+        _destroyBulletAfterDelay = null;
     }
 }
