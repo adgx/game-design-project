@@ -583,7 +583,10 @@ namespace Animations
             {
                 AreaAttackController AAC = playerShoot.attackAreaInstance.GetComponent<AreaAttackController>();
                 if (AAC != null)
+                {
+                    // Debug.Log("Calling function SetDestSize(), Time = " + DateTime.Now);
                     AAC.SetDestSize(playerShoot.damageRadius);
+                }
             }
         }
 

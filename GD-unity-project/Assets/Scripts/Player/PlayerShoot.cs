@@ -39,7 +39,7 @@ public class PlayerShoot : MonoBehaviour
 	public int defaultCloseAttackDamage = 40;
 	private readonly float defaultDamageRadius = 2.5f;
 	[HideInInspector]
-	public float damageRadius = 2f;
+	public float damageRadius;
 	public float finalCloseAttackDamage;
 	public float baseCloseAttackDamage = 40f; // Close attack damage with 0 power-ups (1 stamina)
 	public float closeAttackPowerUp1Damage = 60f; // Close attack damage with 1 power-up (3 stamina)
@@ -676,6 +676,8 @@ public class PlayerShoot : MonoBehaviour
 		
 		// If we are here and the player was loading the close attack, then it means the loading process is terminated
 		loadingAttack = false;
+		
+		// Debug.Log("Computing damage radius, Time = " + DateTime.Now);
 		
 		// Compute close attack's damage
 		finalCloseAttackDamage = defaultCloseAttackDamage;
