@@ -397,14 +397,6 @@ public class PlayerShoot : MonoBehaviour
 	{
 		// Debug.Log("Loading distance attack");
 		
-		// Control to avoid multiple concurrent calls: if it's already loading, exit immediately
-		if (loadingAttack)
-		{
-			Debug.Log("You're already loading a distance attack!");
-			DistanceAttackAnimation();
-			yield break;
-		}
-		
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
 		attackStamina = 0; 
@@ -483,7 +475,7 @@ public class PlayerShoot : MonoBehaviour
 
 	public void FireDistanceAttack()
 	{
-		Debug.Log("Firing distance attack");
+		// Debug.Log("Firing distance attack");
 		
 		// If there is an active loading coroutine, then stop it
 		if (currentLoadingAttackCoroutine != null)
@@ -538,12 +530,12 @@ public class PlayerShoot : MonoBehaviour
 		if (attackStamina == 0)
 		{
 			DecreaseStamina(1);
-			Debug.Log("Stamina consumed by the basic distance attack = 1");
+			// Debug.Log("Stamina consumed by the basic distance attack = 1");
 		}
 		else
 		{
 			DecreaseStamina(attackStamina);
-			Debug.Log("Stamina consumed by the loaded distance attack = " + attackStamina);
+			// Debug.Log("Stamina consumed by the loaded distance attack = " + attackStamina);
 			attackStamina = 0;
 		}
 		
@@ -560,14 +552,6 @@ public class PlayerShoot : MonoBehaviour
 	IEnumerator LoadCloseAttackCoroutine()
 	{
 		// Debug.Log("Loading close attack");
-		
-		// Control to avoid multiple concurrent calls: if it's already loading, exit immediately
-		if (loadingAttack)
-		{
-			Debug.Log("You're already loading a close attack!");
-			CloseAttackAnimation();
-			yield break;
-		}
 		
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
@@ -668,7 +652,7 @@ public class PlayerShoot : MonoBehaviour
 				closeAttackLoadingBar.fillAmount = 0;
 			}
 			
-			Debug.Log("Attack loading process was interrupted");
+			// Debug.Log("Attack loading process was interrupted");
 		}
 		else
 		{
@@ -678,7 +662,7 @@ public class PlayerShoot : MonoBehaviour
 
 	public void FireCloseAttack()
 	{
-		Debug.Log("Firing close attack");
+		// Debug.Log("Firing close attack");
 		
 		// If there is an active loading coroutine, then stop it
 		if (currentLoadingAttackCoroutine != null)
@@ -727,12 +711,12 @@ public class PlayerShoot : MonoBehaviour
 		if (attackStamina == 0)
 		{
 			DecreaseStamina(1);
-			Debug.Log("Stamina consumed by the basic close attack = 1");
+			// Debug.Log("Stamina consumed by the basic close attack = 1");
 		}
 		else
 		{
 			DecreaseStamina(attackStamina);
-			Debug.Log("Stamina consumed by the loaded close attack = " + attackStamina);
+			// Debug.Log("Stamina consumed by the loaded close attack = " + attackStamina);
 			attackStamina = 0; 
 		}
 		
@@ -983,6 +967,9 @@ public class PlayerShoot : MonoBehaviour
 				// The attack is shot only on "Fire1" up && AnimationManager.Instance.rickState == RickStates.Idle
 				if (Input.GetButtonDown("Fire1"))
 				{
+					// Reset EndAttack when pressing the attack button
+					AnimationManager.Instance.ResetEndAttackTriggers();
+					
 					if (shieldIsActive)
 					{
 						// If the player has enough stamina for the attack, then deactivate the shield immediately and

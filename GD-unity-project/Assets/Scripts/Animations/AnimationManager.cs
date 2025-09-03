@@ -129,6 +129,12 @@ public class AnimationManager : MonoBehaviour
         }
         randomIdleIsDone = true;
     }
+    
+    public void ResetEndAttackTriggers()
+    {
+        rickAC.ResetTrigger(endAttackHash);
+        rickAC.ResetTrigger(endAreaAttackHash);
+    }
 
     public void DefenseToIdle()
     {
