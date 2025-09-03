@@ -432,21 +432,23 @@ public class PlayerShoot : MonoBehaviour
 
 			while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp) && loadingAttack)
 			{
+				yield return new WaitForSeconds(0.25f);
+				
 				attackStamina++;
-				// Debug.Log("Stamina the player is about to use = " + attackStamina);
+				distanceAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
 				
 				// Audio management: if after the delay we are still charging, start the sound
 				if (loadingAttack && rickEvents != null && firstIteration)
 				{
+					// Debug.Log("Playing loading distance attack sound");
 					firstIteration = false;
 					rickEvents.ShouldPlayChargeSound = true;
 				}
 				
-				yield return new WaitForSeconds(0.5f);
+				yield return new WaitForSeconds(0.25f);
 				
 				ChangeSphereColor(attackStamina);
 				// Debug.Log("Sphere stamina has changed");
-				distanceAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
 			}
 
 			// Audio management: stop the loading sound of the attack when the loading is terminated 
@@ -513,14 +515,6 @@ public class PlayerShoot : MonoBehaviour
 				float damageRange = maxDamageForPowerUp - baseDistanceAttackDamage;
 				finalBulletDamage = baseDistanceAttackDamage + (damageRange * ((float)(staminaConsumed - 1) / 4));
 			}
-			else // No power-up
-			{
-				finalBulletDamage = baseDistanceAttackDamage;
-			}
-		}
-		else
-		{
-			finalBulletDamage = baseDistanceAttackDamage;
 		}
 		
 		// Debug.Log("Distance attack damage = " + finalBulletDamage + ", Consumed stamina = " + staminaConsumed);
@@ -530,15 +524,7 @@ public class PlayerShoot : MonoBehaviour
 		bullet.SetActive(true);
 		bulletPrefab.gameObject.SetActive(true);
 
-		if (attackStamina == 0)
-		{
-			DecreaseStamina(1);
-		}
-		else
-		{
-			DecreaseStamina(attackStamina);
-			attackStamina = 0;
-		}
+		DecreaseStamina(staminaConsumed);
 		
 		distanceAttackLoadingBar.fillAmount = 0;
 		ResetDistanceAttackValues();
@@ -590,21 +576,23 @@ public class PlayerShoot : MonoBehaviour
 
 			while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp) && loadingAttack)
 			{
+				yield return new WaitForSeconds(0.25f);
+				
 				attackStamina++;
-				// Debug.Log("Stamina the player is about to use = " + attackStamina);
+				closeAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
 				
 				// Audio management: if after the delay we are still charging, start the sound
 				if (loadingAttack && rickEvents != null && firstIteration)
 				{
+					// Debug.Log("Playing loading close attack sound");
 					firstIteration = false;
 					rickEvents.ShouldPlayChargeSound = true;
 				}
 				
-				yield return new WaitForSeconds(0.5f);
+				yield return new WaitForSeconds(0.25f);
 				
 				ChangeSphereColor(attackStamina);
 				// Debug.Log("Sphere stamina has changed");
-				closeAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
 			}
 
 			// Audio management: stop the loading sound of the attack when the loading is terminated 
@@ -702,27 +690,12 @@ public class PlayerShoot : MonoBehaviour
 				finalCloseAttackDamage = baseCloseAttackDamage + (damageRange * ((float)(staminaConsumed - 1) / 4));
 				damageRadius += ((float)(staminaConsumed - 1) / 4) * 1f; // Increase the radius proportionally to stamina
 			}
-			else // No power-up
-			{
-				finalCloseAttackDamage = baseCloseAttackDamage;
-			}
 		}
-		else
-		{
-			finalCloseAttackDamage = baseCloseAttackDamage;
-		}
+
+		// Debug.Log("Close attack damage = " + finalCloseAttackDamage + ", Consumed stamina = " + staminaConsumed + 
+		//           ", Damage radius = " + damageRadius);
 		
-		Debug.Log("Close attack damage = " + finalCloseAttackDamage + ", Consumed stamina = " + staminaConsumed);
-		
-		if (attackStamina == 0)
-		{
-			DecreaseStamina(1);
-		}
-		else
-		{
-			DecreaseStamina(attackStamina);
-			attackStamina = 0; 
-		}
+		DecreaseStamina(staminaConsumed);
 		
 		closeAttackLoadingBar.fillAmount = 0;
 		
