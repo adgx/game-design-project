@@ -336,6 +336,10 @@ public class Incognito : MonoBehaviour, IEnemy
         _bulletPrefab.gameObject.SetActive(false);
         GameObject bullet = Instantiate(_bulletPrefab, _attackSpawn.transform.position, Quaternion.identity);
         bullet.tag = "SpitEnemyAttack";
+        
+        // Assign the current Incognito as the creator of the projectile
+        bullet.GetComponent<ParticleAttackController>().bulletOwner = gameObject;
+        
         //bullet.GetComponent<ParticleAttackController>().enemyBulletDamage = _distanceAttackDamage;
         bullet.GetComponent<ParticleAttackController>().targetPos = _playerTransform;
 

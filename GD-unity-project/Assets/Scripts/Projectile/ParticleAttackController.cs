@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using System.Collections.Generic;
 using Audio;
@@ -21,6 +20,7 @@ public class ParticleAttackController : MonoBehaviour
     public float initialPlayerBulletDamage = 50, enemyBulletDamage = 20;
     public float playerBulletDamage;
     public PlayerShoot.DamageTypes maynardDamageType = PlayerShoot.DamageTypes.MaynardDistanceAttack;
+    public GameObject bulletOwner;
 
     void Start()
     {
@@ -96,6 +96,12 @@ public class ParticleAttackController : MonoBehaviour
         // Only projectiles with a ParticleSystem should handle this collision
         if (_attackPS != null)
         {
+            // To avoid bullet's destruction if it hits its creator's collider
+            if (other.gameObject == bulletOwner)
+            {
+                return; 
+            }
+            
             List<ParticleCollisionEvent> ce = new();
             _attackPS.GetCollisionEvents(other, ce);
 
@@ -108,23 +114,26 @@ public class ParticleAttackController : MonoBehaviour
                     {
                         playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.Spit, transform);
                     }
-                    Destroy(gameObject);
                 }
                 else if (other.CompareTag("PlayerProjectile"))
                 {
-                    Destroy(gameObject); // Destroy Incognito's bullet
-                    Destroy(other);      // Destroy Player's bullet
+                    Destroy(other); // Destroy Player's bullet
                 }
-                else if (!other.CompareTag("EnemyIncognito"))
-                {
-                    Destroy(gameObject);
-                }
+
+                Debug.Log("Destroyed Incognito's bullet");
+                Destroy(gameObject); // Destroy Incognito's bullet
             }
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        // To avoid bullet's destruction if it hits its creator's collider
+        if (other.gameObject == bulletOwner)
+        {
+            return; 
+        }
+        
         // Audio management: avoid the destruction of the projectile if the other collider is the
         // box collider used for handling ambience sounds
         if (other.gameObject.layer == LayerMask.NameToLayer("Room") || other.gameObject.CompareTag("Sphere"))
@@ -138,39 +147,25 @@ public class ParticleAttackController : MonoBehaviour
             return;
         }
         
-        // Logic for Incognito's bullets
-        if (gameObject.CompareTag("SpitEnemyAttack"))
-        {
-            if (other.gameObject.CompareTag("PlayerProjectile")) // Incognito's bullet hits Player's bullet
-            {
-                Destroy(gameObject); // Destroy Incognito's bullet
-                Destroy(other.gameObject); // Destroy Player's bullet
-            }
-        }
-        
         // Logic for Player's bullets
         if (gameObject.CompareTag("PlayerProjectile"))
         {
             if (other.gameObject.tag.Contains("Enemy") && !other.gameObject.CompareTag("SpitEnemyAttack") && !other.gameObject.CompareTag("MaynardEnemyAttack"))
             {
                 other.gameObject.GetComponent<Enemy.EnemyManager.IEnemy>()?.TakeDamage(playerBulletDamage, "d", false);
-                Destroy(gameObject);
             }
             else if (other.gameObject.CompareTag("SpitEnemyAttack") || other.gameObject.CompareTag("MaynardEnemyAttack")) // Player's bullet hits an enemy bullet
             {
-                Destroy(gameObject); // Destroy enemy's bullet
-                Destroy(other.gameObject); // Destroy Player's bullet
+                Destroy(other.gameObject); // Destroy enemy's bullet
             }
-            else
-            {
-                // Collision with something else that is not an enemy or an enemy bullet, destroy the player's bullet
-                Destroy(gameObject);
-            }
+            
+            Debug.Log("Destroyed Player's bullet");
+            Destroy(gameObject); // Destroy Player's bullet
             
             // Audio management
             GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerDistanceAttackImpact, transform.position);
             
-            return; // Exit after handling the player's bullet collision
+            return; // Exit after handling Player's bullet collision
         }
 
         // Logic for Maynard's bullets
@@ -186,18 +181,14 @@ public class ParticleAttackController : MonoBehaviour
                     Vector3 normal = (transform.position - contactPoint).normalized;
                     playerShoot.TakeDamage(enemyBulletDamage, maynardDamageType, transform);
                 }
-                Destroy(gameObject);
             }
             else if (other.gameObject.CompareTag("PlayerProjectile")) // Maynard's bullet hits Player's bullet
             {
-                Destroy(gameObject); // Destroy Maynard's bullet
                 Destroy(other.gameObject); // Destroy Player's bullet
             }
-            else if (!other.gameObject.tag.Contains("Enemy") && !other.gameObject.CompareTag("SpitEnemyAttack"))
-            {
-                // Hit something other than the player, shield, player bullet or other enemy/enemy bullet
-                Destroy(gameObject);
-            }
+
+            Debug.Log("Destroyed Maynard's bullet");
+            Destroy(gameObject); // Destroy Maynard's bullet
         }
     }
 }

@@ -521,6 +521,7 @@ public class PlayerShoot : MonoBehaviour
 		
 		PAC.playerBulletDamage = finalBulletDamage;
 		PAC.targetPos = bulletSpawnTransform;
+		PAC.bulletOwner = gameObject; // Assign the Player as bullet's owner  
 		bullet.SetActive(true);
 		bulletPrefab.gameObject.SetActive(true);
 

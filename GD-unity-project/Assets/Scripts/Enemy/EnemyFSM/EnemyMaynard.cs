@@ -394,15 +394,14 @@ public class Maynard : MonoBehaviour, IEnemy
         if (!_debug)
         {
             GameObject bullet = Instantiate(_bulletPrefab, attackSpawn.transform.position, Quaternion.identity);
-            bullet.tag = "MaynardEnemyAttack"; // Make sure the tag is “MaynardEnemyAttack
+            bullet.tag = "MaynardEnemyAttack"; // Make sure the tag is “MaynardEnemyAttack"
             
-            ParticleAttackController projectileHandler = bullet.GetComponent<ParticleAttackController>();
-            if (projectileHandler == null)
-            {
-                projectileHandler = bullet.AddComponent<ParticleAttackController>();
-            }
-            projectileHandler.enemyBulletDamage = _distanceAttackDamage;
-            projectileHandler.maynardDamageType = PlayerShoot.DamageTypes.MaynardDistanceAttack; // Set damage type
+            // Assign the current Maynard as the creator of the projectile
+            bullet.GetComponent<ParticleAttackController>().bulletOwner = gameObject; 
+            
+            bullet.GetComponent<ParticleAttackController>().targetPos = _playerTransform;
+            bullet.GetComponent<ParticleAttackController>().enemyBulletDamage = _distanceAttackDamage;
+            bullet.GetComponent<ParticleAttackController>().maynardDamageType = PlayerShoot.DamageTypes.MaynardDistanceAttack; // Set damage type
 
             Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
             if (rbBullet == null)
