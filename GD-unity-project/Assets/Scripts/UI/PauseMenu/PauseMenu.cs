@@ -59,9 +59,9 @@ public class PauseMenu : MonoBehaviour
 	void Update()
     {
 		if(!sceneIsLoading) {
-			if(playerInput.PausePressed() || (pauseScreenOpen && pauseMenu.activeInHierarchy && playerInput.BackKeyPressed())) {
+			if(!GameStatus.isUIInventoryMenuOpen && playerInput.PausePressed() || (pauseScreenOpen && pauseMenu.activeInHierarchy 
+				   && playerInput.BackKeyPressed())) {
 				ChangeGameState(!GameStatus.gamePaused);
-
 				TogglePauseMenu();
 			}
 
@@ -97,6 +97,7 @@ public class PauseMenu : MonoBehaviour
 	void TogglePauseMenu() {
 		if(screenContainer.activeInHierarchy) {
 			pauseScreenOpen = false;
+			GameStatus.isUIPauseMenuOpen = false;
 			
 			// Audio management: play close menu sound
 			uiAudioManager.PlayCloseSound();
@@ -108,6 +109,7 @@ public class PauseMenu : MonoBehaviour
 		}
 		else {
 			pauseScreenOpen = true;
+			GameStatus.isUIPauseMenuOpen = true;
 			
 			// Audio management: play open menu sound
 			uiAudioManager.PlayOpenSound();

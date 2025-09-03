@@ -40,10 +40,9 @@ public class InventoryMenu : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
-		if(playerInput.InventoryPressed() || (inventoryScreenOpen && inventoryMenu.activeInHierarchy && playerInput.BackKeyPressed())) {
-
+		if(!GameStatus.isUIPauseMenuOpen && playerInput.InventoryPressed() || (inventoryScreenOpen && inventoryMenu.activeInHierarchy 
+			   && playerInput.BackKeyPressed())) {
 			ChangeGameState(!GameStatus.gamePaused);
-
 			ToggleInventoryMenu();
 		}
 
@@ -79,6 +78,7 @@ public class InventoryMenu : MonoBehaviour {
 	void ToggleInventoryMenu() {
 		if(screenContainer.activeInHierarchy) {
 			inventoryScreenOpen = false;
+			GameStatus.isUIInventoryMenuOpen = false;
 			screenContainer.SetActive(false);
 			inventoryMenu.SetActive(false);
 			
@@ -97,9 +97,9 @@ public class InventoryMenu : MonoBehaviour {
 			
 			// Audio management: play open inventory sound
 			uiAudioManager.PlayOpenSound();
-
 			
 			inventoryScreenOpen = true;
+			GameStatus.isUIInventoryMenuOpen = true;
 			screenContainer.SetActive(true);
 			inventoryMenu.SetActive(true);
 			
