@@ -482,6 +482,9 @@ public class PlayerShoot : MonoBehaviour
 	{
 		// Debug.Log("Firing distance attack");
 		
+		// Reset EndAttack and EndAreaAttack when pressing the attack button
+		AnimationManager.Instance.ResetEndAttackTriggers();
+		
 		// If there is an active loading coroutine, then stop it
 		if (currentLoadingAttackCoroutine != null)
 		{
@@ -645,7 +648,7 @@ public class PlayerShoot : MonoBehaviour
 				closeAttackLoadingBar.fillAmount = 0;
 			}
 			
-			// Debug.Log("Attack loading process was interrupted");
+			Debug.Log("Attack loading process was interrupted");
 		}
 		else
 		{
@@ -656,6 +659,9 @@ public class PlayerShoot : MonoBehaviour
 	public void FireCloseAttack()
 	{
 		// Debug.Log("Firing close attack");
+		
+		// Reset EndAttack and EndAreaAttack when pressing the attack button
+		AnimationManager.Instance.ResetEndAttackTriggers();
 		
 		// If there is an active loading coroutine, then stop it
 		if (currentLoadingAttackCoroutine != null)
@@ -945,7 +951,7 @@ public class PlayerShoot : MonoBehaviour
 				// The attack is shot only on "Fire1" up && AnimationManager.Instance.rickState == RickStates.Idle
 				if (Input.GetButtonDown("Fire1"))
 				{
-					// Reset EndAttack when pressing the attack button
+					// Reset EndAttack and EndAreaAttack when pressing the attack button
 					AnimationManager.Instance.ResetEndAttackTriggers();
 					
 					if (shieldIsActive)
