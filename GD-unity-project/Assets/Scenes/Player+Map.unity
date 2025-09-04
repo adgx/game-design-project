@@ -3145,7 +3145,7 @@ Transform:
   m_GameObject: {fileID: 678183996}
   serializedVersion: 2
   m_LocalRotation: {x: 0.15498191, y: -0.1714842, z: 0.02732746, w: 0.9725364}
-  m_LocalPosition: {x: 0.5407417, y: 1.5170258, z: -1.4856755}
+  m_LocalPosition: {x: 0.6096506, y: 1.5170258, z: -1.3157653}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4659,6 +4659,18 @@ PrefabInstance:
       propertyPath: outOfCombatRecoveryDelay
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 4647093185041228041, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.122
+      objectReference: {fileID: 0}
+    - target: {fileID: 4647093185041228041, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.088
+      objectReference: {fileID: 0}
+    - target: {fileID: 4647093185041228041, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.073
+      objectReference: {fileID: 0}
     - target: {fileID: 6203289601883143786, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
       propertyPath: fadeManagerLoadingScreen
       value: 
@@ -4739,6 +4751,10 @@ PrefabInstance:
       propertyPath: closeAttackImage
       value: 
       objectReference: {fileID: 766725498}
+    - target: {fileID: 8927746728942280376, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+      propertyPath: sphereReturnDelay
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8927746728942280376, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
       propertyPath: distanceAttackImage
       value: 
@@ -5715,7 +5731,7 @@ Transform:
   m_GameObject: {fileID: 2143297035}
   serializedVersion: 2
   m_LocalRotation: {x: 0.15498191, y: -0.1714842, z: 0.027327463, w: 0.9725364}
-  m_LocalPosition: {x: 0.5407417, y: 1.5170258, z: -1.4856755}
+  m_LocalPosition: {x: 0.6096506, y: 1.5170258, z: -1.3157653}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

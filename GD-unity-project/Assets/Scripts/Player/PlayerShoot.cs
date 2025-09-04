@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Helper;
+using UnityEngine.Serialization;
 using Utils;
 
 public class PlayerShoot : MonoBehaviour
@@ -33,13 +34,11 @@ public class PlayerShoot : MonoBehaviour
 
 	// Attack2
 	[SerializeField] private GameObject attackAreaPrefab;
-	[HideInInspector]
-	public GameObject attackAreaInstance;
+	[HideInInspector] public GameObject attackAreaInstance;
 	public GameObject attackAreaVFXPrefab;
 	public int defaultCloseAttackDamage = 40;
 	private readonly float defaultDamageRadius = 2.5f;
-	[HideInInspector]
-	public float damageRadius;
+	[HideInInspector] public float damageRadius;
 	public float finalCloseAttackDamage;
 	public float baseCloseAttackDamage = 40f; // Close attack damage with 0 power-ups (1 stamina)
 	public float closeAttackPowerUp1Damage = 60f; // Close attack damage with 1 power-up (3 stamina)
@@ -55,16 +54,22 @@ public class PlayerShoot : MonoBehaviour
 	[SerializeField] Image closeAttackImage;
 	[SerializeField] Image distanceAttackLoadingBar;
 	[SerializeField] Image closeAttackLoadingBar;
+	[SerializeField] private float sphereReturnDelay = 0.5f;
+	private bool isSpherePositioned = true;
+	private Coroutine resetSpherePosition = null;
+	private float lastDistanceAttackTime;
 	private bool loadingAttack = false;
+
 	// This flag is true if an attack is being executed. While executing it, I can not start another attack
 	private bool attacking = false;
-	private Coroutine currentLoadingAttackCoroutine = null;
+	private Coroutine currentLoadingAttack = null;
 	private int attackStamina = 0;
 	private bool isStaminaRecoveryInterruptible = true;
 	private bool isStaminaRecoveryInterrupted = false;
-	private Coroutine staminaRecoveryCoroutine = null;
+	private Coroutine staminaRecovery = null;
 	public bool shieldIsActive = false;
 	public bool isInteracting = false;
+
 
 	// Health
 	public float maxHealth = 120;
@@ -118,18 +123,22 @@ public class PlayerShoot : MonoBehaviour
 		ChangeSphereColor(maxSphereStamina);
 		finalCloseAttackDamage = defaultCloseAttackDamage;
 		damageRadius = defaultDamageRadius;
-		
+
 		// We initialize the timer to the current time to prevent charging from starting immediately
 		// at the beginning of the game if the stamina is not full for some reason
 		lastStaminaUseTime = Time.time;
-		
+
 		DebugLastStaminaUseDateTime = DateTime.Now;
 	}
-	
+
 	private void Update()
 	{
 		HandleStaminaRecovery();
 		ProcessPlayerInput();
+		if (resetSpherePosition == null)
+		{
+			resetSpherePosition = StartCoroutine(ResetSpherePositionCoroutine());	
+		}
 	}
 	
 	/// <summary>
@@ -163,6 +172,36 @@ public class PlayerShoot : MonoBehaviour
 				StartStaminaRecovery();
 			}
 		}
+	}
+	
+	/// <summary>
+	/// It contains all the logic to decide whether the sphere must go back to its original position  
+	/// </summary>
+	private IEnumerator ResetSpherePositionCoroutine()
+	{
+		// Reposition the sphere only if the minimum time has passed since the last distance attack
+		float currentTime = Time.time;
+
+		if (!(currentTime - lastDistanceAttackTime >= sphereReturnDelay) || isSpherePositioned || attacking)
+			yield break;
+		
+		// Debug.Log("Current time = " + currentTime+ ", Last distance attack time = " + lastDistanceAttackTime + ", Difference = " + (Time.time - lastDistanceAttackTime));
+			
+		// Wait the end of the attack animation before letting the sphere return to its default position
+		yield return new WaitForSeconds(0.3f); // 300ms
+    
+		// Define sphere's destination position
+		Vector3 defaultRotationLocalPosition = new Vector3(0, 1f, rotateSphere.DistanceFromPlayer); 
+        
+		// Make the sphere return to its default position with a linear movement
+		rotateSphere.positionSphere(defaultRotationLocalPosition, RotateSphere.Animation.Linear);
+    
+		// Wait for the sphere return animation to complete
+		yield return new WaitForSeconds(0.3f); // 300ms
+
+		resetSpherePosition = null;
+		isSpherePositioned = true;
+		rotateSphere.isRotating = true;
 	}
 
 	void ChangeSphereColor(int stamina)
@@ -253,23 +292,23 @@ public class PlayerShoot : MonoBehaviour
 	{
 		// Check if a charge is already in progress to avoid starting multiple coroutines, moreover check if
 		// the shield is active or not 
-		if (!increasingStamina && !shieldIsActive && staminaRecoveryCoroutine == null)
+		if (!increasingStamina && !shieldIsActive && staminaRecovery == null)
 		{
 			increasingStamina = true; 
 			isStaminaRecoveryInterruptible = true;
 			isStaminaRecoveryInterrupted = false;
-			staminaRecoveryCoroutine = StartCoroutine(RecoverStaminaCoroutine());
+			staminaRecovery = StartCoroutine(RecoverStaminaCoroutine());
 		}
 	}
 
 	private void InterruptStaminaRecovery()
 	{
 		// Stop the recovery process only if the coroutine is active and the process is interruptible
-		if (staminaRecoveryCoroutine != null && isStaminaRecoveryInterruptible && !isStaminaRecoveryInterrupted)
+		if (staminaRecovery != null && isStaminaRecoveryInterruptible && !isStaminaRecoveryInterrupted)
 		{
 			isStaminaRecoveryInterrupted = true;
-			StopCoroutine(staminaRecoveryCoroutine);
-			staminaRecoveryCoroutine = null;
+			StopCoroutine(staminaRecovery);
+			staminaRecovery = null;
 			increasingStamina = false;
 			isStaminaRecoveryInterrupted = false;
 			// Debug.Log("Stamina recovery process was interrupted, Time = " + DateTime.Now);
@@ -335,7 +374,7 @@ public class PlayerShoot : MonoBehaviour
 		}
 		increasingStamina = false;
 		isStaminaRecoveryInterruptible = true;
-		staminaRecoveryCoroutine = null;
+		staminaRecovery = null;
 	}
 
 	private void SetSelectedAttackImage()
@@ -390,7 +429,6 @@ public class PlayerShoot : MonoBehaviour
 	{
 		loadingAttack = false;
 		attacking = false;
-		rotateSphere.isRotating = true;
 	}
 
 	IEnumerator LoadDistanceAttackCoroutine()
@@ -401,7 +439,8 @@ public class PlayerShoot : MonoBehaviour
 		loadingAttack = true;
 		attackStamina = 0; 
 
-		rotateSphere.positionSphere(new Vector3(0, 0.8f, rotateSphere.DistanceFromPlayer), RotateSphere.Animation.RotateAround);
+		isSpherePositioned = false;
+		rotateSphere.positionSphere(bulletSpawnTransform.localPosition, RotateSphere.Animation.RotateAround);
 		AnimationManager.Instance.Attack();
 		yield return new WaitForSeconds(0.05f);
 
@@ -464,7 +503,7 @@ public class PlayerShoot : MonoBehaviour
 			DistanceAttackAnimation();
 		}
 		
-		currentLoadingAttackCoroutine = null; // The coroutine is finished
+		currentLoadingAttack = null; // The coroutine is finished
 	}
 
 	private void DistanceAttackAnimation()
@@ -486,7 +525,7 @@ public class PlayerShoot : MonoBehaviour
 		AnimationManager.Instance.ResetEndAttackTriggers();
 		
 		// If there is an active loading coroutine, then stop it
-		if (currentLoadingAttackCoroutine != null)
+		if (currentLoadingAttack != null)
 		{
 			InterruptAttackLoading(true);
 		}
@@ -498,6 +537,9 @@ public class PlayerShoot : MonoBehaviour
 		GameObject bullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity);
 		bullet.tag = "PlayerProjectile";
 		ParticleAttackController PAC = bullet.GetComponent<ParticleAttackController>();
+		
+		// Update the time of the last distance attack
+		lastDistanceAttackTime = Time.time;
 		
 		// Compute bullet's damage
 		float finalBulletDamage = PAC.initialPlayerBulletDamage;
@@ -531,12 +573,13 @@ public class PlayerShoot : MonoBehaviour
 		DecreaseStamina(staminaConsumed);
 		
 		distanceAttackLoadingBar.fillAmount = 0;
+		
 		ResetDistanceAttackValues();
 	}
 	
-	public void ResetDistanceAttackValues()
+	private void ResetDistanceAttackValues()
 	{
-		// Restore free spin and status flags
+		// Restore attack flags
 		ResetAttack();
 	}
 
@@ -548,7 +591,9 @@ public class PlayerShoot : MonoBehaviour
 		loadingAttack = true;
 		attackStamina = 0;
 
+		// Make the sphere return to its default position with a linear movement
 		rotateSphere.positionSphere(new Vector3(0, 1.8f, 0), RotateSphere.Animation.Linear);
+		
 		FreezePlayer();
 		AnimationManager.Instance.AreaAttack();
 		yield return new WaitForSeconds(0.05f);
@@ -612,7 +657,7 @@ public class PlayerShoot : MonoBehaviour
 			CloseAttackAnimation();
 		}
 		
-		currentLoadingAttackCoroutine = null; // The coroutine is finished
+		currentLoadingAttack = null; // The coroutine is finished
 	}
 
 	private void CloseAttackAnimation()
@@ -629,10 +674,10 @@ public class PlayerShoot : MonoBehaviour
 	private void InterruptAttackLoading(bool isDistanceAttack)
 	{
 		// Stop the attack loading process only if the coroutine is active
-		if (currentLoadingAttackCoroutine != null)
+		if (currentLoadingAttack != null)
 		{
-			StopCoroutine(currentLoadingAttackCoroutine);
-			currentLoadingAttackCoroutine = null;
+			StopCoroutine(currentLoadingAttack);
+			currentLoadingAttack = null;
 
 			if (isDistanceAttack)
 			{
@@ -648,7 +693,7 @@ public class PlayerShoot : MonoBehaviour
 				closeAttackLoadingBar.fillAmount = 0;
 			}
 			
-			Debug.Log("Attack loading process was interrupted");
+			// Debug.Log("Attack loading process was interrupted");
 		}
 		else
 		{
@@ -664,7 +709,7 @@ public class PlayerShoot : MonoBehaviour
 		AnimationManager.Instance.ResetEndAttackTriggers();
 		
 		// If there is an active loading coroutine, then stop it
-		if (currentLoadingAttackCoroutine != null)
+		if (currentLoadingAttack != null)
 		{
 			InterruptAttackLoading(false);
 		}
@@ -714,14 +759,17 @@ public class PlayerShoot : MonoBehaviour
 
 	public async void ResetCloseAttackValues()
 	{
-		// Returns the sphere to its default position
+		// Make the sphere return to its default position with a linear movement
 		rotateSphere.positionSphere(new Vector3(rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
 
-		// Wait for the ball return animation to have had time to complete
+		// Wait for the sphere return animation to have had time to complete
 		await Task.Delay(300);
 
-		// Restore free spin and status flags
+		// Restore attack flags
 		ResetAttack();
+		
+		// Restore sphere rotation
+		rotateSphere.isRotating = true;
 	}
 
 	private void SpawnMagneticShield()
@@ -971,10 +1019,10 @@ public class PlayerShoot : MonoBehaviour
 							switch (attackNumber)
 							{
 								case 1:
-									currentLoadingAttackCoroutine = StartCoroutine(LoadDistanceAttackCoroutine());
+									currentLoadingAttack = StartCoroutine(LoadDistanceAttackCoroutine());
 									break;
 								case 2:
-									currentLoadingAttackCoroutine = StartCoroutine(LoadCloseAttackCoroutine());
+									currentLoadingAttack = StartCoroutine(LoadCloseAttackCoroutine());
 									break;
 								default:
 									break;
@@ -988,10 +1036,10 @@ public class PlayerShoot : MonoBehaviour
 						switch (attackNumber)
 						{
 							case 1:
-								currentLoadingAttackCoroutine = StartCoroutine(LoadDistanceAttackCoroutine());
+								currentLoadingAttack = StartCoroutine(LoadDistanceAttackCoroutine());
 								break;
 							case 2:
-								currentLoadingAttackCoroutine = StartCoroutine(LoadCloseAttackCoroutine());
+								currentLoadingAttack = StartCoroutine(LoadCloseAttackCoroutine());
 								break;
 							default:
 								break;

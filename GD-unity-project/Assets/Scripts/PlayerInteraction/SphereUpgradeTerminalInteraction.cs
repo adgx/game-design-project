@@ -91,8 +91,10 @@ namespace PlayerInteraction
         {
             _isBusy = true;
             _playerShoot.isInteracting = true;
-
+            
+            // Make the sphere return to its default position with a linear movement
             _rotateSphere.positionSphere(new Vector3(_rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
+            
             GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerTerminalInteraction, transform.position);
 
             _playerShoot.DecreaseStamina(1);
