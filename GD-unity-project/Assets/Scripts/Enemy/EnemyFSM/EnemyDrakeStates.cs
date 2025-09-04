@@ -65,30 +65,30 @@ public class DrakeChaseState : State
     }
 }
 
-public class DrakeBiteAttackState : State
-{
-    private Drake _drake;
-    public DrakeBiteAttackState(string name, Drake drake) : base(name)
-    {
-        _drake = drake;
-    }
-    public override void Enter()
-    {
-        _drake.anim.EndBit = false;
-        _drake.AttackPlayer();
-        _drake.anim.lunchBiteAnim();
-    }
-
-    public override void Tik()
-    {
-        
-    }
-
-    public override void Exit()
-    {
-        _drake.anim.lunchRunAnim();
-    }
-}
+// public class DrakeBiteAttackState : State
+// {
+//     private Drake _drake;
+//     public DrakeBiteAttackState(string name, Drake drake) : base(name)
+//     {
+//         _drake = drake;
+//     }
+//     public override void Enter()
+//     {
+//         _drake.anim.EndBit = false;
+//         _drake.AttackPlayer();
+//         _drake.anim.lunchBiteAnim();
+//     }
+//
+//     public override void Tik()
+//     {
+//         
+//     }
+//
+//     public override void Exit()
+//     {
+//         _drake.anim.lunchRunAnim();
+//     }
+// }
 
 public class DrakeSwipingAttackState : State
 {

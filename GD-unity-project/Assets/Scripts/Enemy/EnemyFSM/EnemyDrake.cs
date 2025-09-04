@@ -125,7 +125,7 @@ public class Drake : MonoBehaviour, IEnemy
 
             _distanceAttackDamageMultiplier = 0f;
             _closeAttackDamageMultiplier = 0.8f;
-            _closeAttackDamage = 20f;
+            _closeAttackDamage = 40f;
         }
         
         //FMS base
@@ -137,7 +137,7 @@ public class Drake : MonoBehaviour, IEnemy
         State chaseS = new DrakeChaseState("Chase", this, _events);
         State wonderS = new DrakeWonderState("Wonder", this);
         State swipingS = new DrakeSwipingAttackState("Swiping", this);
-        State biteS = new DrakeBiteAttackState("Bite", this);
+        // State biteS = new DrakeBiteAttackState("Bite", this);
         State waitS = new DrakeWaitState("Wait", this, _events);
         State debugS = new DrakeDebugState("Debug", this);
 
@@ -158,15 +158,15 @@ public class Drake : MonoBehaviour, IEnemy
         _stateMachine.AddTransition(wonderS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(wonderS, waitS, () => _alreadyAttacked);
         //change playerShoot.health with playerHDG, and playerShoot.damageReduction with  _playerDRDG if you Debug it  
-        _stateMachine.AddTransition(wonderS, swipingS, () => !_alreadyAttacked && _playerInSightRange && _playerInAttackRange && playerShoot.health > _closeAttackDamage * playerShoot.damageReduction);
-        _stateMachine.AddTransition(wonderS, biteS, () => !_alreadyAttacked && _playerInSightRange && _playerInAttackRange && playerShoot.health <= _closeAttackDamage * playerShoot.damageReduction);
+        _stateMachine.AddTransition(wonderS, swipingS, () => !_alreadyAttacked && _playerInSightRange && _playerInAttackRange /*&& playerShoot.health > _closeAttackDamage * playerShoot.damageReduction*/);
+        // _stateMachine.AddTransition(wonderS, biteS, () => !_alreadyAttacked && _playerInSightRange && _playerInAttackRange && playerShoot.health <= _closeAttackDamage * playerShoot.damageReduction);
         //wait
         _stateMachine.AddTransition(waitS, wonderS, () => !_alreadyAttacked);
         //swipingS
         _stateMachine.AddTransition(swipingS, wonderS, () => anim.EndSwiping == true);
 		_stateMachine.AddTransition(swipingS, waitS, () => _alreadyAttacked);
 		//biteS
-		_stateMachine.AddTransition(biteS, wonderS, () => anim.EndBit);
+		// _stateMachine.AddTransition(biteS, wonderS, () => anim.EndBit);
 		//_stateMachine.AddTransition(biteS, waitS, () => _alreadyAttacked);
 		//react
 		_stateMachine.AddTransition(_reactFromFrontS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
@@ -394,15 +394,11 @@ public class Drake : MonoBehaviour, IEnemy
 
     public void CheckSwipingAttackDamage()
     {
-        if (Physics.CheckSphere(transform.position, 2f, whatIsPlayer) && !playerShoot.shieldIsActive)
+        if (!_debug)
         {
-            playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack);
-        }
-        if (Physics.CheckSphere(transform.position, 2f, whatIsPlayer))
-        {
-            if (!_debug)
+            if (Physics.CheckSphere(transform.position, 2f, whatIsPlayer) && !playerShoot.shieldIsActive)
             {
-                playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, transform);
+                playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack);
             }
         }
     }

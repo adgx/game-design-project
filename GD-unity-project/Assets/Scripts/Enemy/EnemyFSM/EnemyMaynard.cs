@@ -114,8 +114,8 @@ public class Maynard : MonoBehaviour, IEnemy
             _distanceAttackDamageMultiplier = 1f;
             _closeAttackDamageMultiplier = 1f;
 
-            _closeAttackDamage = 1f;
-            _distanceAttackDamage = 13f;
+            _closeAttackDamage = 30f;
+            _distanceAttackDamage = 20f;
 
             _agent.speed = 5f;
             _agent.angularSpeed = 200;
@@ -159,7 +159,7 @@ public class Maynard : MonoBehaviour, IEnemy
         _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && (!_playerInCloseAttackRange || !_playerInRemoteAttackRange));
         //chase
         _stateMachine.AddTransition(chaseS, patrolS, () => !_playerInSightRange);
-        _stateMachine.AddTransition(chaseS, wonderS, () => _playerInSightRange && (_playerInRemoteAttackRange || _playerInRemoteAttackRange)); // funzione obbiettivo
+        _stateMachine.AddTransition(chaseS, wonderS, () => _playerInSightRange && (_playerInRemoteAttackRange || _playerInRemoteAttackRange)); // objective function
         //wonder
         _stateMachine.AddTransition(wonderS, patrolS, () => !_playerInSightRange);
         _stateMachine.AddTransition(wonderS, chaseS, () => _playerInSightRange && !_playerInRemoteAttackRange && !_playerInCloseAttackRange);
@@ -437,16 +437,12 @@ public class Maynard : MonoBehaviour, IEnemy
 
     public void CheckCloseAttackDamage()
     {
-        if (Physics.CheckSphere(transform.position, 2f, _whatIsPlayer) && !playerShoot.shieldIsActive)
+        if (!_debug)
         {
-            playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, transform);
-        }
-        if (Physics.CheckSphere(transform.position, 2f, _whatIsPlayer))
-        {
-            if (!_debug)
+            if (Physics.CheckSphere(transform.position, 2f, _whatIsPlayer) && !playerShoot.shieldIsActive)
             {
                 playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, transform);
-            }
+            }   
         }
     }
 
