@@ -74,7 +74,7 @@ public class LookAtEnemy : MonoBehaviour
 
     private void LookAtClosestEnemy(Collider[] enemies)
     {
-        
+
         float minDistance = float.MaxValue;
 
         foreach (Collider enemyCollider in enemies)
@@ -101,7 +101,8 @@ public class LookAtEnemy : MonoBehaviour
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             Quaternion rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, Time.fixedDeltaTime * maxRotationSpeed);
             transform.rotation = rotation;
-            if (checkEnemyTarget()) FoundTarget();
+            if (checkEnemyTarget())
+                FoundTarget();
         }
     }
 
@@ -147,9 +148,26 @@ public class LookAtEnemy : MonoBehaviour
     bool Blocked(Vector3 t)
     {
         RaycastHit hit;
-        if(Physics.Raycast(transform.position + Vector3.up * 1f, t, out hit)){
-            if(hit.collider.gameObject.layer != (int)ORF.Utils.Layers.Enemy) return true;
+        Vector3 dir = (enemyTargetLocator.position - transform.position).normalized;
+        Vector3 forwardOffsetXY = new Vector3(transform.forward.x, 0, transform.forward.z)*0.9f;
+        Vector3 rayPos = transform.position + Vector3.up * 1f + forwardOffsetXY;
+        //rework
+        /*
+        if (Physics.Raycast(rayPos, dir, out hit))
+        {
+            if (hit.collider.gameObject.layer != (int)ORF.Utils.Layers.Enemy) return true;
         }
+        */
         return false;
-    }    
+    }
+
+    private void OnDrawGizmos() {
+        if (enemyTargetLocator != null)
+        {
+            Vector3 forwardOffsetXY = new Vector3(transform.forward.x, 0, transform.forward.z)*0.9f;
+            Vector3 rayPos = transform.position + Vector3.up * 1f + forwardOffsetXY;
+            Debug.DrawRay( rayPos, (enemyTargetLocator.position - transform.position).normalized,
+                            Color.blue);
+        }
+}
 }
