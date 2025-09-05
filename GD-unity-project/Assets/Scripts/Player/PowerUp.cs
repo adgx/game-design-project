@@ -86,7 +86,7 @@ public class PowerUp : MonoBehaviour
 
     public void ObtainPowerUp(object powerUp)
     {
-        Debug.Log(powerUp.ToString());
+        // Debug.Log(powerUp.ToString());
         
         if ((PlayerPowerUpTypes)powerUp == PlayerPowerUpTypes.HealthBoost)
         {
