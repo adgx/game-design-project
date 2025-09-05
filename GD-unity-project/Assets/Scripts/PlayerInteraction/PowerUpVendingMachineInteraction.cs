@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using Audio;
 using Animations;
+using UnityEngine.Serialization;
 
 namespace PlayerInteraction
 {
@@ -24,9 +25,11 @@ namespace PlayerInteraction
 		        {
 			        return "Press E again to take a snack from the machine";
 		        }
-		        return RoomManager.RoomManager.Instance.IsPowerUpVendingMachineUsedInCurrentRoom() 
-		         ? "The snack distributor is now empty" 
-		         : "Press E to interact with the snack distributor";
+		        if (!_feedbackMessageActive && RoomManager.RoomManager.Instance.IsPowerUpVendingMachineUsedInCurrentRoom())
+		        {
+			        return "The snack distributor is now empty";
+		        }
+		        return "Press E to interact with the snack distributor";
 	        }
         }
         
@@ -49,10 +52,13 @@ namespace PlayerInteraction
         [Header("Timings")]
 		[SerializeField] private float _hackingTime = 3.7f;
         [SerializeField] private float _rotationDuration = 0.2f;
-
+        
         [Header("UI Feedback")]
         [Tooltip("How long the 'You obtained a ...' message should display before resetting.")]
-        [SerializeField] private float _feedbackMessageDuration = 3.0f;
+        [SerializeField] private float _feedbackMessageDuration = 5.0f;
+        
+        private PlayerInteractor _playerInteractor;
+        [SerializeField] bool _feedbackMessageActive = false;
 
         static System.Random _random = new System.Random();
 
@@ -88,6 +94,7 @@ namespace PlayerInteraction
             
             _leftHand = GameObject.Find("Player/Armature/mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand").transform;
             _rightHand = GameObject.Find("Player/Armature/mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand").transform;
+            _playerInteractor = FindObjectOfType<PlayerInteractor>();
         }
 
         public bool Interact(GameObject interactor)
@@ -230,9 +237,48 @@ namespace PlayerInteraction
         private IEnumerator ShowFeedbackMessage()
         {
             _powerUpObtained = true;
+            _feedbackMessageActive = true;
+            
+            // Force the PlayerInteractor to show the health recovery prompt
+            if (_playerInteractor != null)
+            {
+	            _playerInteractor.ShowForcedPrompt(this.InteractionPrompt);
+            }
+
             yield return new WaitForSeconds(_feedbackMessageDuration);
+            
             _powerUpObtained = false;
             _noMorePowerUp = true;
+            _feedbackMessageActive = false;
+            
+            // Once the feedback message is gone, make sure the UI prompt updates
+            if (_playerInteractor != null)
+            {
+	            _playerInteractor.ClearForcedPrompt(); // Send the signal to PlayerInteractor
+            }
+        }
+        
+        private void OnTriggerEnter(Collider other)
+        {
+	        if (other.CompareTag("Player"))
+	        {
+		        if (_playerInteractor != null && !_feedbackMessageActive)
+		        {
+			        // If the feedback message is not active, force the PlayerInteractor to consider this terminal
+			        _playerInteractor.SetCurrentTarget(this); 
+		        }
+	        }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+	        if (other.CompareTag("Player"))
+	        {
+		        if (_playerInteractor != null && _playerInteractor.GetCurrentTarget() == this)
+		        {
+			        _playerInteractor.ClearTarget();
+		        }
+	        }
         }
     }
 }

@@ -35,6 +35,9 @@ namespace PlayerInteraction
         [SerializeField]
         private float _interactionGracePeriod = 0.15f;
         private float _cameraOffset = 1.3f;
+        
+        private bool _isPromptForced = false;
+        private string _forcedPromptText = "";
 
         /// <summary>
         /// Tracks the time since the last interactable was hit, used for grace period handling.
@@ -201,7 +204,7 @@ namespace PlayerInteraction
         /// Sets the current interactable target and updates the prompt.
         /// </summary>
         /// <param name="newTarget">The new interactable object to set as target.</param>
-        private void SetCurrentTarget(IInteractable newTarget)
+        public void SetCurrentTarget(IInteractable newTarget)
         {
             if (newTarget == _currentTarget) return;
 
@@ -256,37 +259,49 @@ namespace PlayerInteraction
         /// </summary>
         private void HandleInteractionInput()
         {
-
             if (_currentTarget != null)
             {
                 Vector3 targetDir = (_currentTarget.GameObject.transform.position - transform.position).normalized;
                 if (Vector3.Dot(transform.forward, targetDir) >= 0)
                 {
                     ShowPrompt();
-                    if (_playerInput.InteractionPressed())
+                    // Prevent interaction if there is a forced prompt
+                    if (_playerInput.InteractionPressed() && !_isPromptForced)
                     {
                         _currentTarget.Interact(this.gameObject);
                         ClearTarget();
                     }
                 }
-                else _helpTextContainer.SetActive(false);
+                else
+                {
+                    // If you are not looking at the target, hide the prompt unless it is forced
+                    if (!_isPromptForced)
+                    {
+                        _helpTextContainer.SetActive(false);
+                    }
+                }
             }
-            
+            // If there is no target, hide the prompt unless it is forced
+            else if (!_isPromptForced)
+            {
+                _helpTextContainer.SetActive(false);
+            }
         }
 
         /// <summary>
         /// Clears the current target and hides the interaction UI prompt.
         /// </summary>
-        private void ClearTarget()
+        public void ClearTarget()
         {
             if (_currentTarget == null) return;
+    
             if (_currentTarget is PaperInteraction)
             {
                 GameObjectUtilis.SetLayerRecursively(_currentTarget.GameObject, (int)ORF.Utils.Layers.Interactable);
             }
             else if (_currentTarget is PowerUpVendingMachineInteraction ||
-            _currentTarget is SphereUpgradeTerminalInteraction ||
-            _currentTarget is HealthVendingMachineInteraction)
+                     _currentTarget is SphereUpgradeTerminalInteraction ||
+                     _currentTarget is HealthVendingMachineInteraction)
             { 
                 Transform parentTransform = _currentTarget.GameObject.transform.parent;
 
@@ -299,7 +314,8 @@ namespace PlayerInteraction
             }
             _currentTarget = null;
 
-            if (_helpTextContainer != null)
+            // Do not hide the container if there is an active forced prompt
+            if (_helpTextContainer != null && !_isPromptForced)
             {
                 _helpTextContainer.SetActive(false);
             }
@@ -310,10 +326,25 @@ namespace PlayerInteraction
         /// </summary>
         private void ShowPrompt()
         {
-            if (_helpTextContainer != null && _currentTarget != null)
+            if (_helpTextContainer != null)
             {
-                _helpTextContainer.SetActive(true);
-                _helpText.text = _currentTarget.InteractionPrompt;
+                if (_isPromptForced) // If there is a forced prompt, just show it
+                {
+                    _helpTextContainer.SetActive(true);
+                    _helpText.text = _forcedPromptText;
+                    return;
+                }
+
+                // Normal logic if there is no forced prompt
+                if (_currentTarget != null)
+                {
+                    _helpTextContainer.SetActive(true);
+                    _helpText.text = _currentTarget.InteractionPrompt;
+                }
+                else
+                {
+                    _helpTextContainer.SetActive(false); // Hide if there is no target and no forced prompt
+                }
             }
         }
 
@@ -336,6 +367,37 @@ namespace PlayerInteraction
                 //sphere cast debug
                 Gizmos.DrawWireSphere(_mainCamera.transform.position + _mainCamera.transform.forward * _cameraOffset, 2.5f);
                // Gizmos.DrawWireSphere(_mainCamera.transform.position + _mainCamera.transform.forward * 1.3f, 1.0f);
+            }
+        }
+        
+        public IInteractable GetCurrentTarget()
+        {
+            return _currentTarget;
+        }
+        
+        public void ShowForcedPrompt(string message)
+        {
+            _isPromptForced = true;
+            _forcedPromptText = message;
+            if (_helpTextContainer != null)
+            {
+                _helpTextContainer.SetActive(true);
+                _helpText.text = _forcedPromptText;
+            }
+        }
+        
+        public void ClearForcedPrompt()
+        {
+            _isPromptForced = false;
+            _forcedPromptText = "";
+            // After removing the forced prompt, update the display to the current target
+            if (_currentTarget != null)
+            {
+                ShowPrompt(); // We call ShowPrompt to update the status
+            }
+            else
+            {
+                _helpTextContainer.SetActive(false);
             }
         }
     }

@@ -2,6 +2,7 @@ using System.Collections;
 using Animations;
 using Audio;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace PlayerInteraction
 {
@@ -19,9 +20,11 @@ namespace PlayerInteraction
                 {
                     return "Press E again to take a snack from the machine";
                 }
-                return RoomManager.RoomManager.Instance.IsHealthVendingMachineUsedInCurrentRoom() 
-                    ? "The snack distributor is now empty" 
-                    : "Press E to interact with the snack distributor";
+                if (!_feedbackMessageActive && RoomManager.RoomManager.Instance.IsHealthVendingMachineUsedInCurrentRoom())
+                {
+                    return "The snack distributor is now empty";
+                }
+                return "Press E to interact with the snack distributor";
             }
         }
         
@@ -30,8 +33,7 @@ namespace PlayerInteraction
         public Collider InteractionZone => _interactionZone;
 
         public GameObject GameObject => this.gameObject;
-
-
+        
         [Header("Interaction Zone")]
         [Tooltip("An optional trigger collider that defines the area the player must be in to use this.")]
         [SerializeField]
@@ -43,11 +45,13 @@ namespace PlayerInteraction
         [Header("Timings")]
 		[SerializeField] private float _hackingTime = 3.7f;
         [SerializeField] private float _rotationDuration = 0.2f;
-
+        
         [Header("UI Feedback")]
-        [Tooltip("How long the 'Health Recovered' message should display before resetting.")]
-        [SerializeField]
-        private float _feedbackMessageDuration = 3.0f;
+        [Tooltip("How long the 'You obtained a ...' message should display before resetting.")]
+        [SerializeField] private float _feedbackMessageDuration = 5.0f;
+        
+        private PlayerInteractor _playerInteractor;
+        private bool _feedbackMessageActive = false;
 
         private bool _isHealthVendingMachineHacked = false;
         private bool _healthObtained = false;
@@ -70,6 +74,7 @@ namespace PlayerInteraction
                     "Player/Armature/mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand")
                 .transform;
 			_rickEvents = _player.GetComponent<RickEvents>();
+            _playerInteractor = FindObjectOfType<PlayerInteractor>();
 		}
 
         public bool Interact(GameObject interactor)
@@ -166,8 +171,47 @@ namespace PlayerInteraction
         private IEnumerator ShowFeedbackMessage()
         {
             _healthObtained = true;
+            _feedbackMessageActive = true;
+
+            // Force the PlayerInteractor to show the health recovery prompt
+            if (_playerInteractor != null)
+            {
+                _playerInteractor.ShowForcedPrompt(this.InteractionPrompt);
+            }
+
             yield return new WaitForSeconds(_feedbackMessageDuration);
+
             _healthObtained = false;
+            _feedbackMessageActive = false;
+
+            // Once the feedback message is gone, make sure the UI prompt updates
+            if (_playerInteractor != null)
+            {
+                _playerInteractor.ClearForcedPrompt(); // Send the signal to PlayerInteractor
+            }
+        }
+        
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Player"))
+            {
+                if (_playerInteractor != null && !_feedbackMessageActive)
+                {
+                    // If the feedback message is not active, force the PlayerInteractor to consider this terminal
+                    _playerInteractor.SetCurrentTarget(this); 
+                }
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.CompareTag("Player"))
+            {
+                if (_playerInteractor != null && _playerInteractor.GetCurrentTarget() == this)
+                {
+                    _playerInteractor.ClearTarget();
+                }
+            }
         }
     }
 }
