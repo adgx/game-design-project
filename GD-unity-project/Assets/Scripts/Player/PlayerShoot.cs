@@ -227,7 +227,7 @@ public class PlayerShoot : MonoBehaviour
 				sphereMaterial.SetColor("_EmissionColor", Color.red * intensityHDR);
 				break;
 			case 0:
-				sphereMaterial.SetColor("_EmissionColor", Color.white * intensityHDR);
+				sphereMaterial.SetColor("_EmissionColor", Color.grey);
 				// Debug.Log("Stamina is 0, Time = " + DateTime.Now);
 				break;
 			default:
