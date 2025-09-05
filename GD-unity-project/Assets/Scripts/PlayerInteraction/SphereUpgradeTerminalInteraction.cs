@@ -20,7 +20,7 @@ namespace PlayerInteraction
                     else if(_obtainedPowerUp.ToString() == "CloseAttackPowerUp")
                         message += "Close Attack power-up!";
                     else 
-                        message += "Defensive power-up!";
+                        message += "Defense power-up!";
                     return message;
                 }
                 if (_powerUp != null && _powerUp.spherePowerUps.Count <= 0)

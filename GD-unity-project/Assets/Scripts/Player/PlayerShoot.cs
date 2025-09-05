@@ -7,7 +7,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Helper;
-using UnityEngine.Serialization;
 using Utils;
 
 public class PlayerShoot : MonoBehaviour
@@ -200,8 +199,12 @@ public class PlayerShoot : MonoBehaviour
 		yield return new WaitForSeconds(0.3f); // 300ms
 
 		resetSpherePosition = null;
-		isSpherePositioned = true;
 		rotateSphere.isRotating = true;
+
+		if (!attacking)
+		{
+			isSpherePositioned = true;
+		}
 	}
 
 	void ChangeSphereColor(int stamina)
