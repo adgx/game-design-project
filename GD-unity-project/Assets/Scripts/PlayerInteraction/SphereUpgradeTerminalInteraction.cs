@@ -12,9 +12,6 @@ namespace PlayerInteraction
         {
             get
             {
-                // DistanceAttackPowerUp,
-                // CloseAttackPowerUp,
-                // DefensePowerUp,
                 if (_powerUpObtained)
                 {
                     string message = "You obtained a ";
@@ -29,10 +26,6 @@ namespace PlayerInteraction
                 if (_powerUp != null && _powerUp.spherePowerUps.Count <= 0)
                 {
                     return "You have already collected all sphere power-ups!";
-                }
-                if (_noMorePowerUp)
-                {
-                    return "You have already collected a power-up from this machine";
                 }
                 return RoomManager.RoomManager.Instance.IsSphereUpgradeTerminalUsedInCurrentRoom() 
                     ? "The terminal has already been hacked" 

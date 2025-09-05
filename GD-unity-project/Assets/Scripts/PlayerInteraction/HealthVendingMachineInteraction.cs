@@ -168,7 +168,6 @@ namespace PlayerInteraction
             _healthObtained = true;
             yield return new WaitForSeconds(_feedbackMessageDuration);
             _healthObtained = false;
-            _isBusy = true;
         }
     }
 }

@@ -13,18 +13,12 @@ namespace PlayerInteraction
 	        {
 		        if (_powerUpObtained)
 		        {
-			        // DamageReduction
-			        // HealthBoost
 			        string message = "You obtained a ";
 			        if (_obtainedPowerUp.ToString() == "DamageReduction")
 				        message += "Damage Reduction power-up!";
 			        else 
 						message += "Health Boost power-up!";
 			        return message;
-		        }
-		        if (_noMorePowerUp)
-		        {
-			        return "You have already collected a power-up from this machine";
 		        }
 		        if (_isPowerUpVendingMachineHacked)
 		        {
