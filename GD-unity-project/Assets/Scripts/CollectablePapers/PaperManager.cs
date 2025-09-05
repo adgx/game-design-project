@@ -120,7 +120,7 @@ namespace CollectablePapers
         /// </summary>
         private void ClosePaperUI()
         {
-            if(_collectedPapers.Count <= 4) {
+            if(_collectedPapers.Count > 0 && _collectedPapers.Count <= _startTutorial.tutorial.Count) {
                 StartCoroutine(_startTutorial.ShowTip(_collectedPapers.Count - 1));
             }
             _isPaperUiOpen = 0;

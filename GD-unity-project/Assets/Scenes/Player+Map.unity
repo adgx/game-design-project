@@ -422,9 +422,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 208fdb399a9b6fe4ca69a208211fde98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tutorial:
+  - There are more papers around the laboratory. Find them all! Remember, the sphere's
+    LEDs show its charge, from blue to off.
+  - Press left mouse button to shoot. Use the scroll wheel to select the attack type
+  - You can press the right mouse button to use the shield
+  - Interact with vending machines and terminals to recover health and obtain power
+    ups
   helpTextContainer: {fileID: 423648118}
   helpText: {fileID: 423648117}
-  tipDuration: 3
+  tipDuration: 5
+  _playerInteractor: {fileID: 1732426663}
 --- !u!1001 &361144709
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4808,6 +4816,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+--- !u!114 &1732426663 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8968511297086779072, guid: f6d248482a6182f4aa2da8e41910e72a, type: 3}
+  m_PrefabInstance: {fileID: 1732426662}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 972097719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b96ea9ec4d934238a8815a13d5f1cd14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1738691462
 GameObject:
   m_ObjectHideFlags: 0
