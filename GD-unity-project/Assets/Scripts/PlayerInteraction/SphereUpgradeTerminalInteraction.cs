@@ -12,17 +12,27 @@ namespace PlayerInteraction
         {
             get
             {
+                // DistanceAttackPowerUp,
+                // CloseAttackPowerUp,
+                // DefensePowerUp,
                 if (_powerUpObtained)
                 {
-                    return "You obtained a " + _obtainedPowerUp.ToString() + "!";
+                    string message = "You obtained a ";
+                    if (_obtainedPowerUp.ToString() == "DistanceAttackPowerUp")
+                        message += "Distance Attack power-up!";
+                    else if(_obtainedPowerUp.ToString() == "CloseAttackPowerUp")
+                        message += "Close Attack power-up!";
+                    else 
+                        message += "Defensive power-up!";
+                    return message;
                 }
                 if (_powerUp != null && _powerUp.spherePowerUps.Count <= 0)
                 {
-                    return "You have already collected all sphere powerups!";
+                    return "You have already collected all sphere power-ups!";
                 }
                 if (_noMorePowerUp)
                 {
-                    return "You have already collected a Power Up from this machine";
+                    return "You have already collected a power-up from this machine";
                 }
                 return RoomManager.RoomManager.Instance.IsSphereUpgradeTerminalUsedInCurrentRoom() 
                     ? "The terminal has already been hacked" 

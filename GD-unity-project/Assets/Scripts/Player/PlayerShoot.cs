@@ -55,13 +55,13 @@ public class PlayerShoot : MonoBehaviour
 	[SerializeField] Image distanceAttackLoadingBar;
 	[SerializeField] Image closeAttackLoadingBar;
 	[SerializeField] private float sphereReturnDelay = 0.5f;
-	private bool isSpherePositioned = true;
+	[SerializeField] private bool isSpherePositioned = true;
+	[SerializeField] private float lastDistanceAttackTime;
 	private Coroutine resetSpherePosition = null;
-	private float lastDistanceAttackTime;
 	private bool loadingAttack = false;
 
 	// This flag is true if an attack is being executed. While executing it, I can not start another attack
-	private bool attacking = false;
+	[SerializeField] private bool attacking = false;
 	private Coroutine currentLoadingAttack = null;
 	private int attackStamina = 0;
 	private bool isStaminaRecoveryInterruptible = true;
