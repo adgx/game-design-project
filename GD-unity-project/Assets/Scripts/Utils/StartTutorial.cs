@@ -9,9 +9,9 @@ public class StartTutorial : MonoBehaviour
     [SerializeField]
     public List<string> tutorial = new List<string> {
         "There are more papers around the laboratory. Find them all! Remember, the sphere's LEDs show its charge, from blue to off.",
-        "Press left mouse button to shoot. Use the scroll wheel to select the attack type",
-        "You can press the right mouse button to use the shield",
-        "Interact with vending machines and terminals to recover health and obtain power ups"
+        "Press left mouse button to shoot. Use the scroll wheel to select the attack type.",
+        "You can press the right mouse button to use the shield.",
+        "Interact with vending machines and terminals to recover health and obtain power ups."
     };
 
     [SerializeField] private GameObject helpTextContainer;

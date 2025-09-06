@@ -21,12 +21,16 @@ namespace CollectablePapers
 
         [Tooltip("Container GameObject for displaying paper UI.")] [SerializeField]
         private GameObject _paperTextContainer;
+        
+        [Tooltip("PaperCounterUI script reference to update the counter.")]
+        [SerializeField]
+        private PaperCounterUI _paperCounterUI;
 
         [Tooltip("Reference to the player to freeze movement while reading.")] [SerializeField]
         private Player _player;
 
         private Dictionary<int, string> _paperMessages;
-        private HashSet<int> _collectedPapers = new();
+        public HashSet<int> _collectedPapers = new();
         private byte _isPaperUiOpen = 0;
 
         [SerializeField] private PlayerInput playerInput;
@@ -98,6 +102,11 @@ namespace CollectablePapers
             {
                 _isPaperUiOpen = 1;
                 _collectedPapers.Add(_collectedPapers.Count);
+                
+                if (_paperCounterUI != null)
+                {
+                    _paperCounterUI.UpdatePaperCounterUI();
+                }
 
                 AnimationManager.Instance.Idle();
                 _rickEvents.SetIdleState();
