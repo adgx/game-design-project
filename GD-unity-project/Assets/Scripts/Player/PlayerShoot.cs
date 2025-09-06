@@ -56,8 +56,10 @@ public class PlayerShoot : MonoBehaviour
 	[SerializeField] private float sphereReturnDelay = 0.5f;
 	[SerializeField] private bool isSpherePositioned = true;
 	[SerializeField] private float lastDistanceAttackTime;
+	[SerializeField] private float currentTime;
 	private Coroutine resetSpherePosition = null;
 	private bool loadingAttack = false;
+	[SerializeField] private bool isLastDistanceAttack = false;
 
 	// This flag is true if an attack is being executed. While executing it, I can not start another attack
 	[SerializeField] private bool attacking = false;
@@ -179,15 +181,24 @@ public class PlayerShoot : MonoBehaviour
 	private IEnumerator ResetSpherePositionCoroutine()
 	{
 		// Reposition the sphere only if the minimum time has passed since the last distance attack
-		float currentTime = Time.time;
+		currentTime = Time.time;
 
-		if (!(currentTime - lastDistanceAttackTime >= sphereReturnDelay) || isSpherePositioned || attacking)
+		if (!(currentTime - lastDistanceAttackTime >= sphereReturnDelay) || isSpherePositioned || attacking || !isLastDistanceAttack)
+		{
+			resetSpherePosition = null;
 			yield break;
+		}
 		
 		// Debug.Log("Current time = " + currentTime+ ", Last distance attack time = " + lastDistanceAttackTime + ", Difference = " + (Time.time - lastDistanceAttackTime));
 			
 		// Wait the end of the attack animation before letting the sphere return to its default position
 		yield return new WaitForSeconds(0.3f); // 300ms
+		
+		if (!(currentTime - lastDistanceAttackTime >= sphereReturnDelay) || isSpherePositioned || attacking || !isLastDistanceAttack)
+		{
+			resetSpherePosition = null;
+			yield break;
+		}
     
 		// Define sphere's destination position
 		Vector3 defaultRotationLocalPosition = new Vector3(0, 1f, rotateSphere.DistanceFromPlayer); 
@@ -197,14 +208,15 @@ public class PlayerShoot : MonoBehaviour
     
 		// Wait for the sphere return animation to complete
 		yield return new WaitForSeconds(0.3f); // 300ms
-
-		resetSpherePosition = null;
+		
 		rotateSphere.isRotating = true;
 
 		if (!attacking)
 		{
 			isSpherePositioned = true;
 		}
+		
+		resetSpherePosition = null;
 	}
 
 	void ChangeSphereColor(int stamina)
@@ -441,7 +453,8 @@ public class PlayerShoot : MonoBehaviour
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
 		attackStamina = 0; 
-
+		isLastDistanceAttack = true;
+		
 		isSpherePositioned = false;
 		rotateSphere.positionSphere(bulletSpawnTransform.localPosition, RotateSphere.Animation.RotateAround);
 		AnimationManager.Instance.Attack();
@@ -593,6 +606,7 @@ public class PlayerShoot : MonoBehaviour
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
 		attackStamina = 0;
+		isLastDistanceAttack = false;
 
 		// Make the sphere return to its default position with a linear movement
 		rotateSphere.positionSphere(new Vector3(0, 1.8f, 0), RotateSphere.Animation.Linear);
@@ -725,6 +739,7 @@ public class PlayerShoot : MonoBehaviour
 		// Compute close attack's damage
 		finalCloseAttackDamage = defaultCloseAttackDamage;
 		damageRadius = defaultDamageRadius;
+		isLastDistanceAttack = false;
 		
 		int staminaConsumed = (attackStamina == 0) ? 1 : attackStamina; // If not loaded, the attack consumes 1 stamina
 		
