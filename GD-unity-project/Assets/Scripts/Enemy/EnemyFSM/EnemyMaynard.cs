@@ -439,7 +439,7 @@ public class Maynard : MonoBehaviour, IEnemy
     {
         if (!_debug)
         {
-            if (Physics.CheckSphere(transform.position, 2f, _whatIsPlayer) && !playerShoot.shieldIsActive)
+            if (Physics.CheckSphere(transform.position, 2f, _whatIsPlayer))
             {
                 playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, transform);
             }   

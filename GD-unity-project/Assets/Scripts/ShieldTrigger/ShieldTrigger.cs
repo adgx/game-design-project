@@ -47,29 +47,30 @@ public class ShieldTrigger : MonoBehaviour
     */
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag.Contains("EnemyAttack"))
+        if (other.tag.Contains("Enemy"))
         {
             // Audio management
             GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerShieldHit, transform.position);
             
-            Destroy(other.gameObject);
-        }
-        else
-        {
-            switch (other.tag)
+            if (other.tag.Contains("EnemyAttack"))
             {
-                case "EnemyDrake":
-                    other.GetComponent<Drake>().TakeDamage(0, "c", true);
-                    break;
-                case "EnemyIncognito":
-                    other.GetComponent<Incognito>().TakeDamage(0, "c", true);
-                    break;
-                case "EnemyMaynard":
-                    other.GetComponent<Maynard>().TakeDamage(0, "c", true);
-                    break;
-                default:
-                    break;
+                Destroy(other.gameObject);   
             }
+        }
+
+        switch (other.tag)
+        {
+            case "EnemyDrake":
+                other.GetComponent<Drake>().TakeDamage(0, "c", true);
+                break;
+            case "EnemyIncognito":
+                other.GetComponent<Incognito>().TakeDamage(0, "c", true);
+                break;
+            case "EnemyMaynard":
+                other.GetComponent<Maynard>().TakeDamage(0, "c", true);
+                break;
+            default:
+                break;
         }
     }
 
