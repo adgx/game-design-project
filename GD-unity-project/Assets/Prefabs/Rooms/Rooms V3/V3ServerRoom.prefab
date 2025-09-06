@@ -6544,7 +6544,6 @@ MonoBehaviour:
   _healthVendingMachinePrefab: {fileID: 6600972949366158484}
   _powerUpVendingMachinePrefab: {fileID: 6928970474715373967}
   _upgradeTerminalPrefab: {fileID: 7587463102721923578}
-  _paperPrefab: {fileID: 5040424888119754864}
 --- !u!114 &7209676912337289431
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9139,7 +9138,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5944148766642706805, guid: 7a3e6352a3ead44099ea2bf54e2be7e6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.547
+      value: -6.895
       objectReference: {fileID: 0}
     - target: {fileID: 5944148766642706805, guid: 7a3e6352a3ead44099ea2bf54e2be7e6, type: 3}
       propertyPath: m_LocalPosition.y
@@ -9147,7 +9146,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5944148766642706805, guid: 7a3e6352a3ead44099ea2bf54e2be7e6, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -9.847
+      value: -9.912
       objectReference: {fileID: 0}
     - target: {fileID: 5944148766642706805, guid: 7a3e6352a3ead44099ea2bf54e2be7e6, type: 3}
       propertyPath: m_LocalRotation.w
@@ -9230,7 +9229,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interactionZone: {fileID: 0}
   _specialSnackMeshPrefab: {fileID: 919132149155446097, guid: 81fcb738204ba413daba5d6b77229665, type: 3}
-  _freeSphere: 0.5
   _hackingTime: 4.2
   _rotationDuration: 0.2
   _feedbackMessageDuration: 3
@@ -11734,7 +11732,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 315491622304424668, guid: a9a00926b7af046c6aac1e1028d0d99f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 19.345001
+      value: 18.142
       objectReference: {fileID: 0}
     - target: {fileID: 315491622304424668, guid: a9a00926b7af046c6aac1e1028d0d99f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -11785,11 +11783,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a9a00926b7af046c6aac1e1028d0d99f, type: 3}
---- !u!1 &5040424888119754864 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1092977616310335590, guid: a9a00926b7af046c6aac1e1028d0d99f, type: 3}
-  m_PrefabInstance: {fileID: 5393103310625175574}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5672564202369899210 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 315491622304424668, guid: a9a00926b7af046c6aac1e1028d0d99f, type: 3}
@@ -12329,7 +12322,7 @@ PrefabInstance:
       objectReference: {fileID: 4195157214087469564}
     - target: {fileID: 4578428216053649281, guid: f510dd89a18de47eb8018fc83fbbd76f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 19.722
+      value: 18.65
       objectReference: {fileID: 0}
     - target: {fileID: 4578428216053649281, guid: f510dd89a18de47eb8018fc83fbbd76f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -12399,10 +12392,10 @@ MonoBehaviour:
   _interactionZone: {fileID: 0}
   _energyDrinkMeshPrefab: {fileID: 919132149155446097, guid: cb04921020eb7443ea1506a029dd8ccd, type: 3}
   _snackMeshPrefab: {fileID: 919132149155446097, guid: 789ce07a7489c4ad48e6d7c27ddbcdbb, type: 3}
-  _freeSphere: 0.5
   _hackingTime: 4.2
   _rotationDuration: 0.2
   _feedbackMessageDuration: 3
+  _feedbackMessageActive: 0
 --- !u!1 &6928970474715373967 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3801610488361555259, guid: f510dd89a18de47eb8018fc83fbbd76f, type: 3}

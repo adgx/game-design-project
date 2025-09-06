@@ -20204,7 +20204,6 @@ MonoBehaviour:
   _healthVendingMachinePrefab: {fileID: 2905277698586969508}
   _powerUpVendingMachinePrefab: {fileID: 8926675871645676616}
   _upgradeTerminalPrefab: {fileID: 1564711224368481101}
-  _paperPrefab: {fileID: 3485999479923854522}
 --- !u!114 &6998674342875047581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25993,7 +25992,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 315491622304424668, guid: a9a00926b7af046c6aac1e1028d0d99f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3.017
+      value: 1.35
       objectReference: {fileID: 0}
     - target: {fileID: 315491622304424668, guid: a9a00926b7af046c6aac1e1028d0d99f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -26036,11 +26035,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a9a00926b7af046c6aac1e1028d0d99f, type: 3}
---- !u!1 &3485999479923854522 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1092977616310335590, guid: a9a00926b7af046c6aac1e1028d0d99f, type: 3}
-  m_PrefabInstance: {fileID: 4560962623636485340}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4263521959947441664 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 315491622304424668, guid: a9a00926b7af046c6aac1e1028d0d99f, type: 3}
@@ -28307,10 +28301,10 @@ MonoBehaviour:
   _interactionZone: {fileID: 4596122745931435237}
   _energyDrinkMeshPrefab: {fileID: 919132149155446097, guid: cb04921020eb7443ea1506a029dd8ccd, type: 3}
   _snackMeshPrefab: {fileID: 919132149155446097, guid: 789ce07a7489c4ad48e6d7c27ddbcdbb, type: 3}
-  _freeSphere: 0.5
   _hackingTime: 4.2
   _rotationDuration: 0.2
   _feedbackMessageDuration: 3
+  _feedbackMessageActive: 0
 --- !u!4 &8118368092826758898 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1744657113747431063, guid: d15cb05429db748ec94e328810f6240e, type: 3}
@@ -28705,7 +28699,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interactionZone: {fileID: 3695179507302279619}
   _specialSnackMeshPrefab: {fileID: 919132149155446097, guid: 81fcb738204ba413daba5d6b77229665, type: 3}
-  _freeSphere: 0.5
   _hackingTime: 4.2
   _rotationDuration: 0.2
   _feedbackMessageDuration: 3
