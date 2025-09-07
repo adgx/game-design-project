@@ -137,9 +137,7 @@ public class Drake : MonoBehaviour, IEnemy
         State chaseS = new DrakeChaseState("Chase", this, _events);
         State wonderS = new DrakeWonderState("Wonder", this);
         State swipingS = new DrakeSwipingAttackState("Swiping", this);
-        // State biteS = new DrakeBiteAttackState("Bite", this);
         State waitS = new DrakeWaitState("Wait", this, _events);
-        State debugS = new DrakeDebugState("Debug", this);
 
         _reactFromFrontS = new DrakeReactFromFrontState("Hit", this);
         _defenseS = new DrakeDefenseState("Defense", this);
@@ -165,9 +163,6 @@ public class Drake : MonoBehaviour, IEnemy
         //swipingS
         _stateMachine.AddTransition(swipingS, wonderS, () => anim.EndSwiping == true);
 		_stateMachine.AddTransition(swipingS, waitS, () => _alreadyAttacked);
-		//biteS
-		// _stateMachine.AddTransition(biteS, wonderS, () => anim.EndBit);
-		//_stateMachine.AddTransition(biteS, waitS, () => _alreadyAttacked);
 		//react
 		_stateMachine.AddTransition(_reactFromFrontS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(_reactFromFrontS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
