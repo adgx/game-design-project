@@ -164,6 +164,6 @@ public class ScoreDataCarrier : MonoBehaviour
     public void ResetScore()
     {
         InitializeScoreData();
-        Debug.Log("Score data reset.");
+        // Debug.Log("Score data reset.");
     }
 }

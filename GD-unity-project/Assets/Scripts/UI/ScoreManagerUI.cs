@@ -34,7 +34,7 @@ public class ScoreManagerUI : MonoBehaviour
         // Make sure the in-game score text is visible at the beginning
         if (inGameTotalScoreText != null)
         {
-            Debug.Log("Activating inGameTotaleScoreText");
+            // Debug.Log("Activating inGameTotaleScoreText");
             inGameTotalScoreText.gameObject.SetActive(true);
         }
         
@@ -51,7 +51,7 @@ public class ScoreManagerUI : MonoBehaviour
         {
             ScoreDataCarrier.Instance.AddEnemyKill(enemyName);
             UpdateScoreDisplay(); // Update the UI after the kill
-            Debug.Log($"Enemy killed: {enemyName}. Current total score: {ScoreDataCarrier.Instance.TotalScore}");
+            // Debug.Log($"Enemy killed: {enemyName}. Current total score: {ScoreDataCarrier.Instance.TotalScore}");
         }
     }
 
@@ -64,7 +64,7 @@ public class ScoreManagerUI : MonoBehaviour
         {
             ScoreDataCarrier.Instance.AddPaperCollected();
             UpdateScoreDisplay(); // Update the UI after collection
-            Debug.Log($"Paper collected. Total count: {ScoreDataCarrier.Instance.PapersCollectedCount}");
+            // Debug.Log($"Paper collected. Total count: {ScoreDataCarrier.Instance.PapersCollectedCount}");
         }
     }
     
