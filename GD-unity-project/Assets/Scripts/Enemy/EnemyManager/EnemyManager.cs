@@ -247,5 +247,11 @@ namespace Enemy.EnemyManager
             
             spawnedEnemiesPerRoom[currentRoomIndex].Remove(enemyToRemove);
         }
+        
+        public void ResetEnemySpawns() {
+            roomsEnemiesSpawnedIndexes.Clear();
+            spawnedEnemiesDataPerRoom.Clear();
+            spawnedEnemiesPerRoom.Clear();
+        }
     }
 }
