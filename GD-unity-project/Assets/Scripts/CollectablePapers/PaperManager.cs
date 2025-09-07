@@ -107,6 +107,12 @@ namespace CollectablePapers
                 {
                     _paperCounterUI.UpdatePaperCounterUI();
                 }
+                
+                // Call to the ScoreManagerUI to record the collected paper
+                if (ScoreManagerUI.Instance != null)
+                {
+                    ScoreManagerUI.Instance.PaperCollected();
+                }
 
                 AnimationManager.Instance.Idle();
                 _rickEvents.SetIdleState();

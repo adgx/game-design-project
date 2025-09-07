@@ -278,6 +278,12 @@ public class Drake : MonoBehaviour, IEnemy
                 gameObject.tag = "Untagged";
                 enemyManager.removeEnemyFromList(_roomManager.CurrentRoomIndex, gameObject, enemyName);
 
+                // Call to ScoreManagerUI to record the killing of the enemy
+                if (ScoreManagerUI.Instance != null)
+                {
+                    ScoreManagerUI.Instance.EnemyKilled(enemyName);
+                }
+                
                 _stateMachine.SetState(_deathS);
             }
             else

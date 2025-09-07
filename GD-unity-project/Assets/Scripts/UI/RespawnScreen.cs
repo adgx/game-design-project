@@ -31,6 +31,11 @@ public class RespawnScreen : MonoBehaviour
 			GameEndMessageContainer.SetActive(false);
 			DiedMessageContainer.SetActive(true);
 		}
+		
+		if (ScoreManagerUI.Instance != null)
+		{
+			ScoreManagerUI.Instance.ShowFinalScore();
+		}
 
 		Cursor.lockState = CursorLockMode.None;
 	}
