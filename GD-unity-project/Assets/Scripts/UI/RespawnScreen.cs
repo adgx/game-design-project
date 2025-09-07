@@ -192,7 +192,7 @@ public class RespawnScreen : MonoBehaviour
 	    }
 	    
 	    if (respawnEnemiesKilledText != null) respawnEnemiesKilledText.text = enemiesText;
-	    Debug.Log("respawnEnemiesKilledText: " + enemiesText);
+	    // Debug.Log("respawnEnemiesKilledText: " + enemiesText);
 
 	    int papersScoreTotal = ScoreDataCarrier.Instance.PapersCollectedCount * ScoreDataCarrier.Instance.paperScore;
 	    if (respawnPapersCollectedText != null) respawnPapersCollectedText.text = $"Papers Collected: " +
