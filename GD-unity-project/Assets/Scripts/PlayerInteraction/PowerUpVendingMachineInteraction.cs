@@ -55,7 +55,7 @@ namespace PlayerInteraction
         
         [Header("UI Feedback")]
         [Tooltip("How long the 'You obtained a ...' message should display before resetting.")]
-        [SerializeField] private float _feedbackMessageDuration = 5.0f;
+        [SerializeField] float _feedbackMessageDuration = 3.0f;
         
         private PlayerInteractor _playerInteractor;
         [SerializeField] bool _feedbackMessageActive = false;
