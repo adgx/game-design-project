@@ -15,7 +15,7 @@ public class ScorePanelUI
     {
         if (scoreData == null)
         {
-            Debug.LogError("ScoreDataCarrier è nullo. Impossibile visualizzare il punteggio.");
+            Debug.LogError("ScoreDataCarrier is null. Unable to display score.");
             return;
         }
 
@@ -43,12 +43,15 @@ public class ScorePanelUI
                 {
                     case "Maynard":
                         enemyScore = scoreData.GetMaynardScore(loop);
+                        enemyName = "Screamer";
                         break;
                     case "Drake":
                         enemyScore = scoreData.GetDrakeScore(loop);
+                        enemyName = "Brawler";
                         break;
                     case "Incognito":
                         enemyScore = scoreData.GetIncognitoScore(loop);
+                        enemyName = "Corroder";
                         break;
                 }
 
@@ -59,18 +62,18 @@ public class ScorePanelUI
         }
 
         if (enemiesKilledText != null) enemiesKilledText.text = enemiesText;
-        else { Debug.LogWarning("enemiesKilledText è nullo per questo pannello di punteggio."); }
+        else { Debug.LogWarning("enemiesKilledText is null for this score panel."); }
 
         int papersScoreTotal = scoreData.PapersCollectedCount * scoreData.paperScore;
         if (papersCollectedText != null) papersCollectedText.text = $"Papers Collected: " +
             $"{scoreData.PapersCollectedCount} x {scoreData.paperScore} PTS = " +
             $"{papersScoreTotal} PTS\n";
-        else { Debug.LogWarning("papersCollectedText è nullo per questo pannello di punteggio."); }
+        else { Debug.LogWarning("papersCollectedText is null for this score panel."); }
 
         if (totalScoreText != null) totalScoreText.text = $"Total Score: {scoreData.TotalScore} PTS";
-        else { Debug.LogWarning("totalScoreText è nullo per questo pannello di punteggio."); }
+        else { Debug.LogWarning("totalScoreText is void for this score panel."); }
 
         if (scorePanelContainer != null) scorePanelContainer.SetActive(true); // Show score panel
-        else { Debug.LogWarning("scorePanelContainer è nullo per questo pannello di punteggio."); }
+        else { Debug.LogWarning("scorePanelContainer is null for this score panel."); }
     }
 }
