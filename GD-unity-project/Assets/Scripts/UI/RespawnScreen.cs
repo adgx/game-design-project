@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -125,73 +126,81 @@ public class RespawnScreen : MonoBehaviour
 		BackToPause();
 	}
 	
-	 // Function to display the score on the respawn screen
-    private void DisplayRespawnScore()
-    {
-        if (ScoreDataCarrier.Instance == null)
-        {
-            Debug.LogError("ScoreDataCarrier.Instance not found! Cannot display score on respawn screen.");
-            return;
-        }
+	// Function to display the score on the respawn screen
+	private void DisplayRespawnScore()
+	{
+	    if (ScoreDataCarrier.Instance == null)
+	    {
+	        Debug.LogError("ScoreDataCarrier.Instance not found! Cannot display score on respawn screen.");
+	        return;
+	    }
 
-        ScoreDataCarrier.Instance.CalculateTotalScore(); // Make sure the total is up to date
+	    ScoreDataCarrier.Instance.CalculateTotalScore(); // Make sure the total is up to date
 
-        string enemiesText = "";
+	    string enemiesText = "";
+	    
+	    var orderedLoops = 
+		    ScoreDataCarrier.Instance.EnemiesKilledCount.OrderBy(entry => entry.Key);
 
-        foreach (var loopEntry in ScoreDataCarrier.Instance.EnemiesKilledCount)
-        {
-            GameStatus.LoopIteration loop = loopEntry.Key;
-            Dictionary<string, int> enemiesInLoop = loopEntry.Value;
+	    foreach (var loopEntry in orderedLoops)
+	    {
+	        GameStatus.LoopIteration loop = loopEntry.Key;
+	        Dictionary<string, int> enemiesInLoop = loopEntry.Value;
 
-            int loopMultiplier = 1; 
-            
-            // Loop multiplier logic
-            switch (loop)
-            {
-                case GameStatus.LoopIteration.FIRST_ITERATION:
-                    loopMultiplier = 1;
-                    break;
-                case GameStatus.LoopIteration.SECOND_ITERATION:
-                    loopMultiplier = 1;
-                    break;
-                case GameStatus.LoopIteration.THIRD_ITERATION:
-                    loopMultiplier = 1;
-                    break;
-            }
+	        // Add loop header
+	        enemiesText += $"Loop {((int)loop) + 1}\n";
 
-            foreach (var enemyEntry in enemiesInLoop)
-            {
-                string enemyName = enemyEntry.Key;
-                int count = enemyEntry.Value;
-                int enemyScore = 0;
+	        int loopMultiplier = 1; 
+	        
+	        // Loop multiplier logic
+	        // switch (loop)
+	        // {
+	        //     case GameStatus.LoopIteration.FIRST_ITERATION:
+	        //         loopMultiplier = 1;
+	        //         break;
+	        //     case GameStatus.LoopIteration.SECOND_ITERATION:
+	        //         loopMultiplier = 1;
+	        //         break;
+	        //     case GameStatus.LoopIteration.THIRD_ITERATION:
+	        //         loopMultiplier = 1;
+	        //         break;
+	        // }
 
-                switch (enemyName)
-                {
-                    case "Maynard":
-                        enemyScore = ScoreDataCarrier.Instance.GetMaynardScore(loop);
-                        break;
-                    case "Drake":
-                        enemyScore = ScoreDataCarrier.Instance.GetDrakeScore(loop);
-                        break;
-                    case "Incognito":
-                        enemyScore = ScoreDataCarrier.Instance.GetIncognitoScore(loop);
-                        break;
-                }
+	        foreach (var enemyEntry in enemiesInLoop)
+	        {
+	            string enemyName = enemyEntry.Key;
+	            int count = enemyEntry.Value;
+	            int enemyScore = 0;
 
-                int scoreForEnemyType = count * enemyScore * loopMultiplier;
-                enemiesText += $"Loop {((int)loop) + 1} {enemyName}s: {count} x {enemyScore} PTS = {scoreForEnemyType} PTS\n";
-            }
-        }
-        
-        if (respawnEnemiesKilledText != null) respawnEnemiesKilledText.text = enemiesText;
-        Debug.Log("respawnEnemiesKilledText: " + enemiesText);
+	            switch (enemyName)
+	            {
+	                case "Maynard":
+	                    enemyScore = ScoreDataCarrier.Instance.GetMaynardScore(loop);
+	                    break;
+	                case "Drake":
+	                    enemyScore = ScoreDataCarrier.Instance.GetDrakeScore(loop);
+	                    break;
+	                case "Incognito":
+	                    enemyScore = ScoreDataCarrier.Instance.GetIncognitoScore(loop);
+	                    break;
+	            }
 
-        int papersScoreTotal = ScoreDataCarrier.Instance.PapersCollectedCount * ScoreDataCarrier.Instance.paperScore;
-        if (respawnPapersCollectedText != null) respawnPapersCollectedText.text = $"Papers Collected: {ScoreDataCarrier.Instance.PapersCollectedCount} x " +
-                                         $"{ScoreDataCarrier.Instance.paperScore} PTS = {papersScoreTotal} PTS\n";
+	            int scoreForEnemyType = count * enemyScore * loopMultiplier;
+	            enemiesText += $"\t{enemyName}s: {count} x {enemyScore} PTS = {scoreForEnemyType} PTS\n";
+	        }
+	        enemiesText += "\n";
+	    }
+	    
+	    if (respawnEnemiesKilledText != null) respawnEnemiesKilledText.text = enemiesText;
+	    Debug.Log("respawnEnemiesKilledText: " + enemiesText);
 
-        if (respawnTotalScoreText != null) respawnTotalScoreText.text = $"Total Score: {ScoreDataCarrier.Instance.TotalScore} PTS";
-        
-        if (respawnScorePanel != null) respawnScorePanel.SetActive(true); // Show the final score panel
-    }
+	    int papersScoreTotal = ScoreDataCarrier.Instance.PapersCollectedCount * ScoreDataCarrier.Instance.paperScore;
+	    if (respawnPapersCollectedText != null) respawnPapersCollectedText.text = $"Papers Collected: " +
+		    $"{ScoreDataCarrier.Instance.PapersCollectedCount} x {ScoreDataCarrier.Instance.paperScore} PTS = " +
+		    $"{papersScoreTotal} PTS\n";
+
+	    if (respawnTotalScoreText != null) respawnTotalScoreText.text = $"Total Score: {ScoreDataCarrier.Instance.TotalScore} PTS";
+	    
+	    if (respawnScorePanel != null) respawnScorePanel.SetActive(true); // Show the final score panel
+	}
 }
