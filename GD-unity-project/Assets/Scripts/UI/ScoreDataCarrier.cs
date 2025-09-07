@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using CollectablePapers;
-using UnityEngine.Serialization;
 
 public class ScoreDataCarrier : MonoBehaviour
 {

@@ -115,12 +115,6 @@ namespace Utils {
 					// Audio management: clean the audio before changing scene
 					ForceStopAllAmbientEvents();
 					
-					// TODO: Show the final score before loading the respawn scene
-					// if (ScoreManagerUI.Instance != null)
-					// {
-					// 	ScoreManagerUI.Instance.ShowFinalScore();
-					// }
-					
 					FadeManager.Instance.FadeOutIn(() => {
 						StartCoroutine(LoadRespawnSceneAsync());
 					});
@@ -151,17 +145,6 @@ namespace Utils {
 
 			UpdateTimerUI();
 		}
-		
-		// TODO: Add a public method to start loading the scene after viewing the score
-		// public void ProceedToRespawnScene()
-		// {
-		// 	if (GameStatus.gameEnded) // Only if the game is actually over
-		// 	{
-		// 		FadeManager.Instance.FadeOutIn(() => {
-		// 			StartCoroutine(LoadRespawnSceneAsync());
-		// 		});
-		// 	}
-		// }
 
 		private void HandleRunReady() {
 			currentTime = TimeLimit;
