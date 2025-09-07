@@ -207,6 +207,60 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b753b61d117e41c4bb499640c8617e2c, type: 3}
+--- !u!1 &146448431
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 146448433}
+  - component: {fileID: 146448432}
+  m_Layer: 0
+  m_Name: ScoreDataCarrier
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &146448432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 146448431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdd3488036ac2644ebd9553852ee3876, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maynardBaseScoreLoop1: 50
+  maynardBaseScoreLoop2: 75
+  maynardBaseScoreLoop3: 100
+  drakeBaseScoreLoop1: 100
+  drakeBaseScoreLoop2: 150
+  drakeBaseScoreLoop3: 200
+  IncognitoBaseScoreLoop1: 40
+  IncognitoBaseScoreLoop2: 60
+  IncognitoBaseScoreLoop3: 80
+  paperScore: 100
+--- !u!4 &146448433
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 146448431}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 864.46094, y: 463.17172, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &595096717 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8405228618493373993, guid: 5de0da93c121fc341ba1761b0b865f5b, type: 3}
@@ -1025,3 +1079,4 @@ SceneRoots:
   - {fileID: 864968484}
   - {fileID: 1553633560}
   - {fileID: 2125034420}
+  - {fileID: 146448433}
