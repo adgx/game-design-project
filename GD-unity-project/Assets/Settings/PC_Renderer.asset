@@ -63,6 +63,39 @@ MonoBehaviour:
       restoreCamera: 1
       offset: {x: 0, y: 0, z: 0, w: 0}
       cameraFieldOfView: 60
+--- !u!114 &-5637112311975138744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db8d15ae2f10564cb8abb62fad5cde6, type: 3}
+  m_Name: OutlineFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings: {shader: {fileID: 4800000, guid: 753ebfa9d8dccb74cbd7eaa630e1a9d8, type: 3}}
+  _mat: {fileID: 0}
+--- !u!114 &-3400535172283455341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: OutlineRendererFeature
+  m_EditorClassIdentifier: Assembly-CSharp::OutlineRendererFeature
+  m_Active: 1
+  settings:
+    thickness: 6.75
+    depthMin: 0
+    depthMax: 7.31
+  shader: {fileID: 4800000, guid: 753ebfa9d8dccb74cbd7eaa630e1a9d8, type: 3}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,14 +124,15 @@ MonoBehaviour:
   - {fileID: 7833122117494664109}
   - {fileID: -7730524177821980639}
   - {fileID: -6900749109822012754}
-  m_RendererFeatureMap: ad6b866f10d7b46c21285ae537a9b794ae42f7103f9d3ba0
+  - {fileID: 7364105327774724147}
+  m_RendererFeatureMap: ad6b866f10d7b46c21285ae537a9b794ae42f7103f9d3ba033f09266c78e3266
   m_UseNativeRenderPass: 1
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   m_AssetVersion: 2
   m_OpaqueLayerMask:
     serializedVersion: 2
-    m_Bits: 255
+    m_Bits: 3327
   m_TransparentLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -115,8 +149,25 @@ MonoBehaviour:
   m_CopyDepthMode: 0
   m_DepthAttachmentFormat: 0
   m_DepthTextureFormat: 0
-  m_AccurateGbufferNormals: 0
+  m_AccurateGbufferNormals: 1
   m_IntermediateTextureMode: 0
+--- !u!114 &7364105327774724147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3dc00835a09f68245957ce84d39636b6, type: 3}
+  m_Name: BlurRendererFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    horizontalBlur: 0
+    verticalBlur: 0
+  shader: {fileID: 4800000, guid: 9571a69192d283f49ba703a077b2f742, type: 3}
 --- !u!114 &7833122117494664109
 MonoBehaviour:
   m_ObjectHideFlags: 0

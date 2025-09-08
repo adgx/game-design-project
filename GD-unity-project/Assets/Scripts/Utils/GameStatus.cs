@@ -7,6 +7,12 @@ public static class GameStatus {
 
 	// True if I have reached the last loop
 	public static bool gameEnded = false;
+	
+	// True if I have the UI pause menu open
+	public static bool isUIPauseMenuOpen = false;
+	
+	// True if I have the UI inventory menu open
+	public static bool isUIInventoryMenuOpen = false;
 
 	public enum LoopIteration {
 		FIRST_ITERATION = 0,

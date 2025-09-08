@@ -47,19 +47,31 @@ namespace RoomManager.RoomData
 		/// </summary>
 		[HideInInspector]
 		public bool spawnHealthVendingMachine;
+		
+		/// <summary>
+		/// Internal flag for using a health vending machine (set at runtime).
+		/// </summary>
+		[HideInInspector]
+		public bool usedHealthVendingMachine;
 
 		/// <summary>
-		/// Chance (0–1) to spawn a power up vending machine.
+		/// Chance (0–1) to spawn a power-up vending machine.
 		/// </summary>
 		[Range(0f, 1f)]
         [Tooltip("Chance to spawn a vending machine in this room.")]
         public float powerUpVendingMachineSpawnChance;
 
 		/// <summary>
-		/// Internal flag for spawning a power up vending machine (set at runtime).
+		/// Internal flag for spawning a power-up vending machine (set at runtime).
 		/// </summary>
 		[HideInInspector]
         public bool spawnPowerUpVendingMachine;
+		
+        /// <summary>
+        /// Internal flag for using a power-up vending machine (set at runtime).
+        /// </summary>
+        [HideInInspector]
+        public bool usedPowerUpVendingMachine;
 
         /// <summary>
         /// Chance (0–1) to spawn an upgrade terminal.
@@ -73,6 +85,12 @@ namespace RoomManager.RoomData
         /// </summary>
         [HideInInspector]
         public bool spawnUpgradeTerminal;
+        
+        /// <summary>
+        /// Internal flag for using an upgrade terminal (set at runtime).
+        /// </summary>
+        [HideInInspector]
+        public bool usedUpgradeTerminal;
 
         /// <summary>
         /// Chance (0–1) to spawn a collectible paper item.
@@ -86,6 +104,12 @@ namespace RoomManager.RoomData
         /// </summary>
         [HideInInspector]
         public bool spawnPaper;
+        
+        /// <summary>
+        /// List of flags used only for initial room papers.
+        /// </summary>
+        [HideInInspector]
+        public List<bool> initialRoomPaperStates = new List<bool>();
 
         /// <summary>
         /// Type/category of the room (e.g. Combat, Treasure, etc).
@@ -99,8 +123,10 @@ namespace RoomManager.RoomData
         /// <param name="difficultyMultiplier">Multiplier to scale difficulty (e.g., 1.2 for 20% harder).</param>
         public void SetDifficulty(float difficultyMultiplier)
         {
-            roomSpawnBudget = roomSpawnBudgetLoop1 +
-                              (int)Math.Round(roomSpawnBudgetLoop1 * difficultyMultiplier * (int)GameStatus.loopIteration);
+            roomSpawnBudget = roomSpawnBudgetLoop1 + (int)Math.Round(roomSpawnBudgetLoop1 * difficultyMultiplier * ((int)GameStatus.loopIteration + 1));
+            
+            // Make sure the minimum budget is at least roomSpawnBudgetLoop1 to avoid empty rooms
+            roomSpawnBudget = Math.Max(roomSpawnBudget, roomSpawnBudgetLoop1);
         }
         
         public RoomData Clone()
@@ -119,6 +145,7 @@ namespace RoomManager.RoomData
             clone.spawnUpgradeTerminal = spawnUpgradeTerminal;
             clone.paperSpawnChance = paperSpawnChance;
             clone.spawnPaper = spawnPaper;
+            clone.initialRoomPaperStates = new List<bool>(this.initialRoomPaperStates);
             clone.roomType = roomType;
 
             return clone;

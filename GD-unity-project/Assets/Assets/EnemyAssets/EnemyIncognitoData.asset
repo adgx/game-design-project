@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: EnemyIncognitoData
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 8345268695102665143, guid: b1b325b0ad3f20a47b57643bfa5b51fc, type: 3}
-  enemyName: Paolino
+  enemyName: Incognito
   spawnCost: 1
-  maxHealth: 120
+  maxHealth: 100
   maxHealthLoop1: 100
   baseMoveSpeed: 5
   angularSpeed: 200
-  distanceAttackDamage: 12
+  distanceAttackDamage: 10
   distanceAttackDamageLoop1: 10
-  closeAttackDamage: 12
+  closeAttackDamage: 10
   closeAttackDamageLoop1: 10
   difficultyMultiplier: 0.2
   walkPointRange: 8
@@ -31,3 +31,5 @@ MonoBehaviour:
   attackRange: 8
   distanceAttackDamageMultiplier: 1.4
   closeAttackDamageMultiplier: 1.4
+  longSpitAttackDamage: 20
+  longSpitAttackDamageLoop1: 20

@@ -10,15 +10,15 @@ public class PulseEmission : MonoBehaviour
     [SerializeField]
     [Min(0)]
     private float flickerSpeed = 1.0f;
+    private float intensityRate = 0.1f; 
 
     [SerializeField] private AnimationCurve brightnessCurve;
 
     [SerializeField] private LayerMask whatIsPlayer;
 
-    private Renderer renderer;
+    private new Renderer renderer;
     private List<Material> materials = new List<Material>();
     private List<Color> initialColors = new List<Color>();
-    private bool pulse = false;
 
     private const string EMISSIVE_COLOR_NAME = "_EmissionColor";
 	private const string EMISSIVE_KEYWORD = "_EMISSION";
@@ -45,16 +45,20 @@ public class PulseEmission : MonoBehaviour
         if(renderer.isVisible && Physics.CheckSphere(transform.position, 6f, whatIsPlayer) && !Physics.CheckSphere(transform.position, 2f, whatIsPlayer)) {
             float scaledTime = Time.time * flickerSpeed;
 
-            for(int i = 0; i < materials.Count; i++) {
+            for (int i = 0; i < materials.Count; i++)
+            {
 
                 float brightness = brightnessCurve.Evaluate(scaledTime);
-
-                materials[i].SetColor(EMISSIVE_COLOR_NAME, initialColors[i] * brightness);
+                float intensityHDR = Mathf.Pow(2, brightness * intensityRate);
+                materials[i].SetColor(EMISSIVE_COLOR_NAME, Color.white * brightness);
+                materials[i].EnableKeyword(EMISSIVE_KEYWORD);
             }
         }
         else {
-			for(int i = 0; i < materials.Count; i++) {
-				materials[i].SetColor(EMISSIVE_COLOR_NAME, initialColors[i] * 0);
+            for (int i = 0; i < materials.Count; i++)
+            {
+                materials[i].SetColor(EMISSIVE_COLOR_NAME, Color.white * 0);
+                materials[i].EnableKeyword(EMISSIVE_KEYWORD);
 			}
 		}
     }

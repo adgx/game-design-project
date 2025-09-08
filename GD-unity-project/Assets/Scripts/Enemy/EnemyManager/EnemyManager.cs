@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using RoomManager;
-using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -38,7 +36,6 @@ namespace Enemy.EnemyManager
         private Dictionary<Vector3Int, List<EnemyData.EnemyData>> spawnedEnemiesDataPerRoom = new Dictionary<Vector3Int, List<EnemyData.EnemyData>>();
         private Dictionary<Vector3Int, List<GameObject>> spawnedEnemiesPerRoom = new Dictionary<Vector3Int, List<GameObject>>();
         
-
         private void Awake()
         {
             if (Instance == null)
@@ -60,8 +57,6 @@ namespace Enemy.EnemyManager
 
         private void Start()
         {
-
-
             _roomManager = RoomManager.RoomManager.Instance;
 
             if (_roomManager != null)
@@ -102,52 +97,89 @@ namespace Enemy.EnemyManager
                 int remainingBudget = currentRoom.MaxSpawnCost;
                 int enemiesSpawnedCount = 0;
 
-                for(int i = 0; i < _maxEnemiesPerRoom && shuffledSpawnPoints.Count > 0 && remainingBudget > 0; i++) {
+                for (int i = 0; i < _maxEnemiesPerRoom && shuffledSpawnPoints.Count > 0 && remainingBudget > 0; i++)
+                {
                     List<EnemyData.EnemyData> affordableEnemies = _availableEnemyData
                         .Where(enemyData => enemyData != null && enemyData.enemyPrefab != null && enemyData.spawnCost > 0 &&
                                             enemyData.spawnCost <= remainingBudget)
                         .OrderBy(enemyData => enemyData.spawnCost)
                         .ToList();
 
-                    if(affordableEnemies.Count == 0)
-                        break;
+                    // 👉 Fallback: if there are no spawnable enemies but we still have to respect the minimum
+                    if (affordableEnemies.Count == 0)
+                    {
+                        if (enemiesSpawnedCount < _minEnemiesPerRoom)
+                        {
+                            // Force the cheapest enemy's spawn by ignoring the budget
+                            EnemyData.EnemyData cheapestEnemy = _availableEnemyData
+                                .Where(e => e != null && e.enemyPrefab != null && e.spawnCost > 0)
+                                .OrderBy(e => e.spawnCost)
+                                .FirstOrDefault();
 
+                            if (cheapestEnemy != null)
+                            {
+                                Transform spawnPoint = shuffledSpawnPoints[0];
+                                shuffledSpawnPoints.RemoveAt(0);
+
+                                GameObject enemyInstance =
+                                    Instantiate(cheapestEnemy.enemyPrefab, spawnPoint.position, spawnPoint.rotation);
+
+                                if (enemyInstance.GetComponent<IEnemy>() is { } enemyScript)
+                                {
+                                    enemyScript.Initialize(cheapestEnemy, _roomManager);
+                                    if (spawnedEnemiesDataPerRoom.ContainsKey(currentRoom.RoomIndex))
+                                    {
+                                        spawnedEnemiesDataPerRoom[currentRoom.RoomIndex].Add(cheapestEnemy);
+                                        spawnedEnemiesPerRoom[currentRoom.RoomIndex].Add(enemyInstance);
+                                    }
+                                    else
+                                    {
+                                        spawnedEnemiesDataPerRoom[currentRoom.RoomIndex] = new List<EnemyData.EnemyData> { cheapestEnemy };
+                                        spawnedEnemiesPerRoom[currentRoom.RoomIndex] = new List<GameObject> { enemyInstance };
+                                    }
+                                }
+
+                                enemiesSpawnedCount++;
+                                // Note: here we do not subtract spawnCost from the budget → we ignore the constraint
+                            }
+                        }
+
+                        // Get out of the loop, otherwise you risk endless loops
+                        break;
+                    }
+
+                    // Normal enemy selection
                     EnemyData.EnemyData enemyToSpawnData = (enemiesSpawnedCount < _minEnemiesPerRoom)
                         ? affordableEnemies.FirstOrDefault()
                         : affordableEnemies[Random.Range(0, affordableEnemies.Count)];
 
-                    if(enemyToSpawnData == null)
+                    if (enemyToSpawnData == null)
                         continue;
 
-                    Transform spawnPoint = shuffledSpawnPoints[0];
+                    Transform spawn = shuffledSpawnPoints[0];
                     shuffledSpawnPoints.RemoveAt(0);
 
-                    GameObject enemyInstance =
-                        Instantiate(enemyToSpawnData.enemyPrefab, spawnPoint.position, spawnPoint.rotation);
+                    GameObject instance = Instantiate(enemyToSpawnData.enemyPrefab, spawn.position, spawn.rotation);
 
-                    if(enemyInstance.GetComponent<IEnemy>() is { } enemyScript) {
-                        enemyScript.Initialize(enemyToSpawnData, _roomManager);
+                    if (instance.GetComponent<IEnemy>() is { } enemyScript2)
+                    {
+                        enemyScript2.Initialize(enemyToSpawnData, _roomManager);
                         if (spawnedEnemiesDataPerRoom.ContainsKey(currentRoom.RoomIndex))
                         {
                             spawnedEnemiesDataPerRoom[currentRoom.RoomIndex].Add(enemyToSpawnData);
-                            spawnedEnemiesPerRoom[currentRoom.RoomIndex].Add(enemyInstance);
+                            spawnedEnemiesPerRoom[currentRoom.RoomIndex].Add(instance);
                         }
                         else
                         {
                             spawnedEnemiesDataPerRoom[currentRoom.RoomIndex] = new List<EnemyData.EnemyData> { enemyToSpawnData };
-                            spawnedEnemiesPerRoom[currentRoom.RoomIndex] = new List<GameObject> {enemyInstance};
+                            spawnedEnemiesPerRoom[currentRoom.RoomIndex] = new List<GameObject> { instance };
                         }
                     }
-                    else {
-                        Debug.LogWarning(
-                            $"Spawned enemy '{enemyToSpawnData.enemyName}' from prefab '{enemyToSpawnData.enemyPrefab.name}' but it doesn't implement IEnemy.",
-                            enemyInstance);
-                    }  
 
                     enemiesSpawnedCount++;
                     remainingBudget -= enemyToSpawnData.spawnCost;
                 }
-
+                
                 currentRoom.HasEnemiesSpawned = true;
 
                 if(!roomsEnemiesSpawnedIndexes.Contains(newRoomIndex)) {
@@ -214,6 +246,12 @@ namespace Enemy.EnemyManager
                         .Find(enemyData => enemyData.enemyName == enemyName));
             
             spawnedEnemiesPerRoom[currentRoomIndex].Remove(enemyToRemove);
+        }
+        
+        public void ResetEnemySpawns() {
+            roomsEnemiesSpawnedIndexes.Clear();
+            spawnedEnemiesDataPerRoom.Clear();
+            spawnedEnemiesPerRoom.Clear();
         }
     }
 }

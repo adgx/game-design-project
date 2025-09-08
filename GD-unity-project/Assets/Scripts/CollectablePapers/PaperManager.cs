@@ -21,13 +21,17 @@ namespace CollectablePapers
 
         [Tooltip("Container GameObject for displaying paper UI.")] [SerializeField]
         private GameObject _paperTextContainer;
+        
+        [Tooltip("PaperCounterUI script reference to update the counter.")]
+        [SerializeField]
+        private PaperCounterUI _paperCounterUI;
 
         [Tooltip("Reference to the player to freeze movement while reading.")] [SerializeField]
         private Player _player;
 
         private Dictionary<int, string> _paperMessages;
-        private HashSet<int> _collectedPapers = new();
-        private bool _isPaperUiOpen = false;
+        public HashSet<int> _collectedPapers = new();
+        private byte _isPaperUiOpen = 0;
 
         [SerializeField] private PlayerInput playerInput;
 		[SerializeField] private RickEvents _rickEvents;
@@ -76,9 +80,13 @@ namespace CollectablePapers
 
         private void Update()
         {
-            if (_isPaperUiOpen && playerInput.InteractionPressed())
+            if (_isPaperUiOpen != 0 && playerInput.InteractionPressed())
             {
-                ClosePaperUI();
+                if (_isPaperUiOpen == 2)
+                {
+                    ClosePaperUI();
+                }
+                else _isPaperUiOpen++;
             }
         }
 
@@ -88,12 +96,23 @@ namespace CollectablePapers
         /// <param name="paperPosition">World position of the paper (used for sound).</param>
         public void ShowPaper(Vector3 paperPosition)
         {
-            if (_isPaperUiOpen) return;
+            if (_isPaperUiOpen == 1) return;
 
             if (_paperMessages.TryGetValue(_collectedPapers.Count, out string messageContent))
             {
-                _isPaperUiOpen = true;
+                _isPaperUiOpen = 1;
                 _collectedPapers.Add(_collectedPapers.Count);
+                
+                if (_paperCounterUI != null)
+                {
+                    _paperCounterUI.UpdatePaperCounterUI();
+                }
+                
+                // Call to the ScoreManagerUI to record the collected paper
+                if (ScoreManagerUI.Instance != null)
+                {
+                    ScoreManagerUI.Instance.PaperCollected();
+                }
 
                 AnimationManager.Instance.Idle();
                 _rickEvents.SetIdleState();
@@ -102,7 +121,8 @@ namespace CollectablePapers
 				_paperText.SetText(messageContent + "\n\n<color=#806d06>[Press E to Close]</color>");
                 _paperTextContainer.SetActive(true);
 
-				GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerPaperInteraction, paperPosition);
+                // Audio management
+				GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerPaperInteraction, paperPosition);
             }
             else
             {
@@ -115,10 +135,10 @@ namespace CollectablePapers
         /// </summary>
         private void ClosePaperUI()
         {
-            if(_collectedPapers.Count <= 4) {
+            if(_collectedPapers.Count > 0 && _collectedPapers.Count <= _startTutorial.tutorial.Count) {
                 StartCoroutine(_startTutorial.ShowTip(_collectedPapers.Count - 1));
             }
-            _isPaperUiOpen = false;
+            _isPaperUiOpen = 0;
             _paperTextContainer.SetActive(false);
             _player.isFrozen = false;
         }

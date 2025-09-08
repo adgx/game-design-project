@@ -24,8 +24,8 @@ public class Drake : MonoBehaviour, IEnemy
     private Transform _playerTransform;
     private float _health;
     //player health debug
-    private float _playerHDG = 50f;
-    private float _playerDRDG = 0.2f;
+    // private float _playerHDG = 50f;
+    // private float _playerDRDG = 0.2f;
     private string enemyName;
 
     //Idle
@@ -59,6 +59,11 @@ public class Drake : MonoBehaviour, IEnemy
 
     private EnemyManager enemyManager;
     private bool _debug = false;
+    
+    // Grace period (time interval before the enemy can see and attack the player when he enters a room) 
+    [SerializeField] private float _gracePeriod = 1.5f;
+    private float _graceTimer;
+    private bool _graceActive = true;
     
     // Audio management
     private DrakeEvents _events;
@@ -101,6 +106,10 @@ public class Drake : MonoBehaviour, IEnemy
 
     void Start()
     {
+        // Grace time management
+        _graceTimer = _gracePeriod;
+        _graceActive = true;
+        
         //debug 
         if (_debug)
         {
@@ -116,7 +125,7 @@ public class Drake : MonoBehaviour, IEnemy
 
             _distanceAttackDamageMultiplier = 0f;
             _closeAttackDamageMultiplier = 0.8f;
-            _closeAttackDamage = 20f;
+            _closeAttackDamage = 40f;
         }
         
         //FMS base
@@ -128,7 +137,6 @@ public class Drake : MonoBehaviour, IEnemy
         State chaseS = new DrakeChaseState("Chase", this, _events);
         State wonderS = new DrakeWonderState("Wonder", this);
         State swipingS = new DrakeSwipingAttackState("Swiping", this);
-        State biteS = new DrakeBiteAttackState("Bite", this);
         State waitS = new DrakeWaitState("Wait", this, _events);
 
         _reactFromFrontS = new DrakeReactFromFrontState("Hit", this);
@@ -137,7 +145,7 @@ public class Drake : MonoBehaviour, IEnemy
         //Transition
         //idle
         _stateMachine.AddTransition(idleS, patrolS, () => !_playerInSightRange && _waitCurTime >= _timeIdle);
-        _stateMachine.AddTransition(idleS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
+        _stateMachine.AddTransition(idleS, chaseS, () => !_graceActive && _playerInSightRange && !_playerInAttackRange);
         //patrol
         _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         //chase
@@ -148,21 +156,18 @@ public class Drake : MonoBehaviour, IEnemy
         _stateMachine.AddTransition(wonderS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(wonderS, waitS, () => _alreadyAttacked);
         //change playerShoot.health with playerHDG, and playerShoot.damageReduction with  _playerDRDG if you Debug it  
-        _stateMachine.AddTransition(wonderS, swipingS, () => !_alreadyAttacked && _playerInSightRange && _playerInAttackRange && playerShoot.health > _closeAttackDamage * playerShoot.damageReduction);
-        _stateMachine.AddTransition(wonderS, biteS, () => !_alreadyAttacked && _playerInSightRange && _playerInAttackRange && playerShoot.health <= _closeAttackDamage * playerShoot.damageReduction);
+        _stateMachine.AddTransition(wonderS, swipingS, () => !_alreadyAttacked && _playerInSightRange && _playerInAttackRange /*&& playerShoot.health > _closeAttackDamage * playerShoot.damageReduction*/);
+        // _stateMachine.AddTransition(wonderS, biteS, () => !_alreadyAttacked && _playerInSightRange && _playerInAttackRange && playerShoot.health <= _closeAttackDamage * playerShoot.damageReduction);
         //wait
         _stateMachine.AddTransition(waitS, wonderS, () => !_alreadyAttacked);
         //swipingS
         _stateMachine.AddTransition(swipingS, wonderS, () => anim.EndSwiping == true);
 		_stateMachine.AddTransition(swipingS, waitS, () => _alreadyAttacked);
-		//biteS
-		_stateMachine.AddTransition(biteS, wonderS, () => anim.EndBit);
-		//_stateMachine.AddTransition(biteS, waitS, () => _alreadyAttacked);
-		//reactFromFronts
+		//react
 		_stateMachine.AddTransition(_reactFromFrontS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(_reactFromFrontS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(_reactFromFrontS, wonderS, () => _playerInSightRange && _playerInAttackRange);
-        //denfese
+        //defense
         _stateMachine.AddTransition(_defenseS, patrolS, () => !_playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(_defenseS, chaseS, () => _playerInSightRange && !_playerInAttackRange);
         _stateMachine.AddTransition(_defenseS, wonderS, () => _playerInSightRange && _playerInAttackRange);
@@ -173,20 +178,44 @@ public class Drake : MonoBehaviour, IEnemy
 
     void Update()
     {
-        // Maybe not a great idea to have this check here, but I don't know where to put it
-        if(!playerShoot.magneticShieldOpen) 
-            _attackRange = 1;
-        else
-            _attackRange = 2;
+        // Grace period management
+        if (_graceActive)
+        {
+            _graceTimer -= Time.deltaTime;
+            if (_graceTimer <= 0f)
+            {
+                _graceActive = false;
+            }
+        }
 
-        //Check for sight and attack range
-        _playerInSightRange = Physics.CheckSphere(transform.position, _sightRange, whatIsPlayer);
-        _playerInAttackRange = Physics.CheckSphere(transform.position, _attackRange, whatIsPlayer);
-        _stateMachine.Tik();
+        // If we are in the grace period, then we set the flags to false
+        if (_graceActive)
+        {
+            _playerInSightRange = false;
+            _playerInAttackRange = false;
+        }
+
+        else
+        {
+            // Maybe not a great idea to have this check here, but I don't know where to put it
+            if(!_debug && !playerShoot.shieldIsActive) 
+                _attackRange = 1;
+            else
+                _attackRange = 2;
+
+            //Check for sight and attack range
+            _playerInSightRange = Physics.CheckSphere(transform.position, _sightRange, whatIsPlayer);
+            _playerInAttackRange = Physics.CheckSphere(transform.position, _attackRange, whatIsPlayer);
+            _stateMachine.Tik();
+        }
     }
 
     public void Initialize(EnemyData enemyData, RoomManager.RoomManager roomManager)
     {
+        // Resets grace period at each spawn
+        _graceTimer = _gracePeriod;
+        _graceActive = true;
+        
         _roomManager = roomManager;
 
         if (!_agent) _agent = GetComponent<NavMeshAgent>();
@@ -224,13 +253,19 @@ public class Drake : MonoBehaviour, IEnemy
 
     }
 
-    public void TakeDamage(float damage, string attackType)
+    public void TakeDamage(float damage, string attackType, bool isShield)
     {
-        _health -= damage * (attackType == "c" ? _closeAttackDamageMultiplier : _distanceAttackDamageMultiplier);
-
+        // Drake can be hurt from the player only with close attacks
         if (attackType == "c")
         {
-            StartCoroutine(ChangeColor(Color.red, 0.8f, 0));
+            _health -= damage;
+        
+            // Debug.Log("Drake's health BEFORE the attack = " + (_health + damage) + ", Drake's health AFTER the attack  = " + _health);
+            
+            if (!isShield)
+            {
+                StartCoroutine(ChangeColor(Color.red, 0.8f, 0));   
+            }
 
             if (_health <= 0)
             {
@@ -238,6 +273,12 @@ public class Drake : MonoBehaviour, IEnemy
                 gameObject.tag = "Untagged";
                 enemyManager.removeEnemyFromList(_roomManager.CurrentRoomIndex, gameObject, enemyName);
 
+                // Call to ScoreManagerUI to record the killing of the enemy
+                if (ScoreManagerUI.Instance != null)
+                {
+                    ScoreManagerUI.Instance.EnemyKilled(enemyName);
+                }
+                
                 _stateMachine.SetState(_deathS);
             }
             else
@@ -356,18 +397,18 @@ public class Drake : MonoBehaviour, IEnemy
     {
         if (!_debug)
         {
-            if (Physics.CheckSphere(transform.position, 2f, whatIsPlayer) && !playerShoot.magneticShieldOpen)
+            if (Physics.CheckSphere(transform.position, 2f, whatIsPlayer))
             {
-                playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, 5, 5);
+                playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack);
             }
         }
     }
 
     public void CheckBiteAttackDamage()
     {
-        if (Physics.CheckSphere(transform.position, 2f, whatIsPlayer) && !playerShoot.magneticShieldOpen)
+        if (Physics.CheckSphere(transform.position, 2f, whatIsPlayer))
         {
-            playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.DrakeBiteAttack, 5, 5);
+            playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.DrakeBiteAttack, transform);
         }
     }
 

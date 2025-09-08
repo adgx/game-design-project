@@ -54,6 +54,11 @@ public class Maynard : MonoBehaviour, IEnemy
     //states
     private State _reactFromFrontS;
     private State _deathS;
+    
+    // Grace period (time interval before the enemy can see and attack the player when he enters a room) 
+    [SerializeField] private float _gracePeriod = 1.5f;
+    private float _graceTimer;
+    private bool _graceActive = true;
 
     private RoomManager.RoomManager _roomManager;
 
@@ -63,6 +68,7 @@ public class Maynard : MonoBehaviour, IEnemy
 
     private bool _debug = false;
 
+    // Audio management
     private MaynardEvents _events;
 
     void Awake()
@@ -108,8 +114,8 @@ public class Maynard : MonoBehaviour, IEnemy
             _distanceAttackDamageMultiplier = 1f;
             _closeAttackDamageMultiplier = 1f;
 
-            _closeAttackDamage = 1f;
-            _distanceAttackDamage = 13f;
+            _closeAttackDamage = 30f;
+            _distanceAttackDamage = 20f;
 
             _agent.speed = 5f;
             _agent.angularSpeed = 200;
@@ -126,6 +132,10 @@ public class Maynard : MonoBehaviour, IEnemy
 
     void Start()
     {
+        // Grace time management
+        _graceTimer = _gracePeriod;
+        _graceActive = true;
+        
         //FMS base
         _stateMachine = new FiniteStateMachine<Maynard>(this);
 
@@ -140,14 +150,16 @@ public class Maynard : MonoBehaviour, IEnemy
         _reactFromFrontS = new MaynardReactFromFrontState("Hit", this);
         _deathS = new MaynardDeathState("Death", this);
         //take attention on the order with the transitions are added
-        //idle Transitions
+        
+        // Transition
+        //idle
         _stateMachine.AddTransition(idleS, chaseS, () => _playerInSightRange && (_playerInRemoteAttackRange || _playerInCloseAttackRange));
-        _stateMachine.AddTransition(idleS, patrolS, () => !_playerInSightRange && _waitCurTime >= _timeIdle);
+        _stateMachine.AddTransition(idleS, patrolS, () => !_graceActive && !_playerInSightRange && _waitCurTime >= _timeIdle);
         //Patrol
         _stateMachine.AddTransition(patrolS, chaseS, () => _playerInSightRange && (!_playerInCloseAttackRange || !_playerInRemoteAttackRange));
         //chase
         _stateMachine.AddTransition(chaseS, patrolS, () => !_playerInSightRange);
-        _stateMachine.AddTransition(chaseS, wonderS, () => _playerInSightRange && (_playerInRemoteAttackRange || _playerInRemoteAttackRange)); // funzione obbiettivo
+        _stateMachine.AddTransition(chaseS, wonderS, () => _playerInSightRange && (_playerInRemoteAttackRange || _playerInRemoteAttackRange)); // objective function
         //wonder
         _stateMachine.AddTransition(wonderS, patrolS, () => !_playerInSightRange);
         _stateMachine.AddTransition(wonderS, chaseS, () => _playerInSightRange && !_playerInRemoteAttackRange && !_playerInCloseAttackRange);
@@ -172,22 +184,47 @@ public class Maynard : MonoBehaviour, IEnemy
 
     void Update()
     {
-		// Maybe not a great idea to have this check here, but I don't know where to put it
-		if(!playerShoot.magneticShieldOpen)
-			_closeAttackRange = 1;
-		else
-			_closeAttackRange = 2;
+        // Grace period management
+        if (_graceActive)
+        {
+            _graceTimer -= Time.deltaTime;
+            if (_graceTimer <= 0f)
+            {
+                _graceActive = false;
+            }
+        }
 
-		//Check for sight and attack range
-		_playerInSightRange = Physics.CheckSphere(transform.position, _sightRange, _whatIsPlayer);
-        _playerInRemoteAttackRange = Physics.CheckSphere(transform.position, _remoteAttackRange, _whatIsPlayer);
-        _playerInCloseAttackRange = Physics.CheckSphere(transform.position, _closeAttackRange, _whatIsPlayer);
+        // If we are in the grace period, then we set the flags to false
+        if (_graceActive)
+        {
+            _playerInSightRange = false;
+            _playerInRemoteAttackRange = false;
+            _playerInCloseAttackRange = false;
+        }
 
-        _stateMachine.Tik();
+        else
+        {
+            // Maybe not a great idea to have this check here, but I don't know where to put it
+            if(!playerShoot.shieldIsActive)
+                _closeAttackRange = 1;
+            else
+                _closeAttackRange = 2;
+
+            //Check for sight and attack range
+            _playerInSightRange = Physics.CheckSphere(transform.position, _sightRange, _whatIsPlayer);
+            _playerInRemoteAttackRange = Physics.CheckSphere(transform.position, _remoteAttackRange, _whatIsPlayer);
+            _playerInCloseAttackRange = Physics.CheckSphere(transform.position, _closeAttackRange, _whatIsPlayer);
+
+            _stateMachine.Tik();   
+        }
     }
 
     public void Initialize(EnemyData enemyData, RoomManager.RoomManager roomManager)
     {
+        // Resets grace period at each spawn
+        _graceTimer = _gracePeriod;
+        _graceActive = true;
+        
         _roomManager = roomManager;
 
         if (!_agent) _agent = GetComponent<NavMeshAgent>();
@@ -225,18 +262,30 @@ public class Maynard : MonoBehaviour, IEnemy
         _distanceAttackDamage = maynardData.distanceAttackDamage;
     }
 
-    public void TakeDamage(float damage, string attackType)
+    public void TakeDamage(float damage, string attackType, bool isShield)
     {
-        _health -= damage * (attackType == "c" ? _closeAttackDamageMultiplier : _distanceAttackDamageMultiplier);
+        // Maynard can be hurt from the player both with distance and close attacks
+        _health -= damage;
+        
+        // Debug.Log("Maynard's health BEFORE the attack = " + (_health + damage) + ", Maynard's health AFTER the attack  = " + _health);
 
-        StartCoroutine(ChangeColor(Color.red, 0.8f, 0));
+        if (!isShield)
+        {
+            StartCoroutine(ChangeColor(Color.red, 0.8f, 0));   
+        }
 
         if (_health <= 0)
         {
             gameObject.layer = 0;
             gameObject.tag = "Untagged";
             enemyManager.removeEnemyFromList(_roomManager.CurrentRoomIndex, gameObject, enemyName);
-
+            
+            // Call to ScoreManagerUI to record the killing of the enemy
+            if (ScoreManagerUI.Instance != null)
+            {
+                ScoreManagerUI.Instance.EnemyKilled(enemyName);
+            }
+            
             _stateMachine.SetState(_deathS);
         }
         else
@@ -351,12 +400,37 @@ public class Maynard : MonoBehaviour, IEnemy
         if (!_debug)
         {
             GameObject bullet = Instantiate(_bulletPrefab, attackSpawn.transform.position, Quaternion.identity);
-            bullet.tag = "EnemyAttack";
-            bullet.GetComponent<GetCollisions>().enemyBulletDamage = _distanceAttackDamage;
+            bullet.tag = "MaynardEnemyAttack"; // Make sure the tag is “MaynardEnemyAttack"
+            
+            // Assign the current Maynard as the creator of the projectile
+            bullet.GetComponent<ParticleAttackController>().bulletOwner = gameObject; 
+            
+            bullet.GetComponent<ParticleAttackController>().targetPos = _playerTransform;
+            bullet.GetComponent<ParticleAttackController>().enemyBulletDamage = _distanceAttackDamage;
+            bullet.GetComponent<ParticleAttackController>().maynardDamageType = PlayerShoot.DamageTypes.MaynardDistanceAttack; // Set damage type
 
             Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
+            if (rbBullet == null)
+            {
+                rbBullet = bullet.AddComponent<Rigidbody>(); // Make sure there is a Rigidbody
+                rbBullet.useGravity = true;
+            }
             rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
             rbBullet.AddForce(transform.up * 1f, ForceMode.Impulse);
+
+            // Make sure the bullet has a Collider with Is Trigger enabled
+            Collider bulletCollider = bullet.GetComponent<Collider>();
+            if (bulletCollider == null)
+            {
+                // Add a collider if it doesn't exist, such as a SphereCollider
+                SphereCollider sphereCol = bullet.AddComponent<SphereCollider>();
+                sphereCol.isTrigger = true;
+                sphereCol.radius = 0.5f;
+            }
+            else
+            {
+                bulletCollider.isTrigger = true; // Make sure Is Trigger is true
+            }
         }
         //End of attack code
     }
@@ -369,16 +443,12 @@ public class Maynard : MonoBehaviour, IEnemy
 
     public void CheckCloseAttackDamage()
     {
-        if (Physics.CheckSphere(transform.position, 2f, _whatIsPlayer) && !playerShoot.magneticShieldOpen)
+        if (!_debug)
         {
-            playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, 5, 5);
-        }
-        if (Physics.CheckSphere(transform.position, 2f, _whatIsPlayer))
-        {
-            if (!_debug)
+            if (Physics.CheckSphere(transform.position, 2f, _whatIsPlayer))
             {
-                playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, 5, 5);
-            }
+                playerShoot.TakeDamage(_closeAttackDamage, PlayerShoot.DamageTypes.CloseAttack, transform);
+            }   
         }
     }
 
@@ -403,7 +473,7 @@ public class Maynard : MonoBehaviour, IEnemy
         _chaseRange = choice == 0 ? _remoteAttackRange : _closeAttackRange;
     }
 
-    public bool CheckeChaseRange()
+    public bool CheckChaseRange()
     {
         if (_chaseRange == _remoteAttackRange)
         {

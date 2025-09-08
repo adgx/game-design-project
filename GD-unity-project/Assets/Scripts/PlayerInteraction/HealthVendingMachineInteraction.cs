@@ -2,21 +2,38 @@ using System.Collections;
 using Animations;
 using Audio;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace PlayerInteraction
 {
     public class HealthVendingMachineInteraction : MonoBehaviour, IInteractable
     {
-        public string InteractionPrompt => _healthObtained
-            ? "Your health was recovered!"
-            : _isHealthVendingMachineHacked
-                ? "Press E again to take a snack from the machine"
-                : "Press E to interact with the snack distributor";
-
+        public string InteractionPrompt
+        {
+            get
+            {
+                if (_healthObtained)
+                {
+                    return "Your health was recovered!";
+                }
+                if (_isHealthVendingMachineHacked)
+                {
+                    return "Press E again to take a snack from the machine";
+                }
+                if (!_feedbackMessageActive && RoomManager.RoomManager.Instance.IsHealthVendingMachineUsedInCurrentRoom())
+                {
+                    return "The snack distributor is now empty";
+                }
+                return "Press E to interact with the snack distributor";
+            }
+        }
+        
         public bool IsInteractable => !_isBusy;
         
         public Collider InteractionZone => _interactionZone;
 
+        public GameObject GameObject => this.gameObject;
+        
         [Header("Interaction Zone")]
         [Tooltip("An optional trigger collider that defines the area the player must be in to use this.")]
         [SerializeField]
@@ -26,14 +43,15 @@ namespace PlayerInteraction
         private GameObject _specialSnackMeshPrefab;
 
         [Header("Timings")]
-		[SerializeField] private float _freeSphere = 0.5f;
 		[SerializeField] private float _hackingTime = 3.7f;
         [SerializeField] private float _rotationDuration = 0.2f;
-
+        
         [Header("UI Feedback")]
-        [Tooltip("How long the 'Health Recovered' message should display before resetting.")]
-        [SerializeField]
-        private float _feedbackMessageDuration = 3.0f;
+        [Tooltip("How long the 'You obtained a ...' message should display before resetting.")]
+        [SerializeField] float _feedbackMessageDuration = 3.0f;
+        
+        private PlayerInteractor _playerInteractor;
+        private bool _feedbackMessageActive = false;
 
         private bool _isHealthVendingMachineHacked = false;
         private bool _healthObtained = false;
@@ -56,18 +74,28 @@ namespace PlayerInteraction
                     "Player/Armature/mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand")
                 .transform;
 			_rickEvents = _player.GetComponent<RickEvents>();
+            _playerInteractor = FindObjectOfType<PlayerInteractor>();
 		}
 
         public bool Interact(GameObject interactor)
         {
-            if (_isBusy || _healthObtained) return false;
+            if (_isBusy || _healthObtained || RoomManager.RoomManager.Instance.IsHealthVendingMachineUsedInCurrentRoom())
+            {
+                return false; 
+            }
 
             StartCoroutine(RotatePlayerTowards(transform, _rotationDuration));
             //AnimationManager.Instance.Idle();
 
-            if(_isHealthVendingMachineHacked)
+            if (_isHealthVendingMachineHacked)
+            {
                 GetItemSequence();
-            else 
+                
+                // Mark the health vending machine as used (not interactable anymore)
+                RoomManager.RoomManager.Instance.MarkHealthVendingMachineAsUsedInCurrentRoom();
+            }
+                
+            else if(_playerShoot.CheckStamina(1))
                 StartCoroutine(HackingSequence());
 
             return true;
@@ -76,21 +104,22 @@ namespace PlayerInteraction
         private IEnumerator HackingSequence()
         {
             _isBusy = true;
-
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineActivation,
-                this.transform.position);
-            _rotateSphere.positionSphere(new Vector3(_rotateSphere.DistanceFromPlayer, 1f, 0),
-                RotateSphere.Animation.Linear);
-
-            yield return new WaitForSeconds(_freeSphere);
-			_playerShoot.DecreaseStamina(1);
-			_rotateSphere.isRotating = true;
-
-			yield return new WaitForSeconds(_hackingTime);
-
-            _isHealthVendingMachineHacked = true;
+            _playerShoot.isInteracting = true;
             
+            // Make the sphere return to its default position with a linear movement
+            _rotateSphere.positionSphere(new Vector3(_rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
+            
+            GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerVendingMachineActivation, transform.position);
+
+            _playerShoot.DecreaseStamina(1);
+            
+			yield return new WaitForSeconds(_hackingTime);
+            
+            _playerShoot.lastStaminaUseTime = Time.time;
+            _rotateSphere.isRotating = true;
+            _isHealthVendingMachineHacked = true;
             _isBusy = false;
+            _playerShoot.isInteracting = false;
         }
 
         private void GetItemSequence()
@@ -102,8 +131,8 @@ namespace PlayerInteraction
             _isHealthVendingMachineHacked = false;
 
             AnimationManager.Instance.EatSnack();
-			_rickEvents.healthVendingMachineInteraction = this;
-            _rickEvents.machineType = "health";
+			_rickEvents.HealthVendingMachineInteraction = this;
+            _rickEvents.MachineType = "health";
         }
 
         public void PlaceSpecialSnackInHand()
@@ -142,9 +171,47 @@ namespace PlayerInteraction
         private IEnumerator ShowFeedbackMessage()
         {
             _healthObtained = true;
+            _feedbackMessageActive = true;
+
+            // Force the PlayerInteractor to show the health recovery prompt
+            if (_playerInteractor != null)
+            {
+                _playerInteractor.ShowForcedPrompt(this.InteractionPrompt);
+            }
+
             yield return new WaitForSeconds(_feedbackMessageDuration);
+
             _healthObtained = false;
-            _isBusy = true;
+            _feedbackMessageActive = false;
+
+            // Once the feedback message is gone, make sure the UI prompt updates
+            if (_playerInteractor != null)
+            {
+                _playerInteractor.ClearForcedPrompt(); // Send the signal to PlayerInteractor
+            }
+        }
+        
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Player"))
+            {
+                if (_playerInteractor != null && !_feedbackMessageActive)
+                {
+                    // If the feedback message is not active, force the PlayerInteractor to consider this terminal
+                    _playerInteractor.SetCurrentTarget(this); 
+                }
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.CompareTag("Player"))
+            {
+                if (_playerInteractor != null && _playerInteractor.GetCurrentTarget() == this)
+                {
+                    _playerInteractor.ClearTarget();
+                }
+            }
         }
     }
 }

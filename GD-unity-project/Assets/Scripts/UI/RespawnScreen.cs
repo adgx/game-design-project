@@ -1,5 +1,5 @@
 using System.Collections;
-using TMPro;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -10,8 +10,6 @@ public class RespawnScreen : MonoBehaviour
 	[SerializeField] private CanvasGroup respawnScreenCanvas;
 
 	[SerializeField] private string gameplaySceneName = "Player+Map";
-
-	[SerializeField] private GameObject deathMessageContainer;
 	[SerializeField] private GameObject confirmMenu;
 
 	[SerializeField] private GameObject GameEndMessageContainer;
@@ -19,6 +17,9 @@ public class RespawnScreen : MonoBehaviour
 
 	[SerializeField] private GameObject firstSelected;
 	[SerializeField] private GameObject noButton;
+	
+	[Header("Score Display UI (Respawn Screen)")]
+	[SerializeField] private List<ScorePanelUI> scorePanels;
 
 	private bool fadeOut = false, sceneIsLoading = false, changeScene = false;
 
@@ -34,6 +35,8 @@ public class RespawnScreen : MonoBehaviour
 			GameEndMessageContainer.SetActive(false);
 			DiedMessageContainer.SetActive(true);
 		}
+		
+		DisplayRespawnScore();
 
 		Cursor.lockState = CursorLockMode.None;
 	}
@@ -75,8 +78,14 @@ public class RespawnScreen : MonoBehaviour
 
 	void BackToPause() {
 		confirmMenu.SetActive(false);
-
-		deathMessageContainer.SetActive(true);
+		if (GameStatus.gameEnded)
+		{
+			GameEndMessageContainer.SetActive(true);
+		}
+		else
+		{
+			DiedMessageContainer.SetActive(true);
+		}
 		if(!EventSystem.current.alreadySelecting)
 			EventSystem.current.SetSelectedGameObject(firstSelected);
 	}
@@ -85,13 +94,21 @@ public class RespawnScreen : MonoBehaviour
 		fadeOut = true;
 		changeScene = true;
 		GameStatus.gameEnded = false;
+		ScoreManagerUI.Instance.ResetScore();
 		
 		// Ambient light management
 		AmbientLightManager.ResetLightSequence();
 	}
 
 	public void QuitGameClicked() {
-		deathMessageContainer.SetActive(false);
+		if (GameStatus.gameEnded)
+		{
+			GameEndMessageContainer.SetActive(false);
+		}
+		else
+		{
+			DiedMessageContainer.SetActive(false);
+		}
 		confirmMenu.SetActive(true);
 		EventSystem.current.SetSelectedGameObject(noButton);
 	}
@@ -102,5 +119,20 @@ public class RespawnScreen : MonoBehaviour
 
 	public void NoClicked() {
 		BackToPause();
+	}
+	
+	// Function to display the score on the respawn screen
+	private void DisplayRespawnScore()
+	{
+		if (ScoreDataCarrier.Instance == null)
+		{
+			Debug.LogError("ScoreDataCarrier.Instance not found! Cannot display score on respawn screen.");
+			return;
+		}
+
+		foreach (ScorePanelUI panel in scorePanels)
+		{
+			panel.DisplayScore(ScoreDataCarrier.Instance);
+		}
 	}
 }

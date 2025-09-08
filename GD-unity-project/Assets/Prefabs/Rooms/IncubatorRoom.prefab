@@ -3582,7 +3582,6 @@ MonoBehaviour:
   _healthVendingMachinePrefab: {fileID: 3668037048787151047}
   _powerUpVendingMachinePrefab: {fileID: 0}
   _upgradeTerminalPrefab: {fileID: 0}
-  _paperPrefab: {fileID: 0}
 --- !u!114 &7423116378471019824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12691,6 +12690,10 @@ PrefabInstance:
     - target: {fileID: 1092977616310335590, guid: a9a00926b7af046c6aac1e1028d0d99f, type: 3}
       propertyPath: m_Name
       value: PAPER
+      objectReference: {fileID: 0}
+    - target: {fileID: 4035560390671581398, guid: a9a00926b7af046c6aac1e1028d0d99f, type: 3}
+      propertyPath: paperIndex
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -22223,6 +22226,10 @@ PrefabInstance:
     - target: {fileID: 1092977616310335590, guid: a9a00926b7af046c6aac1e1028d0d99f, type: 3}
       propertyPath: m_Name
       value: PAPER (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4035560390671581398, guid: a9a00926b7af046c6aac1e1028d0d99f, type: 3}
+      propertyPath: paperIndex
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

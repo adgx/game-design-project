@@ -65,30 +65,30 @@ public class DrakeChaseState : State
     }
 }
 
-public class DrakeBiteAttackState : State
-{
-    private Drake _drake;
-    public DrakeBiteAttackState(string name, Drake drake) : base(name)
-    {
-        _drake = drake;
-    }
-    public override void Enter()
-    {
-        _drake.anim.EndBit = false;
-        _drake.AttackPlayer();
-        _drake.anim.lunchBiteAnim();
-    }
-
-    public override void Tik()
-    {
-        
-    }
-
-    public override void Exit()
-    {
-        _drake.anim.lunchRunAnim();
-    }
-}
+// public class DrakeBiteAttackState : State
+// {
+//     private Drake _drake;
+//     public DrakeBiteAttackState(string name, Drake drake) : base(name)
+//     {
+//         _drake = drake;
+//     }
+//     public override void Enter()
+//     {
+//         _drake.anim.EndBit = false;
+//         _drake.AttackPlayer();
+//         _drake.anim.lunchBiteAnim();
+//     }
+//
+//     public override void Tik()
+//     {
+//         
+//     }
+//
+//     public override void Exit()
+//     {
+//         _drake.anim.lunchRunAnim();
+//     }
+// }
 
 public class DrakeSwipingAttackState : State
 {
@@ -230,20 +230,20 @@ public class DrakeIdleState : State
 public class DrakeWaitState : State
 {
     private Drake _drake;
- 
+
     // Audio management
     private DrakeEvents _events;
-    
+
     public DrakeWaitState(string name, Drake drake, DrakeEvents events) : base(name)
     {
         _drake = drake;
         _events = events;
     }
-    
+
     public override void Enter()
     {
         _drake.anim.lunchIdleAnim();
-        
+
         // Audio management: starts idle event if Drake is waiting
         _events.StartIdleSound();
     }
@@ -256,5 +256,28 @@ public class DrakeWaitState : State
     {
         // Audio management: stops idle event if Drake is not waiting anymore
         _events.StopIdleSound();
+    }
+}
+
+public class DrakeDebugState : State
+{
+    private Drake _drake;
+ 
+    public DrakeDebugState(string name, Drake drake) : base(name)
+    {
+        _drake = drake;
+    }
+    
+    public override void Enter()
+    {
+        _drake.anim.lunchIdleAnim();
+    }
+
+    public override void Tik()
+    {
+    }
+
+    public override void Exit()
+    {
     }
 }

@@ -2,22 +2,43 @@ using System.Collections;
 using UnityEngine;
 using Audio;
 using Animations;
+using UnityEngine.Serialization;
 
 namespace PlayerInteraction
 {
     public class PowerUpVendingMachineInteraction : MonoBehaviour, IInteractable
     {
-        public string InteractionPrompt => _powerUpObtained
-            ? "You obtained a " + _obtainedPowerUp.ToString().Replace("Boost", " Boost") + "!"
-            : (_noMorePowerUp
-                ? "You have already collected a Power Up from this machine"
-				: (_isPowerUpVendingMachineHacked
-                    ? "Press E again to take a snack from the machine"
-                    : "Press E to interact with the snack distributor"));
-
+        public string InteractionPrompt
+        {
+	        get
+	        {
+		        if (_powerUpObtained)
+		        {
+			        string message = "You obtained a ";
+			        if (_obtainedPowerUp.ToString() == "DamageReduction")
+				        message += "Damage Reduction power-up!";
+			        else 
+						message += "Health Boost power-up!";
+			        return message;
+		        }
+		        if (_isPowerUpVendingMachineHacked)
+		        {
+			        return "Press E again to take a snack from the machine";
+		        }
+		        if (!_feedbackMessageActive && RoomManager.RoomManager.Instance.IsPowerUpVendingMachineUsedInCurrentRoom())
+		        {
+			        return "The snack distributor is now empty";
+		        }
+		        return "Press E to interact with the snack distributor";
+	        }
+        }
+        
         public bool IsInteractable => !_isBusy;
         
         public Collider InteractionZone => _interactionZone;
+
+        public GameObject GameObject => this.gameObject;
+
 
         [Header("Interaction Zone")]
         [Tooltip("An optional trigger collider that defines the area the player must be in to use this.")]
@@ -29,13 +50,15 @@ namespace PlayerInteraction
         [SerializeField] private GameObject _snackMeshPrefab;
         
         [Header("Timings")]
-		[SerializeField] private float _freeSphere = 0.5f;
 		[SerializeField] private float _hackingTime = 3.7f;
         [SerializeField] private float _rotationDuration = 0.2f;
-
+        
         [Header("UI Feedback")]
         [Tooltip("How long the 'You obtained a ...' message should display before resetting.")]
-        [SerializeField] private float _feedbackMessageDuration = 3.0f;
+        [SerializeField] float _feedbackMessageDuration = 3.0f;
+        
+        private PlayerInteractor _playerInteractor;
+        [SerializeField] bool _feedbackMessageActive = false;
 
         static System.Random _random = new System.Random();
 
@@ -71,11 +94,13 @@ namespace PlayerInteraction
             
             _leftHand = GameObject.Find("Player/Armature/mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:LeftShoulder/mixamorig:LeftArm/mixamorig:LeftForeArm/mixamorig:LeftHand").transform;
             _rightHand = GameObject.Find("Player/Armature/mixamorig:Hips/mixamorig:Spine/mixamorig:Spine1/mixamorig:Spine2/mixamorig:RightShoulder/mixamorig:RightArm/mixamorig:RightForeArm/mixamorig:RightHand").transform;
+            _playerInteractor = FindObjectOfType<PlayerInteractor>();
         }
 
         public bool Interact(GameObject interactor)
         {
-            if (_isBusy || _powerUpObtained || _noMorePowerUp) return false;
+            if (_isBusy || _powerUpObtained || _noMorePowerUp || RoomManager.RoomManager.Instance.IsPowerUpVendingMachineUsedInCurrentRoom())
+	            return false;
             if (_powerUp.playerPowerUps.Count <= 0 && _isPowerUpVendingMachineHacked)
             {
                 Debug.Log("Vending machine is empty.");
@@ -84,30 +109,38 @@ namespace PlayerInteraction
 
             StartCoroutine(RotatePlayerTowards(transform, _rotationDuration));
 
-			if(_isPowerUpVendingMachineHacked)
-				GetItemSequence();
-			else
+            if (_isPowerUpVendingMachineHacked)
+            {
+	            GetItemSequence();
+	            
+	            // Mark the power-up vending machine as used (not interactable anymore)
+	            RoomManager.RoomManager.Instance.MarkPowerUpVendingMachineAsUsedInCurrentRoom();
+            }
+            else if(_playerShoot.CheckStamina(1))
 				StartCoroutine(HackingSequence());
 
 			return true;
         }
-
+        
         private IEnumerator HackingSequence()
         {
-            _isBusy = true;
+	        _isBusy = true;
+	        _playerShoot.isInteracting = true;
+            
+	        // Make the sphere return to its default position with a linear movement
+	        _rotateSphere.positionSphere(new Vector3(_rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
+	        
+	        GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerVendingMachineActivation, transform.position);
 
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineActivation, this.transform.position);
-            _rotateSphere.positionSphere(new Vector3(_rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
-
-			yield return new WaitForSeconds(_freeSphere);
-			_playerShoot.DecreaseStamina(1);
-			_rotateSphere.isRotating = true;
-
-			yield return new WaitForSeconds(_hackingTime);
-			
-            _isPowerUpVendingMachineHacked = true;
-
-            _isBusy = false;
+	        _playerShoot.DecreaseStamina(1);
+	        
+	        yield return new WaitForSeconds(_hackingTime);
+	        
+	        _playerShoot.lastStaminaUseTime = Time.time;
+	        _rotateSphere.isRotating = true;
+	        _isPowerUpVendingMachineHacked = true;
+	        _isBusy = false;
+	        _playerShoot.isInteracting = false;
         }
 
         private void GetItemSequence()
@@ -132,8 +165,8 @@ namespace PlayerInteraction
 				itemToPick = ItemToPick.Drink;
             }
 
-            _rickEvents.powerUpVendingMachineInteraction = this;
-            _rickEvents.machineType = "playerPowerUp";
+            _rickEvents.PowerUpVendingMachineInteraction = this;
+            _rickEvents.MachineType = "playerPowerUp";
         }
 
 		public void PlaceItemInHand() {
@@ -162,9 +195,11 @@ namespace PlayerInteraction
         }
 
 		public void TerminatePlayerPowerUp() {
-			if(_obtainedPowerUp == PowerUp.PlayerPowerUpTypes.HealthBoost) {
-				_playerShoot.maxHealth += 20;
-				_playerShoot.health += 20;
+            if (_obtainedPowerUp == PowerUp.PlayerPowerUpTypes.HealthBoost)
+            {
+                _playerShoot.maxHealth += 20;
+                _playerShoot.health = _playerShoot.maxHealth;
+                
 			}
 
 			if(_obtainedPowerUp == PowerUp.PlayerPowerUpTypes.DamageReduction) {
@@ -202,9 +237,48 @@ namespace PlayerInteraction
         private IEnumerator ShowFeedbackMessage()
         {
             _powerUpObtained = true;
+            _feedbackMessageActive = true;
+            
+            // Force the PlayerInteractor to show the health recovery prompt
+            if (_playerInteractor != null)
+            {
+	            _playerInteractor.ShowForcedPrompt(this.InteractionPrompt);
+            }
+
             yield return new WaitForSeconds(_feedbackMessageDuration);
+            
             _powerUpObtained = false;
             _noMorePowerUp = true;
+            _feedbackMessageActive = false;
+            
+            // Once the feedback message is gone, make sure the UI prompt updates
+            if (_playerInteractor != null)
+            {
+	            _playerInteractor.ClearForcedPrompt(); // Send the signal to PlayerInteractor
+            }
+        }
+        
+        private void OnTriggerEnter(Collider other)
+        {
+	        if (other.CompareTag("Player"))
+	        {
+		        if (_playerInteractor != null && !_feedbackMessageActive)
+		        {
+			        // If the feedback message is not active, force the PlayerInteractor to consider this terminal
+			        _playerInteractor.SetCurrentTarget(this); 
+		        }
+	        }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+	        if (other.CompareTag("Player"))
+	        {
+		        if (_playerInteractor != null && _playerInteractor.GetCurrentTarget() == this)
+		        {
+			        _playerInteractor.ClearTarget();
+		        }
+	        }
         }
     }
 }

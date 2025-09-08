@@ -1,5 +1,4 @@
-using FMOD.Studio;
-using Audio;
+using Animations;
 using UnityEngine;
 
 	public class Player : MonoBehaviour
@@ -8,7 +7,7 @@ using UnityEngine;
         //player attributes
         [Header("Player Attributes")]
         [Tooltip("Max speed")]
-        [SerializeField] private float maxMovementSpeed = 7f;
+        [SerializeField] private float maxMovementSpeed = 6.5f;
         
 		[Tooltip("Acceleration and deceleration")]
 		[SerializeField] private float speedChangeRate = 10.0f;
@@ -32,10 +31,7 @@ using UnityEngine;
 		public bool isFrozen;
 		
 		// Audio management
-		private PlayerShoot playerShoot;
-		private EventInstance sphere;
-		private EventInstance sphereRotation;
-		[SerializeField] private GameObject rotatingSphere;
+		private RickEvents rickEvents;
 
 		public void FreezeMovement(bool freeze)
 		{
@@ -54,6 +50,9 @@ using UnityEngine;
 			player.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
 			Cursor.lockState = CursorLockMode.Locked;
+			
+			// Audio management
+			rickEvents = GetComponentInChildren<RickEvents>();
 		}
 
 		private void Move()
@@ -63,9 +62,6 @@ using UnityEngine;
 
 			//set target speed to the maxMovementSpeed
 			float targetSpeed = move == Vector2.zero ? 0f : maxMovementSpeed;
-
-
-            //currentHorizontalSpeed = new Vector3(player.linearVelocity.x, 0f, player.linearVelocity.z).magnitude;
             currentHorizontalSpeed = speed;
             
 			//acceleration stuff
@@ -76,12 +72,27 @@ using UnityEngine;
 			if (currentHorizontalSpeed < targetSpeed - speedOffset ||
 				currentHorizontalSpeed > targetSpeed + speedOffset)
 			{
-				speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.fixedDeltaTime * speedChangeRate);
+				if (inputMagnitude > 0.1)
+				{
+					speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.fixedDeltaTime * speedChangeRate);
+					if (AnimationManager.Instance.rickState == RickStates.Walk)
+					{
+						AnimationManager.Instance.rickState = RickStates.Run;
+					}
+				}
+				else
+				{
+					speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.fixedDeltaTime * speedChangeRate * 2);
+					if (AnimationManager.Instance.rickState != RickStates.Walk && AnimationManager.Instance.rickState == RickStates.Run)
+					{
+						AnimationManager.Instance.rickState = RickStates.Walk;
+					}
+				}
 			}
-            else
-            {
+			else
+			{
 				speed = targetSpeed;
-            }
+			}
 
 
 			Vector3 direction = input.Vertical * (new Vector3(mainCamera.transform.forward.x, 0f, mainCamera.transform.forward.z)) + input.Horizontal * (new Vector3(mainCamera.transform.right.x, 0f, mainCamera.transform.right.z));
@@ -91,12 +102,13 @@ using UnityEngine;
 			float runBlendVal = ORF.Utils.Math.NormalizeValueByRage(0f, maxMovementSpeed, speed);
 			AnimationManager.Instance.SetRunBledingAnim(runBlendVal);
 
-			if (runBlendVal == 0f && AnimationManager.Instance.rickState.Equals(RickStates.Run))
+			if (runBlendVal == 0f && AnimationManager.Instance.rickState.Equals(RickStates.Walk))
 			{
 				AnimationManager.Instance.Idle();
 			}
 			else if (runBlendVal != 0f && AnimationManager.Instance.rickState.Equals(RickStates.Idle))
 			{
+				AnimationManager.Instance.rickState = RickStates.Walk;
 				AnimationManager.Instance.Run();
 			}
 
@@ -115,14 +127,6 @@ using UnityEngine;
 			// I need this constraint to avoid that the player turns upside down when it touches another collider
 			player.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 		}
-		
-		// Audio management
-		private void Start()
-		{
-			playerShoot = GetComponent<PlayerShoot>();
-			sphereRotation = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerSphereRotation);
-			sphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
-		}
 
 		// FixedUpdate is called once per frame
 		void FixedUpdate()
@@ -131,7 +135,7 @@ using UnityEngine;
 			{
 				Move();
 			}
-			
+			//Debug.Log($"Rick's state: {AnimationManager.Instance.rickState}");
 			// Audio management
 			UpdateSound();
 		}
@@ -139,24 +143,16 @@ using UnityEngine;
 		// Audio management
 		private void UpdateSound()
 		{
-			sphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphere.transform));
+			if (GameStatus.gamePaused)
+			{
+				return;
+			}
 			
-			// Get the playback state for the rotation event
-			PLAYBACK_STATE rotationPlaybackState;
-			sphereRotation.getPlaybackState(out rotationPlaybackState);
-
-			if (playerShoot != null && playerShoot.IsSphereRotating)
+			// We get the sphere state from PlayerShoot
+			PlayerShoot playerShoot = GetComponent<PlayerShoot>();
+			if (playerShoot != null && rickEvents != null)
 			{
-				// If the sphere is rotating, then start the sound
-				if (rotationPlaybackState == PLAYBACK_STATE.STOPPED)
-					sphereRotation.start();
+				rickEvents.SetSphereRotationState(playerShoot.IsSphereRotating);
 			}
-			else
-			{
-				// If the sphere is not rotating, then stop the sound
-				if (rotationPlaybackState != PLAYBACK_STATE.STOPPED)
-					sphereRotation.stop(STOP_MODE.ALLOWFADEOUT);
-			}
-
 		}
 	}

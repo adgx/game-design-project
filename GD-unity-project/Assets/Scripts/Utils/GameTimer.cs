@@ -9,12 +9,13 @@ using UnityEngine.SceneManagement;
 using Enemy.EnemyManager;
 using System.Threading.Tasks;
 using Animations;
+using Audio;
 using FMOD.Studio;
 
 namespace Utils {
 	public class GameTimer : MonoBehaviour
 	{
-		private const float TimeLimit = 10 * 60f;
+		private const float TimeLimit = 7 * 60f;
 		public float currentTime;
 
 		public TMP_Text timerText;
@@ -93,6 +94,14 @@ namespace Utils {
 			if(currentTime <= 0f) {
 				currentTime = 0f;
 				isRunning = false;
+				
+				// This code is necessary to avoid problems with stamina recovery process whenever the player interacts
+				// with a terminal/distributor at the end of the current loop iteration
+				if (playerShoot != null && playerShoot.isInteracting)
+				{
+					// Debug.Log("Flag reset");
+					playerShoot.isInteracting = false;
+				}
 
 				AnimationManager.Instance.Idle();
 				rickEvents.DisableRickState();
@@ -185,6 +194,7 @@ namespace Utils {
 
 				roomManager.SetRoomsDifficulty();
 				enemyManager.SetEnemyDifficulty();
+				enemyManager.ResetEnemySpawns();
 				enemyManager.DestroyEnemies(roomManager.CurrentRoomIndex);
 
 				playerShoot.ResetAttack();

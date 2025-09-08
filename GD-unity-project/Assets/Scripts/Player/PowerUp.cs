@@ -4,6 +4,8 @@ using System.Collections.Generic;
 public class PowerUp : MonoBehaviour
 {
     public static PowerUp Instance { get; private set; }
+    [SerializeField] private HealthBar _healthBar;
+    private PlayerShoot _playerShoot;
 
     // Sphere PowerUps
     public enum SpherePowerUpTypes
@@ -56,6 +58,12 @@ public class PowerUp : MonoBehaviour
 
     private void Start()
     {
+        if (_healthBar == null)
+        {
+            Debug.Log("Error hb not asigned");
+        }
+        _playerShoot = PlayerShoot.Instance;
+
         spherePowerUps.Add(SpherePowerUpTypes.DistanceAttackPowerUp);
         spherePowerUps.Add(SpherePowerUpTypes.DistanceAttackPowerUp);
         spherePowerUps.Add(SpherePowerUpTypes.CloseAttackPowerUp);
@@ -69,11 +77,22 @@ public class PowerUp : MonoBehaviour
         playerPowerUps.Add(PlayerPowerUpTypes.DamageReduction);
         playerPowerUps.Add(PlayerPowerUpTypes.DamageReduction);
         playerPowerUps.Add(PlayerPowerUpTypes.DamageReduction);
-	}
+        
+        // TODO: debug code
+        // powerUpsObtained[SpherePowerUpTypes.DefensePowerUp] = 2;
+        // powerUpsObtained[SpherePowerUpTypes.DistanceAttackPowerUp] = 2;
+        // powerUpsObtained[SpherePowerUpTypes.CloseAttackPowerUp] = 2;
+    }
 
     public void ObtainPowerUp(object powerUp)
     {
-        Debug.Log(powerUp.ToString());
+        // Debug.Log(powerUp.ToString());
+        
+        if ((PlayerPowerUpTypes)powerUp == PlayerPowerUpTypes.HealthBoost)
+        {
+            _healthBar.increaseHealthBar();
+            _healthBar.SetMaxHealth(_playerShoot.maxHealth);
+        }
 
         if (powerUpsObtained.ContainsKey(powerUp))
         {
@@ -81,7 +100,7 @@ public class PowerUp : MonoBehaviour
         }
         else
         {
-            powerUpsObtained[powerUp] = 1;
+           powerUpsObtained[powerUp] = 1;
         }
     }
 }

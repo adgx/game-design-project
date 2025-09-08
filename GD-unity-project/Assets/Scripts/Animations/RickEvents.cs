@@ -1,16 +1,17 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Audio;
 using FMOD.Studio;
 using PlayerInteraction;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Animations
 {
     public class RickEvents : MonoBehaviour
     {
-        // Audio management
+        // Audio management: looping sounds
         private EventInstance rickLoadCloseAttackWithPowerUp1;
         private EventInstance rickLoadDistanceAttackWithPowerUp1;
         private EventInstance rickLoadCloseAttackWithPowerUp2;
@@ -18,36 +19,96 @@ namespace Animations
         private EventInstance rickWalkFootsteps;
         private EventInstance rickRunFootsteps;
         private EventInstance rickIdle;
+        private EventInstance rickHeartbeat;
+        private EventInstance rickSphereRotation;
+        private EventInstance rickSphereCharging;
+        
+        // Audio management: one-shot sounds
+        private List<EventInstance> activeOneShotInstances = new List<EventInstance>();
+        
+        // Audio management
+        [Header("Audio Sources")]
+        [SerializeField] private GameObject rotatingSphereSource; 
+        private bool isHitSoundPending = false;
+        private bool shouldPlayHeartbeat = false;
+        private bool sphereShouldBePlaying = false;
+        private bool sphereChargingShouldBePlaying = false;
+        private Coroutine shieldDeactivationCoroutine;
 
+        //Player
+        [SerializeField] private Player _player;
         // Defense
-	    [SerializeField] private GameObject magneticShieldPrefab;
+        [SerializeField] private GameObject magneticShieldPrefab;
         private GameObject shield;
 
-        // This flag must be set to 'true' by the input script when the attack key is pressed,
-        // and to 'false' when released
+        // This flag must be set to 'true' by the input script when the attack key is pressed, and to 'false' when released
         public bool ShouldPlayChargeSound { get; set; } = false;
 
         public PowerUp powerUp;
         public PlayerShoot playerShoot;
         [SerializeField] private FadeManagerLoadingScreen fadeManagerLoadingScreen;
-        [NonSerialized] public HealthVendingMachineInteraction healthVendingMachineInteraction;
-		[NonSerialized] public PowerUpVendingMachineInteraction powerUpVendingMachineInteraction;
-        [NonSerialized] public string machineType; // Can be "playerPowerUp" or "health"
+        [NonSerialized] public HealthVendingMachineInteraction HealthVendingMachineInteraction;
+		[NonSerialized] public PowerUpVendingMachineInteraction PowerUpVendingMachineInteraction;
+        [NonSerialized] public string MachineType; // Can be "playerPowerUp" or "health"
+
+        // Audio management
+        private void Start()
+        {
+            rickLoadCloseAttackWithPowerUp1 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerCloseAttackLoadWithPowerUp1);
+            rickLoadCloseAttackWithPowerUp1.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+
+            rickLoadDistanceAttackWithPowerUp1 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerDistanceAttackLoadWithPowerUp1);
+            rickLoadDistanceAttackWithPowerUp1.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+
+            rickLoadCloseAttackWithPowerUp2 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerCloseAttackLoadWithPowerUp2);
+            rickLoadCloseAttackWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+
+            rickLoadDistanceAttackWithPowerUp2 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerDistanceAttackLoadWithPowerUp2);
+            rickLoadDistanceAttackWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+
+            rickWalkFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerWalkFootsteps);
+            rickWalkFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+
+            rickRunFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerRunFootsteps);
+            rickRunFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+
+            rickIdle = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerIdle);
+            rickIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            
+            rickHeartbeat = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerHeartbeat);
+            rickHeartbeat.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            
+            rickSphereRotation = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerSphereRotation);
+            rickSphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphereSource.transform));
+            
+            rickSphereCharging = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerSphereCharging);
+            rickSphereCharging.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphereSource.transform));
+        }
+
+        // FixedUpdate is called once per frame
+        void FixedUpdate()
+        {
+            // Audio management
+            UpdateSound();
+        }
 
         public void DisableRickState()
         {
             AnimationManager.Instance.rickState = RickStates.None;
         }
-		
+
         public void SetHitState()
         {
             AnimationManager.Instance.rickState = RickStates.Hit;
         }
-        
+
         public void SetIdleState()
         {
-            AnimationManager.Instance.rickState = RickStates.Idle;
-            playerShoot.FreePlayer();
+            if (AnimationManager.Instance.rickState != RickStates.Idle)
+            {
+                AnimationManager.Instance.rickState = RickStates.Idle;
+                playerShoot.FreePlayer();
+            }
         }
 
         public void SetHitSpitState()
@@ -82,9 +143,15 @@ namespace Animations
         public void CloseAttackShoot()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerCloseAttackShoot, transform.position);
-
+            PlayManagedEvent(FMODEvents.Instance.PlayerCloseAttackShoot);
+            
             playerShoot.FireCloseAttack();
+            
+            AreaAttackController areaController = playerShoot.attackAreaInstance.GetComponent<AreaAttackController>();
+            if (areaController != null)
+            {
+                areaController.Initialize(playerShoot.finalCloseAttackDamage);
+            }
         }
 
         public void DistanceAttackLoad()
@@ -96,123 +163,109 @@ namespace Animations
         public void DistanceAttackShoot()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDistanceAttackShoot, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerDistanceAttackShoot);
 
             playerShoot.FireDistanceAttack();
         }
 
-        public void DefenseVFX(Vector3 pos)
+        private void DefenseVFX()
         {
-            magneticShieldPrefab.gameObject.SetActive(false);
-            GameObject shield = Instantiate(magneticShieldPrefab, pos, Quaternion.identity);
+            shield = Instantiate(magneticShieldPrefab, transform.position, Quaternion.identity, transform);
             shield.tag = "Shield";
-            magneticShieldPrefab.gameObject.SetActive(true);
             shield.gameObject.SetActive(true);
 
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldActivation, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerShieldActivation);
 
             if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
             {
                 if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1)
                 {
-                    shield.GetComponent<ShieldTrigger>().SetLifeTime(3f);
+                    shield.GetComponent<ShieldTrigger>().SetLifeTime(3.5f);
                 }
                 else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 2)
                 {
-                    shield.GetComponent<ShieldTrigger>().SetLifeTime(3.8f);
+                    shield.GetComponent<ShieldTrigger>().SetLifeTime(4.5f);
                 }
             }
             else
             {
-                shield.GetComponent<ShieldTrigger>().SetLifeTime(2f);
+                shield.GetComponent<ShieldTrigger>().SetLifeTime(2.5f);
             }
-            
+
         }
 
         public void ShieldActivation()
         {
-            DefenseVFX(transform.position);
-
-            /* Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldActivation, transform.position);
-
-            if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
-            {
-                if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1)
-                {
-                    _ = ShieldDeactivationAfterDelay(5000);
-                }
-
-                else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 2)
-                {
-                    _ = ShieldDeactivationAfterDelay(10000);
-                }
-            }
-
-            else
-            {
-                Debug.Log("PowerUp 0");
-                _ = ShieldDeactivationAfterDelay(3000);
-            }
-            */
+            // Activate the shield
+            DefenseVFX();
+            
+            // Let the player free to move during the usage of the shield
+            _ = UnfreezePlayerAfterDelay(700);
+            
+            // Deactivate the shield
+            ShieldDeactivation();
         }
 
-        public void ShieldDeactivation1()
+        public void ShieldDeactivation()
         {
+            //reset the idle state
+            AnimationManager.Instance.rickState = RickStates.Idle;
             // Audio management
-            if (!powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
-            {
-                //AnimationManager.Instance.RemoveDefenseVfx();
-
-                _ = ShieldDeactivationAfterDelay(0);
-                playerShoot.CloseShield();
-                ShieldDestory();
-            }
-        }
-
-        
-        public void ShieldDeactivation2()
-        {
-            // Audio management
+            float delay = 2.5f; // Default value
             if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
             {
-                if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1)
-                {
-                    _ = ShieldDeactivationAfterDelay(0);
-                    playerShoot.CloseShield();
-                    ShieldDestory();
-                }
+                if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 1) delay = 3.5f;
+                else if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 2) delay = 4.5f;
             }
+            shieldDeactivationCoroutine = StartCoroutine(ShieldDestructionAfterDelay(delay)); // Save the reference to coroutine
         }
 
-        public void ShieldDeactivation3()
-        {
-            if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DefensePowerUp))
-            {
-                // Audio management
-                if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DefensePowerUp] == 2)
-                {
-                    _ = ShieldDeactivationAfterDelay(0);
-                    playerShoot.CloseShield();
-                    ShieldDestory();
-                }
-            }
-        }
-
-        public void ShieldDestory()
+        private void ShieldDestroy()
         {
             if (shield != null)
             {
+                // Disable the entire GameObject instantly. This removes it from both view and all physical
+                // systems, including that of particles
+                shield.SetActive(false);
+        
+                // Queue ultimate destruction to free memory. This will happen at the end of the frame,
+                // but it does not matter anymore because the object is already inactive
                 Destroy(shield);
+                
+                // Explicitly sets the variable to null, allowing the creation of a new shield
+                shield = null; 
+                
+                if (playerShoot != null)
+                {
+                    // Notify PlayerShoot that the shield is no longer active
+                    playerShoot.SetShieldIsActive(false);
+                }
             }
-            AnimationManager.Instance.DefenseToIdle();
+        }
+        
+        public void InstantShieldDeactivation()
+        {
+            if (shieldDeactivationCoroutine != null)
+            {
+                StopCoroutine(shieldDeactivationCoroutine); // Stop the automatic deactivation coroutine by using its reference
+                shieldDeactivationCoroutine = null; // Remove the reference
+            }
+
+            // Audio management
+            GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerShieldImmediateDeactivation, transform.position);
+
+            // Destroy the shield immediately
+            ShieldDestroy();
+    
+            // Make sure the player is unlocked if it was frozen by the shield
+            playerShoot.UnfreezePlayer();
         }
 
         public void DeathForwardGrunt()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardGrunt, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerDieForwardGrunt);
 
             playerShoot.SetLayerToZero();
         }
@@ -220,19 +273,19 @@ namespace Animations
         public void DeathForwardThud1()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardThud1, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerDieForwardThud1);
         }
 
         public void DeathForwardThud2()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieForwardThud2, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerDieForwardThud2);
         }
 
         public void DeathBackwardGrunt()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieBackwardGrunt, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerDieBackwardGrunt);
 
             playerShoot.SetLayerToZero();
         }
@@ -240,7 +293,7 @@ namespace Animations
         public void DeathBackwardThud()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDieBackwardThud, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerDieBackwardThud);
         }
 
         public void PlayDeathAnimation()
@@ -256,29 +309,29 @@ namespace Animations
         public void Drink()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerDrink, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerDrink);
         }
 
         public void EatChips()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChips, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerEatChips);
         }
 
         public void EndPowerUp()
         {
-            powerUpVendingMachineInteraction.TerminatePlayerPowerUp();
+            PowerUpVendingMachineInteraction.TerminatePlayerPowerUp();
         }
 
         public void EatChocolate()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerEatChocolate, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerEatChocolate);
         }
 
         public void EndHealthRecovery()
         {
-            healthVendingMachineInteraction.TerminateHealthRecovery();
+            HealthVendingMachineInteraction.TerminateHealthRecovery();
         }
 
         public void FreePlayerAfterAnimation()
@@ -289,33 +342,52 @@ namespace Animations
         public void Hit()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHit, transform.position);
+            if (isHitSoundPending)
+            {
+                isHitSoundPending = false; // "Consume" the request
+
+                // Play the sound
+                PlayManagedEvent(FMODEvents.Instance.PlayerHit);
+            }
         }
 
         public void HitBySpit()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHitBySpit, transform.position);
+            if (isHitSoundPending)
+            {
+                isHitSoundPending = false; // "Consume" the request
+
+                // Play the sounds
+                PlayManagedEvent(FMODEvents.Instance.PlayerHitBySpit);
+                PlayManagedEvent(FMODEvents.Instance.PlayerHit);
+            }
         }
 
         public void HitByBite()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerHitByBite, transform.position);
+            if (isHitSoundPending)
+            {
+                isHitSoundPending = false; // "Consume" the request
+
+                // Play the sound
+                PlayManagedEvent(FMODEvents.Instance.PlayerHitByBite);
+            }
         }
 
         public void VendingMachineItemPickup()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerVendingMachineItemPickUp, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerVendingMachineItemPickUp);
 
-            if (machineType == "health")
-                healthVendingMachineInteraction.PlaceSpecialSnackInHand();
+            if (MachineType == "health")
+                HealthVendingMachineInteraction.PlaceSpecialSnackInHand();
             else
             {
-                if (machineType == "playerPowerUp")
+                if (MachineType == "playerPowerUp")
                 {
-                    powerUpVendingMachineInteraction.PlaceItemInHand();
+                    PowerUpVendingMachineInteraction.PlaceItemInHand();
                 }
             }
         }
@@ -323,41 +395,55 @@ namespace Animations
         public void WakeUp()
         {
             // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerWakeUp, transform.position);
+            PlayManagedEvent(FMODEvents.Instance.PlayerWakeUp);
 
             fadeManagerLoadingScreen.Hide();
         }
-
-        // Audio management
-        private void Start()
+        
+        private void OnDestroy()
         {
-            rickLoadCloseAttackWithPowerUp1 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerCloseAttackLoadWithPowerUp1);
-            rickLoadCloseAttackWithPowerUp1.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            // If the FMOD manager has already been turned off, do not even attempt to clean the instances
+            if (!FMODUnity.RuntimeManager.IsInitialized) return;
+            
+            // Audio management: stops and release looping sounds
+            StopAllLoopingSounds();
 
-            rickLoadDistanceAttackWithPowerUp1 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerDistanceAttackLoadWithPowerUp1);
-            rickLoadDistanceAttackWithPowerUp1.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-
-            rickLoadCloseAttackWithPowerUp2 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerCloseAttackLoadWithPowerUp2);
-            rickLoadCloseAttackWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-
-            rickLoadDistanceAttackWithPowerUp2 = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerDistanceAttackLoadWithPowerUp2);
-            rickLoadDistanceAttackWithPowerUp2.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-
-            rickWalkFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerWalkFootsteps);
-            rickWalkFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-
-            rickRunFootsteps = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerRunFootsteps);
-            rickRunFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
-
-            rickIdle = GamePlayAudioManager.instance.CreateInstance(FMODEvents.Instance.PlayerIdle);
-            rickIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            // Audio management: stops one-shot sounds
+            foreach (var instance in activeOneShotInstances)
+            {
+                if (instance.isValid())
+                    instance.stop(STOP_MODE.IMMEDIATE);
+            }
+            activeOneShotInstances.Clear();
         }
-
-        // FixedUpdate is called once per frame
-        void FixedUpdate()
+        
+        private void PlayManagedEvent(FMODUnity.EventReference fmodEvent)
+        {   
+            // Instances the event
+            EventInstance eventInstance = GamePlayAudioManager.instance.CreateInstance(fmodEvent);
+            // Set the 3D position before starting the event
+            eventInstance.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            // Adds it to the list so it can be checked
+            activeOneShotInstances.Add(eventInstance);
+            // Starts playing
+            eventInstance.start();
+            // Removes the instance from the list once it is finished, preventing the list from growing indefinitely
+            StartCoroutine(ReleaseInstanceWhenFinished(eventInstance));
+        }
+        
+        private System.Collections.IEnumerator ReleaseInstanceWhenFinished(EventInstance eventInstance)
         {
-            // Audio management
-            UpdateSound();
+            // Waits until the event is no longer playing
+            PLAYBACK_STATE playbackState;
+            do {
+                eventInstance.getPlaybackState(out playbackState);
+                yield return null; // Waits for next frame
+            } while (playbackState != PLAYBACK_STATE.STOPPED);
+
+            // Removes the instance from the active list
+            activeOneShotInstances.Remove(eventInstance);
+            // Releases FMOD resources
+            GamePlayAudioManager.instance.ReleaseInstance(eventInstance);
         }
 
         private void UpdateSound()
@@ -369,11 +455,17 @@ namespace Animations
             rickWalkFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             rickRunFootsteps.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
             rickIdle.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+            rickHeartbeat.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(transform));
+
+            if (rotatingSphereSource != null)
+            {
+                rickSphereRotation.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphereSource.transform));
+                rickSphereCharging.set3DAttributes(FMODUnity.RuntimeUtils.To3DAttributes(rotatingSphereSource.transform));
+            }
 
             RickStates currentState = AnimationManager.Instance.rickState;
 
-            // Condition for close-loading audio:
-            // Must be in the correct state and the isLoadingSoundPlaying flag must be true
+            // Condition for close-loading audio
             bool shouldPlayCloseLoad = currentState == RickStates.LoadingCloseAttack && ShouldPlayChargeSound;
             if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp))
             {
@@ -381,7 +473,7 @@ namespace Animations
                 HandleLoopingSound(rickLoadCloseAttackWithPowerUp2, shouldPlayCloseLoad && powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 2);
             }
 
-            // Condition for remote loading audio:
+            // Condition for remote-loading audio
             bool shouldPlayDistanceLoad = currentState == RickStates.LoadingDistanceAttack && ShouldPlayChargeSound;
             if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp))
             {
@@ -389,10 +481,13 @@ namespace Animations
                 HandleLoopingSound(rickLoadDistanceAttackWithPowerUp2, shouldPlayDistanceLoad && powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 2);
             }
 
-            // Motion and idle sounds
+            // Looping sounds
+            HandleLoopingSound(rickSphereRotation, sphereShouldBePlaying);
+            HandleLoopingSound(rickSphereCharging, sphereChargingShouldBePlaying);
             HandleLoopingSound(rickWalkFootsteps, currentState == RickStates.Walk);
             HandleLoopingSound(rickRunFootsteps, currentState == RickStates.Run);
             HandleLoopingSound(rickIdle, currentState == RickStates.Idle);
+            HandleLoopingSound(rickHeartbeat, shouldPlayHeartbeat);
         }
 
         // Helper method to reduce code duplication for loop sounds
@@ -415,33 +510,66 @@ namespace Animations
                 }
             }
         }
-
-        // Audio management
-        private async Task ShieldDeactivationAfterDelay(int delayMs)
+        
+        private async Task UnfreezePlayerAfterDelay(int delayMs)
         {
+            AnimationManager.Instance.DefenseToIdle();
             await Task.Delay(delayMs);
-
-            Debug.Log("ShieldDeactivation");
-
-            // Audio management
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerShieldDeactivation, transform.position);
+            playerShoot.UnfreezePlayer();
         }
         
+        private IEnumerator ShieldDestructionAfterDelay(float delaySeconds)
+        {
+            // The delay is split in two parts: for synchronization reasons, the first one goes
+            // before the clip audio, while the second after that. 
+            
+            // First part of the delay
+            yield return new WaitForSeconds(delaySeconds - 1.0f);
+
+            // Audio management
+            GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerShieldDeactivationAfterDelay, transform.position);
+            
+            // The recharge delay of the stamina must start just before the shield is destroyed
+            if (playerShoot != null)
+            {
+                playerShoot.lastStaminaUseTime = Time.time - 1.0f;
+            }
+            
+            // Second part of the delay
+            yield return new WaitForSeconds(1.0f);
+            
+            // Destroy the shield
+            shieldDeactivationCoroutine = null;
+            ShieldDestroy();
+        }
+
         // Audio management
         public void StopAllLoopingSounds()
         {
-            // Use STOP_MODE.IMMEDIATE to ensure they stop instantly, without waiting for the fade-out.
-            // This is crucial in a reset
-            rickLoadCloseAttackWithPowerUp1.stop(STOP_MODE.IMMEDIATE);
-            rickLoadDistanceAttackWithPowerUp1.stop(STOP_MODE.IMMEDIATE);
-            rickLoadCloseAttackWithPowerUp2.stop(STOP_MODE.IMMEDIATE);
-            rickLoadDistanceAttackWithPowerUp2.stop(STOP_MODE.IMMEDIATE);
-            rickWalkFootsteps.stop(STOP_MODE.IMMEDIATE);
-            rickRunFootsteps.stop(STOP_MODE.IMMEDIATE);
-            rickIdle.stop(STOP_MODE.IMMEDIATE);
+            // Use STOP_MODE.IMMEDIATE to ensure they stop instantly, without waiting for the fade-out
+            if (rickLoadCloseAttackWithPowerUp1.isValid())
+                rickLoadCloseAttackWithPowerUp1.stop(STOP_MODE.IMMEDIATE);
+            if (rickLoadDistanceAttackWithPowerUp1.isValid())
+                rickLoadDistanceAttackWithPowerUp1.stop(STOP_MODE.IMMEDIATE);
+            if (rickLoadCloseAttackWithPowerUp2.isValid())
+                rickLoadCloseAttackWithPowerUp2.stop(STOP_MODE.IMMEDIATE);
+            if (rickLoadDistanceAttackWithPowerUp2.isValid())
+                rickLoadDistanceAttackWithPowerUp2.stop(STOP_MODE.IMMEDIATE);
+            if (rickWalkFootsteps.isValid())
+                rickWalkFootsteps.stop(STOP_MODE.IMMEDIATE);
+            if (rickRunFootsteps.isValid())
+                rickRunFootsteps.stop(STOP_MODE.IMMEDIATE);
+            if (rickIdle.isValid())
+                rickIdle.stop(STOP_MODE.IMMEDIATE);
+            if (rickHeartbeat.isValid())
+                rickHeartbeat.stop(STOP_MODE.IMMEDIATE);
+            if (rickSphereRotation.isValid())
+                rickSphereRotation.stop(STOP_MODE.IMMEDIATE);
+            if(rickSphereCharging.isValid())
+                rickSphereCharging.stop(STOP_MODE.IMMEDIATE);
         }
 
-        public void SpwawnAreaAttack()
+        public void SpawnAreaAttack()
         {
             playerShoot.attackAreaVFXPrefab.gameObject.SetActive(false);
             playerShoot.attackAreaInstance = Instantiate(playerShoot.attackAreaVFXPrefab, transform.position, Quaternion.identity);
@@ -455,20 +583,123 @@ namespace Animations
             {
                 AreaAttackController AAC = playerShoot.attackAreaInstance.GetComponent<AreaAttackController>();
                 if (AAC != null)
+                {
+                    // Debug.Log("Calling function SetDestSize(), Time = " + DateTime.Now);
                     AAC.SetDestSize(playerShoot.damageRadius);
-                else Debug.Log("AAC=null");
+                }
             }
         }
 
         public void DestroyAreaAttack()
         {
-            Debug.Log("Destroy Areattack");
             if (playerShoot.attackAreaInstance != null)
             {
                 Destroy(playerShoot.attackAreaInstance);
             }
+            
+            playerShoot.ResetCloseAttackValues();
+        }
+        
+        // Audio management
+        public void RequestHitSound(PlayerShoot.DamageTypes damageType)
+        {
+            // If there is already a request in progress, don't start another one to avoid chaos
+            if (isHitSoundPending) return;
+
+            isHitSoundPending = true;
+            // Imported the fallback chamber which, also the internal compartment of RickEvents
+            PlayHitSoundFallback();
+        }
+        
+        // Audio management
+        private void PlayHitSoundFallback()
+        {
+            // If the request is still pending after the wait, we will handle it
+            if (isHitSoundPending)
+            {
+                isHitSoundPending = false; // "Consume" the request
+
+                // Play the hit sound
+                PlayManagedEvent(FMODEvents.Instance.PlayerHit);
+            }
+        }
+        
+        // Audio management
+        public void SetHeartbeatStatus(bool shouldPlay)
+        {
+            shouldPlayHeartbeat = shouldPlay;
+        }
+        
+        // Audio management
+        public void SetSphereRotationState(bool shouldBePlaying)
+        {
+            sphereShouldBePlaying = shouldBePlaying;
+        }
+        
+        // Audio management
+        public void SetSphereChargingState(bool shouldBePlaying)
+        {
+            sphereChargingShouldBePlaying = shouldBePlaying;
+        }
+        
+        /// <summary>
+        /// Pauses all Rick's sounds
+        /// </summary>
+        public void PauseAllRickSounds()
+        {
+            // Stop looping sounds
+            rickLoadCloseAttackWithPowerUp1.setPaused(true);
+            rickLoadDistanceAttackWithPowerUp1.setPaused(true);
+            rickLoadCloseAttackWithPowerUp2.setPaused(true);
+            rickLoadDistanceAttackWithPowerUp2.setPaused(true);
+            rickWalkFootsteps.setPaused(true);
+            rickRunFootsteps.setPaused(true);
+            rickIdle.setPaused(true);
+            rickHeartbeat.setPaused(true);
+            rickSphereRotation.setPaused(true);
+            rickSphereCharging.setPaused(true);
+
+            // Stop one-shot sounds
+            foreach (var instance in activeOneShotInstances)
+            {
+                instance.setPaused(true);
+            }
+        }
+        
+        /// <summary>
+        /// Resumes all Rick's sounds
+        /// </summary>
+        public void ResumeAllRickSounds()
+        {
+            // Resume looping sounds
+            rickLoadCloseAttackWithPowerUp1.setPaused(false);
+            rickLoadDistanceAttackWithPowerUp1.setPaused(false);
+            rickLoadCloseAttackWithPowerUp2.setPaused(false);
+            rickLoadDistanceAttackWithPowerUp2.setPaused(false);
+            rickWalkFootsteps.setPaused(false);
+            rickRunFootsteps.setPaused(false);
+            rickIdle.setPaused(false);
+            rickHeartbeat.setPaused(false);
+            rickSphereRotation.setPaused(false);
+            rickSphereCharging.setPaused(false);
+            
+            // Resume one-shot sounds
+            foreach (var instance in activeOneShotInstances)
+            {
+                instance.setPaused(false);
+            }
+        }
+        
+        /// <summary>
+        /// Forcibly stops all coroutines running on this script.
+        /// Use before a scene change to avoid errors with invalid FMOD handles.
+        /// </summary>
+        public void StopAllAudioCoroutines()
+        {
+            // StopAllCoroutines() it is a MonoBehaviour function that interrupts
+            // all coroutines initiated by this script instance, such as ‘ReleaseInstanceWhenFinished’
+            // and ‘ShieldDestructionAfterDelay’.
+            StopAllCoroutines();
         }
     }
-    
-    
 }

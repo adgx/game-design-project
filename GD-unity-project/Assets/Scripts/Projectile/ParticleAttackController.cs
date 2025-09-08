@@ -1,8 +1,7 @@
-using System;
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-
+using Audio;
+using System.Collections;
 
 public class ParticleAttackController : MonoBehaviour
 {
@@ -19,76 +18,125 @@ public class ParticleAttackController : MonoBehaviour
     private float _currentVF;
     private float _currentVUp;
     private float _t = 0;
-    public float initialPlayerBulletDamage = 40, enemyBulletDamage = 20;
+    public float initialPlayerBulletDamage = 50, enemyBulletDamage = 20;
     public float playerBulletDamage;
-
+    public PlayerShoot.DamageTypes maynardDamageType = PlayerShoot.DamageTypes.MaynardDistanceAttack;
+    public GameObject bulletOwner;
+    [SerializeField] private float destructionDelay = 0.1f;
+    private Coroutine _destroyBulletAfterDelay = null;
+    
     void Start()
     {
-        _currentVF = 0f;
-        _currentVUp = _vyInit;
-        gameObject.SetActive(false);
-
-        if (gameObject.CompareTag("PlayerProjectile"))
+        // This section of code only applies to projectiles that use a _currentVF and _currentVUp based motion system,
+        // or Player's bullets and Incognito's bullets. Maynard's bullets, which use a Rigidbody for movement, do not
+        // they should execute this logic.
+        if (gameObject.CompareTag("PlayerProjectile") || gameObject.CompareTag("SpitEnemyAttack"))
         {
-            transform.LookAt(targetPos.position + targetPos.forward);
+            _currentVF = 0f;
+            _currentVUp = _vyInit;
+            gameObject.SetActive(false); // Turn off for a moment to set LookAt correctly
+
+            if (gameObject.CompareTag("PlayerProjectile"))
+            {
+                if (targetPos != null)
+                {
+                    transform.LookAt(targetPos.position + targetPos.forward);
+                }
+                else
+                {
+                    Debug.LogWarning($"{gameObject.name}: 'targetPos' not assigned for PlayerProjectile. The bullet may not be looking in the correct direction.");
+                }
+            }
+            else if (gameObject.CompareTag("SpitEnemyAttack"))
+            {
+                if (targetPos != null)
+                {
+                    _destPos = targetPos.position;
+                    //offset
+                    _destPos.y += 1f;
+                    transform.LookAt(_destPos);
+                }
+                else
+                {
+                    Debug.LogWarning($"{gameObject.name}: 'targetPos' not assigned for SpitEnemyAttack. The bullet may not be looking in the correct direction.");
+                }
+            } 
+            
+            gameObject.SetActive(true); // Reactivate GameObject
+
+            // Checks if _attackPS was assigned before attempting to use it
+            if (_attackPS != null)
+            {
+                _attackPS.Play();
+            }
+            else
+            {
+                Debug.LogWarning($"{gameObject.name}: Unassigned ParticleSystem. If this bullet should have a ParticleSystem, check the Inspector.");
+            }
         }
-        else if (gameObject.CompareTag("SpitEnemyAttack"))
-        {
-            _destPos = targetPos.position;
-            //offset
-            _destPos.y += 1f;
-            transform.LookAt(_destPos);
-        } 
-        
-
-        gameObject.SetActive(true);
-        _attackPS.Play();
-
     }
+    
     void Update()
     {
-        if (_currentVF < _vMax)
+        if (gameObject.CompareTag("PlayerProjectile") || gameObject.CompareTag("SpitEnemyAttack"))
         {
-            _t += Time.deltaTime * _a / _vMax;
-            _currentVF = Mathf.Lerp(0f, _vMax, _t);
+            if (_currentVF < _vMax)
+            {
+                _t += Time.deltaTime * _a / _vMax;
+                _currentVF = Mathf.Lerp(0f, _vMax, _t);
+            }
+
+            _currentVUp = _g * Time.deltaTime;
+        
+            Vector3 sDirF = transform.forward * _currentVF * Time.deltaTime;
+            Vector3 sDirUp = transform.up * _currentVUp * Time.deltaTime;
+            transform.position += sDirF + sDirUp;   
         }
-
-        _currentVUp = _g * Time.deltaTime;
-
-
-        Vector3 sDirF = transform.forward * _currentVF * Time.deltaTime;
-        Vector3 sDirUp = transform.up * _currentVUp * Time.deltaTime;
-        transform.position += sDirF + sDirUp;
-
     }
-
-
+    
     void OnParticleCollision(GameObject other)
     {
-        List<ParticleCollisionEvent> ce = new();
-        _attackPS.GetCollisionEvents(other, ce);
-        Debug.Log($"Collision Detected :{other.gameObject.tag}");
-        if (gameObject.CompareTag("SpitEnemyAttack"))
+        // Only projectiles with a ParticleSystem should handle this collision
+        if (_attackPS != null)
         {
-            if (other.CompareTag("Player"))
+            // To avoid bullet's destruction if it hits its creator's collider
+            if (other.gameObject == bulletOwner)
             {
-                PlayerShoot playerShoot = other.GetComponent<PlayerShoot>();
-                playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.Spit, Math.Sign(ce[0].normal.x), Math.Sign(ce[0].normal.z));
-                Destroy(gameObject);
+                return; 
             }
-            else if (other.CompareTag("Shield"))
+            
+            List<ParticleCollisionEvent> ce = new();
+            _attackPS.GetCollisionEvents(other, ce);
+
+            if (gameObject.CompareTag("SpitEnemyAttack"))
             {
-                Debug.Log("Shield");
-                GamePlayAudioManager.instance.PlayOneShot(Audio.FMODEvents.Instance.PlayerShieldHit, transform.position);
-                Destroy(gameObject);
+                if (other.CompareTag("Player"))
+                {
+                    PlayerShoot playerShoot = other.GetComponent<PlayerShoot>();
+                    if (playerShoot != null && ce.Count > 0)
+                    {
+                        playerShoot.TakeDamage(enemyBulletDamage, PlayerShoot.DamageTypes.Spit, transform);
+                    }
+                }
+                else if (other.CompareTag("PlayerProjectile"))
+                {
+                    Destroy(other); // Destroy Player's bullet
+                }
+                
+                // Debug.Log("Incognito's bullet was destroyed");
+                Destroy(gameObject); // Destroy Incognito's bullet
             }
-            else if (!other.CompareTag("EnemyIncognito"))
-                Destroy(gameObject);
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        // To avoid bullet's destruction if it hits its creator's collider
+        if (other.gameObject == bulletOwner)
+        {
+            return; 
+        }
+        
         // Audio management: avoid the destruction of the projectile if the other collider is the
         // box collider used for handling ambience sounds
         if (other.gameObject.layer == LayerMask.NameToLayer("Room") || other.gameObject.CompareTag("Sphere"))
@@ -102,26 +150,75 @@ public class ParticleAttackController : MonoBehaviour
             return;
         }
         
-        if (gameObject.CompareTag("SpitEnemyAttack"))
-        {
-            if (other.gameObject.CompareTag("PlayerProjectile"))
-            {
-                Destroy(gameObject);
-            }
-        }
-        
+        // Logic for Player's bullets
         if (gameObject.CompareTag("PlayerProjectile"))
         {
-            Debug.Log($"{gameObject.tag} collided with:{other.gameObject.tag}");
-            if (other.gameObject.tag.Contains("Enemy") && !other.gameObject.tag.Contains("EnemyAttack"))
+            bool hasHitEnemy = false;
+            
+            if (other.gameObject.tag.Contains("Enemy") && !other.gameObject.CompareTag("SpitEnemyAttack") && !other.gameObject.CompareTag("MaynardEnemyAttack"))
             {
-                other.gameObject.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(playerBulletDamage, "d");
-                Destroy(gameObject);
+                hasHitEnemy = true;
+                other.gameObject.GetComponent<Enemy.EnemyManager.IEnemy>()?.TakeDamage(playerBulletDamage, "d", false);
             }
-            else
+            else if (other.gameObject.CompareTag("SpitEnemyAttack") || other.gameObject.CompareTag("MaynardEnemyAttack")) // Player's bullet hits an enemy bullet
             {
-                Destroy(gameObject);
+                Destroy(other.gameObject); // Destroy enemy's bullet
             }
-        }  
+
+            if (!hasHitEnemy)
+            {
+                // Debug.Log("Player's bullet was destroyed immediately");
+                Destroy(gameObject); // Destroy Player's bullet
+            }
+            else if(_destroyBulletAfterDelay == null)
+            {
+                // Debug.Log("Player's bullet was destroyed after a " + destructionDelay + " seconds delay");
+                _destroyBulletAfterDelay = StartCoroutine(DestroyBulletAfterDelayCoroutine(destructionDelay));
+            }
+            
+            // Audio management
+            GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerDistanceAttackImpact, transform.position);
+            
+            return; // Exit after handling Player's bullet collision
+        }
+
+        // Logic for Maynard's bullets
+        if (gameObject.CompareTag("MaynardEnemyAttack"))
+        {
+            if (other.gameObject.CompareTag("Player"))
+            {
+                PlayerShoot playerShoot = other.GetComponent<PlayerShoot>();
+                if (playerShoot != null)
+                {
+                    // Determine the direction of the shot based on contact
+                    Vector3 contactPoint = other.ClosestPoint(transform.position);
+                    Vector3 normal = (transform.position - contactPoint).normalized;
+                    // hasHitPlayer = true;
+                    playerShoot.TakeDamage(enemyBulletDamage, maynardDamageType, transform);
+                }
+            }
+            else if (other.gameObject.CompareTag("PlayerProjectile")) // Maynard's bullet hits Player's bullet
+            {
+                Destroy(other.gameObject); // Destroy Player's bullet
+            }
+
+            // Debug.Log("Maynard's bullet was destroyed");
+            Destroy(gameObject); // Destroy Maynard's bullet
+        }
+    }
+    
+    // Coroutine to destroy the projectile after a specific delay
+    private IEnumerator DestroyBulletAfterDelayCoroutine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        
+        // Check if the GameObject even exists before attempting to destroy it to avoid errors if it has
+        // already been destroyed by a collision
+        if (gameObject != null)
+        {
+            Destroy(gameObject);
+        }
+
+        _destroyBulletAfterDelay = null;
     }
 }

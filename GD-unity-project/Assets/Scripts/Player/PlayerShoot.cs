@@ -12,30 +12,39 @@ using Utils;
 public class PlayerShoot : MonoBehaviour
 {
 	public static PlayerShoot Instance { get; private set; }
+	public float lastStaminaUseTime;
+	public DateTime DebugLastStaminaUseDateTime;
+	[HideInInspector] public bool isInCombat = false;
+	private float recoveryDelay = 3f;
 
 	// Audio management 
 	public bool IsSphereRotating => rotateSphere.isRotating;
 	private bool isShieldCoroutineRunning;
-	[SerializeField] private RickEvents rickEvents; 
-	
+	[SerializeField] private RickEvents rickEvents;
+	private const float LOW_HEALTH_PERCENTAGE = 0.30f; // 30%
+
 	// Attack1
 	[SerializeField] private float bulletSpeed;
-	// The point in which the bullet spawns
-	[SerializeField] private Transform bulletSpawnTransform;
+	[SerializeField] private Transform bulletSpawnTransform; // The point in which the bullet spawns
 	[SerializeField] private GameObject bulletPrefab;
+	public float baseDistanceAttackDamage = 50f; // Distance attack damage with 0 power-ups (1 stamina)
+	public float distanceAttackPowerUp1Damage = 75f; // Distance attack damage with 1 power-up (3 stamina)
+	public float distanceAttackPowerUp2Damage = 100f; // Distance attack damage with 2 power-ups (5 stamina)
 
 	// Attack2
 	[SerializeField] private GameObject attackAreaPrefab;
-	[HideInInspector]
-	public GameObject attackAreaInstance;
+	[HideInInspector] public GameObject attackAreaInstance;
 	public GameObject attackAreaVFXPrefab;
-	public int defaultCloseAttackDamage = 50;
-	public int closeAttackDamage = 50;
-	private float defaultDamageRadius = 2.5f;
-	[HideInInspector]
-	public float damageRadius = 2f;
+	public int defaultCloseAttackDamage = 40;
+	private readonly float defaultDamageRadius = 2.5f;
+	[HideInInspector] public float damageRadius;
+	public float finalCloseAttackDamage;
+	public float baseCloseAttackDamage = 40f; // Close attack damage with 0 power-ups (1 stamina)
+	public float closeAttackPowerUp1Damage = 60f; // Close attack damage with 1 power-up (3 stamina)
+	public float closeAttackPowerUp2Damage = 80f; // Close attack damage with 2 power-up1 (5 stamina)
 
 	public bool cannotAttack = false;
+	private bool isDying = false;
 
 	// The player has 2 attacks he can choose. He can change them by using the mouse scroll wheel or the back buttons on the controller
 	private int attackNumber = 1;
@@ -44,14 +53,25 @@ public class PlayerShoot : MonoBehaviour
 	[SerializeField] Image closeAttackImage;
 	[SerializeField] Image distanceAttackLoadingBar;
 	[SerializeField] Image closeAttackLoadingBar;
+	[SerializeField] private float sphereReturnDelay = 0.5f;
+	[SerializeField] private bool isSpherePositioned = true;
+	[SerializeField] private float lastDistanceAttackTime;
+	[SerializeField] private float currentTime;
+	private Coroutine resetSpherePosition = null;
 	private bool loadingAttack = false;
+	[SerializeField] private bool isLastDistanceAttack = false;
+
 	// This flag is true if an attack is being executed. While executing it, I can not start another attack
-	private bool attacking = false;
+	[SerializeField] private bool attacking = false;
+	private Coroutine currentLoadingAttack = null;
 	private int attackStamina = 0;
-	
-	GameObject magneticShield;
-	public bool magneticShieldOpen = false;
-	
+	private bool isStaminaRecoveryInterruptible = true;
+	private bool isStaminaRecoveryInterrupted = false;
+	private Coroutine staminaRecovery = null;
+	public bool shieldIsActive = false;
+	public bool isInteracting = false;
+
+
 	// Health
 	public float maxHealth = 120;
 	public float health;
@@ -60,15 +80,12 @@ public class PlayerShoot : MonoBehaviour
 
 	// Stamina for the attacks
 	public int maxSphereStamina = 5;
-	public bool increaseStamina = false, increasingStamina = false;
+	public bool increasingStamina = false;
 	public int sphereStamina = 5;
-	private bool sphereIsDischarged = false;
-	
+	public bool sphereIsDischarged = false;
+
 	// PowerUps
 	public PowerUp powerUp;
-
-	// Needed to set DistantAttackDamage
-	public GetCollisions getCollisions;
 
 	private Player player;
 	[SerializeField] private RotateSphere rotateSphere;
@@ -77,8 +94,10 @@ public class PlayerShoot : MonoBehaviour
 
 	[SerializeField] private string respawnSceneName = "RespawnScene";
 	[SerializeField] private GameTimer gameTimer;
+	private bool _debug = false;
 
-	public enum DamageTypes {
+	public enum DamageTypes
+	{
 		Spit,
 		MaynardDistanceAttack,
 		CloseAttack,
@@ -86,56 +105,150 @@ public class PlayerShoot : MonoBehaviour
 	}
 
 	private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else if (Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-    }
+	{
+		if (Instance == null)
+		{
+			Instance = this;
+		}
+		else if (Instance != this)
+		{
+			Destroy(gameObject);
+		}
+	}
 
 	private void Start()
 	{
-		healthBar.SetMaxHealth(health);
+		if (!_debug)
+			healthBar.SetMaxHealth(health);
 		player = GetComponent<Player>();
-
-		
 		ChangeSphereColor(maxSphereStamina);
+		finalCloseAttackDamage = defaultCloseAttackDamage;
+		damageRadius = defaultDamageRadius;
+
+		// We initialize the timer to the current time to prevent charging from starting immediately
+		// at the beginning of the game if the stamina is not full for some reason
+		lastStaminaUseTime = Time.time;
+
+		DebugLastStaminaUseDateTime = DateTime.Now;
+	}
+
+	private void Update()
+	{
+		HandleStaminaRecovery();
+		ProcessPlayerInput();
+		if (resetSpherePosition == null)
+		{
+			resetSpherePosition = StartCoroutine(ResetSpherePositionCoroutine());	
+		}
+	}
+	
+	/// <summary>
+	/// It contains all the logic to decide whether to start stamina recovery
+	/// </summary>
+	private void HandleStaminaRecovery()
+	{
+		// Conditions for doing nothing: stamina recovery already in progress or full stamina or the playe is loading an attack 
+		if (increasingStamina || sphereStamina >= maxSphereStamina || isInteracting || loadingAttack)
+		{
+			return;
+		}
+
+		// At this point, the stamina is not full and is not recharging 
+		if (Time.time - lastStaminaUseTime >= recoveryDelay)
+		{
+			// Debug.Log("Starting stamina recovery process. Current time = " + DateTime.Now + 
+			//           ", Last time stamina was used = " + DebugLastStaminaUseDateTime);
+			
+			// Logic in combat: starts only after the delay if the sphere is completely discharged
+			if (isInCombat)
+			{
+				if (sphereIsDischarged)
+				{
+					StartStaminaRecovery();
+				}
+			}
+			// Logic out of combat: starts only after the delay
+			else
+			{
+				StartStaminaRecovery();
+			}
+		}
+	}
+	
+	/// <summary>
+	/// It contains all the logic to decide whether the sphere must go back to its original position  
+	/// </summary>
+	private IEnumerator ResetSpherePositionCoroutine()
+	{
+		// Reposition the sphere only if the minimum time has passed since the last distance attack
+		currentTime = Time.time;
+
+		if (!(currentTime - lastDistanceAttackTime >= sphereReturnDelay) || isSpherePositioned || attacking || !isLastDistanceAttack)
+		{
+			resetSpherePosition = null;
+			yield break;
+		}
 		
+		// Debug.Log("Current time = " + currentTime+ ", Last distance attack time = " + lastDistanceAttackTime + ", Difference = " + (Time.time - lastDistanceAttackTime));
+			
+		// Wait the end of the attack animation before letting the sphere return to its default position
+		yield return new WaitForSeconds(0.3f); // 300ms
+		
+		if (!(currentTime - lastDistanceAttackTime >= sphereReturnDelay) || isSpherePositioned || attacking || !isLastDistanceAttack)
+		{
+			resetSpherePosition = null;
+			yield break;
+		}
+    
+		// Define sphere's destination position
+		Vector3 defaultRotationLocalPosition = new Vector3(0, 1f, rotateSphere.DistanceFromPlayer); 
+        
+		// Make the sphere return to its default position with a linear movement
+		rotateSphere.positionSphere(defaultRotationLocalPosition, RotateSphere.Animation.Linear);
+    
+		// Wait for the sphere return animation to complete
+		yield return new WaitForSeconds(0.3f); // 300ms
+		
+		rotateSphere.isRotating = true;
+
+		if (!attacking)
+		{
+			isSpherePositioned = true;
+		}
+		
+		resetSpherePosition = null;
 	}
 
 	void ChangeSphereColor(int stamina)
 	{
+		float intensityRate = 3.0f;
+		float intensityHDR = Mathf.Pow(2,intensityRate);
+
 		switch (stamina)
 		{
 			case 5:
-				sphereMaterial.SetColor("_EmissionColor", new Color(0, 1, 1) * 2f);
+				sphereMaterial.SetColor("_EmissionColor", new Color(0, 1, 1) * intensityHDR);
 				break;
 			case 4:
-				sphereMaterial.SetColor("_EmissionColor", Color.green * 2f);
+				sphereMaterial.SetColor("_EmissionColor", Color.green * intensityHDR);
 				break;
 			case 3:
-				sphereMaterial.SetColor("_EmissionColor", Color.yellow * 2f);
+				sphereMaterial.SetColor("_EmissionColor", Color.yellow * intensityHDR);
 				break;
 			case 2:
-				sphereMaterial.SetColor("_EmissionColor", new Color(1, 0.1875f, 0) * 2f);
+				sphereMaterial.SetColor("_EmissionColor", new Color(1, 0.1875f, 0) * intensityHDR);
 				break;
 			case 1:
-				sphereMaterial.SetColor("_EmissionColor", Color.red * 2f);
+				sphereMaterial.SetColor("_EmissionColor", Color.red * intensityHDR);
 				break;
 			case 0:
-				sphereMaterial.SetColor("_EmissionColor", Color.white * 2f);
+				sphereMaterial.SetColor("_EmissionColor", Color.grey);
+				// Debug.Log("Stamina is 0, Time = " + DateTime.Now);
 				break;
 			default:
 				break;
-
 		}
 		sphereMaterial.EnableKeyword("_EMISSION");
-		
 	}
 
 	public void DisableAttacks(bool value)
@@ -143,44 +256,146 @@ public class PlayerShoot : MonoBehaviour
 		cannotAttack = value;
 	}
 
-	private bool CheckStamina(int value) {
-		// The Sphere still has stamina
-		if (sphereStamina >= value && !sphereIsDischarged) {
+	public bool CheckStamina(int value)
+	{
+		if (sphereIsDischarged || (increasingStamina && !isStaminaRecoveryInterruptible))
+		{
+			// Audio management: the sphere has finished the stamina or is loading after having been completely discharged
+			GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerSphereDischarge, rotatingSphere.transform.position);
+			return false;
+		}
+
+		// The sphere still has stamina
+		if (sphereStamina >= value && !sphereIsDischarged)
+		{
+			// If the stamina recovery process can still be interrupted, and it's currently running, then stop it
+			if (increasingStamina)
+			{
+				InterruptStaminaRecovery();
+			}
+			
 			return true;
 		}
-		
-		// Audio management: the Sphere has finished the stamina or is loading after having been completely discharged
-		GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerSphereDischarge, rotatingSphere.transform.position);
+
 		return false;
 	}
 
-	public void DecreaseStamina(int amount) {
+	public void DecreaseStamina(int amount)
+	{
+		// We update the timestamp every time the stamina is consumed
+		lastStaminaUseTime = Time.time;
+		DebugLastStaminaUseDateTime = DateTime.Now;
 		sphereStamina -= amount;
-		increaseStamina = false;
+		increasingStamina = false;
+
+		// Let's make sure the stamina doesn't go below zero
+		if (sphereStamina <= 0)
+		{
+			sphereStamina = 0;
+			sphereIsDischarged = true;
+		}
+		// If the stamina is > 0, the sphere is not discharged
+		else
+		{
+			sphereIsDischarged = false;
+		}
+		
 		ChangeSphereColor(sphereStamina);
 	}
 
-	public async Task RecoverStamina() {
-		increasingStamina = true;
-		while(sphereStamina < maxSphereStamina && increaseStamina && !loadingAttack) {
-			await Task.Delay(500);
-			if(increaseStamina && !loadingAttack) {
-				sphereStamina += 1;
-				ChangeSphereColor(sphereStamina);
+	public void StartStaminaRecovery()
+	{
+		// Check if a charge is already in progress to avoid starting multiple coroutines, moreover check if
+		// the shield is active or not 
+		if (!increasingStamina && !shieldIsActive && staminaRecovery == null)
+		{
+			increasingStamina = true; 
+			isStaminaRecoveryInterruptible = true;
+			isStaminaRecoveryInterrupted = false;
+			staminaRecovery = StartCoroutine(RecoverStaminaCoroutine());
+		}
+	}
 
-				// Audio management
-				if (sphereStamina == maxSphereStamina)
+	private void InterruptStaminaRecovery()
+	{
+		// Stop the recovery process only if the coroutine is active and the process is interruptible
+		if (staminaRecovery != null && isStaminaRecoveryInterruptible && !isStaminaRecoveryInterrupted)
+		{
+			isStaminaRecoveryInterrupted = true;
+			StopCoroutine(staminaRecovery);
+			staminaRecovery = null;
+			increasingStamina = false;
+			isStaminaRecoveryInterrupted = false;
+			// Debug.Log("Stamina recovery process was interrupted, Time = " + DateTime.Now);
+		}
+		else
+		{
+			Debug.LogWarning("Stamina recovery process was NOT interrupted");
+		}
+	}
+
+	private IEnumerator RecoverStaminaCoroutine()
+	{
+		// Debug.Log("Recovering stamina, Time = " + DateTime.Now);
+		
+		sphereIsDischarged = false;
+		bool firstIteration = true;
+		
+		while (sphereStamina < maxSphereStamina && !loadingAttack)
+		{
+			yield return new WaitForSeconds(0.5f); // 500ms
+			
+			// Passed this checkpoint, if stamina is at least 1, the recovering process can't be interrupted anymore
+			if (sphereStamina >= 0 && firstIteration)
+			{
+				isStaminaRecoveryInterruptible = false;
+				firstIteration = false;
+				
+				// Audio management: start sphere charging sound
+				if (rickEvents != null)
+				{
+					// Debug.Log("Starting sphere charging SFX");
+					rickEvents.SetSphereChargingState(true); 
+				}
+			}
+			
+			if (!isStaminaRecoveryInterrupted)
+			{
+				sphereStamina += 1;
+				
+				// If the stamina is > 0, the sphere is not discharged
+				if (sphereStamina > 0) 
 				{
 					sphereIsDischarged = false; 
-					GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerSphereFullRecharge, rotatingSphere.transform.position);
+				}
+				
+				// Debug.Log("Current stamina = " + sphereStamina + ", Time = " + DateTime.Now);
+				
+				ChangeSphereColor(sphereStamina);
+
+				if (sphereStamina == maxSphereStamina)
+				{
+					// Audio management: stop sphere charging sound
+					if (rickEvents != null)
+					{
+						// Debug.Log("Stopping sphere charging SFX");
+						rickEvents.SetSphereChargingState(false);
+					}
+					
+					// Audio management: play sphere full charge sound
+					GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerSphereFullCharge, rotatingSphere.transform.position);
 				}
 			}
 		}
 		increasingStamina = false;
+		isStaminaRecoveryInterruptible = true;
+		staminaRecovery = null;
 	}
 
-	void setSelectedAttackImage() {
-		if(attackNumber == 1) {
+	private void SetSelectedAttackImage()
+	{
+		if (attackNumber == 1)
+		{
 			// Distance attack selected
 			distanceAttackImage.transform.localScale = new Vector3(1, 1, 1);
 			distanceAttackImage.color = new Color(255 / 255f, 255 / 255f, 255 / 255f);
@@ -190,346 +405,519 @@ public class PlayerShoot : MonoBehaviour
 
 			closeAttackLoadingBar.fillAmount = 0;
 		}
-		else {
+		else
+		{
 			// Close attack selected
 			closeAttackImage.transform.localScale = new Vector3(1, 1, 1);
 			closeAttackImage.color = new Color(255 / 255f, 255 / 255f, 255 / 255f);
 
 			distanceAttackImage.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
-			distanceAttackImage.color = new (87 / 255f, 87 / 255f, 87 / 255f);
+			distanceAttackImage.color = new(87 / 255f, 87 / 255f, 87 / 255f);
 
 			distanceAttackLoadingBar.fillAmount = 0;
 		}
 	}
 
-	void ChangeAttack(int direction) {
+	void ChangeAttack(int direction)
+	{
 		attackNumber += direction;
-		if(attackNumber > 2) {
+		if (attackNumber > 2)
+		{
 			attackNumber = 1;
 		}
-		else if(attackNumber < 1) {
+		else if (attackNumber < 1)
+		{
 			attackNumber = 2;
 		}
 
-		setSelectedAttackImage();
+		SetSelectedAttackImage();
 	}
 
-	void SetAttack(int n) {
+	void SetAttack(int n)
+	{
 		attackNumber = n;
 
-		setSelectedAttackImage();
+		SetSelectedAttackImage();
 	}
 	
-	async void LoadDistanceAttack() {
+	public void ResetAttack()
+	{
+		loadingAttack = false;
+		attacking = false;
+	}
+
+	IEnumerator LoadDistanceAttackCoroutine()
+	{
+		// Debug.Log("Loading distance attack");
+		
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
-		rotateSphere.positionSphere(new Vector3(0, 0.8f, rotateSphere.DistanceFromPlayer), RotateSphere.Animation.RotateAround);
-
+		attackStamina = 0; 
+		isLastDistanceAttack = true;
+		
+		isSpherePositioned = false;
+		rotateSphere.positionSphere(bulletSpawnTransform.localPosition, RotateSphere.Animation.RotateAround);
 		AnimationManager.Instance.Attack();
-		
-		await Task.Delay(50);
-		
-		attackStamina = 0;
-		int maxStamina = 0;
+		yield return new WaitForSeconds(0.05f);
+
+		// Let's check if the player has the power-up for the loaded attack
 		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp))
 		{
-			if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 1)
+			int maxStamina = 0;
+			if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp))
 			{
-				maxStamina = Math.Min(sphereStamina, 3);
-			}
-			else
-			{
-				if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 2)
+				if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 1)
 				{
-					maxStamina = Math.Min(sphereStamina, 5);
+					maxStamina = Math.Min(sphereStamina, 3);
+				}
+				else
+				{
+					if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp] == 2)
+					{
+						maxStamina = Math.Min(sphereStamina, 5);
+					}
 				}
 			}
-		}
-		
-		// This delay is necessary to avoid the activation of the loading bar whenever the player press and released the attack
-		// button in a very fast way (as for the loading sound)
-		await Task.Delay(50);
-		
-		// Audio management: if after the delay we are still charging, start the sound
-		if (loadingAttack && rickEvents != null)
-		{
-			rickEvents.ShouldPlayChargeSound = true;
-		}
-		
-		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp) && loadingAttack)
-		{
-			attackStamina++;
-			ChangeSphereColor(attackStamina);
 
-			distanceAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
+			// This delay is necessary to avoid the activation of the loading bar whenever the player press and released
+			// the attack button in a very fast way (as for the loading sound)
+			yield return new WaitForSeconds(0.25f);
 
-			if (attackStamina > 1) {
-				getCollisions.playerBulletDamage += 10;
+			bool firstIteration = true;
+
+			while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp) && loadingAttack)
+			{
+				yield return new WaitForSeconds(0.25f);
+				
+				attackStamina++;
+				distanceAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
+				
+				// Audio management: if after the delay we are still charging, start the sound
+				if (loadingAttack && rickEvents != null && firstIteration)
+				{
+					// Debug.Log("Playing loading distance attack sound");
+					firstIteration = false;
+					rickEvents.ShouldPlayChargeSound = true;
+				}
+				
+				yield return new WaitForSeconds(0.25f);
+				
+				ChangeSphereColor(attackStamina);
+				// Debug.Log("Sphere stamina has changed");
 			}
-			
-			await Task.Delay(500);
+
+			// Audio management: stop the loading sound of the attack when the loading is terminated 
+			if (rickEvents != null)
+			{
+				rickEvents.ShouldPlayChargeSound = false;
+			}
 		}
-		
-		// Audio management: stop the loading sound of the attack when the loading is terminated 
-		if (rickEvents != null)
+
+		else
 		{
-			rickEvents.ShouldPlayChargeSound = false;
+			// The player doesn't have the power-up, so we immediately fire a normal (not loaded) distance attack
+			DistanceAttackAnimation();
 		}
-	}
-	
-	private void DistanceAttackAnimation() {
-		loadingAttack = false;
 		
+		currentLoadingAttack = null; // The coroutine is finished
+	}
+
+	private void DistanceAttackAnimation()
+	{
 		// Audio management: stop the loading sound of the attack if the button is released
 		if (rickEvents != null)
 		{
 			rickEvents.ShouldPlayChargeSound = false;
 		}
-		
+
 		AnimationManager.Instance.EndAttack();
 	}
 
-	public async void FireDistanceAttack() {
+	public void FireDistanceAttack()
+	{
+		// Debug.Log("Firing distance attack");
+		
+		// Reset EndAttack and EndAreaAttack when pressing the attack button
+		AnimationManager.Instance.ResetEndAttackTriggers();
+		
+		// If there is an active loading coroutine, then stop it
+		if (currentLoadingAttack != null)
+		{
+			InterruptAttackLoading(true);
+		}
+		
+		// If we are here and the player was loading the distance attack, then it means the loading process is terminated
+		loadingAttack = false;
+		
 		bulletPrefab.gameObject.SetActive(false);
 		GameObject bullet = Instantiate(bulletPrefab, bulletSpawnTransform.position, Quaternion.identity);
 		bullet.tag = "PlayerProjectile";
 		ParticleAttackController PAC = bullet.GetComponent<ParticleAttackController>();
-		PAC.playerBulletDamage = PAC.initialPlayerBulletDamage;
+		
+		// Update the time of the last distance attack
+		lastDistanceAttackTime = Time.time;
+		
+		// Compute bullet's damage
+		float finalBulletDamage = PAC.initialPlayerBulletDamage;
+		int staminaConsumed = (attackStamina == 0) ? 1 : attackStamina; // If not loaded, the attack consumes 1 stamina
+		
+		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp))
+		{
+			int powerUpLevel = powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.DistanceAttackPowerUp];
+			if (powerUpLevel == 1) // First power-up, max 3 stamina
+			{
+				float maxDamageForPowerUp = distanceAttackPowerUp1Damage;
+				float damageRange = maxDamageForPowerUp - baseDistanceAttackDamage;
+				finalBulletDamage = baseDistanceAttackDamage + (damageRange * ((float)(staminaConsumed - 1) / 2));
+			}
+			else if (powerUpLevel == 2) // Second power-up, max 5 stamina
+			{
+				float maxDamageForPowerUp = distanceAttackPowerUp2Damage;
+				float damageRange = maxDamageForPowerUp - baseDistanceAttackDamage;
+				finalBulletDamage = baseDistanceAttackDamage + (damageRange * ((float)(staminaConsumed - 1) / 4));
+			}
+		}
+		
+		// Debug.Log("Distance attack damage = " + finalBulletDamage + ", Consumed stamina = " + staminaConsumed);
+		
+		PAC.playerBulletDamage = finalBulletDamage;
 		PAC.targetPos = bulletSpawnTransform;
+		PAC.bulletOwner = gameObject; // Assign the Player as bullet's owner  
 		bullet.SetActive(true);
 		bulletPrefab.gameObject.SetActive(true);
-		/*
-		Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
-		rbBullet.AddForce(bulletSpawnTransform.forward * bulletSpeed, ForceMode.Impulse);
-		rbBullet.AddForce(bulletSpawnTransform.up * 2f, ForceMode.Impulse);
-		
-		getCollisions.playerBulletDamage = getCollisions.initialPlayerBulletDamage;
-		*/
-		
-		if (attackStamina == 0)
-		{
-			DecreaseStamina(1);
-		}
-		else
-		{
-			DecreaseStamina(attackStamina);
-		}
 
+		DecreaseStamina(staminaConsumed);
+		
 		distanceAttackLoadingBar.fillAmount = 0;
-
-		await Task.Delay(500);
+		
+		ResetDistanceAttackValues();
+	}
+	
+	private void ResetDistanceAttackValues()
+	{
+		// Restore attack flags
 		ResetAttack();
 	}
-	
-	async void LoadCloseAttack() {
+
+	IEnumerator LoadCloseAttackCoroutine()
+	{
+		// Debug.Log("Loading close attack");
+		
 		// If we are here the stamina is at least 1
 		loadingAttack = true;
-		rotateSphere.positionSphere(new Vector3(0, 1.8f, 0), RotateSphere.Animation.Linear);
-		player.isFrozen = true;
-		AnimationManager.Instance.AreaAttack();
-		
-		await Task.Delay(50);
-		
 		attackStamina = 0;
-		int maxStamina = 0;
+		isLastDistanceAttack = false;
+
+		// Make the sphere return to its default position with a linear movement
+		rotateSphere.positionSphere(new Vector3(0, 1.8f, 0), RotateSphere.Animation.Linear);
+		
+		FreezePlayer();
+		AnimationManager.Instance.AreaAttack();
+		yield return new WaitForSeconds(0.05f);
+
+		// Let's check if the player has the power-up for the loaded attack
 		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp))
 		{
-			if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 1)
+			int maxStamina = 0;
+			if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp))
 			{
-				maxStamina = Math.Min(sphereStamina, 3);
-			}
-			else
-			{
-				if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 2)
+				if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 1)
 				{
-					maxStamina = Math.Min(sphereStamina, 5);
+					maxStamina = Math.Min(sphereStamina, 3);
+				}
+				else
+				{
+					if (powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp] == 2)
+					{
+						maxStamina = Math.Min(sphereStamina, 5);
+					}
 				}
 			}
-		}
-		
-		// This delay is necessary to avoid the activation of the loading bar whenever the player press and released the attack
-		// button in a very fast way (as for the loading sound)
-		await Task.Delay(50);
-		
-		// Audio management: if after the delay we are still charging, start the sound
-		if (loadingAttack && rickEvents != null)
-		{
-			rickEvents.ShouldPlayChargeSound = true;
-		}
-		
-		while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp) && loadingAttack) {
-			attackStamina++;
-			ChangeSphereColor(attackStamina);
 
-			closeAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
-
-			if (attackStamina > 1) {
-				damageRadius += 1f;
-				closeAttackDamage += 20;
-			}
+			// This delay is necessary to avoid the activation of the loading bar whenever the player press and released
+			// the attack button in a very fast way (as for the loading sound)
+			yield return new WaitForSeconds(0.25f);
 			
-			await Task.Delay(500);
+			bool firstIteration = true;
+
+			while (attackStamina < maxStamina && powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp) && loadingAttack)
+			{
+				yield return new WaitForSeconds(0.25f);
+				
+				attackStamina++;
+				closeAttackLoadingBar.fillAmount = (float)attackStamina / maxSphereStamina;
+				
+				// Audio management: if after the delay we are still charging, start the sound
+				if (loadingAttack && rickEvents != null && firstIteration)
+				{
+					// Debug.Log("Playing loading close attack sound");
+					firstIteration = false;
+					rickEvents.ShouldPlayChargeSound = true;
+				}
+				
+				yield return new WaitForSeconds(0.25f);
+				
+				ChangeSphereColor(attackStamina);
+				// Debug.Log("Sphere stamina has changed");
+			}
+
+			// Audio management: stop the loading sound of the attack when the loading is terminated 
+			if (rickEvents != null)
+			{
+				rickEvents.ShouldPlayChargeSound = false;
+			}
 		}
-		
-		// Audio management: stop the loading sound of the attack when the loading is terminated 
-		if (rickEvents != null)
+
+		else
 		{
-			rickEvents.ShouldPlayChargeSound = false;
+			// The player does not have the power-up, we immediately carry out the normal (not loaded) attack
+			CloseAttackAnimation();
 		}
-	}
-	
-	private void CloseAttackAnimation() {
-		loadingAttack = false;
 		
+		currentLoadingAttack = null; // The coroutine is finished
+	}
+
+	private void CloseAttackAnimation()
+	{
 		// Audio management: stop the loading sound of the attack if the button is released
 		if (rickEvents != null)
 		{
 			rickEvents.ShouldPlayChargeSound = false;
 		}
-		
+
 		AnimationManager.Instance.EndAreaAttack();
 	}
+	
+	private void InterruptAttackLoading(bool isDistanceAttack)
+	{
+		// Stop the attack loading process only if the coroutine is active
+		if (currentLoadingAttack != null)
+		{
+			StopCoroutine(currentLoadingAttack);
+			currentLoadingAttack = null;
 
-	public void FireCloseAttack() {
-		if(attackStamina == 0) {
-			DecreaseStamina(1);
+			if (isDistanceAttack)
+			{
+				ResetDistanceAttackValues();
+				distanceAttackLoadingBar.fillAmount = 0;
+			}
+			else
+			{
+				// IMPORTANT: Do not use here ResetCloseAttackValues(). Differently from the distance attack, the reset of the
+				// values of the close attack is handle in RickEvents.cs, by the function DestroyAreaAttack(), which destroys
+				// the area attack and, only after that, goes on calling the ResetCloseAttackValues(). If you use this function
+				// here then there will be problems with most sequence of 5 rapid close attacks.
+				closeAttackLoadingBar.fillAmount = 0;
+			}
+			
+			// Debug.Log("Attack loading process was interrupted");
 		}
-		else {
-			DecreaseStamina(attackStamina);
+		else
+		{
+			Debug.LogWarning("Attack loading process was NOT interrupted");
 		}
-
-		closeAttackLoadingBar.fillAmount = 0;
-
-		SpawnAttackArea();
 	}
 
-	async void SpawnAttackArea() {
+	public void FireCloseAttack()
+	{
+		// Debug.Log("Firing close attack");
 		
-		/*GameObject attackArea = Instantiate(attackAreaPrefab, transform.position, Quaternion.identity);
-		attackArea.transform.parent = transform;
-		attackArea.transform.localScale = new Vector3(2 * damageRadius, 0, 2 * damageRadius);
+		// Reset EndAttack and EndAreaAttack when pressing the attack button
+		AnimationManager.Instance.ResetEndAttackTriggers();
 		
-		CheckForEnemies();
-		*/
-		await Task.Delay(500);
+		// If there is an active loading coroutine, then stop it
+		if (currentLoadingAttack != null)
+		{
+			InterruptAttackLoading(false);
+		}
 		
-		//Destroy(attackArea);
-		rotateSphere.positionSphere(new Vector3(rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
-		await Task.Delay(300);
-
-		// Set values back to default
-		closeAttackDamage = defaultCloseAttackDamage;
+		// If we are here and the player was loading the close attack, then it means the loading process is terminated
+		loadingAttack = false;
+		
+		// Debug.Log("Computing damage radius, Time = " + DateTime.Now);
+		
+		// Compute close attack's damage
+		finalCloseAttackDamage = defaultCloseAttackDamage;
 		damageRadius = defaultDamageRadius;
+		isLastDistanceAttack = false;
 		
-		ResetAttack();
-	}
-
-	// Checks if there are enemies in the attack area and, if so, damages them
-	void CheckForEnemies() {
-		Collider[] colliders = Physics.OverlapSphere(transform.position, damageRadius);
-		foreach(Collider c in colliders) {
-			// Checks if the collider is an enemy
-			if(c.transform.tag.Contains("Enemy") && !c.transform.tag.Contains("EnemyAttack")) {
-				c.GetComponent<Enemy.EnemyManager.IEnemy>().TakeDamage(closeAttackDamage, "c");
+		int staminaConsumed = (attackStamina == 0) ? 1 : attackStamina; // If not loaded, the attack consumes 1 stamina
+		
+		if (powerUp.powerUpsObtained.ContainsKey(PowerUp.SpherePowerUpTypes.CloseAttackPowerUp))
+		{
+			int powerUpLevel = powerUp.powerUpsObtained[PowerUp.SpherePowerUpTypes.CloseAttackPowerUp];
+			if (powerUpLevel == 1) // First power-up, max 3 stamina
+			{
+				float maxDamageForPowerUp = closeAttackPowerUp1Damage;
+				float damageRange = maxDamageForPowerUp - baseCloseAttackDamage;
+				finalCloseAttackDamage = baseCloseAttackDamage + (damageRange * ((float)(staminaConsumed - 1) / 2));
+				damageRadius += ((float)(staminaConsumed - 1) / 2) * 1f; // Increase the radius proportionally to stamina
+			}
+			else if (powerUpLevel == 2) // Second power-up, max 5 stamina
+			{
+				float maxDamageForPowerUp = closeAttackPowerUp2Damage;
+				float damageRange = maxDamageForPowerUp - baseCloseAttackDamage;
+				finalCloseAttackDamage = baseCloseAttackDamage + (damageRange * ((float)(staminaConsumed - 1) / 4));
+				damageRadius += ((float)(staminaConsumed - 1) / 4) * 1f; // Increase the radius proportionally to stamina
 			}
 		}
+
+		// Debug.Log("Close attack damage = " + finalCloseAttackDamage + ", Consumed stamina = " + staminaConsumed + 
+		//           ", Damage radius = " + damageRadius);
+		
+		DecreaseStamina(staminaConsumed);
+		
+		closeAttackLoadingBar.fillAmount = 0;
+		
+		// IMPORTANT: Do not use here ResetCloseAttackValues(). Differently from the distance attack, the reset of the
+		// values of the close attack is handle in RickEvents.cs, by the function DestroyAreaAttack(), which destroys
+		// the area attack and, only after that, goes on calling the ResetCloseAttackValues(). If you use this function
+		// here then there will be problems with most sequence of 5 rapid close attacks.
 	}
 
-	public void ResetAttack() {
-		loadingAttack = false;
-		attacking = false;
+	public async void ResetCloseAttackValues()
+	{
+		// Make the sphere return to its default position with a linear movement
+		rotateSphere.positionSphere(new Vector3(rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
+
+		// Wait for the sphere return animation to have had time to complete
+		await Task.Delay(300);
+
+		// Restore attack flags
+		ResetAttack();
+		
+		// Restore sphere rotation
 		rotateSphere.isRotating = true;
 	}
 
-	async Task<bool> WaitUntilOrTimeout(Func<bool> condition, int timeoutMs, int checkIntervalMs = 25)
+	private void SpawnMagneticShield()
 	{
-		var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-
-		while (stopwatch.ElapsedMilliseconds < timeoutMs)
+		if (!CheckStamina(1))
 		{
-			if (condition())
-				return true;
-
-			await Task.Delay(checkIntervalMs);
-		}
-
-		return false; // Timeout scaduto
-	}
-
-	private void SpawnMagneticShield() {
-		if (!CheckStamina(1)) {
 			return; // Exits the function if the shield cannot be activated
 		}
-		
-		DecreaseStamina(1);
-		
+
 		// Without this check, if the button for activating/deactivating the shield is pushed and released more than once in a very fast way, then
 		// the function is called multiple times, creating a race condition among multiple concurrent instances of it (buggy code)
 		if (isShieldCoroutineRunning)
 		{
 			return;
 		}
-		
+
 		isShieldCoroutineRunning = true;
-		
-		if(!magneticShieldOpen) 
-		{ 
-			// to modify for the instantiate the vfx and lunch the animation character
-			//luch defense animation
+
+		if (!shieldIsActive)
+		{
+			// Decrease sphere's stamina and disable player's attacks until the shield is closed  
+			DecreaseStamina(1);
+
+			// To modify for the instantiation of the vfx and launch defense animation
 			AnimationManager.Instance.Defense();
-			magneticShieldOpen = true;
-			player.isFrozen = true;
+			SetShieldIsActive(true);
+			FreezePlayer();
 		}
-		
+
 		isShieldCoroutineRunning = false;
 	}
 
-	public void CloseShield() {
-		player.isFrozen = false;
-		magneticShieldOpen = false;
+	public void SetShieldIsActive(bool value)
+	{
+		shieldIsActive = value;
 	}
 
-	public void TakeDamage(float damage, DamageTypes damageType, int x, int z) {
-     	health -= damage * damageReduction;
-     	healthBar.SetHealth(health);
-     
-     	StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
+	public void FreezePlayer()
+	{
+		player.isFrozen = true;
+	}
 
-		if(health > 0) {
+	public void UnfreezePlayer()
+	{
+		player.isFrozen = false;
+	}
+
+	public void TakeDamage(float damage, DamageTypes damageType, Transform enemyTransform = null)
+	{
+		if (isDying)
+		{
+			return; // If the player is already dying, ignore any further damage
+		}
+		
+		// If the shield is active then no damage is taken by the player and his hit animation does not start
+		if (shieldIsActive)
+		{
+			// Debug.Log("Damage blocked by the shield!");
+			GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerShieldHit, transform.position);
+			return; // Exits the function, canceling the damage
+		}
+
+		// Debug.Log("Take damage");
+		health -= damage * damageReduction;
+		if (health < 0) health = 0; // To prevent health from going below zero in the UI
+
+		healthBar.SetHealth(health);
+
+		StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
+
+		// Audio management: call the new method to update the audio status
+		UpdateHealthState();
+
+		if (health > 0)
+		{
+			// Audio management: he notifies RickEvents that damage has occurred and that he must handle the sound
+			if (rickEvents != null)
+			{
+				rickEvents.RequestHitSound(damageType);
+			}
+
 			HitAnimation(damageType, 0, 1);
 		}
 		else
-     	{
-	        DisableAttacks(true);
-	        player.FreezeMovement(true);
+		{
+			isDying = true;
+			DisableAttacks(true);
+			player.FreezeMovement(true);
 			gameTimer.isRunning = false;
-			if(damageType == DamageTypes.DrakeBiteAttack) {
+
+			// Audio management: make sure your heartbeat stops at death
+			if (rickEvents != null)
+			{
+				rickEvents.SetHeartbeatStatus(false);
+			}
+
+			if (damageType == DamageTypes.DrakeBiteAttack)
+			{
 				AnimationManager.Instance.Bite();
 			}
-			else {
+			else
+			{
 				DeathAnimation(1, 1);
 			}
-     	}
+		}
 	}
 
-	public void DeathAnimation(int x, int z) {
+	public void DeathAnimation(int x, int z)
+	{
 		AnimationManager.Instance.Death(x, z);
 	}
 
-	public void SetLayerToZero() {
+	public void SetLayerToZero()
+	{
 		gameObject.layer = 0;
 	}
 
-	public void LoadRespawnScene() {
+	public void LoadRespawnScene()
+	{
 		Invoke(nameof(DestroyPlayer), 1f);
 
-		FadeManager.Instance.FadeOutIn(() => {
+		FadeManager.Instance.FadeOutIn(() =>
+		{
 			StartCoroutine(LoadRespawnSceneAsync());
 		});
 	}
-	
+
 	// Change player color when hit and change it back to normal after "duration" seconds
-	IEnumerator ChangeColor(Renderer renderer, Color dmgColor, float duration, float delay) {
+	IEnumerator ChangeColor(Renderer renderer, Color dmgColor, float duration, float delay)
+	{
 		// Save the original color of the enemy
 		Color originColor = renderer.material.color;
 
@@ -538,7 +926,8 @@ public class PlayerShoot : MonoBehaviour
 		yield return new WaitForSeconds(delay);
 
 		// Lerp animation with given duration in seconds
-		for(float t = 0; t < 1.0f || renderer.material.color != originColor; t += Time.deltaTime / duration) {
+		for (float t = 0; t < 1.0f || renderer.material.color != originColor; t += Time.deltaTime / duration)
+		{
 			renderer.material.color = Color.Lerp(dmgColor, originColor, t);
 
 			yield return null;
@@ -546,9 +935,12 @@ public class PlayerShoot : MonoBehaviour
 
 		renderer.material.color = originColor;
 	}
-	private void HitAnimation(DamageTypes damageType, int x, int z) {
-		if(!cannotAttack && !player.isFrozen) {
-			switch(damageType) {
+	private void HitAnimation(DamageTypes damageType, int x, int z)
+	{
+		if (!cannotAttack && !player.isFrozen)
+		{
+			switch (damageType)
+			{
 				case DamageTypes.Spit:
 					DisableAttacks(true);
 					player.FreezeMovement(true);
@@ -572,58 +964,100 @@ public class PlayerShoot : MonoBehaviour
 			}
 		}
 	}
-	public void FreePlayer() {
+	public void FreePlayer()
+	{
 		DisableAttacks(false);
 		player.FreezeMovement(false);
 	}
-	private void DestroyPlayer() {
+	private void DestroyPlayer()
+	{
 		Destroy(gameObject);
 	}
-	private IEnumerator LoadRespawnSceneAsync() {
-
-		// Inizia il caricamento asincrono della scena
+	private IEnumerator LoadRespawnSceneAsync()
+	{
+		// Asynchronous loading of scene starts
 		AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(respawnSceneName);
-		asyncLoad.allowSceneActivation = false;
+		if (asyncLoad != null)
+		{
+			asyncLoad.allowSceneActivation = false;
 
-		// Attendi finch� la scena � quasi pronta (>= 0.9)
-		while(asyncLoad.progress < 0.9f) {
-			yield return null;
+			// Wait until the scene is almost ready (>= 0.9)
+			while (asyncLoad.progress < 0.9f)
+			{
+				yield return null;
+			}
+
+			// Now actually activates the scene
+			asyncLoad.allowSceneActivation = true;
 		}
-
-		// Ora attiva effettivamente la scena
-		asyncLoad.allowSceneActivation = true;
 	}
 
-	public void RecoverHealth(float amount) {
+	public void RecoverHealth(float amount)
+	{
 		health += amount;
-		if (health > maxHealth) {
+		if (health > maxHealth)
+		{
 			health = maxHealth;
 		}
-		
+
 		healthBar.SetHealth(health);
+		// Audio management: call the update method even when recovering life
+		UpdateHealthState();
 	}
 
-	void Update() {
+	void ProcessPlayerInput()
+	{
+		//debug Rick State
+		//Debug.Log($"Rick state: {AnimationManager.Instance.rickState}");
+		
 		if (!GameStatus.gamePaused)
 		{
 			if (!cannotAttack)
 			{
-				// The attack is shot only on "Fire1" up
-				//  && AnimationManager.Instance.rickState == RickStates.Idle
-				if(Input.GetButtonDown("Fire1"))
+				// The attack is shot only on "Fire1" up && AnimationManager.Instance.rickState == RickStates.Idle
+				if (Input.GetButtonDown("Fire1"))
 				{
-					if (!magneticShield && CheckStamina(1) && !attacking)
+					// Reset EndAttack and EndAreaAttack when pressing the attack button
+					AnimationManager.Instance.ResetEndAttackTriggers();
+					
+					if (shieldIsActive)
 					{
-						loadingAttack = true;
+						// If the player has enough stamina for the attack, then deactivate the shield immediately and
+						// play the deactivation sound
+						if (rickEvents != null && CheckStamina(1))
+						{
+							rickEvents.InstantShieldDeactivation();
+						}
+						SetShieldIsActive(false); // Set shield as inactive
+						// At this point, the player can proceed with the attack
+						if (!attacking && CheckStamina(1)) // Check the stamina even after the shield is deactivated
+						{
+							attacking = true;
+
+							switch (attackNumber)
+							{
+								case 1:
+									currentLoadingAttack = StartCoroutine(LoadDistanceAttackCoroutine());
+									break;
+								case 2:
+									currentLoadingAttack = StartCoroutine(LoadCloseAttackCoroutine());
+									break;
+								default:
+									break;
+							}
+						}
+					}
+					else if (!attacking && CheckStamina(1))
+					{
 						attacking = true;
 
 						switch (attackNumber)
 						{
 							case 1:
-								LoadDistanceAttack();
+								currentLoadingAttack = StartCoroutine(LoadDistanceAttackCoroutine());
 								break;
 							case 2:
-								LoadCloseAttack();
+								currentLoadingAttack = StartCoroutine(LoadCloseAttackCoroutine());
 								break;
 							default:
 								break;
@@ -633,8 +1067,10 @@ public class PlayerShoot : MonoBehaviour
 
 				if (Input.GetButtonUp("Fire1"))
 				{
-					if (!magneticShield && CheckStamina(1) && loadingAttack)
+					if (!shieldIsActive && loadingAttack)
 					{
+						// Debug.Log("Button released, now the attack loading process will be stopped");
+						
 						switch (attackNumber)
 						{
 							case 1:
@@ -650,19 +1086,19 @@ public class PlayerShoot : MonoBehaviour
 				}
 
 				//&& AnimationManager.Instance.rickState == RickStates.Idle
-				if(Input.GetButtonDown("Fire2") && !loadingAttack)
+				if (Input.GetButtonDown("Fire2") && !loadingAttack)
 				{
 					SpawnMagneticShield();
 				}
 
 				// Selecting a different attack
 				if ((Input.GetAxis("Mouse ScrollWheel") > 0 || Input.GetKeyDown(increaseAttackController)) &&
-				    !loadingAttack)
+					!loadingAttack)
 				{
 					ChangeAttack(1);
 				}
 				else if ((Input.GetAxis("Mouse ScrollWheel") < 0 || Input.GetKeyDown(decreaseAttackController)) &&
-				         !loadingAttack)
+						 !loadingAttack)
 				{
 					ChangeAttack(-1);
 				}
@@ -676,20 +1112,24 @@ public class PlayerShoot : MonoBehaviour
 				{
 					SetAttack(2);
 				}
-
-				// I check the stamina every frame since it is possible that it is = 0 when I am not attacking (thanks asynchronous processes)
-				// Not that good, but I don't have better ways to manage it
-				if (sphereStamina <= 0)
-				{
-					sphereIsDischarged = true;
-					
-					if (!increasingStamina)
-					{
-						increaseStamina = true;
-						_ = RecoverStamina();
-					}
-				}
 			}
+		}
+	}
+
+	public void UpdateHealthState()
+	{
+		if (rickEvents == null) return;
+
+		// Calculate whether health is below the threshold (but the player is still alive)
+		bool isHealthLow = (health <= maxHealth * LOW_HEALTH_PERCENTAGE && health > 0);
+
+		// Audio management: communicate status to RickEvents
+		rickEvents.SetHeartbeatStatus(isHealthLow);
+
+		// Notify HealthBar of the status for flashing
+		if (healthBar != null)
+		{
+			healthBar.SetFlashing(isHealthLow);
 		}
 	}
 }

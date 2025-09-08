@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using Animations;
-using UnityEngine.Audio;
+using Audio;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -31,6 +31,7 @@ public class PauseMenu : MonoBehaviour
 	private PlayerInput playerInput;
 	
 	// Audio management
+	[SerializeField] private UIAudioManager uiAudioManager;
 	private RickEvents rickEvents;
 
 	private bool pauseScreenOpen = false;
@@ -58,9 +59,9 @@ public class PauseMenu : MonoBehaviour
 	void Update()
     {
 		if(!sceneIsLoading) {
-			if(playerInput.PausePressed() || (pauseScreenOpen && pauseMenu.activeInHierarchy && playerInput.BackKeyPressed())) {
+			if(!GameStatus.isUIInventoryMenuOpen && playerInput.PausePressed() || (pauseScreenOpen && pauseMenu.activeInHierarchy 
+				   && playerInput.BackKeyPressed())) {
 				ChangeGameState(!GameStatus.gamePaused);
-
 				TogglePauseMenu();
 			}
 
@@ -71,17 +72,23 @@ public class PauseMenu : MonoBehaviour
 	}
 
 	async void ChangeGameState(bool paused) {
-		if(paused) {
-			// Setting timeScale to 0 pauses the game
+		if(paused) 
+		{
 			Time.timeScale = 0f;
 			Cursor.lockState = CursorLockMode.None;
+			
+			// Audio management: pause all sounds except music
+			GameAudioPauser.PauseGameAudio(true); 
 		}
-		else {
-			// Resume the game
+		else 
+		{
 			Time.timeScale = 1f;
 			await Task.Delay(100);
 			EventSystem.current.SetSelectedGameObject(null);
 			Cursor.lockState = CursorLockMode.Locked;
+        
+			// Audio management: resume all sounds except music
+			GameAudioPauser.ResumeGameAudio(true);
 		}
 
 		GameStatus.gamePaused = paused;
@@ -90,19 +97,23 @@ public class PauseMenu : MonoBehaviour
 	void TogglePauseMenu() {
 		if(screenContainer.activeInHierarchy) {
 			pauseScreenOpen = false;
+			GameStatus.isUIPauseMenuOpen = false;
+			
+			// Audio management: play close menu sound
+			uiAudioManager.PlayCloseSound();
+			
 			screenContainer.SetActive(false);
 			foreach(Transform child in screenContainer.transform) {
 				child.gameObject.SetActive(false);
 			}
 		}
 		else {
-			// Audio management: stops all Rick's looping sounds  
-			if (rickEvents != null)
-			{
-				rickEvents.StopAllLoopingSounds();
-			}
-			
 			pauseScreenOpen = true;
+			GameStatus.isUIPauseMenuOpen = true;
+			
+			// Audio management: play open menu sound
+			uiAudioManager.PlayOpenSound();
+			
 			screenContainer.SetActive(true);
 			pauseMenu.SetActive(true);
 			EventSystem.current.SetSelectedGameObject(firstSelected);
@@ -178,11 +189,20 @@ public class PauseMenu : MonoBehaviour
 		EventSystem.current.SetSelectedGameObject(noButton);
 	}
 
-	public async void YesButtonClick(GameObject button) {
+	public void YesButtonClick(GameObject button) {
 		buttonEffects.OnMouseExit(button);
 
 		if(actionToConfirm == ActionToConfirm.StartNewGame) {
-			print("Ciao");
+			// Before doing anything else, clean all FMOD events
+			if (GamePlayAudioManager.instance != null)
+			{
+				GamePlayAudioManager.instance.StopAndReleaseAllEvents();
+			}
+			// Stop all audio coroutines in RickEvents
+			if (rickEvents != null)
+			{
+				rickEvents.StopAllAudioCoroutines();
+			}
 			Destroy(GameObject.Find("RoomManager"));
 			StartCoroutine(LoadGameplaySceneAsync());
 		}

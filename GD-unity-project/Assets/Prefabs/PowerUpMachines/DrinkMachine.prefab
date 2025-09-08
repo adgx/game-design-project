@@ -100,8 +100,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interactionZone: {fileID: 0}
   _energyDrinkMeshPrefab: {fileID: 919132149155446097, guid: cb04921020eb7443ea1506a029dd8ccd, type: 3}
-  _snackMeshPrefab: {fileID: 919132149155446097, guid: 789ce07a7489c4ad48e6d7c27ddbcdbb, type: 3}
-  _freeSphere: 0.5
+  _snackMeshPrefab: {fileID: 1670000987306246585, guid: 8319bfce3e0a8fc4d862006ebde615ab, type: 3}
   _hackingTime: 4.2
   _rotationDuration: 0.2
   _feedbackMessageDuration: 3
@@ -162,9 +161,13 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 67989320934642044, guid: 058251f06555f413a8a908ffaabf6c1d, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 67989320934642044, guid: 058251f06555f413a8a908ffaabf6c1d, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: ffc786458ed2c4569b58e6b5d45cfdad, type: 2}
+      objectReference: {fileID: 2100000, guid: 409f47ed2bcc3b24d92b436cbfa7c537, type: 2}
     - target: {fileID: 919132149155446097, guid: 058251f06555f413a8a908ffaabf6c1d, type: 3}
       propertyPath: m_Name
       value: DrinkMachine
@@ -232,15 +235,15 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 2
-      outSlope: 2
+      inSlope: 1.2
+      outSlope: 1.2
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 0.5
-      value: 1
+      value: 0.6
       inSlope: 0
       outSlope: 0
       tangentMode: 34
@@ -250,8 +253,8 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 0
-      inSlope: -2
-      outSlope: -2
+      inSlope: -1.2
+      outSlope: -1.2
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334

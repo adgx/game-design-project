@@ -13,15 +13,16 @@ MonoBehaviour:
   m_Name: EnemyDrakeData
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 6635268580633063533, guid: a68a969db10e47e4294fc8705c93da1e, type: 3}
-  enemyName: Blender King
+  enemyName: Drake
   spawnCost: 4
-  maxHealth: 168
-  maxHealthLoop1: 120
+  maxHealth: 170
+  maxHealthLoop1: 170
   baseMoveSpeed: 3
-  distanceAttackDamage: 14
+  angularSpeed: 200
+  distanceAttackDamage: 10
   distanceAttackDamageLoop1: 10
-  closeAttackDamage: 28
-  closeAttackDamageLoop1: 20
+  closeAttackDamage: 40
+  closeAttackDamageLoop1: 40
   difficultyMultiplier: 0.2
   walkPointRange: 6
   timeBetweenAttacks: 4

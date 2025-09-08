@@ -2,23 +2,45 @@ using System.Collections;
 using Animations;
 using Audio;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace PlayerInteraction
 {
     public class SphereUpgradeTerminalInteraction : MonoBehaviour, IInteractable
     {
-        public string InteractionPrompt => _powerUpObtained
-            ? "You obtained a " + _obtainedPowerUp.ToString() + "!"
-            : (_powerUp != null && _powerUp.spherePowerUps.Count <= 0)
-                ? "Terminal is empty"
-                : (_noMorePowerUp)
-                    ? "You have already collected a Power Up from this machine"
-					: "Press E to interact with the terminal";
-
-        public bool IsInteractable =>
-            !_isBusy && (_powerUp != null && _powerUp.spherePowerUps.Count > 0);
+        public string InteractionPrompt
+        {
+            get
+            {
+                if (_powerUpObtained)
+                {
+                    string message = "You obtained a ";
+                    if (_obtainedPowerUp.ToString() == "DistanceAttackPowerUp")
+                        message += "Distance Attack power-up!";
+                    else if(_obtainedPowerUp.ToString() == "CloseAttackPowerUp")
+                        message += "Close Attack power-up!";
+                    else 
+                        message += "Defense power-up!";
+                    return message;
+                }
+                if (_powerUp != null && _powerUp.spherePowerUps.Count <= 0)
+                {
+                    return "You have already collected all sphere power-ups!";
+                }
+                if (!_feedbackMessageActive && RoomManager.RoomManager.Instance.IsSphereUpgradeTerminalUsedInCurrentRoom())
+                {
+                    return "The terminal has already been hacked";
+                }
+                return "Press E to interact with the terminal";
+            }
+        }
+        
+        public bool IsInteractable => !_isBusy && (_powerUp != null && _powerUp.spherePowerUps.Count > 0);
         
         public Collider InteractionZone => _interactionZone;
+
+        public GameObject GameObject => this.gameObject;
+
 
         [Header("Interaction Zone")]
         [Tooltip("An optional trigger collider that defines the area the player must be in to use this.")]
@@ -28,11 +50,12 @@ namespace PlayerInteraction
         [Header("Timings")] [SerializeField] private float _interactionTime = 2.0f;
         [SerializeField] private float _postInteractionDelay = 1.5f;
         [SerializeField] private float _rotationDuration = 0.2f;
-
+        
         [Header("UI Feedback")]
         [Tooltip("How long the 'You obtained a ...' message should display before resetting.")]
-        [SerializeField]
-        private float _feedbackMessageDuration = 3.0f;
+        [SerializeField] float _feedbackMessageDuration = 3.0f;
+        private bool _feedbackMessageActive = false;
+        private PlayerInteractor _playerInteractor;
 
         private PowerUp.SpherePowerUpTypes _obtainedPowerUp;
         private bool _powerUpObtained = false;
@@ -53,15 +76,19 @@ namespace PlayerInteraction
             _powerUp = PowerUp.Instance;
             _rotateSphere = RotateSphere.Instance;
             _rickEvents = _player.GetComponent<RickEvents>();
+            _playerInteractor = FindObjectOfType<PlayerInteractor>();
         }
 
         public bool Interact(GameObject interactor)
         {
-            if (!IsInteractable) return false;
+            if (!IsInteractable || RoomManager.RoomManager.Instance.IsSphereUpgradeTerminalUsedInCurrentRoom() || !_playerShoot.CheckStamina(1)) 
+                return false;
 
-			_rickEvents.SetIdleState();
             AnimationManager.Instance.Idle();
 			StartCoroutine(RotatePlayerTowards(transform, _rotationDuration));
+            
+            // Mark the upgrade sphere terminal as used (not interactable anymore)
+            RoomManager.RoomManager.Instance.MarkSphereUpgradeTerminalAsUsedInCurrentRoom();
 
             StartCoroutine(UpgradeSequence());
             return true;
@@ -70,32 +97,31 @@ namespace PlayerInteraction
         private IEnumerator UpgradeSequence()
         {
             _isBusy = true;
-            _player.FreezeMovement(true);
-            _playerShoot.DisableAttacks(true);
+            _playerShoot.isInteracting = true;
+            
+            // Make the sphere return to its default position with a linear movement
+            _rotateSphere.positionSphere(new Vector3(_rotateSphere.DistanceFromPlayer, 1f, 0), RotateSphere.Animation.Linear);
+            
+            GamePlayAudioManager.instance.PlayManagedOneShot(FMODEvents.Instance.PlayerTerminalInteraction, transform.position);
 
-            _rotateSphere.positionSphere(new Vector3(_rotateSphere.DistanceFromPlayer, 1f, 0),
-                RotateSphere.Animation.Linear);
-            GamePlayAudioManager.instance.PlayOneShot(FMODEvents.Instance.PlayerTerminalInteraction,
-                this.transform.position);
-
+            _playerShoot.DecreaseStamina(1);
+            
             yield return new WaitForSeconds(_interactionTime);
-
+            
+            _playerShoot.lastStaminaUseTime = Time.time;
+            
             int powerUpIndex = _random.Next(_powerUp.spherePowerUps.Count);
             _obtainedPowerUp = _powerUp.spherePowerUps[powerUpIndex];
             _powerUp.ObtainPowerUp(_obtainedPowerUp);
             _powerUp.spherePowerUps.RemoveAt(powerUpIndex);
 
             StartCoroutine(ShowFeedbackMessage());
-
+            
             yield return new WaitForSeconds(_postInteractionDelay);
-
-            _playerShoot.DecreaseStamina(1);
-
-			_player.FreezeMovement(false);
-			_playerShoot.DisableAttacks(false);
+            
 			_rotateSphere.isRotating = true;
-
             _isBusy = false;
+            _playerShoot.isInteracting = false;
         }
 
         private IEnumerator RotatePlayerTowards(Transform target, float duration)
@@ -116,9 +142,48 @@ namespace PlayerInteraction
         private IEnumerator ShowFeedbackMessage()
         {
             _powerUpObtained = true;
+            _feedbackMessageActive = true;
+
+            // Force the PlayerInteractor to show the power-up prompt
+            if (_playerInteractor != null)
+            {
+                _playerInteractor.ShowForcedPrompt(this.InteractionPrompt);
+            }
+
             yield return new WaitForSeconds(_feedbackMessageDuration);
+
             _powerUpObtained = false;
+            _feedbackMessageActive = false;
             _noMorePowerUp = true;
+
+            // Once the feedback message is gone, make sure the UI prompt updates
+            if (_playerInteractor != null)
+            {
+                _playerInteractor.ClearForcedPrompt(); // Send the signal to PlayerInteractor
+            }
+        }
+        
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Player"))
+            {
+                if (_playerInteractor != null && !_feedbackMessageActive)
+                {
+                    // If the feedback message is not active, force the PlayerInteractor to consider this terminal
+                    _playerInteractor.SetCurrentTarget(this); 
+                }
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.CompareTag("Player"))
+            {
+                if (_playerInteractor != null && _playerInteractor.GetCurrentTarget() == this)
+                {
+                    _playerInteractor.ClearTarget();
+                }
+            }
         }
     }
 }

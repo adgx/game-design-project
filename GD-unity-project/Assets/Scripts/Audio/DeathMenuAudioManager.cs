@@ -1,31 +1,39 @@
-using Audio;
-using UnityEngine;
-using FMODUnity;
 using FMOD.Studio;
+using FMODUnity;
+using UnityEngine;
 
-public class DeathMenuAudioManager : MonoBehaviour
+namespace Audio
 {
-    private EventInstance musicEventInstance;
-    
-    private void Start()
+    public class DeathMenuAudioManager : MonoBehaviour
     {
-        InitializeMusic(FMODEvents.Instance.DeathMenuMusic);
-    }
+        private EventInstance musicEventInstance;
     
-    private void OnDestroy()
-    {
-        StopMusic();
-    }
+        private void Start()
+        {
+            InitializeMusic(FMODEvents.Instance.DeathMenuMusic);
+        }
     
-    private void InitializeMusic(EventReference musicEventReference)
-    {
-        musicEventInstance = RuntimeManager.CreateInstance(musicEventReference);
-        musicEventInstance.start();
-    }
+        private void OnDestroy()
+        {
+            if (FMODUnity.RuntimeManager.IsInitialized)
+            {
+                StopMusic();   
+            }
+        }
     
-    private void StopMusic()
-    {
-        musicEventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-        musicEventInstance.release();
+        private void InitializeMusic(EventReference musicEventReference)
+        {
+            musicEventInstance = RuntimeManager.CreateInstance(musicEventReference);
+            musicEventInstance.start();
+        }
+    
+        private void StopMusic()
+        {
+            if (musicEventInstance.isValid())
+            {
+                musicEventInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                musicEventInstance.release();   
+            }
+        }
     }
 }

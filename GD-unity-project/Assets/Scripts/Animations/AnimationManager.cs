@@ -29,6 +29,7 @@ public enum RickStates
 public class AnimationManager : MonoBehaviour
 {
     [SerializeField] private Animator rickAC;
+    [SerializeField] private Player _player;
     [SerializeField] private byte NUM_IDLE_ANIMATIONS = 2;
     [SerializeField] private int WAIT_IDLE_TIME = 2;
     private int idleTriggerHash;
@@ -52,8 +53,6 @@ public class AnimationManager : MonoBehaviour
     public RickStates rickState;
     //for switch from animation to another for the idle
     private bool randomIdleIsDone = true;
-    private bool activeRandomIdle = true;
-    private bool justIdle = true;
     //sheildVFX  gameObj
     [SerializeField] GameObject prefabSheildVFX;
     private GameObject shield;
@@ -75,6 +74,11 @@ public class AnimationManager : MonoBehaviour
 
     private void Start()
     {
+        if (_player == null)
+        {
+            Debug.Log("None Player reference");
+        }
+
         if (rickAC == null)
         {
             Debug.LogWarning("None Animation Controller insert on inspector");
@@ -103,7 +107,7 @@ public class AnimationManager : MonoBehaviour
 
         //sheild check
         if (prefabSheildVFX == null)
-            Debug.LogError("The sheild VFX not found!");
+            Debug.LogError("Shield VFX not found!");
     }
 
     private void Update()
@@ -125,18 +129,22 @@ public class AnimationManager : MonoBehaviour
         }
         randomIdleIsDone = true;
     }
+    
+    public void ResetEndAttackTriggers()
+    {
+        rickAC.ResetTrigger(endAttackHash);
+        rickAC.ResetTrigger(endAreaAttackHash);
+    }
 
     public void DefenseToIdle()
-    { 
+    {
         rickAC.SetTrigger("CloseDefense");
     }
 
     public void Run()
     {
-        activeRandomIdle = false;
         rickAC.SetTrigger(runTriggerHash);
-        rickState = RickStates.Run;
-
+        //rickState = RickStates.Run;
     }
     public void Defense()
     {
@@ -151,9 +159,11 @@ public class AnimationManager : MonoBehaviour
 
     public void Idle()
     {
-        activeRandomIdle = true;
-        rickAC.SetTrigger(idleTriggerHash);
-        rickState = RickStates.Idle;
+        if (rickState != RickStates.Idle)
+        {
+            rickAC.SetTrigger(idleTriggerHash);
+            rickState = RickStates.Idle;
+        }
     }
 
     public void Attack()
@@ -180,23 +190,24 @@ public class AnimationManager : MonoBehaviour
         rickState = RickStates.EndAreaAttack;
     }
 
-    public void RemoveDefenseVfx() {
+    public void RemoveDefenseVfx()
+    {
         Destroy(shield);
     }
-    
+
     public void Hit(int x, int z)
     {
         rickAC.SetInteger("DirHitX", x);
-		rickAC.SetInteger("DirHitZ", z);
+        rickAC.SetInteger("DirHitZ", z);
 
         rickAC.SetTrigger(hitHash);
         rickState = RickStates.Hit;
     }
-    
+
     public void HitSpit(int x, int z)
     {
-		rickAC.SetInteger("DirHitX", x);
-		rickAC.SetInteger("DirHitZ", z);
+        rickAC.SetInteger("DirHitX", x);
+        rickAC.SetInteger("DirHitZ", z);
 
         rickAC.SetTrigger(hitSpitHash);
         rickState = RickStates.HitSpit;
@@ -226,10 +237,10 @@ public class AnimationManager : MonoBehaviour
         rickState = RickStates.EatChips;
     }
 
-	public void Death(int x, int z)
+    public void Death(int x, int z)
     {
-		rickAC.SetInteger("DirHitX", x);
-		rickAC.SetInteger("DirHitZ", z);
+        rickAC.SetInteger("DirHitX", x);
+        rickAC.SetInteger("DirHitZ", z);
 
         rickAC.SetTrigger(deathHash);
         rickState = RickStates.Death;
@@ -240,6 +251,4 @@ public class AnimationManager : MonoBehaviour
         rickAC.SetTrigger(standUpHash);
         rickState = RickStates.StandUp;
     }
-
-    
 }

@@ -131,10 +131,42 @@ namespace Enemy.EnemyData.EnemyMovement
             {
                 //Attack code here
                 GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-                bullet.tag = "EnemyAttack";
-                bullet.GetComponent<GetCollisions>().enemyBulletDamage = closeAttackDamage;
+                bullet.tag = "DrakeEnemyAttack";
+                
+                ParticleAttackController projectileHandler = bullet.GetComponent<ParticleAttackController>();
+                if (projectileHandler == null)
+                {
+                    projectileHandler = bullet.AddComponent<ParticleAttackController>();
+                }
+                projectileHandler.enemyBulletDamage = closeAttackDamage;
+                
+                // For Drake, who has a close attack, targetPos may not be strictly necessary if the "bullet" is more
+                // of an immediate collision effect or a wave. However, if your ParticleAttackController also handles
+                // movement for melee attacks (eg an expanding shock wave), you may want to pass playerTransform.
+                // projectileHandler.targetPos = playerTransform; 
 
                 Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
+                if (rbBullet == null)
+                {
+                    rbBullet = bullet.AddComponent<Rigidbody>();
+                }
+                rbBullet.useGravity = false; // We assume it doesn't want gravity, but it depends on the desired effect
+                rbBullet.isKinematic = false; // If Drake "shoots" something with AddForce, it shouldn't be Kinematic
+
+                Collider bulletCollider = bullet.GetComponent<Collider>();
+                if (bulletCollider == null)
+                {
+                    // Add a Collider if not present, such as a SphereCollider
+                    SphereCollider sphereCol = bullet.AddComponent<SphereCollider>();
+                    sphereCol.isTrigger = true;
+                    sphereCol.radius = 0.5f; // Adjust the radius based on the Drake effect
+                }
+                else
+                {
+                    bulletCollider.isTrigger = true; // Make sure it's a trigger
+                }
+
+                // We leave AddForce as Drake seems to be "throwing" something.
                 rbBullet.AddForce(transform.forward * 16f, ForceMode.Impulse);
                 rbBullet.AddForce(transform.up * 2f, ForceMode.Impulse);
                 //End of attack code
@@ -144,12 +176,16 @@ namespace Enemy.EnemyData.EnemyMovement
             }
         }
 
-        public void TakeDamage(float damage, string attackType)
+        public void TakeDamage(float damage, string attackType, bool isShield)
         {
             health -= damage * (attackType == "c" ? closeAttackDamageMultiplier : distanceAttackDamageMultiplier);
 
             if((attackType == "c" && closeAttackDamageMultiplier != 0) || (attackType == "d" && distanceAttackDamageMultiplier != 0)) {
-                StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));
+                
+                if (!isShield)
+                {
+                    StartCoroutine(ChangeColor(transform.GetComponent<Renderer>(), Color.red, 0.8f, 0));   
+                }
 
                 if(health <= 0)
                     Invoke(nameof(DestroyEnemy), 0.05f);

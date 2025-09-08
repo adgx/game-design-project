@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using Random = UnityEngine.Random;
 
 namespace RoomManager
 {
@@ -93,12 +92,11 @@ namespace RoomManager
 
         private float _upgradeTerminalSpawnChance;
         private bool _spawnUpgradeTerminal;
-
-        [Tooltip("Prefab for a collectible paper item that may appear in the room.")] [SerializeField]
-        private GameObject _paperPrefab;
-
-        private float _paperSpawnChance;
+        
         private bool _spawnPaper;
+        private List<bool> _initialRoomPaperStates;
+        private List<PlayerInteraction.PaperInteraction> _paperScripts = new List<PlayerInteraction.PaperInteraction>();
+        private List<GameObject> _paperInstances = new List<GameObject>();
 
         private RoomManager _roomManager;
 
@@ -154,13 +152,19 @@ namespace RoomManager
 
             _upgradeTerminalSpawnChance = roomData.upgradeTerminalSpawnChance;
             _spawnUpgradeTerminal = roomData.spawnUpgradeTerminal;
-
-            _paperSpawnChance = roomData.paperSpawnChance;
+            
             _spawnPaper = roomData.spawnPaper;
+            _initialRoomPaperStates = roomData.initialRoomPaperStates;
         }
 
         private void Awake()
         {
+            _paperInstances.Clear(); // Cleans the list for safety
+            foreach (var paperScript in GetComponentsInChildren<PlayerInteraction.PaperInteraction>(true))
+            {
+                _paperScripts.Add(paperScript);
+            }
+            
             if (_centralSpawnPoint == null)
             {
                 GameObject centralSpawnPointGameObject = new GameObject("CentralSpawnPoint_Generated");
@@ -279,9 +283,33 @@ namespace RoomManager
         /// </summary>
         public bool PostInitializePaper()
         {
-            if (_paperSpawnChance == 0) return false;
+            if (_paperScripts.Count == 0)
+            {
+                return false;
+            }
 
-            _paperPrefab.SetActive(_spawnPaper);
+            // Special case: if this is the IncubatorRoom, we use the list logic
+            if (RoomType == RoomType.IncubatorRoom && _initialRoomPaperStates != null && _initialRoomPaperStates.Count > 0)
+            {
+                foreach (var paperScript in _paperScripts)
+                {
+                    int index = paperScript.paperIndex;
+                
+                    // We activate the paper only if its index is valid and its flag is 'true
+                    if (index >= 0 && index < _initialRoomPaperStates.Count)
+                    {
+                        paperScript.gameObject.SetActive(_initialRoomPaperStates[index]);
+                    }
+                }
+            }
+            else // Normal case for all other rooms
+            {
+                foreach (var paperScript in _paperScripts)
+                {
+                    paperScript.gameObject.SetActive(_spawnPaper);
+                }
+            }
+        
             return _spawnPaper;
         }
     }

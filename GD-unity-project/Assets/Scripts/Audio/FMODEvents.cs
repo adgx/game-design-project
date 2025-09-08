@@ -9,11 +9,14 @@ namespace Audio
         [field: SerializeField] public EventReference PlayerCloseAttackLoadWithPowerUp1 { get; private set; }
         [field: SerializeField] public EventReference PlayerCloseAttackLoadWithPowerUp2 { get; private set; }
         [field: SerializeField] public EventReference PlayerCloseAttackShoot { get; private set; }
+        [field: SerializeField] public EventReference PlayerCloseAttackImpact { get; private set; }
         [field: SerializeField] public EventReference PlayerDistanceAttackLoadWithPowerUp1 { get; private set; }
         [field: SerializeField] public EventReference PlayerDistanceAttackLoadWithPowerUp2 { get; private set; }
         [field: SerializeField] public EventReference PlayerDistanceAttackShoot { get; private set; }
+        [field: SerializeField] public EventReference PlayerDistanceAttackImpact { get; private set; }
         [field: SerializeField] public EventReference PlayerShieldActivation { get; private set; }
-        [field: SerializeField] public EventReference PlayerShieldDeactivation { get; private set; }
+        [field: SerializeField] public EventReference PlayerShieldDeactivationAfterDelay { get; private set; }
+        [field: SerializeField] public EventReference PlayerShieldImmediateDeactivation { get; private set; }
         [field: SerializeField] public EventReference PlayerShieldHit { get; private set; }
         [field: SerializeField] public EventReference PlayerDieBackwardGrunt { get; private set; }
         [field: SerializeField] public EventReference PlayerDieBackwardThud { get; private set; }
@@ -28,12 +31,14 @@ namespace Audio
         [field: SerializeField] public EventReference PlayerHit { get; private set; }
         [field: SerializeField] public EventReference PlayerHitBySpit { get; private set; }
         [field: SerializeField] public EventReference PlayerHitByBite { get; private set; }
+        [field: SerializeField] public EventReference PlayerHeartbeat { get; private set; }
         [field: SerializeField] public EventReference PlayerIdle { get; private set; }
         [field: SerializeField] public EventReference PlayerPaperInteraction { get; private set; }
         [field: SerializeField] public EventReference PlayerWalkFootsteps { get; private set; }
         [field: SerializeField] public EventReference PlayerRunFootsteps { get; private set; }
         [field: SerializeField] public EventReference PlayerSphereDischarge { get; private set; }
-        [field: SerializeField] public EventReference PlayerSphereFullRecharge { get; private set; }
+        [field: SerializeField] public EventReference PlayerSphereFullCharge { get; private set; }
+        [field: SerializeField] public EventReference PlayerSphereCharging { get; private set; }
         [field: SerializeField] public EventReference PlayerSphereRotation { get; private set; }
         [field: SerializeField] public EventReference PlayerTerminalInteraction { get; private set; }
         [field: SerializeField] public EventReference PlayerVendingMachineActivation { get; private set; }
@@ -89,7 +94,17 @@ namespace Audio
         [field: SerializeField] public EventReference IncognitoFootsteps { get; private set; }
         [field: SerializeField] public EventReference IncognitoStandUpFootstep1 { get; private set; }
         [field: SerializeField] public EventReference IncognitoStandUpFootstep2 { get; private set; }
-    
+        
+        [field: Header("UI SFX")]
+        [field: SerializeField] public EventReference PauseMenuOpen { get; private set; }
+        [field: SerializeField] public EventReference PauseMenuClose { get; private set; }
+        [field: SerializeField] public EventReference PauseMenuPositiveSelection { get; private set; }
+        [field: SerializeField] public EventReference PauseMenuNegativeSelection { get; private set; }
+        [field: SerializeField] public EventReference MasterVolumeControlSlider { get; private set; }
+        [field: SerializeField] public EventReference MusicVolumeControlSlider { get; private set; }
+        [field: SerializeField] public EventReference AmbienceVolumeControlSlider { get; private set; }
+        [field: SerializeField] public EventReference SfxVolumeControlSlider { get; private set; }
+        
         [field: Header("Ambience")]
         [field: SerializeField] public EventReference Alarm { get; private set;  }
         [field: SerializeField] public EventReference ServerNoise { get; private set;  }

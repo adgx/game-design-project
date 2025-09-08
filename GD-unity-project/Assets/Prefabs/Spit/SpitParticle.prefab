@@ -4920,9 +4920,12 @@ MonoBehaviour:
   _vyInit: 0.2
   _vMax: 15
   targetPos: {fileID: 0}
-  initialPlayerBulletDamage: 40
+  initialPlayerBulletDamage: 50
   enemyBulletDamage: 20
   playerBulletDamage: 50
+  maynardDamageType: 1
+  bulletOwner: {fileID: 0}
+  destructionDelay: 0.05
 --- !u!135 &6237466035387509802
 SphereCollider:
   m_ObjectHideFlags: 0
